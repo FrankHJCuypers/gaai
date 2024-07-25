@@ -8,4 +8,4 @@ This project is licensed under the GNU AGPLv3 License. See the [LICENSE](LICENSE
 
 ## Support
 
-For support, questions, or feedback, please open an issue on the [GitHub repository](https://github.com/FrankHJCuypers/Gaai/Issues/New).
+For support, questions, or feedback, please open an issue on the [GitHub repository](https://github.com/FrankHJCuypers/Gaai/issues/new).
