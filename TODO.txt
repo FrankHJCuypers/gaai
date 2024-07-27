@@ -1,1 +1,6 @@
 // TODO: Create specific theme? See https://developer.android.com/codelabs/basic-android-kotlin-compose-material-theming?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-3-pathway-3%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-material-theming#0
+// TODO: Verify shields.io badges in README.md when Github repo is made public; does not work for private repos
+// TODO: enable GitHub discussions on the Gaai repository as soon as it is public.
+
+
+

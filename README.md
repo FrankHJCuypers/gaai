@@ -1,3 +1,19 @@
+
+[![maintainer](https://img.shields.io/badge/maintainer-Frank%20HJ%20Cuypers-green?style=for-the-badge&logo=github)](https://github.com/frankhjcuypers)
+[![GitHub Discussions](https://img.shields.io/github/discussions/FrankHJCuypers/Gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/Gaai/discussions)
+
+[![android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://www.android.com/)
+[![android studio](https://img.shields.io/badge/Android_Studio-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white)](https://developer.android.com/studio)
+[![kotlin](	https://img.shields.io/badge/Kotlin-B125EA?style=for-the-badge&logo=kotlin&logoColor=white)](https://developer.android.com/kotlin)
+
+[![github release](https://img.shields.io/github/v/release/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
+[![github release date](https://img.shields.io/github/release-date/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/releases)
+[![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/Gaai)](LICENSE)
+[![Gitea Last Commit](https://img.shields.io/gitea/last-commit/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/commits)
+[![github contributors](https://img.shields.io/github/contributors/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/graphs/contributors)
+[![github commit activity](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/main)
+
+
 # Simple Nexxtender Home android app
 
 The goal of this app is to be able to control the Nexxtender Home charger without requiring the 
@@ -21,6 +37,12 @@ This app is developed in [Kotlin](https://developer.android.com/kotlin) with
 - [Kotlin coroutines](https://developer.android.com/kotlin/coroutines)
 - [Kotlin BLE Library for Android](https://github.com/NordicSemiconductor/Kotlin-BLE-Library)
 
+## Gaai?
+
+Choosing a short distinctive name for a project is always difficult.
+A bidrname was choosen.
+[Gaai](https://nl.wikipedia.org/wiki/Gaai) is Dutch for the
+[Eurasian jay](https://en.wikipedia.org/wiki/Eurasian_jay).
 
 ## Features
 
@@ -35,9 +57,12 @@ This app is developed in [Kotlin](https://developer.android.com/kotlin) with
 
 Useful information can be found at
 - [Nexxtender Information, Frank HJ Cuypers, Google Docs] (TBD)
-- [https://github.com/geertmeersman/nexxtender](ESPHome BLE Client for Powerdale Nexxtender EV Charger)
+- [https://github.com/geertmeersman/nexxtender](ESPHome BLE Client for Powerdale Nexxtender EV Charger) 
 - [https://github.com/geertmeersman/nexxtmove](Nexxtmove for Home Assistant)
 - [https://github.com/toSvenson/nexxtender-ble](Nexxtender Home Bluetooth Controller)
+- [Discord chat](https://discord.gg/PTpExQJsWA) related to 
+  [https://github.com/geertmeersman/nexxtender](ESPHome BLE Client for Powerdale Nexxtender EV Charger)
+  and [https://github.com/geertmeersman/nexxtmove](Nexxtmove for Home Assistant)
 - [Android Nexxtmove app](https://play.google.com/store/apps/details?id=com.powerdale.nexxtender)
 - [Android Nexxtender Installer app](https://play.google.com/store/apps/details?id=com.powerdale.homeinstaller)
 
