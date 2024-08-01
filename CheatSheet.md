@@ -1,0 +1,2 @@
+- ByteArray.toHexString() converts a byte array to a hexadecimal string representation
+- String.hexToByteArray() converts a hexadecimal string representation to a byte array
