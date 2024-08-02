@@ -39,15 +39,13 @@ It also depends on other nordic libs:
 - libs.nordic.ui
 - libs.nordic.theme, so includes the Nordic logo etc...
 - libs.nordic.navigation, encapsulates a lot of the navigation stuff with NavHost and NavController.
-  Not clear what the differences are compared with the Cupkaes course.
+  Not clear what the differences are compared with the Cupcakes course.
 - libs.nordic.permissions.ble for instance for requiring bluetooth permission etc... 
   Includes the screens needed to ask for permission.
   Seems to use the composables  
 - libs.nordic.logger
 
 So it uses nordic themes and navigation?
-
-
 
 ## app_server
 
@@ -80,7 +78,7 @@ Depends on the modules core, client-api and server-api.
 ## profile
 
 Seems to contain message parsers for several standard BLE profiles.
-Interesting as example for Gooa on how to parse Nexxtender Home messages.
+Interesting as example for Gaai on how to parse Nexxtender Home messages.
 
 Depends on the module core.
 

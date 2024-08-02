@@ -25,7 +25,7 @@ Both the [Nexxtmove app](https://play.google.com/store/apps/details?id=com.power
 and the [Nexxtmove.me website](https://www.nexxtmove.me/) require a username and password to login.
 Without it, it is impossible to use the
 [Nexxtmove app](https://play.google.com/store/apps/details?id=com.powerdale.nexxtender)
-and therefore impossible to to operate the Nexxtender Home charger, which has no UI or inputdevice
+and therefore impossible to to operate the Nexxtender Home charger, which has no UI or input device
 on its own.
 If you no longer have a login, using Gaai is an option.
 

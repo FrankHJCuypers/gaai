@@ -18,7 +18,7 @@ package be.cuypers_ghys.gaai.util
 /**
  * Implementation of CRC-8-CCITT.
  *
- * x^8^+x^2^+x+1 or 0x7 in normal presentation, no initial value and no exoring at the end.
+ * x^8^+x^2^+x+1 or 0x7 in normal presentation, no initial value and no XORing at the end.
  *
  * Non-optimized version.
  *
