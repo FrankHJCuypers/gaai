@@ -41,15 +41,6 @@ class CRC8CCITT {
     }
 
     /**
-     * Returns the size in bytes of the CRC value.
-     * @return The size in bytes.
-     */
-    @Suppress("unused")
-    fun size(): Int {
-        return 1
-    }
-
-    /**
      * Add byte to the CRC.
      * @param data The byte to add.
      * @return The current value of the CRC, unsigned.
@@ -108,5 +99,14 @@ class CRC8CCITT {
 
         /** Normal Polynomial.  */
         const val POLYNOMIAL: Int = 0x07
+
+        /**
+         * Returns the size in bytes of the CRC value.
+         * @return The size in bytes.
+         */
+        @Suppress("unused")
+        fun size(): Int {
+            return 1
+        }
     }
 }
