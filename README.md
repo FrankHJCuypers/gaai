@@ -57,12 +57,12 @@ A bird name was chosen.
 
 Useful information can be found at
 - [Nexxtender Information, Frank HJ Cuypers, Google Docs] (TBD)
-- [https://github.com/geertmeersman/nexxtender](ESPHome BLE Client for Powerdale Nexxtender EV Charger) 
-- [https://github.com/geertmeersman/nexxtmove](Nexxtmove for Home Assistant)
-- [https://github.com/toSvenson/nexxtender-ble](Nexxtender Home Bluetooth Controller)
+- [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender) 
+- [Nexxtmove for Home Assistant](https://github.com/geertmeersman/nexxtmove)
+- [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
 - [Discord chat](https://discord.gg/PTpExQJsWA) related to 
-  [https://github.com/geertmeersman/nexxtender](ESPHome BLE Client for Powerdale Nexxtender EV Charger)
-  and [https://github.com/geertmeersman/nexxtmove](Nexxtmove for Home Assistant)
+  [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
+  and Nexxtmove for Home Assistant](https://github.com/geertmeersman/nexxtmove)
 - [Android Nexxtmove app](https://play.google.com/store/apps/details?id=com.powerdale.nexxtender)
 - [Android Nexxtender Installer app](https://play.google.com/store/apps/details?id=com.powerdale.homeinstaller)
 
