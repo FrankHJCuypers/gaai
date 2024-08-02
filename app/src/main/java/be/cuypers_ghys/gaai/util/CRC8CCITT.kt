@@ -104,7 +104,7 @@ class CRC8CCITT {
          * Returns the size in bytes of the CRC value.
          * @return The size in bytes.
          */
-        @Suppress("unused")
+        @Suppress("unused", "SameReturnValue")
         fun size(): Int {
             return 1
         }
