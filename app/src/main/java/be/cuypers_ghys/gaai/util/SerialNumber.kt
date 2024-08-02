@@ -21,14 +21,18 @@ object SerialNumber {
             .toTypedArray()
         val numberString: String?
         var yearMonthString: String? = null
-        if (split.size == 5) {
-            yearMonthString = split[2]
-            numberString = split[3]
-        } else if (split.size == 3) {
-            yearMonthString = split[0]
-            numberString = split[1]
-        } else {
-            numberString = null
+        when (split.size) {
+            5 -> {
+                yearMonthString = split[2]
+                numberString = split[3]
+            }
+            3 -> {
+                yearMonthString = split[0]
+                numberString = split[1]
+            }
+            else -> {
+                numberString = null
+            }
         }
         if (yearMonthString == null || numberString == null || yearMonthString.length != 4) {
             return 0
