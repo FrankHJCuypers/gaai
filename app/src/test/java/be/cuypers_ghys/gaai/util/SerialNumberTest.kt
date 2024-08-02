@@ -28,7 +28,7 @@ class SerialNumberTest {
 
     @OptIn(ExperimentalStdlibApi::class)
     @ParameterizedTest
-    @MethodSource("UsedCombinationsProvider")
+    @MethodSource("usedCombinationsProvider")
     fun verifyResultsFromKnownTestVectors(serialNumberString: String, expectedSerialNumber: Int, expectedSerialNumberString: String) {
         val computedSerialNumber = SerialNumber.calcSerialNumber(serialNumberString)
         Assertions.assertEquals(expectedSerialNumber, computedSerialNumber)
@@ -43,7 +43,7 @@ class SerialNumberTest {
          * @return Stream of arguments to test
          */
         @JvmStatic
-        fun UsedCombinationsProvider(): Stream<Arguments> {
+        fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("60211-A2-2303-00005-E3", 0x17030005, "17030005"),
                 Arguments.of("2303-00005-E3", 0x17030005, "17030005"),

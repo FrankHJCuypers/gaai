@@ -28,7 +28,7 @@ class TestCRC8CCITT {
 
     @OptIn(ExperimentalStdlibApi::class)
     @ParameterizedTest
-    @MethodSource("UsedCombinationsProvider")
+    @MethodSource("usedCombinationsProvider")
     fun verifyResultsFromKnownTestVectors(sData: String, expectedCrc: Int) {
         val crc8Ccitt = CRC8CCITT()
         val data = sData.hexToByteArray()
@@ -54,7 +54,7 @@ class TestCRC8CCITT {
          * @return Stream of arguments to test
          */
         @JvmStatic
-        fun UsedCombinationsProvider(): Stream<Arguments> {
+        fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("010203", 0x48),
                 Arguments.of("481A6A0A08030303", 0x72),
