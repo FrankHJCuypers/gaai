@@ -26,7 +26,6 @@ import java.util.stream.Stream
  */
 class SerialNumberTest {
 
-    @OptIn(ExperimentalStdlibApi::class)
     @ParameterizedTest
     @MethodSource("usedCombinationsProvider")
     fun verifyResultsFromKnownTestVectors(serialNumberString: String, expectedSerialNumber: Int, expectedSerialNumberString: String) {
