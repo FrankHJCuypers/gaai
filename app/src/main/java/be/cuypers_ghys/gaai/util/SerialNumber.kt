@@ -33,7 +33,7 @@ object SerialNumber {
         if (yearMonthString == null || numberString == null || yearMonthString.length != 4) {
             return 0
         }
-        val yearString = yearMonthString!!.substring(0, 2)
+        val yearString = yearMonthString.substring(0, 2)
         val monthString = yearMonthString.substring(2, 4)
         val year = yearString.toInt()
         val month = monthString.toInt()
@@ -43,7 +43,7 @@ object SerialNumber {
         return serialNumber
     }
 
-    fun calcSerialNumberString(str: String): String? {
+    fun calcSerialNumberString(str: String): String {
         val serialNumber = calcSerialNumber(str)
         val serialNumberString = String.format("%08X", serialNumber)
         return serialNumberString

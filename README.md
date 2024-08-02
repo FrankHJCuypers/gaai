@@ -40,7 +40,7 @@ This app is developed in [Kotlin](https://developer.android.com/kotlin) with
 ## Gaai?
 
 Choosing a short distinctive name for a project is always difficult.
-A bidrname was choosen.
+A bird name was chosen.
 [Gaai](https://nl.wikipedia.org/wiki/Gaai) is Dutch for the
 [Eurasian jay](https://en.wikipedia.org/wiki/Eurasian_jay).
 
