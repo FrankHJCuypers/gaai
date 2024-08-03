@@ -17,13 +17,22 @@
 package be.cuypers_ghys.gaai.util
 
 /**
- * Holds a parsed serial number.
- *
- * @author Frank HJ Cuypers
+ * Writes the *value* as a 2-byte Little Endian value ot position *offset* in the ByteArray.
+ * @param offset Offset to start writing in the ByteArray.
+ * @param value Value to write in the ByteArray.
  */
-data class SerialNumber(
-    val year: UByte,
-    val month: UByte,
-    val number: UInt,
-    val unknown: UByte
-)
+fun ByteArray.toUint16LE(offset: Int, value: UInt) {
+    this[offset] = (value and 0xFFu).toByte()
+    this[offset+1] = (value shr 8).toByte()
+}
+
+/**
+ * Writes the *value* as a 2-byte Big Endian value ot position *offset* in the ByteArray.
+ * @param offset Offset to start writing in the ByteArray.
+ * @param value Value to write in the ByteArray.
+ */
+fun ByteArray.toUint16BE(offset: Int, value: UInt) {
+    this[offset] = (value shr 8).toByte()
+    this[offset+1] = (value and 0xFFu).toByte()
+}
+

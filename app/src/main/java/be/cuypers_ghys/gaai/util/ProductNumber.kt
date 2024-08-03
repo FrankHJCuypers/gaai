@@ -17,13 +17,11 @@
 package be.cuypers_ghys.gaai.util
 
 /**
- * Holds a parsed serial number.
+ * Holds a parsed product number.
  *
  * @author Frank HJ Cuypers
  */
-data class SerialNumber(
-    val year: UByte,
-    val month: UByte,
-    val number: UInt,
-    val unknown: UByte
+data class ProductNumber(
+    val modelNumber: UInt,
+    val hardwareRevision: UByte
 )
