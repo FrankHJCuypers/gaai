@@ -36,3 +36,23 @@ fun ByteArray.toUint16BE(offset: Int, value: UInt) {
     this[offset+1] = (value and 0xFFu).toByte()
 }
 
+/**
+ * Reads the 2-byte Unsigned Little Endian value ot position *offset* of the ByteArray.
+ * @param offset Offset to start reading in the ByteArray.
+ * @return Value read from the ByteArray.
+ */
+fun ByteArray.fromUint16LE(offset: Int) :UShort {
+    return (( this[offset].toUInt() and 0xFFu) or (this[offset+1].toUInt() shl 8)).toUShort()
+}
+
+/**
+ * Reads the 4-byte Unsigned Little Endian value ot position *offset* of the ByteArray.
+ * @param offset Offset to start reading in the ByteArray.
+ * @return Value read from the ByteArray.
+ */
+fun ByteArray.fromUint32LE(offset: Int) :UInt {
+    return (( this[offset].toUInt() and 0xFFu)
+            or ((this[offset+1].toUInt() and 0xFFu) shl 8)
+            or ((this[offset+2].toUInt() and 0xFFu) shl 16)
+            or ((this[offset+3].toUInt() and 0xFFu) shl 24))
+}

@@ -21,10 +21,10 @@ import java.util.UUID
 object NexxtenderHomeSpecification {
 
     /** Base to convert 16-bit UUIDs into 128-bit UUIDs. */
-    val UUID_BLE_SHORT_BASE = "0000%s-0000-1000-8000-00805f9b34fb"
+    const val UUID_BLE_SHORT_BASE = "0000%s-0000-1000-8000-00805f9b34fb"
 
-    /** Base to convert 8-bit NExxtender Home servce or characteristic into 128-bit UUIDs. */
-    val UUID_NEXXTENDER_HOME_SHORT_BASE = "fd47416a-95fb-4206-88b5-b4a8045f75"
+    /** Base to convert 8-bit Nexxtender Home service or characteristic into 128-bit UUIDs. */
+    const val UUID_NEXXTENDER_HOME_SHORT_BASE = "fd47416a-95fb-4206-88b5-b4a8045f75"
 
     /** BLE Generic Access Service UUID. */
     val UUID_BLE_GENERIC_ACCESS_SERVICE: UUID = from16bitString("1800")
@@ -122,7 +122,7 @@ object NexxtenderHomeSpecification {
      * @preturn 128-bit UUID
      */
     private fun from16bitString(shortUUID: String): UUID{
-        return UUID.fromString(String.format(UUID_BLE_SHORT_BASE, shortUUID));
+        return UUID.fromString(String.format(UUID_BLE_SHORT_BASE, shortUUID))
     }
 
     /**
@@ -131,6 +131,6 @@ object NexxtenderHomeSpecification {
      * @preturn 128-bit UUID
      */
     private fun fromNexxtenderHomeBase(shortUUID: String): UUID{
-        return UUID.fromString(String.format(UUID_NEXXTENDER_HOME_SHORT_BASE + shortUUID));
+        return UUID.fromString(String.format(UUID_NEXXTENDER_HOME_SHORT_BASE + shortUUID))
     }
 }
