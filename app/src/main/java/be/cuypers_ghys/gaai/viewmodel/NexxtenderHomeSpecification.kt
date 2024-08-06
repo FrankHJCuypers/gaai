@@ -119,7 +119,7 @@ object NexxtenderHomeSpecification {
     /**
      * Creates a 128-bit UUID from a 16-bit UUID.
      * @param shortUUID 16-bit UUID
-     * @preturn 128-bit UUID
+     * @return 128-bit UUID
      */
     private fun from16bitString(shortUUID: String): UUID{
         return UUID.fromString(String.format(UUID_BLE_SHORT_BASE, shortUUID))
@@ -128,7 +128,7 @@ object NexxtenderHomeSpecification {
     /**
      * Creates a 128-bit UUID from a 8-bit UUID.
      * @param shortUUID 8-bit UUID
-     * @preturn 128-bit UUID
+     * @return 128-bit UUID
      */
     private fun fromNexxtenderHomeBase(shortUUID: String): UUID{
         return UUID.fromString(String.format(UUID_NEXXTENDER_HOME_SHORT_BASE + shortUUID))

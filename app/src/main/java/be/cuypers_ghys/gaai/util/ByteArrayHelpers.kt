@@ -56,3 +56,12 @@ fun ByteArray.fromUint32LE(offset: Int) :UInt {
             or ((this[offset+2].toUInt() and 0xFFu) shl 16)
             or ((this[offset+3].toUInt() and 0xFFu) shl 24))
 }
+
+/**
+ * Reads the 2-byte signed Little Endian value ot position *offset* of the ByteArray.
+ * @param offset Offset to start reading in the ByteArray.
+ * @return Value read from the ByteArray.
+ */
+fun ByteArray.fromInt16LE(offset: Int) :Short {
+    return (( this[offset].toInt() and 0xFF) or (this[offset+1].toInt() shl 8)).toShort()
+}

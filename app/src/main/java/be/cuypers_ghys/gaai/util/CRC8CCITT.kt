@@ -22,8 +22,10 @@ package be.cuypers_ghys.gaai.util
  *
  * Non-optimized version.
  *
- * See also [CRC_8_CCITT](https://www.3dbrew.org/wiki/CRC-8-CCITT)
- * and [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
+ * See also [CRC_8_CCITT](https://www.3dbrew.org/wiki/CRC-8-CCITT),
+ * [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
+ * and [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/).
+ *
  * @author Frank HJ Cuypers
  */
 class CRC8CCITT {

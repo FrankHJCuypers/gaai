@@ -84,4 +84,16 @@ class ByteArrayHelpersTest {
         Assertions.assertEquals(0x98A6F482u, ba.fromUint32LE(1))
     }
 
+    @Test
+    fun fromInt16_LE_correct() {
+        val ba = byteArrayOf(0x00, 0x12.toByte(), 0x34.toByte(), 0x00)
+        Assertions.assertEquals(0x3412.toShort(), ba.fromInt16LE(1))
+    }
+
+    @Test
+    fun fromInt16_LE_MSBitSetInBothBytes() {
+        val ba = byteArrayOf(0x00, 0x82.toByte(), 0xF4.toByte(), 0x00)
+        Assertions.assertEquals(0xF482u.toShort(), ba.fromInt16LE(1))
+    }
+
 }
