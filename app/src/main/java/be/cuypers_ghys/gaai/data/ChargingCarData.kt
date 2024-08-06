@@ -17,35 +17,35 @@
 package be.cuypers_ghys.gaai.data
 
 /**
- * Holds the result of the Charging Grid Data BLE Characteristic.
+ * Holds the result of the Charging Car Data BLE Characteristic.
  *
  * @author Frank HJ Cuypers
  */
-data class ChargingGridData(
+data class ChargingCarData(
     /** Measurement time in Unix Time. */
     val timestamp: UInt,
     /**
-     * Grid phase L1 current in dA.
-     * A negative value indicates that a power surplus is delivered to the Grid.
-     * That can only happen in case there are solar panels and solar power is more than what is
-     * consumed by the house and the EV.
+     * Car phase L1 current in dA.
      */
     val l1: Short,
     /**
-     * Grid phase L2 current in dA.
-     * @see l1
+     * Car phase L2 current in dA.
      */
     val l2: Short,
     /**
-     * Grid phase L3 current in dA.
-     * @see l1
+     * Car phase L3 current in dA.
      */
     val l3: Short,
     /**
-     * Total grid power consumption in Watt.
-     * @see l1
+     * Car phase L1 power consumption in W.
      */
-    val consumed : Short,
-    /** Counter that goes from 0 to 900 (15 minutes)? */
-    val interval: UShort,
+    val p1: Short,
+    /**
+     * Car phase L2 power consumption in W.
+     */
+    val p2: Short,
+    /**
+     * Car phase L3 power consumption in W.
+     */
+    val p3: Short,
 )
