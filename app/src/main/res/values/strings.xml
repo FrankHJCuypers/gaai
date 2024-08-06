@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Gaai</string>
+    <string name="authorized_max">Authorized max</string>
+    <string name="authorized_eco">Authorized eco</string>
+    <string name="authorized_default">Authorized default</string>
+    <string name="charge_stopped_in_app">Charge stopped in app</string>
+    <string name="charge_paused">Charge paused</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="unknown">Unknown</string>
 </resources>

@@ -18,53 +18,52 @@ package be.cuypers_ghys.gaai.data
 
 import be.cuypers_ghys.gaai.util.MODBUS
 import be.cuypers_ghys.gaai.util.fromInt16LE
+import be.cuypers_ghys.gaai.util.fromInt32LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 
 /**
- * Parses Charging Car Data.
+ * Parses Charging Advanced Data.
  *
  * @author Frank HJ Cuypers
  */
-object ChargingCarDataParser {
+object ChargingAdvancedDataParser {
     /**
      * Parses a byte array with the contents of the Charging Car Data BLE Characteristic into an
-     * [ChargingCarData].
-     * @param chargingCarData Byte array with the value read from the Charging Car Data BLE
+     * [ChargingAdvancedData].
+     * @param chargingAdvancedData Byte array with the value read from the Charging Car Data BLE
      * Characteristic.
-     * @return A [ChargingCarData] holding the parsed result.
-     *      Null if *ChargingCarData* is not 18 bytes long or the CRC16 is not correct.
+     * @return A [ChargingAdvancedData] holding the parsed result.
+     *      Null if *chargingAdvancedData* is not 18 bytes long or the CRC16 is not correct.
      */
-    fun parse(chargingCarData: ByteArray): ChargingCarData? {
-        if ( chargingCarData.size !=  18 )
+    fun parse(chargingAdvancedData: ByteArray): ChargingAdvancedData? {
+        if ( chargingAdvancedData.size !=  18 )
         {
             return null
         }
 
-        val crc =  chargingCarData.fromUint16LE(16)
-        val computedCrc = CRC16.MODBUS(chargingCarData,0, 16).toUShort()
+        val crc =  chargingAdvancedData.fromUint16LE(16)
+        val computedCrc = CRC16.MODBUS(chargingAdvancedData,0, 16).toUShort()
         if ( computedCrc != crc )
         {
             return null
         }
 
-        val timestamp = chargingCarData.fromUint32LE(0)
-        val l1 = chargingCarData.fromInt16LE(4)
-        val l2 = chargingCarData.fromInt16LE(6)
-        val l3 = chargingCarData.fromInt16LE(8)
-        val p1 = chargingCarData.fromInt16LE(10)
-        val p2 = chargingCarData.fromInt16LE(12)
-        val p3 = chargingCarData.fromInt16LE(14)
+        val timestamp = chargingAdvancedData.fromUint32LE(0)
+        val iAvailable = chargingAdvancedData.fromInt16LE(4)
+        val gridPower = chargingAdvancedData.fromInt32LE(6)
+        val carPower = chargingAdvancedData.fromInt32LE(10)
+        val autorizationStatus = AuthorizationStatus(chargingAdvancedData[14])
+        val errorCode = chargingAdvancedData[15]
 
-        return ChargingCarData(
+        return  ChargingAdvancedData(
             timestamp,
-            l1,
-            l2,
-            l3,
-            p1,
-            p2,
-            p3
+            iAvailable,
+            gridPower,
+            carPower,
+            autorizationStatus,
+            errorCode
         )
     }
 }
