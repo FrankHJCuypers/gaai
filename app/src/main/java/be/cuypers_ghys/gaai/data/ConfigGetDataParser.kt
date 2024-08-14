@@ -28,13 +28,46 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  */
 object ConfigGetDataParser {
     /**
-     * Parses a byte array with the contents of the Config Get operation into an
+     * Parses a byte array with the contents of the Config Get operation in Config_1_0 format into an
      * [ConfigGetData].
      * @param configGetData Byte array with the value read from the Config Get operation.
      * @return A [ConfigGetData] holding the parsed result.
+     *      Null if *configGetData* is not 13 long or the CRC16 is not correct.
+     */
+    fun parseConfig_1_0(configGetData: ByteArray): ConfigGetData? {
+        if (configGetData.size !=  13)
+        {
+            return null
+        }
+
+        return parse(configGetData, ConfigVersion.CONFIG_1_0)
+    }
+
+    /**
+     * Parses a byte array with the contents of the Config Get operation in Config_1_1 format into an
+     * [ConfigGetData].
+     * @param configGetData Byte array with the value read from the Config Get operation.
+     * @return A [ConfigGetData] holding the parsed result.
+     *      Null if *configGetData* is not 15 long or the CRC16 is not correct.
+     */
+    fun parseConfig_1_1(configGetData: ByteArray): ConfigGetData? {
+        if (configGetData.size !=  15)
+        {
+            return null
+        }
+
+        return parse(configGetData, ConfigVersion.CONFIG_1_1)
+    }
+
+    /**
+     * Parses a byte array with the contents of the Config Get operation into an
+     * [ConfigGetData].
+     * @param configGetData Byte array with the value read from the Config Get operation.
+     * @param configVersion The configutation version.
+     * @return A [ConfigGetData] holding the parsed result.
      *      Null if *configGetData* is not 13 or 15 bytes long or the CRC16 is not correct.
      */
-    fun parse(configGetData: ByteArray): ConfigGetData? {
+    fun parse(configGetData: ByteArray, configVersion : ConfigVersion): ConfigGetData? {
         if ((configGetData.size !=  13) && (configGetData.size !=  15))
         {
             return null
@@ -51,11 +84,9 @@ object ConfigGetDataParser {
         val maxGrid = configGetData[offset++].toUByte()
 
         var maxDevice = 0.toUByte()
-        var isConfig_1_1 = false
-        if ( configGetData.size ==  15) // CONFIG_1_1
+        if ( configVersion == ConfigVersion.CONFIG_1_1 )
         {
             maxDevice = configGetData[offset++].toUByte()
-            isConfig_1_1 = true
         }
 
         val rawMode = configGetData[offset++]
@@ -70,7 +101,7 @@ object ConfigGetDataParser {
         val safe=  configGetData[offset++].toUByte()
 
         var networkType = NetWorkType.UNKNOWN
-        if ( configGetData.size ==  15) // CONFIG_1_1
+        if ( configVersion == ConfigVersion.CONFIG_1_1 )
         {
             val rawNetworkType = configGetData[offset++]
             networkType = when(rawNetworkType) {
@@ -96,7 +127,9 @@ object ConfigGetDataParser {
             touWeekEnd,
             touWeekendStart,
             touWeekendEnd,
-            isConfig_1_1
+            configVersion
         )
     }
+
+
 }

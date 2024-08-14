@@ -32,6 +32,13 @@ enum class NetWorkType {
 }
 
 /**
+ * Codes the Configuration version type.
+ */
+enum class ConfigVersion {
+    CONFIG_1_0, CONFIG_1_1, CONFIG_CBOR
+}
+
+/**
  * Holds the result of the Config Get operation.
  *
  * @author Frank HJ Cuypers
@@ -59,6 +66,6 @@ data class ConfigGetData(
     val touWeekendStart: Short,
     /** Off peak charging end time of each weekend day. Coded in minutes since midnight. */
     val touWeekendEnd: Short,
-    /** Is it a Config 1.1 or Config 1.0 format. */
-    val isConfig_1_1: Boolean
+    /** Is it a Config 1.0, Config 1.0 or Config_CBOR format. */
+    val configVersion: ConfigVersion
 )

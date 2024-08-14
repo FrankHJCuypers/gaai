@@ -41,8 +41,13 @@ class ConfigGetDataParserTest {
                                                 expectedTouWeekEnd: Int,
                                                 expectedTouWeekendStart: Int,
                                                 expectedTouWeekendEnd: Int,
-                                                expectedIsConfig_1_1: Boolean) {
-        val computedConfigGetData = ConfigGetDataParser.parse(configGetData)
+                                                expectedConfigurationVersion: ConfigVersion) {
+
+        val computedConfigGetData = when( expectedConfigurationVersion )        {
+            ConfigVersion.CONFIG_1_0 -> ConfigGetDataParser.parseConfig_1_0(configGetData)
+            ConfigVersion.CONFIG_1_1 -> ConfigGetDataParser.parseConfig_1_1(configGetData)
+            ConfigVersion.CONFIG_CBOR -> ConfigGetDataParser.parseConfig_1_1(configGetData)
+        }
         assertNotNull(computedConfigGetData)
         assertEquals(expectedMaxGrid.toUByte(), computedConfigGetData!!.maxGrid)
         assertEquals(expectedMaxDevice.toUByte(), computedConfigGetData.maxDevice)
@@ -53,7 +58,7 @@ class ConfigGetDataParserTest {
         assertEquals(expectedTouWeekEnd.toShort(), computedConfigGetData.touWeekEnd)
         assertEquals(expectedTouWeekendStart.toShort(), computedConfigGetData.touWeekendStart)
         assertEquals(expectedTouWeekendEnd.toShort(), computedConfigGetData.touWeekendEnd)
-        assertEquals(expectedIsConfig_1_1, computedConfigGetData.isConfig_1_1)
+        assertEquals(expectedConfigurationVersion, computedConfigGetData.configVersion)
     }
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -84,14 +89,14 @@ class ConfigGetDataParserTest {
         @JvmStatic
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of("1234057800BCDEF0123456789ACC2F".hexToByteArray(), 0x12, 0x34, Mode.MAX_OPEN, 0x78, NetWorkType.MONO_TRIN, 0xDEBC, 0x12F0, 0x5634, 0x9A78, true),
-                Arguments.of("112200440266778899AABBCCDD5AD6".hexToByteArray(), 0x11, 0x22, Mode.ECO_PRIVATE, 0x44, NetWorkType.TRI, 0x7766, 0x9988, 0xBBAA, 0xDDCC, true),
-                Arguments.of("112201440366778899AABBCCDD53BA".hexToByteArray(), 0x11, 0x22, Mode.MAX_PRIVATE, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, true),
-                Arguments.of("112204440366778899AABBCCDD4276".hexToByteArray(), 0x11, 0x22, Mode.ECO_OPEN, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, true),
-                Arguments.of("112264440366778899AABBCCDDBC77".hexToByteArray(), 0x11, 0x22, Mode.UNKNOWN, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, true),
-                Arguments.of("32200006003C00B10400003D00DD09".hexToByteArray(), 0x32, 0x20, Mode.ECO_PRIVATE, 0x06, NetWorkType.MONO_TRIN, 0x003C, 0x04B1, 0x0000, 0x003D, true ),
-                Arguments.of("120578BCDEF0123456789A9E1A".hexToByteArray(), 0x12, 0x00, Mode.MAX_OPEN, 0x78, NetWorkType.UNKNOWN, 0xDEBC, 0x12F0, 0x5634, 0x9A78, false),
-                Arguments.of("11004466778899AABBCCDD12EE".hexToByteArray(), 0x11, 0x00, Mode.ECO_PRIVATE, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, false),
+                Arguments.of("1234057800BCDEF0123456789ACC2F".hexToByteArray(), 0x12, 0x34, Mode.MAX_OPEN, 0x78, NetWorkType.MONO_TRIN, 0xDEBC, 0x12F0, 0x5634, 0x9A78, ConfigVersion.CONFIG_1_1),
+                Arguments.of("112200440266778899AABBCCDD5AD6".hexToByteArray(), 0x11, 0x22, Mode.ECO_PRIVATE, 0x44, NetWorkType.TRI, 0x7766, 0x9988, 0xBBAA, 0xDDCC, ConfigVersion.CONFIG_1_1),
+                Arguments.of("112201440366778899AABBCCDD53BA".hexToByteArray(), 0x11, 0x22, Mode.MAX_PRIVATE, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, ConfigVersion.CONFIG_1_1),
+                Arguments.of("112204440366778899AABBCCDD4276".hexToByteArray(), 0x11, 0x22, Mode.ECO_OPEN, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, ConfigVersion.CONFIG_1_1),
+                Arguments.of("112264440366778899AABBCCDDBC77".hexToByteArray(), 0x11, 0x22, Mode.UNKNOWN, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, ConfigVersion.CONFIG_1_1),
+                Arguments.of("32200006003C00B10400003D00DD09".hexToByteArray(), 0x32, 0x20, Mode.ECO_PRIVATE, 0x06, NetWorkType.MONO_TRIN, 0x003C, 0x04B1, 0x0000, 0x003D, ConfigVersion.CONFIG_1_1 ),
+                Arguments.of("120578BCDEF0123456789A9E1A".hexToByteArray(), 0x12, 0x00, Mode.MAX_OPEN, 0x78, NetWorkType.UNKNOWN, 0xDEBC, 0x12F0, 0x5634, 0x9A78, ConfigVersion.CONFIG_1_0),
+                Arguments.of("11004466778899AABBCCDD12EE".hexToByteArray(), 0x11, 0x00, Mode.ECO_PRIVATE, 0x44, NetWorkType.UNKNOWN, 0x7766, 0x9988, 0xBBAA, 0xDDCC, ConfigVersion.CONFIG_1_0),
             )
         }
     }
