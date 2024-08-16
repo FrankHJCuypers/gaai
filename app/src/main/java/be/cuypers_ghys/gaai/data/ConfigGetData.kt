@@ -66,6 +66,10 @@ data class ConfigGetData(
     val touWeekendStart: Short,
     /** Off peak charging end time of each weekend day. Coded in minutes since midnight. */
     val touWeekendEnd: Short,
+    /** ?*/
+    val minDevice: UByte,
+    /** ?*/
+    val iCapacity: UByte,
     /** Is it a Config 1.0, Config 1.0 or Config_CBOR format. */
     val configVersion: ConfigVersion
 )
