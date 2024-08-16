@@ -54,7 +54,7 @@ object ChargingAdvancedDataParser {
         val iAvailable = chargingAdvancedData.fromInt16LE(4)
         val gridPower = chargingAdvancedData.fromInt32LE(6)
         val carPower = chargingAdvancedData.fromInt32LE(10)
-        val autorizationStatus = AuthorizationStatus(chargingAdvancedData[14])
+        val authorizationStatus = AuthorizationStatus(chargingAdvancedData[14])
         val errorCode = chargingAdvancedData[15]
 
         return  ChargingAdvancedData(
@@ -62,7 +62,7 @@ object ChargingAdvancedDataParser {
             iAvailable,
             gridPower,
             carPower,
-            autorizationStatus,
+            authorizationStatus,
             errorCode
         )
     }

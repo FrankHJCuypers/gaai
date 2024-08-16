@@ -18,7 +18,6 @@ package be.cuypers_ghys.gaai.data
 
 import android.content.Context
 import be.cuypers_ghys.gaai.R
-import java.util.BitSet
 
 /**
  * Codes the bits in the authorization status.
@@ -34,7 +33,7 @@ data class AuthorizationStatus ( val authStatus: Byte) {
         return ((1 shl bit) and authStatus.toInt()) != 0
     }
 
-        // TODO: move to a view. This is represnetation stuff.
+        // TODO: move to a view. This is representation stuff.
     fun toString(context : Context): String {
        return when (authStatus) {
            AUTHORIZED_MAX -> context.getString(R.string.authorized_max)
@@ -48,23 +47,23 @@ data class AuthorizationStatus ( val authStatus: Byte) {
     }
 
     companion object {
-        val UNAUTHORIZED_BIT = 0
-        val AUTHORIZED_DEFAULT_BIT = 1
-        val CHARGE_STOPPED_IN_APP_BIT = 2
-        val RFU1_BIT = 3
-        val CHARGE_PAUSED_BIT = 4
-        val MAX_BIT = 5
-        val ECO_BIT = 6
-        val RFU2_BIT = 7
-        val UNAUTHORIZED = (1 shl UNAUTHORIZED_BIT).toByte()
-        val AUTHORIZED = 1 shl AUTHORIZED_DEFAULT_BIT
-        val CHARGE_STOPPED_IN_APP = (1 shl CHARGE_STOPPED_IN_APP_BIT).toByte()
-        val CHARGE_PAUSED = (1 shl CHARGE_PAUSED_BIT).toByte()
-        val MAX = 1 shl MAX_BIT
-        val ECO = 1 shl ECO_BIT
-        val AUTHORIZED_DEFAULT = (AUTHORIZED).toByte()
-        val AUTHORIZED_MAX = (AUTHORIZED or MAX).toByte()
-        val AUTHORIZED_ECO = (AUTHORIZED or ECO).toByte()
+        const val UNAUTHORIZED_BIT = 0
+        const val AUTHORIZED_DEFAULT_BIT = 1
+        const val CHARGE_STOPPED_IN_APP_BIT = 2
+        const val RFU1_BIT = 3
+        const val CHARGE_PAUSED_BIT = 4
+        const val MAX_BIT = 5
+        const val ECO_BIT = 6
+        const val RFU2_BIT = 7
+        const val UNAUTHORIZED = (1 shl UNAUTHORIZED_BIT).toByte()
+        const val AUTHORIZED = 1 shl AUTHORIZED_DEFAULT_BIT
+        const val CHARGE_STOPPED_IN_APP = (1 shl CHARGE_STOPPED_IN_APP_BIT).toByte()
+        const val CHARGE_PAUSED = (1 shl CHARGE_PAUSED_BIT).toByte()
+        const val MAX = 1 shl MAX_BIT
+        const val ECO = 1 shl ECO_BIT
+        const val AUTHORIZED_DEFAULT = (AUTHORIZED).toByte()
+        const val AUTHORIZED_MAX = (AUTHORIZED or MAX).toByte()
+        const val AUTHORIZED_ECO = (AUTHORIZED or ECO).toByte()
     }
 }
 
