@@ -27,6 +27,7 @@ enum class Mode {
 /**
  * Codes the network type.
  */
+@Suppress("SpellCheckingInspection")
 enum class NetWorkType {
     MONO_TRIN, TRI, UNKNOWN
 }
@@ -39,37 +40,58 @@ enum class ConfigVersion {
 }
 
 /**
- * Holds the result of the Config Get operation.
+ * Holds the Configuration.
  *
  * @author Frank HJ Cuypers
  */
-data class ConfigGetData(
+data class ConfigData(
     /** Maximum allowed grid consumption limit in A. */
     val maxGrid: UByte,
+
     /**
      * Maximum allowed charging speed in A for the device.
+     * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
      */
     val maxDevice: UByte,
+
     /**
      * Default charging mode.
      */
     val mode: Mode,
+
     /** Minimum charging speed in A for the device. */
     val safe: UByte,
-    /** Codes the network type. */
+
+    /**
+     * Codes the network type.
+     * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
+     */
     val networkType: NetWorkType,
+
     /** Off peak charging start time of each weekday. Coded in minutes since midnight. */
     val touWeekStart: Short,
+
     /** Off peak charging end time of each weekday. Coded in minutes since midnight. */
     val touWeekEnd: Short,
+
     /** Off peak charging start time of each weekend day. Coded in minutes since midnight. */
     val touWeekendStart: Short,
+
     /** Off peak charging end time of each weekend day. Coded in minutes since midnight. */
     val touWeekendEnd: Short,
-    /** ?*/
+
+    /**
+     * ?
+     * Only available in [ConfigVersion.CONFIG_CBOR].
+     */
     val minDevice: UByte,
-    /** ?*/
+
+    /**
+     * ?
+     * Only available in [ConfigVersion.CONFIG_CBOR].
+     */
     val iCapacity: UByte,
-    /** Is it a Config 1.0, Config 1.0 or Config_CBOR format. */
+
+    /** Which configuration is used?. */
     val configVersion: ConfigVersion
 )

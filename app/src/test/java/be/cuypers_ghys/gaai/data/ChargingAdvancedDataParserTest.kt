@@ -49,18 +49,21 @@ class ChargingAdvancedDataParserTest {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
+    @Suppress("SpellCheckingInspection")
     @Test
     fun parse_ChargingAdvancedDataLengthToShort() {
         assertNull(ChargingAdvancedDataParser.parse("1234567890ABCDEF1234567890ABCDEF18".hexToByteArray()))
     }
 
     @OptIn(ExperimentalStdlibApi::class)
+    @Suppress("SpellCheckingInspection")
     @Test
     fun parse_ChargingAdvancedDataLengthToLong() {
         assertNull(ChargingAdvancedDataParser.parse("1234567890ABCDEF1234567890ABCDEF18E7FF".hexToByteArray()))
     }
 
     @OptIn(ExperimentalStdlibApi::class)
+    @Suppress("SpellCheckingInspection")
     @Test
     fun parse_ChargingAdvancedDataIncorrectCRC16() {
         assertNull(ChargingAdvancedDataParser.parse("1234567890ABCDEF1234567890ABCDEF6969".hexToByteArray()))
@@ -74,6 +77,7 @@ class ChargingAdvancedDataParserTest {
          */
         @OptIn(ExperimentalStdlibApi::class)
         @JvmStatic
+        @Suppress("SpellCheckingInspection")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("1234567890ABCDEF1234567890ABCDEF18E7".hexToByteArray(), 0x78563412, 0xAB90, 0x3412EFCD, 0xAB907856, AuthorizationStatus(0xCD.toByte()), 0xEF),

@@ -49,12 +49,14 @@ class ChargingGridDataParserTest {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
+    @Suppress("SpellCheckingInspection")
     @Test
     fun parse_ChargingGridDataLengthToShort() {
         assertNull(ChargingGridDataParser.parse("1234567890ABCDEF1234567890ABEE".hexToByteArray()))
     }
 
     @OptIn(ExperimentalStdlibApi::class)
+    @Suppress("SpellCheckingInspection")
     @Test
     fun parse_ChargingGridDataLengthToLong() {
         assertNull(ChargingGridDataParser.parse("1234567890ABCDEF1234567890ABEEDBFF".hexToByteArray()))

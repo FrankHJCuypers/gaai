@@ -51,7 +51,7 @@ class ChargingCarDataParserTest {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    @Test
+    @Suppress("SpellCheckingInspection")    @Test
     fun parse_ChargingCarDataLengthToShort() {
         assertNull(ChargingCarDataParser.parse("1234567890ABCDEF1234567890ABCDEF18".hexToByteArray()))
     }
@@ -63,6 +63,7 @@ class ChargingCarDataParserTest {
     }
 
     @OptIn(ExperimentalStdlibApi::class)
+    @Suppress("SpellCheckingInspection")
     @Test
     fun parse_ChargingCarDataIncorrectCRC16() {
         assertNull(ChargingBasicDataParser.parse("1234567890ABCDEF1234567890ABCDEF6969".hexToByteArray()))
@@ -76,6 +77,7 @@ class ChargingCarDataParserTest {
          */
         @OptIn(ExperimentalStdlibApi::class)
         @JvmStatic
+        @Suppress("SpellCheckingInspection")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("1234567890ABCDEF1234567890ABCDEF18E7".hexToByteArray(), 0x78563412, 0xAB90, 0xEFCD, 0x3412, 0x7856, 0xAB90, 0xEFCD),

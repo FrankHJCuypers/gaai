@@ -31,6 +31,7 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  * @param length Length of the range in bytes.
  * @return the CRC-16-MODBUS
  */
+@Suppress("FunctionName")
 fun CRC16.MODBUS(data: ByteArray, offset: Int, length: Int): Int {
     return CRC(0x8005, 0xFFFF, data, offset, length, refin = true, refout = true, xorout = 0x0000)
 }

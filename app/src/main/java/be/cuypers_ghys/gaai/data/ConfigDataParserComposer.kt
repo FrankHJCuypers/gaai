@@ -19,11 +19,14 @@ package be.cuypers_ghys.gaai.data
 import be.cuypers_ghys.gaai.util.MODBUS
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
+import be.cuypers_ghys.gaai.util.toUint16LE
 import com.google.iot.cbor.CborInteger
 import com.google.iot.cbor.CborMap
+import com.google.iot.cbor.CborObject
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 
 /** Enumerates all CONFIG_CBOR keys. s*/
+@Suppress("SpellCheckingInspection")
 enum class CborKey(val keyNum: Int) {
     ChargeMode(1),
     ModbusSlaveAddress(2),
@@ -46,19 +49,20 @@ enum class CborKey(val keyNum: Int) {
     ICapacity(19)
 }
 /**
- * Parses Config Get operation data.
+ * Parses and composes Config data.
  *
  * @author Frank HJ Cuypers
  */
-object ConfigGetDataParser {
+object ConfigDataParserComposer {
     /**
      * Parses a byte array with the contents of the Config Get operation in Config_1_0 format into an
-     * [ConfigGetData].
+     * [ConfigData].
      * @param configGetData Byte array with the value read from the Config Get operation.
-     * @return A [ConfigGetData] holding the parsed result.
+     * @return A [ConfigData] holding the parsed result.
      *      Null if *configGetData* is not 13 long or the CRC16 is not correct.
      */
-    fun parseConfig_1_0(configGetData: ByteArray): ConfigGetData? {
+    @Suppress("FunctionName")
+    fun parseConfig_1_0(configGetData: ByteArray): ConfigData? {
         if (configGetData.size !=  13)
         {
             return null
@@ -69,12 +73,13 @@ object ConfigGetDataParser {
 
     /**
      * Parses a byte array with the contents of the Config Get operation in Config_1_1 format into an
-     * [ConfigGetData].
+     * [ConfigData].
      * @param configGetData Byte array with the value read from the Config Get operation.
-     * @return A [ConfigGetData] holding the parsed result.
+     * @return A [ConfigData] holding the parsed result.
      *      Null if *configGetData* is not 15 long or the CRC16 is not correct.
      */
-    fun parseConfig_1_1(configGetData: ByteArray): ConfigGetData? {
+    @Suppress("FunctionName")
+    fun parseConfig_1_1(configGetData: ByteArray): ConfigData? {
         if (configGetData.size !=  15)
         {
             return null
@@ -85,13 +90,13 @@ object ConfigGetDataParser {
 
     /**
      * Parses a byte array with the contents of the Config Get operation into an
-     * [ConfigGetData].
+     * [ConfigData].
      * @param configGetData Byte array with the value read from the Config Get operation.
      * @param configVersion The configuration version.
-     * @return A [ConfigGetData] holding the parsed result.
+     * @return A [ConfigData] holding the parsed result.
      *      Null if *configGetData* is not 13 or 15 bytes long or the CRC16 is not correct.
      */
-    fun parse(configGetData: ByteArray, configVersion : ConfigVersion): ConfigGetData? {
+    fun parse(configGetData: ByteArray, configVersion : ConfigVersion): ConfigData? {
         if ((configGetData.size !=  13) && (configGetData.size !=  15))
         {
             return null
@@ -130,7 +135,7 @@ object ConfigGetDataParser {
         val touWeekendStart = configGetData.fromInt16LE(offset)
         offset += 2
         val touWeekendEnd = configGetData.fromInt16LE(offset)
-        return  ConfigGetData(
+        return  ConfigData(
             maxGrid,
             maxDevice,
             mode,
@@ -152,6 +157,12 @@ object ConfigGetDataParser {
         else -> NetWorkType.UNKNOWN
     }
 
+    private fun getRawNetWorkType(networkType: NetWorkType) = when (networkType) {
+        NetWorkType.MONO_TRIN -> 0
+        NetWorkType.TRI -> 2
+        NetWorkType.UNKNOWN -> 0x69
+    }
+
     private fun getMode(rawMode: Int) = when (rawMode) {
         0 -> Mode.ECO_PRIVATE
         1 -> Mode.MAX_PRIVATE
@@ -160,14 +171,23 @@ object ConfigGetDataParser {
         else -> Mode.UNKNOWN
     }
 
+    private fun getRawMode(mode: Mode) = when (mode) {
+        Mode.ECO_PRIVATE -> 0
+        Mode.MAX_PRIVATE -> 1
+        Mode.ECO_OPEN -> 4
+        Mode.MAX_OPEN -> 5
+        else -> 0x69
+    }
+
     /**
      * Parses a byte array with the contents of the Config Get operation in Config_CBOR format into an
-     * [ConfigGetData].
+     * [ConfigData].
      * @param configGetData Byte array with the value read from the Config Get operation.
-     * @return A [ConfigGetData] holding the parsed result.
+     * @return A [ConfigData] holding the parsed result.
      *      Null if the CRC16 is not correct, configData is not correctly CBOR coded.
      */
-    fun parseConfig_CBOR(configGetData: ByteArray): ConfigGetData? {
+    @Suppress("FunctionName")
+    fun parseConfig_CBOR(configGetData: ByteArray): ConfigData? {
         val crc =  configGetData.fromUint16LE(configGetData.size-2)
         val computedCrc = CRC16.MODBUS(configGetData,0, configGetData.size-2).toUShort()
         if ( computedCrc != crc ){
@@ -175,9 +195,9 @@ object ConfigGetDataParser {
         }
 
         val cborMap = CborMap.createFromCborByteArray(configGetData, 0, configGetData.size-2 ) ?: return null
-        val submap0 = cborMap.get(CborInteger.create(0)) ?: return null
-        val submap1 = cborMap.get(CborInteger.create(1)) ?: return null
-        if ( submap1 !is CborMap) return null
+        val subMap0 = cborMap.get(CborInteger.create(0)) ?: return null
+        val subMap1 = cborMap.get(CborInteger.create(1)) ?: return null
+        if ( subMap1 !is CborMap) return null
 
         var maxGrid: UByte = 0u
         var maxDevice: UByte = 0u
@@ -192,7 +212,7 @@ object ConfigGetDataParser {
         var iCapacity: UByte = 0u
         val configVersion = ConfigVersion.CONFIG_CBOR
 
-        submap1.mapValue().forEach { entry ->
+        subMap1.mapValue().forEach { entry ->
             val intValue = entry.value as? CborInteger
             val intKey = entry.key as? CborInteger
             if ( (intValue!= null ) && (intKey != null)) {
@@ -213,7 +233,7 @@ object ConfigGetDataParser {
                 }
             }
         }
-        return  ConfigGetData(
+        return  ConfigData(
             maxGrid,
             maxDevice,
             mode,
@@ -228,4 +248,91 @@ object ConfigGetDataParser {
             configVersion
         )
     }
+
+    /**
+     * Composes a byte array with the contents of the Config Set operation from an
+     * [ConfigData].
+     * @param configGetData The data to compose.
+     * @return Byte array with the compose configuration.
+     */
+    fun compose(configGetData: ConfigData): ByteArray {
+        if ( configGetData.configVersion == ConfigVersion.CONFIG_CBOR ) {
+            return composeConfig_CBOR(configGetData)
+        }
+
+        val dataLength = if (configGetData.configVersion == ConfigVersion.CONFIG_1_1) 15 else 13
+        val data = ByteArray(dataLength)
+        var offset = 0
+
+        data[offset++]= configGetData.maxGrid.toByte()
+
+        var maxDevice = 0.toUByte()
+        if ( configGetData.configVersion == ConfigVersion.CONFIG_1_1 )
+        {
+            data[offset++]= configGetData.maxDevice.toByte()
+        }
+
+        data[offset++]= getRawMode(configGetData.mode).toByte()
+        data[offset++]= configGetData.safe.toByte()
+
+        if ( configGetData.configVersion == ConfigVersion.CONFIG_1_1 )
+        {
+            data[offset++] = getRawNetWorkType(configGetData.networkType).toByte()
+        }
+        data.toUint16LE(offset,configGetData.touWeekStart.toUInt())
+        offset += 2
+        data.toUint16LE(offset,configGetData.touWeekEnd.toUInt())
+        offset += 2
+        data.toUint16LE(offset,configGetData.touWeekendStart.toUInt())
+        offset += 2
+        data.toUint16LE(offset,configGetData.touWeekendEnd.toUInt())
+        offset += 2
+
+        val computedCrc = CRC16.MODBUS(data,0, dataLength-2).toUInt()
+        data.toUint16LE(offset,computedCrc)
+        return data
+    }
+
+    /**
+     * Composes a byte array with the contents of the Config Set operation from an
+     * [ConfigData] in the []ConfigVersion.CONFIG_CBOR] configuration.
+     * @param configGetData The data to compose.
+     * @return Byte array with the compose configuration.
+     */
+    @Suppress("FunctionName")
+    fun composeConfig_CBOR(configGetData: ConfigData): ByteArray {
+        assert(configGetData.configVersion == ConfigVersion.CONFIG_CBOR)
+
+        val dataMap = HashMap<CborObject,CborObject>()
+        dataMap[CborInteger.create(CborKey.ChargeMode.keyNum.toLong())] = CborInteger.create(getRawMode(configGetData.mode).toLong())
+        dataMap[CborInteger.create(CborKey.IMax.keyNum.toLong())] = CborInteger.create((configGetData.maxGrid.toLong()))
+        dataMap[CborInteger.create(CborKey.IEvseMax.keyNum.toLong())] = CborInteger.create((configGetData.maxDevice.toLong()))
+        dataMap[CborInteger.create(CborKey.IEvseMin.keyNum.toLong())] = CborInteger.create((configGetData.minDevice.toLong()))
+        dataMap[CborInteger.create(CborKey.ILevel1.keyNum.toLong())] = CborInteger.create((configGetData.safe.toLong()))
+        dataMap[CborInteger.create(CborKey.PhaseSeq.keyNum.toLong())] = CborInteger.create(getRawNetWorkType(configGetData.networkType).toLong())
+        dataMap[CborInteger.create(CborKey.TouWeekStart.keyNum.toLong())] = CborInteger.create((configGetData.touWeekStart.toLong()))
+        dataMap[CborInteger.create(CborKey.TouWeekStop.keyNum.toLong())] = CborInteger.create((configGetData.touWeekEnd.toLong()))
+        dataMap[CborInteger.create(CborKey.TouWeekendStart.keyNum.toLong())] = CborInteger.create((configGetData.touWeekendStart.toLong()))
+        dataMap[CborInteger.create(CborKey.TouWeekendStop.keyNum.toLong())] = CborInteger.create((configGetData.touWeekendEnd.toLong()))
+        dataMap[CborInteger.create(CborKey.ICapacity.keyNum.toLong())] = CborInteger.create((configGetData.iCapacity.toLong()))
+
+        val subMap0 = HashMap<CborObject,CborObject>()
+        subMap0[CborInteger.create(1L)] = CborInteger.create(1L)
+        subMap0[CborInteger.create(2L)] = CborInteger.create(1L)
+
+        val rootMap = HashMap<CborObject,CborObject>()
+        rootMap[CborInteger.create(0L)] = CborMap.create(subMap0)
+        rootMap[CborInteger.create(1L)] = CborMap.create(dataMap)
+
+        // Note: toCborByteArray() does not output map pairs sorted by integer key value!
+        val cborData = CborMap.create(rootMap).toCborByteArray()
+
+        val computedCrc = CRC16.MODBUS(cborData, 0, cborData.size).toUInt()
+        val computedCrcArray = ByteArray(2)
+        computedCrcArray.toUint16LE(0,computedCrc)
+        val cborDatWithCrc = cborData + computedCrcArray
+
+        return cborDatWithCrc
+    }
+
 }

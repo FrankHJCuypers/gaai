@@ -24,6 +24,7 @@ import java.util.stream.Stream
 /**
  * @author Frank HJ Cuypers
  */
+
 class TestCRC8CCITT {
 
     @OptIn(ExperimentalStdlibApi::class)
@@ -54,6 +55,7 @@ class TestCRC8CCITT {
          * @return Stream of arguments to test
          */
         @JvmStatic
+        @Suppress("SpellCheckingInspection")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("010203", 0x48),

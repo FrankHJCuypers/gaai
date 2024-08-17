@@ -78,9 +78,11 @@ class ChargingBasicDataParserTest {
          *
          * @return Stream of arguments to test
          */
+        @Suppress("SpellCheckingInspection")
         @OptIn(ExperimentalStdlibApi::class)
         @JvmStatic
         fun usedCombinationsProvider(): Stream<Arguments> {
+            @Suppress("SpellCheckingInspection")
             return Stream.of(
                 Arguments.of("0300024200000000785634120001".hexToByteArray(), 0x03, Discriminator.CHARGING, Status.PLUGGED, 'B', 0x12345678, 1),
                 Arguments.of("FFFF014300000000A8A6A4A20002".hexToByteArray(), 0xFFFF, Discriminator.STARTED, Status.CHARGING, 'C', 0xA2A4A6A8, 2),
