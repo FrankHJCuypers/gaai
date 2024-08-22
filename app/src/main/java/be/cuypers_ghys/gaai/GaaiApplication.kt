@@ -16,31 +16,20 @@
 
 package be.cuypers_ghys.gaai
 
-import android.os.Bundle
+import android.app.Application
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import be.cuypers_ghys.gaai.ui.GaaiApp
-import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import be.cuypers_ghys.gaai.data.AppContainer
+import be.cuypers_ghys.gaai.data.DefaultAppContainer
 
 // Tag for logging
-private const val TAG = "MainActivity"
+private const val TAG = "GaaiApplication"
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+class GaaiApplication : Application() {
+    /** AppContainer instance used by the rest of classes to obtain dependencies */
+    lateinit var container: AppContainer
+    override fun onCreate() {
+        super.onCreate()
         Log.d(TAG, "onCreate Called")
-        enableEdgeToEdge()
-        setContent {
-            GaaiTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    GaaiApp()
-                }
-            }
-        }
+        container = DefaultAppContainer( this )
     }
 }

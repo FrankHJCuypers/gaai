@@ -7,4 +7,11 @@
     <string name="charge_paused">Charge paused</string>
     <string name="unauthorized">Unauthorized</string>
     <string name="unknown">Unknown</string>
+    <string name="back_button">Back</string>
+    <string name="device_entry_title">Add Device</string>
+    <string name="no_item_description">Oops!\nNo devices registered yet.\nTap + to add.</string>
+    <string name="save_action">Save</string>
+    <string name="device_pn_req">Device Product Number (PN)*</string>
+    <string name="device_sn_req">Device Serial Number (SN)*</string>
+    <string name="required_fields">*required fields</string>
 </resources>

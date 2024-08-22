@@ -13,34 +13,27 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
+package be.cuypers_ghys.gaai.ui.screens
 
-package be.cuypers_ghys.gaai
-
-import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import be.cuypers_ghys.gaai.ui.GaaiApp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 
-// Tag for logging
-private const val TAG = "MainActivity"
+@Composable
+fun FindDeviceScreen(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+) {
+}
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate Called")
-        enableEdgeToEdge()
-        setContent {
-            GaaiTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    GaaiApp()
-                }
-            }
-        }
+
+@Preview(showBackground = true)
+@Composable
+fun FindDeviceScreenPreview() {
+    GaaiTheme {
+        FindDeviceScreen()
     }
 }

@@ -1,6 +1,6 @@
 [versions]
 agp = "8.5.2"
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -10,6 +10,10 @@ activityCompose = "1.9.1"
 composeBom = "2024.06.00"
 junitJupiter = "5.8.2"
 nordicsemiKotlinBLE = "1.1.0"
+room = "2.6.1"
+navigationRuntimeKtx = "2.7.7"
+navigationCompose = "2.7.7"
+ksp = "2.0.10-1.0.24"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,10 +32,19 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 nordicsemi-kotlin-ble-profile = { module = "no.nordicsemi.android.kotlin.ble:profile", version.ref = "nordicsemiKotlinBLE" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "room"}
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+room = {id = "androidx.room", version.ref = "room"}
+devtools-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"  }
+
 
 
