@@ -32,11 +32,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
@@ -48,8 +44,6 @@ import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
-import be.cuypers_ghys.gaai.util.ProductNumberParser
-import be.cuypers_ghys.gaai.util.SerialNumberParser
 import kotlinx.coroutines.launch
 
 object DeviceEntryDestination : NavigationDestination {
@@ -112,7 +106,7 @@ fun DeviceEntryBody(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
     ) {
         DeviceInputForm(
-            deviceDetails = deviceUiState.deviceDetails,
+            deviceUiState = deviceUiState,
             onValueChange = onDeviceValueChange,
             modifier = Modifier.fillMaxWidth()
         )
@@ -132,29 +126,26 @@ fun DeviceEntryBody(
 )
 @Composable
 fun DeviceInputForm(
-    deviceDetails: DeviceDetails,
+    deviceUiState: DeviceUiState,
+//    deviceDetails: DeviceDetails,
     modifier: Modifier = Modifier,
     onValueChange: (DeviceDetails) -> Unit = {},
     enabled: Boolean = true
 ) {
+    val deviceDetails = deviceUiState.deviceDetails
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
-        var isPNError by rememberSaveable { mutableStateOf(false) }
-        fun validatePN(text: String) {
-            isPNError = ProductNumberParser.parse(text) == null
-        }
         OutlinedTextField(
             value = deviceDetails.pn,
             onValueChange = {
                 onValueChange(deviceDetails.copy(pn = it))
-                validatePN(deviceDetails.pn)
             },
             label = { Text(stringResource(R.string.device_pn_req)) },
             placeholder = { Text(text = "AAAAA-RR") },
-            isError = isPNError,
-            supportingText = { if (isPNError) {Text(text = "Required format: AAAAA-RR", color = MaterialTheme.colorScheme.error) }},
+            isError = !deviceUiState.isPnValid,
+            supportingText = { if (!deviceUiState.isPnValid) {Text(text = "Required format: AAAAA-RR", color = MaterialTheme.colorScheme.error) }},
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -164,20 +155,15 @@ fun DeviceInputForm(
             enabled = enabled,
             singleLine = true
         )
-        var isSNError by rememberSaveable { mutableStateOf(false) }
-        fun validateSN(text: String) {
-            isSNError = SerialNumberParser.parse(text) == null
-        }
         OutlinedTextField(
             value = deviceDetails.sn,
             onValueChange = {
                 onValueChange(deviceDetails.copy(sn = it))
-                validateSN(deviceDetails.sn)
             },
             label = { Text(stringResource(R.string.device_sn_req)) },
             placeholder = { Text(text = "YYMM-NNNNN-UU") },
-            isError = isSNError,
-            supportingText = { if (isSNError) {Text(text = "Required format: YYMM-NNNNN-UU", color = MaterialTheme.colorScheme.error) }},
+            isError = !deviceUiState.isSnValid,
+            supportingText = { if (!deviceUiState.isSnValid) {Text(text = "Required format: YYMM-NNNNN-UU", color = MaterialTheme.colorScheme.error) }},
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -203,7 +189,7 @@ private fun DeviceEntryScreenPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "60211-A2", sn = "2303-00005-E3"
-            )
+            ), true, true, true
         ), onDeviceValueChange = {}, onSaveClick = {})
     }
 }
@@ -214,19 +200,19 @@ private fun DeviceEntryScreenEmptyPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "", sn = ""
-            )
+            ), true, true, true
         ), onDeviceValueChange = {}, onSaveClick = {})
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun DeviceEntryScreenPNIncorrectPreview() {
+private fun DeviceEntryScreenPnIncorrectPreview() {
     GaaiTheme {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
-                pn = "12-34", sn = "34-56-78"
-            )
+                pn = "12-34", sn = "1234-56789-00"
+            ), false, true, false
         ), onDeviceValueChange = {}, onSaveClick = {})
     }
 }

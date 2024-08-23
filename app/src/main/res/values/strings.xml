@@ -14,4 +14,5 @@
     <string name="device_pn_req">Device Product Number (PN)*</string>
     <string name="device_sn_req">Device Serial Number (SN)*</string>
     <string name="required_fields">*required fields</string>
+    <string name="ev_charger_content_desc">EV Charger item</string>
 </resources>

@@ -22,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.DevicesRepository
+import be.cuypers_ghys.gaai.util.ProductNumberParser
+import be.cuypers_ghys.gaai.util.SerialNumberParser
 
 /**
  * ViewModel to validate and insert devices in the Room database.
@@ -39,8 +41,10 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository) : V
      * a validation for input values.
      */
     fun updateUiState(deviceDetails: DeviceDetails) {
+        val isSnValid =  validateSn(deviceDetails)
+        val isPnValid =  validatePn(deviceDetails)
         deviceUiState =
-            DeviceUiState(deviceDetails = deviceDetails, isEntryValid = validateInput(deviceDetails))
+            DeviceUiState(deviceDetails = deviceDetails, isSnValid = isSnValid, isPnValid = isPnValid, isEntryValid = isSnValid && isPnValid )
     }
 
     /**
@@ -52,10 +56,20 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository) : V
         }
     }
 
-    private fun validateInput(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
+    private fun validateSn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
         return with(uiState) {
-            pn.isNotBlank() && sn.isNotBlank()
+            SerialNumberParser.parse(sn) != null
         }
+    }
+
+    private fun validatePn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
+        return with(uiState) {
+            ProductNumberParser.parse(pn) != null
+        }
+    }
+
+    private fun validateInput(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
+        return validateSn(uiState) && validatePn(uiState)
     }
 }
 
@@ -64,7 +78,9 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository) : V
  */
 data class DeviceUiState(
     val deviceDetails: DeviceDetails = DeviceDetails(),
-    val isEntryValid: Boolean = false
+    val isEntryValid: Boolean = false,
+    val isSnValid: Boolean = false,
+    val isPnValid: Boolean = false
 )
 
 data class DeviceDetails(
