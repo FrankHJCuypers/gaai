@@ -16,8 +16,9 @@
 package be.cuypers_ghys.gaai.data
 
 import android.content.Context
-import be.cuypers_ghys.gaai.ble.DummyGaaiBleService
-import be.cuypers_ghys.gaai.ble.GaaiBleService
+import be.cuypers_ghys.gaai.ble.BleRepository
+import be.cuypers_ghys.gaai.ble.NordicBleRepository
+import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
 
 /**
@@ -25,20 +26,29 @@ import be.cuypers_ghys.gaai.ble.GaaiBleService
  */
 interface AppContainer {
     val devicesRepository: DevicesRepository
+    val bleRepository: BleRepository
 }
 
 /**
  *  [AppContainer] implementation that provides instance of [OfflineDevicesRepository]
+ *  and [NordicBleRepository]
  *
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
 class DefaultAppContainer(context : Context): AppContainer {
-    private val gaaiBleService : GaaiBleService = DummyGaaiBleService()
+//    private val gaaiBleService : GaaiBleService = DummyGaaiBleService()
 
     /**
-     * Implementation for [DevicesRepository]
+     * Implementation for [DevicesRepository].
      */
     override val devicesRepository : DevicesRepository by lazy {
         OfflineDevicesRepository(GaaiDatabase.getDatabase(context).deviceDao())
+    }
+
+    /**
+     * Implementation for [BleRepository].
+     */
+    override val bleRepository : BleRepository by lazy {
+        NordicBleRepository(BleScanner(context))
     }
 }

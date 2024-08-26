@@ -21,6 +21,30 @@ import org.junit.jupiter.api.Test
 class ByteArrayHelpersTest {
 
     @Test
+    fun toUint32_LE_correct() {
+        val ba = ByteArray(6)
+        ba.toUint32LE(1, 0x12345678u)
+        Assertions.assertEquals(0x0.toByte(), ba[0])
+        Assertions.assertEquals(0x78.toByte(), ba[1])
+        Assertions.assertEquals(0x56.toByte(), ba[2])
+        Assertions.assertEquals(0x34.toByte(), ba[3])
+        Assertions.assertEquals(0x12.toByte(), ba[4])
+        Assertions.assertEquals(0x0.toByte(), ba[5])
+    }
+
+    @Test
+    fun toUint32_LE_MSBitSetInAllBytes() {
+        val ba = ByteArray(6)
+        ba.toUint32LE(1, 0xC2D4E6F8u)
+        Assertions.assertEquals(0x0.toByte(), ba[0])
+        Assertions.assertEquals(0xF8.toByte(), ba[1])
+        Assertions.assertEquals(0xE6.toByte(), ba[2])
+        Assertions.assertEquals(0xD4.toByte(), ba[3])
+        Assertions.assertEquals(0xC2.toByte(), ba[4])
+        Assertions.assertEquals(0x0.toByte(), ba[5])
+    }
+
+    @Test
     fun toUint16_LE_correct() {
         val ba = ByteArray(4)
         ba.toUint16LE(1, 0x1234u)

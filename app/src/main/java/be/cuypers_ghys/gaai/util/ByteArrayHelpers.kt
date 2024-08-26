@@ -37,6 +37,18 @@ fun ByteArray.toUint16BE(offset: Int, value: UInt) {
 }
 
 /**
+ * Writes the *value* as a 4-byte Little Endian value at position *offset* in the ByteArray.
+ * @param offset Offset to start writing in the ByteArray.
+ * @param value Value to write in the ByteArray.
+ */
+fun ByteArray.toUint32LE(offset: Int, value: UInt) {
+    this[offset] = (value).toByte()
+    this[offset+1] = (value shr 8).toByte()
+    this[offset+2] = (value shr 16).toByte()
+    this[offset+3] = (value shr 24).toByte()
+}
+
+/**
  * Reads the 2-byte Unsigned Little Endian value at position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.

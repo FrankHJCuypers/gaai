@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.2"
+cbor = "0.01.02"
 kotlin = "2.0.10"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -17,6 +18,7 @@ ksp = "2.0.10-1.0.24"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+cbor = { module = "com.google.iot.cbor:cbor", version.ref = "cbor" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -32,6 +34,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 nordicsemi-kotlin-ble-profile = { module = "no.nordicsemi.android.kotlin.ble:profile", version.ref = "nordicsemiKotlinBLE" }
+nordicsemi-kotlin-ble-scanner = { module = "no.nordicsemi.android.kotlin.ble:scanner", version.ref = "nordicsemiKotlinBLE" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

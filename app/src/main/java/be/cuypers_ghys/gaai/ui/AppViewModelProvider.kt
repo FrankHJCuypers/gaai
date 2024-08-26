@@ -37,7 +37,7 @@ object AppViewModelProvider {
 
         // Initializer for DeviceEntryViewModel
         initializer {
-            DeviceEntryViewModel(gaaiApplication().container.devicesRepository)
+            DeviceEntryViewModel(gaaiApplication().container.devicesRepository, gaaiApplication().container.bleRepository)
         }
 
         // Initializer for HomeViewModel

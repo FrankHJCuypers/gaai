@@ -3,4 +3,7 @@
 // TODO: enable GitHub discussions on the Gaai repository as soon as it is public.
 // TODO: use Kotlin-BLE-Library/profile.,,,,/common/CRC16 to compute MODBUS CRC? Is vey similar to MAXIM (other init value))
 // TODO: use DataByteArray.getIntValue(IntFormat.FORMAT_UINT16_LE, offset) to parse ints from BLE array. See e.g. Kotlin-BLE-Library/profile/src/main/java/...bps/BloodPressureMeasurementParser
+// TODO: implement explicit permission requirements check (see @SuppressLint("MissingPermission"))
+// TODO: Gaai crashed without android.permission.BLUETOOTH_CONNECT permission when starting scan.
+//       I gave manual permission. But should be improved.
 

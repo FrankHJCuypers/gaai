@@ -72,6 +72,12 @@ fun DeviceEntryScreen(
         DeviceEntryBody(
             deviceUiState = viewModel.deviceUiState,
             onDeviceValueChange = viewModel::updateUiState,
+            onScanClick = {
+                // Note: similar remark as for onSaveClick?
+                coroutineScope.launch {
+                    viewModel.scanDevice()
+                }
+            },
             onSaveClick = {
                 // Note: If the user rotates the screen very fast, the operation may get cancelled
                 // and the device may not be saved in the Database. This is because when config
@@ -98,6 +104,7 @@ fun DeviceEntryScreen(
 fun DeviceEntryBody(
     deviceUiState: DeviceUiState,
     onDeviceValueChange: (DeviceDetails) -> Unit,
+    onScanClick: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -110,6 +117,14 @@ fun DeviceEntryBody(
             onValueChange = onDeviceValueChange,
             modifier = Modifier.fillMaxWidth()
         )
+        Button(
+            onClick = onScanClick,
+            enabled = deviceUiState.isEntryValid,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(R.string.scan_action))
+        }
         Button(
             onClick = onSaveClick,
             enabled = deviceUiState.isEntryValid,
@@ -127,7 +142,6 @@ fun DeviceEntryBody(
 @Composable
 fun DeviceInputForm(
     deviceUiState: DeviceUiState,
-//    deviceDetails: DeviceDetails,
     modifier: Modifier = Modifier,
     onValueChange: (DeviceDetails) -> Unit = {},
     enabled: Boolean = true
@@ -153,7 +167,7 @@ fun DeviceInputForm(
             ),
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
-            singleLine = true
+            singleLine = true,
         )
         OutlinedTextField(
             value = deviceDetails.sn,
@@ -190,7 +204,7 @@ private fun DeviceEntryScreenPreview() {
             DeviceDetails(
                 pn = "60211-A2", sn = "2303-00005-E3"
             ), true, true, true
-        ), onDeviceValueChange = {}, onSaveClick = {})
+        ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
     }
 }
 @Preview(showBackground = true)
@@ -201,7 +215,7 @@ private fun DeviceEntryScreenEmptyPreview() {
             DeviceDetails(
                 pn = "", sn = ""
             ), true, true, true
-        ), onDeviceValueChange = {}, onSaveClick = {})
+        ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
     }
 }
 
@@ -213,6 +227,6 @@ private fun DeviceEntryScreenPnIncorrectPreview() {
             DeviceDetails(
                 pn = "12-34", sn = "1234-56789-00"
             ), false, true, false
-        ), onDeviceValueChange = {}, onSaveClick = {})
+        ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
     }
 }

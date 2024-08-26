@@ -16,19 +16,36 @@
 
 package be.cuypers_ghys.gaai.ui.device
 
+import android.annotation.SuppressLint
+import android.os.ParcelUuid
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import be.cuypers_ghys.gaai.ble.BleRepository
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.DevicesRepository
 import be.cuypers_ghys.gaai.util.ProductNumberParser
 import be.cuypers_ghys.gaai.util.SerialNumberParser
+import be.cuypers_ghys.gaai.util.toUint32LE
+import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
+import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanFilter
+import no.nordicsemi.android.kotlin.ble.core.scanner.FilteredServiceData
+import no.nordicsemi.android.kotlin.ble.scanner.aggregator.BleScanResultAggregator
+
+// Tag for logging
+private const val TAG = "DeviceEntryViewModel"
 
 /**
  * ViewModel to validate and insert devices in the Room database.
  */
-class DeviceEntryViewModel(private val devicesRepository: DevicesRepository) : ViewModel() {
+class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, private val bleRepository: BleRepository) : ViewModel() {
 
     /**
      * Holds current device ui state
@@ -53,6 +70,32 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository) : V
     suspend fun saveDevice() {
         if (validateInput()) {
             devicesRepository.insertDevice(deviceUiState.deviceDetails.toDevice())
+        }
+    }
+
+    /**
+     * Scans an [Device] using BLE
+     */
+    @SuppressLint("MissingPermission")
+    suspend fun scanDevice() {
+        if (validateInput()) {
+            val serviceData = getFilteredDataService()
+            Log.d(TAG, "starting scan using filter $serviceData")
+            val aggregator = BleScanResultAggregator()
+            bleRepository.scanner.scan(listOf(BleScanFilter(serviceData= serviceData)))
+                .map { aggregator.aggregateDevices(it) } //Add new device and return an aggregated list
+                .onEach{ Log.d(TAG, "ble scanner found $it")}
+                .launchIn(viewModelScope) //Scanning will stop after we leave the screen
+        }
+    }
+
+    private fun getFilteredDataService(uiState: DeviceDetails = deviceUiState.deviceDetails): FilteredServiceData {
+        return with(uiState) {
+            val serialNumber = SerialNumberParser.parse(sn)
+            val hexSerialNumber = SerialNumberParser.calcHexSerialNumber(serialNumber!!)
+            val serviceData = ByteArray(4)
+            serviceData.toUint32LE(0, hexSerialNumber)
+            return FilteredServiceData(uuid = ParcelUuid(UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE), data = DataByteArray(serviceData))
         }
     }
 
