@@ -16,4 +16,5 @@
     <string name="required_fields">*required fields</string>
     <string name="ev_charger_content_desc">EV Charger item</string>
     <string name="scan_action">Scan device</string>
+    <string name="permissions">Permissions</string>
 </resources>

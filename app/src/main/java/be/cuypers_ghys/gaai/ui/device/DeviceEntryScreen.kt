@@ -43,8 +43,10 @@ import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
+import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsComponent
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import kotlinx.coroutines.launch
+
 
 object DeviceEntryDestination : NavigationDestination {
     override val route = "device_entry"
@@ -108,32 +110,36 @@ fun DeviceEntryBody(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
-    ) {
-        DeviceInputForm(
-            deviceUiState = deviceUiState,
-            onValueChange = onDeviceValueChange,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Button(
-            onClick = onScanClick,
-            enabled = deviceUiState.isEntryValid,
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
+
+//    MissingPermissionsComponent {
+        Column(
+            modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
         ) {
-            Text(text = stringResource(R.string.scan_action))
+            MissingPermissionsComponent()
+            DeviceInputForm(
+                deviceUiState = deviceUiState,
+                onValueChange = onDeviceValueChange,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Button(
+                onClick = onScanClick,
+                enabled = deviceUiState.isEntryValid,
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(R.string.scan_action))
+            }
+            Button(
+                onClick = onSaveClick,
+                enabled = deviceUiState.isEntryValid,
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(R.string.save_action))
+            }
         }
-        Button(
-            onClick = onSaveClick,
-            enabled = deviceUiState.isEntryValid,
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = stringResource(R.string.save_action))
-        }
-    }
+//    }
 }
 
 @Suppress("SpellCheckingInspection", "SpellCheckingInspection", "SpellCheckingInspection",

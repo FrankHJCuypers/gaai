@@ -25,6 +25,8 @@ import be.cuypers_ghys.gaai.ui.device.DeviceEntryDestination
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryScreen
 import be.cuypers_ghys.gaai.ui.home.HomeDestination
 import be.cuypers_ghys.gaai.ui.home.HomeScreen
+import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsDestination
+import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsScreen
 
 /**
  * Provides Navigation graph for the application.
@@ -36,7 +38,7 @@ fun GaaiNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = HomeDestination.route,
+        startDestination = MissingPermissionsDestination.route,
         modifier = modifier
     ) {
         composable(route = HomeDestination.route) {
@@ -54,5 +56,11 @@ fun GaaiNavHost(
             )
         }
 
+        composable(route = MissingPermissionsDestination.route) {
+            MissingPermissionsScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
     }
 }
