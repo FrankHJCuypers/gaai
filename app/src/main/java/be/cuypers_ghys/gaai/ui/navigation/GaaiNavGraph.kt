@@ -58,8 +58,7 @@ fun GaaiNavHost(
 
         composable(route = MissingPermissionsDestination.route) {
             MissingPermissionsScreen(
-                navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() }
+                navigateToHome = { navController.navigate(HomeDestination.route)  },
             )
         }
     }
