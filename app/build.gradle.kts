@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "be.cuypers_ghys.gaai"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "be.cuypers_ghys.gaai"
