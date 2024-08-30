@@ -17,7 +17,6 @@
 package be.cuypers_ghys.gaai.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -25,6 +24,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import be.cuypers_ghys.gaai.GaaiApplication
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryViewModel
 import be.cuypers_ghys.gaai.ui.home.HomeViewModel
+import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsViewModel
 
 // Tag for logging
 private const val TAG = "AppViewModelProvider"
@@ -42,10 +42,12 @@ object AppViewModelProvider {
 
         // Initializer for HomeViewModel
         initializer {
-            Log.d(TAG, "Initialize HomeViewModel")
-            val gaaiApplication = gaaiApplication()
-            Log.d(TAG, "GaaiApplication: $gaaiApplication")
             HomeViewModel(gaaiApplication().container.devicesRepository)
+        }
+
+        // Initializer for MissingPermissionsViewModel
+        initializer {
+            MissingPermissionsViewModel()
         }
     }
 }

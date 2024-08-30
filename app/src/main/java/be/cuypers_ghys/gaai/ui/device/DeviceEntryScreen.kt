@@ -138,8 +138,7 @@ fun DeviceEntryBody(
     }
 }
 
-@Suppress("SpellCheckingInspection", "SpellCheckingInspection", "SpellCheckingInspection",
-    "SpellCheckingInspection", "SpellCheckingInspection", "SpellCheckingInspection"
+@Suppress("SpellCheckingInspection"
 )
 @Composable
 fun DeviceInputForm(
@@ -205,7 +204,7 @@ private fun DeviceEntryScreenPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "60211-A2", sn = "2303-00005-E3"
-            ), true, true, true
+            ), isEntryValid = true, isSnValid = true, isPnValid = true
         ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
     }
 }
@@ -216,7 +215,7 @@ private fun DeviceEntryScreenEmptyPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "", sn = ""
-            ), true, true, true
+            ), isEntryValid = true, isSnValid = true, isPnValid = true
         ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
     }
 }
@@ -228,7 +227,7 @@ private fun DeviceEntryScreenPnIncorrectPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "12-34", sn = "1234-56789-00"
-            ), false, true, false
+            ), isEntryValid = false, isSnValid = true, isPnValid = false
         ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
     }
 }

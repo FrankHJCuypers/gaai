@@ -17,4 +17,11 @@
     <string name="ev_charger_content_desc">EV Charger item</string>
     <string name="scan_action">Scan device</string>
     <string name="permissions">Permissions</string>
+    <string name="request_permissions">Request permissions</string>
+    <string name="the_space">"The "</string>
+    <string name="command_and_space">", and "</string>
+    <string name="permission_is">permission is</string>
+    <string name="permissions_are">permissions are</string>
+    <string name="permissions_required">" required by the app.\nPlease grant all of them."</string>
+    <string name="permissions_denied">" denied. The app cannot function without them.\nPlease provide them in the App Settings."</string>
 </resources>

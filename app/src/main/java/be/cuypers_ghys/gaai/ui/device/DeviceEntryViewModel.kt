@@ -77,7 +77,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
      * Scans an [Device] using BLE
      */
     @SuppressLint("MissingPermission")
-    suspend fun scanDevice() {
+    fun scanDevice() {
         if (validateInput()) {
             val serviceData = getFilteredDataService()
             Log.d(TAG, "starting scan using filter $serviceData")

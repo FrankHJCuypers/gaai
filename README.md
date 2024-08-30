@@ -51,7 +51,30 @@ A bird name was chosen.
 
 ## Getting Started
 
-//TODO: explain how to run the app
+### Bluetooth 
+Gaai uses Bluetooth Low Energy (BLE) to connect to the Nexxtender Home, 
+so make sure that bluetooth is enabled on your mobile device.
+
+In addition, Gaai requires some Bluetooth related permissions in order to function.
+When Gaai is ran for the first time, it will ask for the required permissions.
+In that case, please press the "Request permissions" button, and then press "Allow".
+If you press "Don't Allow", Gaai will insist that it needs the permissions to continue,
+but recent Android versions only allow an app to ask only once for permissions.
+The only way out in that case is to go to Android Settings, then Apps, select Gaai and then Permissions. 
+in the "Not Allowed" section you will find the permission "Nearby devices":
+click on it and press "Allow". You now have granted the permission.
+
+Depending on the Android version, the following permissions are required:
++ Up to and including Android 11 (SDK <= 30): `android.permission.ACCESS_FINE_LOCATION`
++ Starting from Android 12 (SDK >= 31): `android.permission.BLUETOOTH_SCAN` and `android.permission.BLUETOOTH_CONNECT`
+
+Note that permission naming is confusing in Android! 
+Although the Gaai application code asks for the permissions `BLUETOOTH_SCAN` and `BLUETOOTH_CONNECT`
+in Android 12 and up:
++ The Android pop-up where you have to allow the permissions, will ask
+  "Allow Gaai to find, connect to, and determine the relative position of nearby devices."
++ In Android Settings -> Apps -> Gaai -> Permission the permission is named 
+  "Nearby Devices permission".
 
 ## Links
 
