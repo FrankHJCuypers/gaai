@@ -74,8 +74,7 @@ dependencies {
     implementation(libs.nordic.kotlin.ble.profile)
     implementation(libs.nordic.kotlin.ble.scanner)
     implementation(libs.cbor)
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
-//    runtimeOnly("com.google.accompanist:accompanist-permissions:0.34.0")
+    implementation(libs.accompanist.permissions)
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.androidx.room.runtime)
