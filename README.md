@@ -93,6 +93,12 @@ Useful information can be found at
 
 This project is licensed under the GNU AGPLv3 License. See the [LICENSE](LICENSE) file for details.
 
+## Acknowledgements
+
+Part of the code is based on existing code.
+The following code was heavily borrowed from:
+- [NordicSemiconductor Kotlin-BLE-Library uiscanner](https://github.com/NordicSemiconductor/Kotlin-BLE-Library/tree/main/uiscanner)
+
 ## Support
 
 For support, questions, or feedback, please open an issue on the [GitHub repository](https://github.com/FrankHJCuypers/Gaai/issues/new).

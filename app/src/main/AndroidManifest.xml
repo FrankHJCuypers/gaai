@@ -24,13 +24,16 @@
      This app does not use this location information in any way.
      Since Android 10 ACCESS_FINE_LOCATION is required and for that, the COARSE one also needs
      to be specified.
+
+     The Nexxtender Home announces itself as a beacon.
+     Without the ACCESS_FINE_LOCATION, beacons are not included in scanner results.
+     So even in Android 12+ we ask for ACCESS_FINE_LOCATION.
     -->
     <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        android:maxSdkVersion="30"/>
+        android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
-        android:maxSdkVersion="30"/>
+        />
     <!--
      On Android 12 new set of Bluetooth permissions were added. BLUETOOTH_SCAN permission is
      needed to scan for Bluetooth LE devices. The "never for location" flag is set, as we are not
@@ -39,13 +42,13 @@
     -->
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation"
         tools:targetApi="s" />
     <!--
      This permission is required in order to connect to a Bluetooth LE device on Android 12
      onwards.
     -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true"/>

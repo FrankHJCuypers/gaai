@@ -49,6 +49,18 @@ fun ByteArray.toUint32LE(offset: Int, value: UInt) {
 }
 
 /**
+ * Writes the *value* as a 4-byte Big Endian value at position *offset* in the ByteArray.
+ * @param offset Offset to start writing in the ByteArray.
+ * @param value Value to write in the ByteArray.
+ */
+fun ByteArray.toUint32BE(offset: Int, value: UInt) {
+    this[offset] = (value shr 24).toByte()
+    this[offset+1] = (value shr 16).toByte()
+    this[offset+2] = (value shr 8).toByte()
+    this[offset+3] = value.toByte()
+}
+
+/**
  * Reads the 2-byte Unsigned Little Endian value at position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
@@ -67,6 +79,18 @@ fun ByteArray.fromUint32LE(offset: Int) :UInt {
             or ((this[offset+1].toUInt() and 0xFFu) shl 8)
             or ((this[offset+2].toUInt() and 0xFFu) shl 16)
             or ((this[offset+3].toUInt() and 0xFFu) shl 24))
+}
+
+/**
+ * Reads the 4-byte Unsigned Big Endian value at position *offset* of the ByteArray.
+ * @param offset Offset to start reading in the ByteArray.
+ * @return Value read from the ByteArray.
+ */
+fun ByteArray.fromUint32BE(offset: Int) :UInt {
+    return ( (( this[offset].toUInt() and 0xFFu) shl 24)
+            or ((this[offset+1].toUInt() and 0xFFu) shl 16)
+            or ((this[offset+2].toUInt() and 0xFFu) shl 8)
+            or (this[offset+3].toUInt() and 0xFFu))
 }
 
 /**
