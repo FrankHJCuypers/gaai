@@ -37,7 +37,7 @@ class MissingPermissionsViewModel : ViewModel() {
         if (Build.VERSION.SDK_INT <= 30)
         {
             Log.d(TAG, "SDK <= 30")
-            permissions = listOf( // 3.
+            permissions = listOf(
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
         }
@@ -46,6 +46,7 @@ class MissingPermissionsViewModel : ViewModel() {
             Log.d(TAG, "SDK >= 30")
             permissions = permissions.plus(
                 listOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.BLUETOOTH_SCAN,
                     Manifest.permission.BLUETOOTH_CONNECT,
                 )
