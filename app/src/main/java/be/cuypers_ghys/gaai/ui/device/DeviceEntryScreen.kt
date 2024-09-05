@@ -84,7 +84,7 @@ fun DeviceEntryScreen(
                             viewModel.updateUiState(EntryState.SCANNING)
                             viewModel.scanDevice()
                         }
-                    EntryState.SCANNING -> {
+                    EntryState.SCANNING, EntryState.DUPLICATE_DEVICE_FOUND -> {
                         viewModel.updateUiState(EntryState.ENTRY_VALID)
                         viewModel.cancelScanDevice()
                     }
@@ -147,6 +147,7 @@ fun DeviceEntryBody(
                     EntryState.ENTRY_VALID -> stringResource(R.string.scan_action)
                     EntryState.SCANNING -> stringResource(R.string.cancel_scanning)
                     EntryState.DEVICE_FOUND -> stringResource(R.string.save_action)
+                    EntryState.DUPLICATE_DEVICE_FOUND -> stringResource(R.string.cancel_scanning)
                 }
             )
         }
@@ -159,10 +160,19 @@ fun DeviceDataForm(
     deviceUiState: DeviceUiState,
     modifier: Modifier = Modifier
 ){
-    if ( deviceUiState.entryState == EntryState.DEVICE_FOUND ) {
+    if ( (deviceUiState.entryState == EntryState.DEVICE_FOUND )
+        or (deviceUiState.entryState == EntryState.DUPLICATE_DEVICE_FOUND)){
         GaaiDeviceCard(device = deviceUiState.deviceDetails.toDevice(),
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small)))
+        if (deviceUiState.entryState == EntryState.DUPLICATE_DEVICE_FOUND) {
+            Text(
+                text = stringResource(R.string.duplicate),
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
+            )
+
+        }
     }
 }
 
@@ -269,6 +279,18 @@ private fun DeviceEntryScreenScanCorrectPreview() {
             DeviceDetails(
                 pn = "12-34", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
             ), entryState= EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = false
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeviceEntryScreenScanDuplicatePreview() {
+    GaaiTheme {
+        DeviceEntryBody(deviceUiState = DeviceUiState(
+            DeviceDetails(
+                pn = "12-34", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
+            ), entryState= EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = false
         ), onDeviceValueChange = {}, onButtonClick = {})
     }
 }

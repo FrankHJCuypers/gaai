@@ -33,6 +33,24 @@ interface DevicesRepository {
     fun getDeviceStream(id: Int): Flow<Device?>
 
     /**
+     * Count the number of devices already in the db with this mac.
+     * @param mac
+     */
+    suspend fun count(mac: String) : Int
+
+    /**
+     * Count the number of devices already in the db with this pn and sn.
+     * @param pn
+     * @param sn
+     */
+    suspend fun count(pn: String, sn:String) : Int
+
+    /**
+     * @return true if this device can be inserted with [insertDevice].
+     */
+    suspend fun canInsert(device:Device) : Boolean
+
+    /**
      * Insert device in the data source
      */
     suspend fun insertDevice(device: Device)

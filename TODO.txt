@@ -9,4 +9,5 @@
 // TODO: Document all classes/functions in KDoc
 // TODO: Allow to delete a device from the db in the app
 // TODO: Make sure no double entries can be created in the db.
+// TODO: GaaiTopAppBar() is just plain text. Add color and maybe the Gaai pictogram?
 

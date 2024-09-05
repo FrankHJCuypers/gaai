@@ -21,6 +21,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
@@ -34,6 +35,17 @@ interface DeviceDao {
 
     @Query("SELECT * from devices WHERE id = :id")
     fun getDevice(id: Int): Flow<Device>
+
+    @Query("SELECT COUNT(*) from devices WHERE mac = :mac")
+    suspend fun count(mac: String) : Int
+
+    @Query("SELECT COUNT(*) from devices WHERE pn = :pn AND sn = :sn")
+    suspend fun count(pn: String, sn:String) : Int
+
+    @Transaction
+    suspend fun canInsert(device:Device) : Boolean {
+        return (count(device.mac) == 0) and (count(device.pn, device.sn) == 0)
+    }
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.

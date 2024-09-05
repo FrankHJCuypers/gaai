@@ -29,4 +29,5 @@
     <string name="found_servicedata_colon">"Service data: "</string>
     <string name="device_deleted">Device deleted</string>
     <string name="delete">Delete</string>
+    <string name="duplicate">This device is already saved</string>
 </resources>

@@ -65,7 +65,13 @@ enum class EntryState {
     /**
      * The app found a match and will continue scanning.
      */
-    DEVICE_FOUND
+    DEVICE_FOUND,
+
+    /**
+     * The app found a match, but the device ia already registered.
+     * The app will continue scanning.
+     */
+    DUPLICATE_DEVICE_FOUND
 }
 
 /**
@@ -120,9 +126,13 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
     /**
      * Updates the [deviceUiState] with the BLE scan result.
      */
-    fun updateUiState(scanResult: BleScanResult) {
-        val deviceDetails = deviceUiState.deviceDetails.copy(mac = scanResult.device.address, serviceDataValue = serviceDataFilter.data.fromUint32BE(0).toInt())
-        deviceUiState = deviceUiState.copy(deviceDetails=deviceDetails, entryState = EntryState.DEVICE_FOUND )
+    suspend fun updateUiState(scanResult: BleScanResult) {
+        val deviceDetails = deviceUiState.deviceDetails.copy(
+            mac = scanResult.device.address,
+            serviceDataValue = serviceDataFilter.data.fromUint32BE(0).toInt()
+        )
+        val canInsert = devicesRepository.canInsert(deviceDetails.toDevice())
+        deviceUiState = deviceUiState.copy(deviceDetails=deviceDetails, entryState = if (canInsert) EntryState.DEVICE_FOUND else EntryState.DUPLICATE_DEVICE_FOUND)
     }
 
     /**

@@ -26,6 +26,12 @@ class OfflineDevicesRepository(private val deviceDao: DeviceDao) : DevicesReposi
 
     override fun getDeviceStream(id: Int): Flow<Device?> = deviceDao.getDevice(id)
 
+    override suspend fun count(mac: String)  = deviceDao.count(mac)
+
+    override suspend fun count(pn: String, sn: String)  = deviceDao.count(pn, sn)
+
+    override suspend fun canInsert(device:Device)  = deviceDao.canInsert(device)
+
     override suspend fun insertDevice(device: Device) = deviceDao.insert(device)
 
     override suspend fun deleteDevice(device: Device) = deviceDao.delete(device)
