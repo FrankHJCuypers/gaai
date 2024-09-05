@@ -168,7 +168,8 @@ private fun DevicesList(
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
-private fun GaaiDevice(
+// TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
+internal fun GaaiDevice(
     device: Device, modifier: Modifier = Modifier
 ) {
     Card(

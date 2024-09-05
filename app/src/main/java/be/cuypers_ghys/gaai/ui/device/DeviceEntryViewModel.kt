@@ -218,6 +218,9 @@ data class DeviceUiState(
     val entryState : EntryState = EntryState.INPUTTING
 )
 
+/**
+ * TODO: merge with [Device]?
+ */
 data class DeviceDetails(
     val id: Int = 0,
     val pn: String = "",
