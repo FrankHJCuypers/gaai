@@ -28,7 +28,11 @@ import kotlinx.coroutines.flow.stateIn
 /**
  * ViewModel to retrieve all devices in the Room database.
  */
-class HomeViewModel(devicesRepository: DevicesRepository) : ViewModel() {
+class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewModel() {
+
+    suspend fun removeDevice(device: Device) {
+        devicesRepository.deleteDevice(device)
+    }
 
     /**
      * Holds home ui state. The list of devices are retrieved from [DevicesRepository] and mapped to

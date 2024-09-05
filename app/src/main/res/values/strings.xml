@@ -27,4 +27,6 @@
     <string name="found_mac_colon">"MAC: "</string>
     <string name="cancel_scanning">Cancel scanning</string>
     <string name="found_servicedata_colon">"Service data: "</string>
+    <string name="device_deleted">Device deleted</string>
+    <string name="delete">Delete</string>
 </resources>

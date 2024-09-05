@@ -16,7 +16,10 @@
 
 package be.cuypers_ghys.gaai.ui.home
 
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,6 +36,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,14 +44,22 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -62,6 +74,8 @@ import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import be.cuypers_ghys.gaai.ui.theme.RedA400
+import kotlinx.coroutines.launch
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -79,6 +93,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val homeUiState by viewModel.homeUiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -111,6 +126,10 @@ fun HomeScreen(
         HomeBody(
             deviceList = homeUiState.deviceList,
             onItemClick = navigateToItemUpdate,
+            onItemRemove = {
+                coroutineScope.launch {
+                viewModel.removeDevice(it)}
+            },
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
         )
@@ -121,6 +140,7 @@ fun HomeScreen(
 private fun HomeBody(
     deviceList: List<Device>,
     onItemClick: (Int) -> Unit,
+    onItemRemove: (Device) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -139,6 +159,7 @@ private fun HomeBody(
             DevicesList(
                 deviceList = deviceList,
                 onItemClick = { onItemClick(it.id) },
+                onRemove = { onItemRemove(it)},
                 contentPadding = contentPadding,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
@@ -150,6 +171,7 @@ private fun HomeBody(
 private fun DevicesList(
     deviceList: List<Device>,
     onItemClick: (Device) -> Unit,
+    onRemove: (Device) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -158,18 +180,59 @@ private fun DevicesList(
         contentPadding = contentPadding
     ) {
         items(items = deviceList, key = { it.id }) { item ->
-            GaaiDevice(device = item,
+            GaaiDeviceItem(device = item,
+                onItemClick=onItemClick,
+                onRemove=onRemove,
                 modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
                     .clickable { onItemClick(item) })
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GaaiDeviceItem(
+    device: Device,
+    onItemClick: (Device) -> Unit,
+    onRemove: (Device) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val currentDevice by rememberUpdatedState(device)
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            when(it) {
+                SwipeToDismissBoxValue.StartToEnd -> {
+                    onRemove(currentDevice)
+                    Toast.makeText(context,
+                        context.getString(R.string.device_deleted), Toast.LENGTH_SHORT).show()
+                }
+                SwipeToDismissBoxValue.EndToStart -> {
+                    // Disabled in call to SwipeToDismissBox()
+                }
+                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
+            }
+            return@rememberSwipeToDismissBoxState true
+        },
+        // positional threshold of 25%
+        positionalThreshold = { it * .25f }
+    )
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromEndToStart = false,
+        modifier = modifier,
+        backgroundContent = { DismissBackground(dismissState)}
+        ) {
+            GaaiDeviceCard(device,modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+                .clickable { onItemClick(device) })
     }
 }
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
-internal fun GaaiDevice(
+internal fun GaaiDeviceCard(
     device: Device, modifier: Modifier = Modifier
 ) {
     Card(
@@ -223,6 +286,31 @@ internal fun GaaiDevice(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DismissBackground(dismissState: SwipeToDismissBoxState) {
+    val color = when (dismissState.dismissDirection) {
+        SwipeToDismissBoxValue.StartToEnd -> RedA400
+        SwipeToDismissBoxValue.EndToStart -> RedA400
+        SwipeToDismissBoxValue.Settled -> Color.Transparent
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color)
+            .padding(12.dp, 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Icon(
+            Icons.Default.Delete,
+            contentDescription = stringResource(R.string.delete)
+        )
+        Spacer(modifier = Modifier)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun HomeBodyPreview() {
@@ -231,7 +319,7 @@ fun HomeBodyPreview() {
             Device(1, "60211-A2", "2303-00005-E3","FF:B8:37:72:4F:F8", 0x17030005),
             Device(2, "60211-A2", "2303-00006-E3", "FF:B8:37:72:4F:F7", 0x17030006),
             Device(3, "60211-A2", "2303-00007-E3", "FF:B8:37:72:4F:F6", 0x17030007),
-        ), onItemClick = {})
+        ), onItemClick = {}, onItemRemove = {})
     }
 }
 
@@ -239,7 +327,7 @@ fun HomeBodyPreview() {
 @Composable
 fun HomeBodyEmptyListPreview() {
     GaaiTheme {
-        HomeBody(listOf(), onItemClick = {})
+        HomeBody(listOf(), onItemClick = {}, onItemRemove = {})
     }
 }
 
@@ -247,7 +335,7 @@ fun HomeBodyEmptyListPreview() {
 @Composable
 fun DevicePreview() {
     GaaiTheme {
-        GaaiDevice(
+        GaaiDeviceCard(
             Device(1, "60211-A2", "2303-00005-E3", "FF:B8:37:72:4F:F8", 0x17030005),
         )
     }

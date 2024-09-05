@@ -42,7 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
-import be.cuypers_ghys.gaai.ui.home.GaaiDevice
+import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import kotlinx.coroutines.launch
@@ -160,7 +160,7 @@ fun DeviceDataForm(
     modifier: Modifier = Modifier
 ){
     if ( deviceUiState.entryState == EntryState.DEVICE_FOUND ) {
-        GaaiDevice(device = deviceUiState.deviceDetails.toDevice(),
+        GaaiDeviceCard(device = deviceUiState.deviceDetails.toDevice(),
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small)))
     }
