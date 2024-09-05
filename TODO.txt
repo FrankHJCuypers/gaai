@@ -7,4 +7,6 @@
 // TODO: Implement consistent Logging with Log.d etc...
 // TODO: Test what happens if Bluetooth is switched off?
 // TODO: Document all classes/functions in KDoc
+// TODO: Allow to delete a device from the db in the app
+// TODO: Make sure no double entries can be created in the db.
 

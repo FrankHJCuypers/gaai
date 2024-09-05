@@ -73,21 +73,31 @@ fun DeviceEntryScreen(
         DeviceEntryBody(
             deviceUiState = viewModel.deviceUiState,
             onDeviceValueChange = viewModel::updateUiState,
-            onScanClick = {
-                // Note: similar remark as for onSaveClick?
-                coroutineScope.launch {
-                    viewModel.scanDevice()
+            // TODO: move body of onButtonClick to the [DeviceEntryViewModel]
+            onButtonClick = {
+                when(viewModel.deviceUiState.entryState) {
+                    EntryState.INPUTTING -> {}
+                    EntryState.ENTRY_VALID ->
+                        // Note: similar remark as for onSaveClick?
+                        coroutineScope.launch {
+                            viewModel.updateUiState(EntryState.SCANNING)
+                            viewModel.scanDevice()
+                        }
+                    EntryState.SCANNING -> {
+                        viewModel.updateUiState(EntryState.ENTRY_VALID)
+                        viewModel.cancelScanDevice()
+                    }
+                    EntryState.DEVICE_FOUND ->
+                        // Note: If the user rotates the screen very fast, the operation may get cancelled
+                        // and the device may not be saved in the Database. This is because when config
+                        // change occurs, the Activity will be recreated and the rememberCoroutineScope will
+                        // be cancelled - since the scope is bound to composition.
+                        coroutineScope.launch {
+                            viewModel.saveDevice()
+                            navigateBack()
+                        }
                 }
-            },
-            onSaveClick = {
-                // Note: If the user rotates the screen very fast, the operation may get cancelled
-                // and the device may not be saved in the Database. This is because when config
-                // change occurs, the Activity will be recreated and the rememberCoroutineScope will
-                // be cancelled - since the scope is bound to composition.
-                coroutineScope.launch {
-                    viewModel.saveDevice()
-                    navigateBack()
-                }
+
             },
             modifier = Modifier
                 .padding(
@@ -105,8 +115,7 @@ fun DeviceEntryScreen(
 fun DeviceEntryBody(
     deviceUiState: DeviceUiState,
     onDeviceValueChange: (DeviceDetails) -> Unit,
-    onScanClick: () -> Unit,
-    onSaveClick: () -> Unit,
+    onButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -119,22 +128,45 @@ fun DeviceEntryBody(
             onValueChange = onDeviceValueChange,
             modifier = Modifier.fillMaxWidth()
         )
+
+        DeviceDataForm(
+            deviceUiState = deviceUiState,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         Button(
-            onClick = onScanClick,
-            enabled = deviceUiState.isEntryValid,
+            onClick = onButtonClick,
+            enabled = deviceUiState.entryState!=EntryState.INPUTTING,
             shape = MaterialTheme.shapes.small,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(R.string.scan_action))
+            Text(text =
+                when(deviceUiState.entryState) {
+                    EntryState.INPUTTING ->  stringResource(R.string.scan_action)
+                    EntryState.ENTRY_VALID -> stringResource(R.string.scan_action)
+                    EntryState.SCANNING -> stringResource(R.string.cancel_scanning)
+                    EntryState.DEVICE_FOUND -> stringResource(R.string.save_action)
+                }
+            )
         }
-        Button(
-            onClick = onSaveClick,
-            enabled = deviceUiState.isEntryValid,
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = stringResource(R.string.save_action))
-        }
+    }
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+@Composable
+fun DeviceDataForm(
+    deviceUiState: DeviceUiState,
+    modifier: Modifier = Modifier
+){
+    if ( deviceUiState.entryState == EntryState.DEVICE_FOUND ) {
+        Text(
+            text = stringResource(R.string.found_mac_colon) + deviceUiState.deviceDetails.mac,
+            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
+        )//"0x"+device.serviceDataValue.toHexString()
+        Text(
+            text = stringResource(R.string.found_servicedata_colon) + "0x" + deviceUiState.deviceDetails.serviceDataValue.toHexString(),
+            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
+        )
     }
 }
 
@@ -191,6 +223,7 @@ fun DeviceInputForm(
         if (enabled) {
             Text(
                 text = stringResource(R.string.required_fields),
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
             )
         }
@@ -204,8 +237,8 @@ private fun DeviceEntryScreenPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "60211-A2", sn = "2303-00005-E3"
-            ), isEntryValid = true, isSnValid = true, isPnValid = true
-        ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
+            ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+        ), onDeviceValueChange = {}, onButtonClick = {})
     }
 }
 @Preview(showBackground = true)
@@ -215,8 +248,8 @@ private fun DeviceEntryScreenEmptyPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "", sn = ""
-            ), isEntryValid = true, isSnValid = true, isPnValid = true
-        ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
+            ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+        ), onDeviceValueChange = {}, onButtonClick = {})
     }
 }
 
@@ -227,7 +260,19 @@ private fun DeviceEntryScreenPnIncorrectPreview() {
         DeviceEntryBody(deviceUiState = DeviceUiState(
             DeviceDetails(
                 pn = "12-34", sn = "1234-56789-00"
-            ), isEntryValid = false, isSnValid = true, isPnValid = false
-        ), onDeviceValueChange = {}, onScanClick = {}, onSaveClick = {})
+            ), entryState= EntryState.INPUTTING, isSnValid = true, isPnValid = false
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeviceEntryScreenScanCorrectPreview() {
+    GaaiTheme {
+        DeviceEntryBody(deviceUiState = DeviceUiState(
+            DeviceDetails(
+                pn = "12-34", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
+            ), entryState= EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = false
+        ), onDeviceValueChange = {}, onButtonClick = {})
     }
 }

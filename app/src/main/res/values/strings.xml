@@ -24,4 +24,7 @@
     <string name="permissions_are">permissions are</string>
     <string name="permissions_required">" required by the app.\nPlease grant all of them."</string>
     <string name="permissions_denied">" denied. The app cannot function without them.\nPlease provide them in the App Settings."</string>
+    <string name="found_mac_colon">"MAC: "</string>
+    <string name="cancel_scanning">Cancel scanning</string>
+    <string name="found_servicedata_colon">"Service data: "</string>
 </resources>
