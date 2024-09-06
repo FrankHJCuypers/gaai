@@ -21,7 +21,7 @@ import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
 /**
- * Repository that provides BLE scanning for a [Device] .
+ * Repository that provides BLE scanning for a [Device][be.cuypers_ghys.gaai.data.Device] .
  */
 interface BleRepository {
     val scanner: BleScanner

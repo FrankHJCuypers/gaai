@@ -18,10 +18,12 @@ package be.cuypers_ghys.gaai.ui
 
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import be.cuypers_ghys.gaai.GaaiApplication
+import be.cuypers_ghys.gaai.ui.device.DeviceDetailsViewModel
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryViewModel
 import be.cuypers_ghys.gaai.ui.home.HomeViewModel
 import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsViewModel
@@ -38,6 +40,11 @@ object AppViewModelProvider {
         // Initializer for DeviceEntryViewModel
         initializer {
             DeviceEntryViewModel(gaaiApplication().container.devicesRepository, gaaiApplication().container.bleRepository)
+        }
+
+        // Initializer for DeviceDetailsViewModel
+        initializer {
+            DeviceDetailsViewModel( this.createSavedStateHandle(), gaaiApplication().container.devicesRepository, gaaiApplication().container.bleRepository)
         }
 
         // Initializer for HomeViewModel

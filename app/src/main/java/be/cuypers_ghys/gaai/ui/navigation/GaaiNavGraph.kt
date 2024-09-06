@@ -19,8 +19,12 @@ package be.cuypers_ghys.gaai.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import be.cuypers_ghys.gaai.ui.device.DeviceDetailsDestination
+import be.cuypers_ghys.gaai.ui.device.DeviceDetailsScreen
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryDestination
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryScreen
 import be.cuypers_ghys.gaai.ui.home.HomeDestination
@@ -43,14 +47,26 @@ fun GaaiNavHost(
     ) {
         composable(route = HomeDestination.route) {
             HomeScreen(
-                navigateToItemEntry = { navController.navigate(DeviceEntryDestination.route) },
-                navigateToItemUpdate = {
-//                    navController.navigate("${ItemDetailsDestination.route}/${it}")
+                navigateToDeviceEntry = { navController.navigate(DeviceEntryDestination.route) },
+                navigateToDeviceDetails = {
+                    navController.navigate("${DeviceDetailsDestination.route}/${it}")
                 }
             )
         }
         composable(route = DeviceEntryDestination.route) {
             DeviceEntryScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = DeviceDetailsDestination.routeWithArgs,
+            arguments = listOf(navArgument(DeviceDetailsDestination.deviceIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            DeviceDetailsScreen(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )

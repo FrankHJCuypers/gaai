@@ -16,6 +16,7 @@
 
 package be.cuypers_ghys.gaai.ui.home
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -77,6 +78,9 @@ import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.ui.theme.RedA400
 import kotlinx.coroutines.launch
 
+// Tag for logging
+private const val TAG = "HomeScreen"
+
 object HomeDestination : NavigationDestination {
     override val route = "home"
     override val titleRes = R.string.app_name
@@ -88,8 +92,8 @@ object HomeDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navigateToItemEntry: () -> Unit,
-    navigateToItemUpdate: (Int) -> Unit,
+    navigateToDeviceEntry: () -> Unit,
+    navigateToDeviceDetails: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -108,7 +112,7 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = navigateToItemEntry,
+                onClick = navigateToDeviceEntry,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
                     .padding(
@@ -125,8 +129,8 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeBody(
             deviceList = homeUiState.deviceList,
-            onItemClick = navigateToItemUpdate,
-            onItemRemove = {
+            onDeviceClick = navigateToDeviceDetails,
+            onDeviceRemove = {
                 coroutineScope.launch {
                 viewModel.removeDevice(it)}
             },
@@ -139,8 +143,8 @@ fun HomeScreen(
 @Composable
 private fun HomeBody(
     deviceList: List<Device>,
-    onItemClick: (Int) -> Unit,
-    onItemRemove: (Device) -> Unit,
+    onDeviceClick: (Int) -> Unit,
+    onDeviceRemove: (Device) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -158,8 +162,8 @@ private fun HomeBody(
         } else {
             DevicesList(
                 deviceList = deviceList,
-                onItemClick = { onItemClick(it.id) },
-                onRemove = { onItemRemove(it)},
+                onDeviceClick = { onDeviceClick(it.id) },
+                onDeviceRemove = { onDeviceRemove(it)},
                 contentPadding = contentPadding,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
@@ -170,8 +174,8 @@ private fun HomeBody(
 @Composable
 private fun DevicesList(
     deviceList: List<Device>,
-    onItemClick: (Device) -> Unit,
-    onRemove: (Device) -> Unit,
+    onDeviceClick: (Device) -> Unit,
+    onDeviceRemove: (Device) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -179,12 +183,12 @@ private fun DevicesList(
         modifier = modifier,
         contentPadding = contentPadding
     ) {
-        items(items = deviceList, key = { it.id }) { item ->
-            GaaiDeviceItem(device = item,
-                onItemClick=onItemClick,
-                onRemove=onRemove,
+        items(items = deviceList, key = { it.id }) { device ->
+            GaaiDeviceItem(device = device,
+                onDeviceClick=onDeviceClick,
+                onDeviceRemove=onDeviceRemove,
                 modifier = Modifier
-                    .clickable { onItemClick(item) })
+                    .clickable { onDeviceClick(device) })
         }
     }
 }
@@ -193,8 +197,8 @@ private fun DevicesList(
 @Composable
 fun GaaiDeviceItem(
     device: Device,
-    onItemClick: (Device) -> Unit,
-    onRemove: (Device) -> Unit,
+    onDeviceClick: (Device) -> Unit,
+    onDeviceRemove: (Device) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -203,7 +207,7 @@ fun GaaiDeviceItem(
         confirmValueChange = {
             when(it) {
                 SwipeToDismissBoxValue.StartToEnd -> {
-                    onRemove(currentDevice)
+                    onDeviceRemove(currentDevice)
                     Toast.makeText(context,
                         context.getString(R.string.device_deleted), Toast.LENGTH_SHORT).show()
                 }
@@ -225,7 +229,7 @@ fun GaaiDeviceItem(
         ) {
             GaaiDeviceCard(device,modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small))
-                .clickable { onItemClick(device) })
+                .clickable { onDeviceClick(device) })
     }
 }
 
@@ -235,6 +239,7 @@ fun GaaiDeviceItem(
 internal fun GaaiDeviceCard(
     device: Device, modifier: Modifier = Modifier
 ) {
+    Log.d(TAG, "Entered GaaiDeviceCard with device = $device")
     Card(
         modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -257,6 +262,8 @@ internal fun GaaiDeviceCard(
                 Row(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    Log.d(TAG, "GaaiDeviceCard printing first line")
+
                     Text(
                         text = device.pn,
                         style = MaterialTheme.typography.titleMedium,
@@ -283,6 +290,7 @@ internal fun GaaiDeviceCard(
                 }
             }
         }
+        Log.d(TAG, "exiting GaaiDeviceCard with device = $device")
     }
 }
 
@@ -319,7 +327,7 @@ fun HomeBodyPreview() {
             Device(1, "60211-A2", "2303-00005-E3","FF:B8:37:72:4F:F8", 0x17030005),
             Device(2, "60211-A2", "2303-00006-E3", "FF:B8:37:72:4F:F7", 0x17030006),
             Device(3, "60211-A2", "2303-00007-E3", "FF:B8:37:72:4F:F6", 0x17030007),
-        ), onItemClick = {}, onItemRemove = {})
+        ), onDeviceClick = {}, onDeviceRemove = {})
     }
 }
 
@@ -327,7 +335,7 @@ fun HomeBodyPreview() {
 @Composable
 fun HomeBodyEmptyListPreview() {
     GaaiTheme {
-        HomeBody(listOf(), onItemClick = {}, onItemRemove = {})
+        HomeBody(listOf(), onDeviceClick = {}, onDeviceRemove = {})
     }
 }
 

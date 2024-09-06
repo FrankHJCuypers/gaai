@@ -30,4 +30,5 @@
     <string name="device_deleted">Device deleted</string>
     <string name="delete">Delete</string>
     <string name="duplicate">This device is already saved</string>
+    <string name="device_details_title">Device details</string>
 </resources>

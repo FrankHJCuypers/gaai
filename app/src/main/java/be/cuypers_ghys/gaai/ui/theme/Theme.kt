@@ -48,6 +48,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+@JvmOverloads
 @Composable
 fun GaaiTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

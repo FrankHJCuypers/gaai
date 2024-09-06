@@ -240,7 +240,7 @@ data class DeviceDetails(
 )
 
 /**
- * Extension function to convert [DeviceState] to [Device].
+ * Extension function to convert [DeviceDetails] to [Device].
  */
 fun DeviceDetails.toDevice(): Device = Device(
     id = id,
