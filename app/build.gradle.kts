@@ -73,11 +73,13 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.nordic.kotlin.ble.profile)
     implementation(libs.nordic.kotlin.ble.scanner)
+    implementation(libs.nordic.kotlin.ble.client)
     implementation(libs.cbor)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
     annotationProcessor(libs.androidx.room.compiler)
     // To use Kotlin annotation processing tool (kapt)
     //kapt(libs.androidx.room.compiler)

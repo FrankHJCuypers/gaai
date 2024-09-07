@@ -31,4 +31,9 @@
     <string name="delete">Delete</string>
     <string name="duplicate">This device is already saved</string>
     <string name="device_details_title">Device details</string>
+    <string name="device_name">Device Name</string>
+    <string name="model_number">Model Number</string>
+    <string name="serial_number">Serial Number</string>
+    <string name="firmware_revision">Firmware Revision</string>
+    <string name="hardware_revision">Hardware Revision</string>
 </resources>

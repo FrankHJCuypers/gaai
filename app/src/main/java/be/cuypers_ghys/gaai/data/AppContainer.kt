@@ -49,6 +49,6 @@ class DefaultAppContainer(context : Context): AppContainer {
      * Implementation for [BleRepository].
      */
     override val bleRepository : BleRepository by lazy {
-        NordicBleRepository(BleScanner(context))
+        NordicBleRepository(context, BleScanner(context))
     }
 }

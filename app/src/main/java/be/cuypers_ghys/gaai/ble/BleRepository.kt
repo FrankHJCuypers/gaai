@@ -16,7 +16,11 @@
 
 package be.cuypers_ghys.gaai.ble
 
+import android.content.Context
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
+import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectOptions
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
@@ -24,10 +28,23 @@ import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
  * Repository that provides BLE scanning for a [Device][be.cuypers_ghys.gaai.data.Device] .
  */
 interface BleRepository {
+    val context: Context
     val scanner: BleScanner
 
     /**
      * Starts scanning and emit results in the Flow. Automatically stops scanning when CoroutineScope of the Flow is closed.
      */
     fun getScannerState(): Flow<BleScanResult>
+
+    /**
+     * Connects to the specified device. Device is provided using mac address.
+     * Uses the Application Context.
+     * @param macAddress MAC address of a device.
+     * @param options Connection options.
+     * @param logger Logger which is responsible for displaying logs from the BLE device.
+     * @return [ClientBleGatt] with initiated connection based on [options] provided.
+     */
+    suspend fun getClientBleGattConnection(macAddress: String,
+                                   scope: CoroutineScope,
+                                   options: BleGattConnectOptions = BleGattConnectOptions()) : ClientBleGatt
 }

@@ -16,6 +16,7 @@ navigationRuntimeKtx = "2.7.7"
 navigationCompose = "2.7.7"
 ksp = "2.0.10-1.0.24"
 accompanist = "0.34.0"
+lifecycleRuntimeComposeAndroid = "2.8.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +37,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 nordic-kotlin-ble-profile = { module = "no.nordicsemi.android.kotlin.ble:profile", version.ref = "nordicKotlinBLE" }
 nordic-kotlin-ble-scanner = { module = "no.nordicsemi.android.kotlin.ble:scanner", version.ref = "nordicKotlinBLE" }
+nordic-kotlin-ble-client = { module = "no.nordicsemi.android.kotlin.ble:client", version.ref = "nordicKotlinBLE" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "room"}
@@ -43,6 +45,7 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
+androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

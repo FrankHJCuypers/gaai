@@ -17,12 +17,25 @@
 package be.cuypers_ghys.gaai.ble
 
 import android.annotation.SuppressLint
+import android.content.Context
+import kotlinx.coroutines.CoroutineScope
+import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
+import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectOptions
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
 /**
  * Local devices database
  */
-class NordicBleRepository(override val scanner: BleScanner) : BleRepository {
+class NordicBleRepository(override val context: Context, override val scanner: BleScanner) : BleRepository {
     @SuppressLint("MissingPermission")
     override fun getScannerState()= scanner.scan()
+
+    @SuppressLint("MissingPermission")
+    override suspend fun getClientBleGattConnection(
+        macAddress: String,
+        scope: CoroutineScope,
+        options: BleGattConnectOptions
+    ): ClientBleGatt {
+        return ClientBleGatt.connect(context, macAddress, scope, options)
+    }
 }

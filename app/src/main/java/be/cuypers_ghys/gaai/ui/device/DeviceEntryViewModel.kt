@@ -169,7 +169,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
              * So don't pass filters to BleScanner.scan() !
              * scan() returns a Flow of BleScanResult, which consists of ServerDevice and BleScanResultData.
              */
-            currentJob = bleRepository.scanner.scan()
+            currentJob = bleRepository.getScannerState()
                 .filter{
                     filterServiceData(it)}
                 .onEach{
