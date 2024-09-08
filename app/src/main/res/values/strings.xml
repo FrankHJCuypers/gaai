@@ -36,4 +36,18 @@
     <string name="serial_number">Serial Number</string>
     <string name="firmware_revision">Firmware Revision</string>
     <string name="hardware_revision">Hardware Revision</string>
+    <string name="seconds">Seconds</string>
+    <string name="discriminator">Discriminator</string>
+    <string name="status">Status</string>
+    <string name="energy">Energy</string>
+    <string name="phasecount">Phase count</string>
+    <string name="timestamp">Timestamp</string>
+    <string name="l1">L1</string>
+    <string name="l2">L2</string>
+    <string name="l3">L3</string>
+    <string name="consumed">Consumed</string>
+    <string name="interval">Interval</string>
+    <string name="l1_power">L1 power</string>
+    <string name="l2_power">L2 power</string>
+    <string name="l3_power">L3 power</string>
 </resources>

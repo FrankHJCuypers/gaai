@@ -22,6 +22,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.cuypers_ghys.gaai.ble.BleRepository
+import be.cuypers_ghys.gaai.data.ChargingBasicData
+import be.cuypers_ghys.gaai.data.ChargingBasicDataParser
+import be.cuypers_ghys.gaai.data.ChargingCarData
+import be.cuypers_ghys.gaai.data.ChargingCarDataParser
+import be.cuypers_ghys.gaai.data.ChargingGridData
+import be.cuypers_ghys.gaai.data.ChargingGridDataParser
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.DevicesRepository
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
@@ -62,11 +68,14 @@ class DeviceDetailsViewModel(
         startGattClient(gaaiDevice)
     }
 
-    private lateinit var deviveNameCharacteristic: ClientBleGattCharacteristic
+    private lateinit var deviceNameCharacteristic: ClientBleGattCharacteristic
     private lateinit var modelNumberStringCharacteristic: ClientBleGattCharacteristic
     private lateinit var serialNumberStringCharacteristic: ClientBleGattCharacteristic
     private lateinit var firmwareRevisionStringCharacteristic: ClientBleGattCharacteristic
     private lateinit var hardwareRevisionStringCharacteristic: ClientBleGattCharacteristic
+    private lateinit var nexxtenderHomeChargingBasicDataCharacteristic: ClientBleGattCharacteristic
+    private lateinit var nexxtenderHomeChargingGridDataCharacteristic: ClientBleGattCharacteristic
+    private lateinit var nexxtenderHomeChargingCarDataCharacteristic: ClientBleGattCharacteristic
 
     @SuppressLint("MissingPermission")
     private fun startGattClient(gaaiDevice: Device) = viewModelScope.launch{
@@ -86,9 +95,11 @@ class DeviceDetailsViewModel(
 
     @SuppressLint("MissingPermission")
     private suspend fun configureGatt(services: ClientBleGattServices) {
+        Log.d(TAG, "Found the following services: $services")
+
         //Remember needed service and characteristics which are used to communicate with the DK.
         val genericAccessService = services.findService(NexxtenderHomeSpecification.UUID_BLE_GENERIC_ACCESS_SERVICE)!!
-        deviveNameCharacteristic = genericAccessService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_DEVICE_NAME_CHARACTERISTIC)!!
+        deviceNameCharacteristic = genericAccessService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_DEVICE_NAME_CHARACTERISTIC)!!
 
         val deviceInformationService = services.findService(NexxtenderHomeSpecification.UUID_BLE_DEVICE_INFORMATION_SERVICE)!!
         modelNumberStringCharacteristic = deviceInformationService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_MODEL_NUMBER_STRING_CHARACTERISTIC)!!
@@ -96,14 +107,33 @@ class DeviceDetailsViewModel(
         firmwareRevisionStringCharacteristic = deviceInformationService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_FIRMWARE_REVISION_STRING_CHARACTERISTIC)!!
         hardwareRevisionStringCharacteristic = deviceInformationService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_HARDWARE_REVISION_STRING_CHARACTERISTIC)!!
 
-        val deviceName = deviveNameCharacteristic.read().value.toString(Charsets.UTF_8)
+        val nexxtenderGenericService = services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_CDR_SERVICE)!!
+        nexxtenderHomeChargingBasicDataCharacteristic = nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC)!!
+        nexxtenderHomeChargingGridDataCharacteristic = nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC)!!
+        nexxtenderHomeChargingCarDataCharacteristic = nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_CAR_DATA_CHARACTERISTIC)!!
+
+
+
+        val deviceName = deviceNameCharacteristic.read().value.toString(Charsets.UTF_8)
         val modelNumber = modelNumberStringCharacteristic.read().value.toString(Charsets.UTF_8)
         val serialNumber = serialNumberStringCharacteristic.read().value.toString(Charsets.UTF_8)
         val firmwareRevision = firmwareRevisionStringCharacteristic.read().value.toString(Charsets.UTF_8)
         val hardwareRevision = hardwareRevisionStringCharacteristic.read().value.toString(Charsets.UTF_8)
         val deviceInformation = DeviceInformation(modelNumber=modelNumber,serialNumber=serialNumber,
             firmwareRevision=firmwareRevision,hardwareRevision=hardwareRevision )
-        _state.value=_state.value.copy(deviceName = deviceName, deviceInformation=deviceInformation)
+
+        val chargingBasicData =  ChargingBasicDataParser.parse(nexxtenderHomeChargingBasicDataCharacteristic.read().value)!!
+        Log.d(TAG, "Found the following chargingBasicData: $chargingBasicData")
+
+        val chargingGridData =  ChargingGridDataParser.parse(nexxtenderHomeChargingGridDataCharacteristic.read().value)!!
+        Log.d(TAG, "Found the following chargingGridData: $chargingGridData")
+
+        val chargingCarData =  ChargingCarDataParser.parse(nexxtenderHomeChargingCarDataCharacteristic.read().value)!!
+        Log.d(TAG, "Found the following chargingGridData: $chargingGridData")
+
+        _state.value=_state.value.copy(deviceName = deviceName, deviceInformation=deviceInformation,
+            chargingBasicData=chargingBasicData, chargingGridData= chargingGridData,
+            chargingCarData= chargingCarData)
 
     }
 
@@ -134,5 +164,8 @@ data class DeviceInformation(
  */
 data class DeviceDetailsViewState(
     val deviceName : String = "",
-    val deviceInformation : DeviceInformation = DeviceInformation()
+    val deviceInformation : DeviceInformation = DeviceInformation(),
+    val chargingBasicData : ChargingBasicData = ChargingBasicData(),
+    val chargingGridData : ChargingGridData = ChargingGridData(),
+    val chargingCarData : ChargingCarData = ChargingCarData(),
 )

@@ -23,29 +23,29 @@ package be.cuypers_ghys.gaai.data
  */
 data class ChargingCarData(
     /** Measurement time in Unix Time. */
-    val timestamp: UInt,
+    val timestamp: UInt=0u,
     /**
      * Car phase L1 current in dA.
      */
-    val l1: Short,
+    val l1: Short=0,
     /**
      * Car phase L2 current in dA.
      */
-    val l2: Short,
+    val l2: Short=0,
     /**
      * Car phase L3 current in dA.
      */
-    val l3: Short,
+    val l3: Short=0,
     /**
      * Car phase L1 power consumption in W.
      */
-    val p1: Short,
+    val p1: Short=0,
     /**
      * Car phase L2 power consumption in W.
      */
-    val p2: Short,
+    val p2: Short=0,
     /**
      * Car phase L3 power consumption in W.
      */
-    val p3: Short,
+    val p3: Short=0,
 )

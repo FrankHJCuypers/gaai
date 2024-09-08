@@ -49,12 +49,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
+import be.cuypers_ghys.gaai.data.ChargingBasicData
+import be.cuypers_ghys.gaai.data.ChargingCarData
+import be.cuypers_ghys.gaai.data.ChargingGridData
 import be.cuypers_ghys.gaai.data.Device
+import be.cuypers_ghys.gaai.data.Discriminator
+import be.cuypers_ghys.gaai.data.Status
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import be.cuypers_ghys.gaai.util.Timestamp
 
 // Tag for logging
 private const val TAG = "DeviceDetailsScreen"
@@ -114,7 +120,7 @@ fun DeviceDetailsBody(
     state: DeviceDetailsViewState,
     modifier: Modifier = Modifier
 ) {
-    Log.d(TAG, "Entering DeviceDetailsBody, device = ${device}")
+    Log.d(TAG, "Entering DeviceDetailsBody, device = $device")
 
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
@@ -140,10 +146,27 @@ fun DeviceDetailsBody(
                 .padding(dimensionResource(id = R.dimen.padding_small))
         )
 
+        GaaiChargingBasicDataCard(
+            chargingBasicData=state.chargingBasicData,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
+        GaaiChargingGridDataCard(
+            chargingGridData=state.chargingGridData,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
+        GaaiChargingCarDataCard(
+            chargingCarData=state.chargingCarData,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiDeviceNameCard(
@@ -182,7 +205,6 @@ internal fun GaaiDeviceNameCard(
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiDeviceInformationCard(
@@ -263,6 +285,328 @@ internal fun GaaiDeviceInformationCard(
     }
 }
 
+@Composable
+// TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
+internal fun GaaiChargingBasicDataCard(
+    chargingBasicData: ChargingBasicData, modifier: Modifier = Modifier
+) {
+    Log.d(TAG, "Entered GaaiChargingBasicDataCard with chargingBasicData = $chargingBasicData")
+    Card(
+        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row (
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.seconds),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingBasicData.seconds.toString(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.discriminator),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingBasicData.discriminator.toString(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.status),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingBasicData.status.toString(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.energy),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingBasicData.energy.toInt().toString()+" Wh",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.phasecount),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingBasicData.phaseCount.toString(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+        Log.d(TAG, "exiting GaaiChargingBasicDataCard with chargingBasicData = $chargingBasicData")
+    }
+}
+
+@Composable
+// TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
+internal fun GaaiChargingGridDataCard(
+    chargingGridData: ChargingGridData, modifier: Modifier = Modifier
+) {
+    Log.d(TAG, "Entered GaaiChargingGridDataCard with chargingGridData = $chargingGridData")
+    Card(
+        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row (
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.timestamp),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(text= Timestamp.toString(chargingGridData.timestamp),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l1),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingGridData.l1.toString()+" dA",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l2),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingGridData.l2.toString()+" dA",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l3),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingGridData.l3.toString()+" dA",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.consumed),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingGridData.consumed.toString()+" W",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.interval),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingGridData.interval.toInt().toString(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+        Log.d(TAG, "exiting GaaiChargingGridDataCard with chargingGridData = $chargingGridData")
+    }
+}
+
+@Composable
+// TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
+internal fun GaaiChargingCarDataCard(
+    chargingCarData: ChargingCarData, modifier: Modifier = Modifier
+) {
+    Log.d(TAG, "Entered GaaiChargingCarDataCard with chargingCarData = $chargingCarData")
+    Card(
+        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row (
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.timestamp),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(text= Timestamp.toString(chargingCarData.timestamp),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l1),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingCarData.l1.toString()+" dA",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l2),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingCarData.l2.toString()+" dA",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l3),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingCarData.l3.toString()+" dA",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l1_power),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingCarData.p1.toString()+" W",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l2_power),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingCarData.p2.toString()+" W",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.l3_power),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingCarData.p3.toString()+" W",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+        Log.d(TAG, "exiting GaaiChargingCarDataCard with chargingCarData = $chargingCarData")
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun DeviceDetailsScreenPreview() {
@@ -271,8 +615,26 @@ private fun DeviceDetailsScreenPreview() {
             device =  Device(
                 pn = "12345-AB", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
             ),
-        state = DeviceDetailsViewState(deviceName = "HOME2_",
+        state = DeviceDetailsViewState(
+            deviceName = "HOME2_",
             deviceInformation= DeviceInformation(modelNumber = "12345", serialNumber= "67890",
-            firmwareRevision = "1.23.4", hardwareRevision = "A1")))
+                firmwareRevision = "1.23.4", hardwareRevision = "A1"),
+            chargingBasicData = ChargingBasicData(seconds =123u, discriminator = Discriminator.STOPPED,
+                status = Status.PLUGGED, energy = 1234u, phaseCount = 2u),
+            chargingGridData = ChargingGridData(timestamp=0x662D0EFBu, l1=1, l2=2, l3=-1, consumed=12345, interval=345u),
+            chargingCarData = ChargingCarData(timestamp=0x662D0EFBu, l1=1, l2=2, l3=-1, p1=1111, p2 =22222, p3=3333)
+        ))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GaaiChargingCarDataCardPreview() {
+    GaaiTheme {
+        GaaiChargingCarDataCard(
+            chargingCarData = ChargingCarData(timestamp=0x662D0EFBu, l1=1, l2=2, l3=-1, p1=1111, p2 =22222, p3=3333),
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+            )
     }
 }

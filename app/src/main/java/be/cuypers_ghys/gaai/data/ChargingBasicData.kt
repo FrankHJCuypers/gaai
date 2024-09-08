@@ -37,15 +37,15 @@ enum class Status {
  */
 data class ChargingBasicData(
     /** Number of seconds since start of charging? */
-    val seconds: UShort,
+    val seconds: UShort =0u,
     /** State of the discriminator. */
-    val discriminator: Discriminator,
+    val discriminator: Discriminator = Discriminator.UNKNOWN,
     /** State of the charger. */
-    val status : Status,
+    val status : Status = Status.UNKNOWN,
     /** Not yet decoded Status */
-    val rawStatus: Byte,
-     /** Total energy in Wh charged during this session? */
-    val energy: UInt,
+    val rawStatus: Byte = 0,
+    /** Total energy in Wh charged during this session? */
+    val energy: UInt = 0u,
     /** Charging Phase Count?*/
-    val phaseCount: UByte
+    val phaseCount: UByte =0u
 )
