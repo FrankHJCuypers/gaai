@@ -7,13 +7,15 @@
 [![kotlin](	https://img.shields.io/badge/Kotlin-B125EA?style=for-the-badge&logo=kotlin&logoColor=white)](https://developer.android.com/kotlin)
 [![compose](https://img.shields.io/badge/Jetpack-Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://developer.android.com/compose)
 
+[![alpha](https://img.shields.io/badge/version-experimantal-red)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
+
+
 [![github release](https://img.shields.io/github/v/release/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
 [![github release date](https://img.shields.io/github/release-date/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/releases)
 [![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/Gaai)](LICENSE)
 [![Gitea Last Commit](https://img.shields.io/gitea/last-commit/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/commits)
 [![github contributors](https://img.shields.io/github/contributors/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/graphs/contributors)
 [![github commit activity](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/main)
-
 
 # Simple Nexxtender Home android app
 
@@ -51,8 +53,11 @@ A bird name was chosen.
   Powerdale Nexxtender Home EV charger for data exchange and control
 
 ## Getting Started
+// TODO
+
 
 ### Bluetooth 
+
 Gaai uses Bluetooth Low Energy (BLE) to connect to the Nexxtender Home, 
 so make sure that bluetooth is enabled on your mobile device.
 
@@ -77,6 +82,21 @@ in Android 12 and up:
 + In Android Settings -> Apps -> Gaai -> Permission the permission is named 
   "Nearby Devices permission".
 
+### Bluetooth pairing
+
+The first time that a Nexxtender Home is connected to in Gaai, Gaai will show a pop-up asking to 
+enter the 6-digit PIN.
+After entering the PIN, pairing completes.
+
+If the mobile phone user later removes the Nexxtender *Home* device from the "Bluetooth" menu
+in Android, the pairing information is lost and Gaai will not automatically open the pairing 
+dialog again.
+The only options to restore from this situation are either of:
+- pair the device from the Android Bluetooth menu.
+- delete the Nexxtender Home from Gaai and then add it again.
+  Gaai will now again ask to pair.
+
+
 ## Links
 
 Useful information can be found at
@@ -99,6 +119,12 @@ This project is licensed under the GNU AGPLv3 License. See the [LICENSE](LICENSE
 Part of the code is based on existing code.
 The following code was heavily borrowed from:
 - [NordicSemiconductor Kotlin-BLE-Library uiscanner](https://github.com/NordicSemiconductor/Kotlin-BLE-Library/tree/main/uiscanner)
+
+## Disclaimer
+
+This app was developed by someone without prior knowledge of most of the components and tools used
+developing it: Android app development, Android Studio, Gradle, Kotlin, Jetpack compose, BLE, ...
+Treat it as such and use at your own risk.
 
 ## Support
 
