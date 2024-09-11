@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
+import be.cuypers_ghys.gaai.data.AuthorizationStatus
+import be.cuypers_ghys.gaai.data.ChargingAdvancedData
 import be.cuypers_ghys.gaai.data.ChargingBasicData
 import be.cuypers_ghys.gaai.data.ChargingCarData
 import be.cuypers_ghys.gaai.data.ChargingGridData
@@ -160,6 +162,12 @@ fun DeviceDetailsBody(
 
         GaaiChargingCarDataCard(
             chargingCarData=state.chargingCarData,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
+        GaaiChargingAdvancedDataCard(
+            chargingAdvancedData=state.chargingAdvancedData,
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small))
         )
@@ -607,23 +615,186 @@ internal fun GaaiChargingCarDataCard(
     }
 }
 
+@Composable
+// TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
+internal fun GaaiChargingAdvancedDataCard(
+    chargingAdvancedData: ChargingAdvancedData, modifier: Modifier = Modifier
+) {
+    Log.d(TAG, "Entered GaaiChargingAdvancedDataCard with chargingAdvancedData = $chargingAdvancedData")
+    Card(
+        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row (
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.timestamp),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(text= Timestamp.toString(chargingAdvancedData.timestamp),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.i_available),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingAdvancedData.iAvailable.toString()+" A",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.grid_power),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingAdvancedData.gridPower.toString()+" W",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.car_power),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingAdvancedData.carPower.toString()+" W",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.authorization_status),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = when (chargingAdvancedData.authorizationStatus.authStatus)
+                        {
+                            AuthorizationStatus.UNAUTHORIZED -> "Unauthorized"
+                            AuthorizationStatus.AUTHORIZED_DEFAULT -> "Authorized Default"
+                            AuthorizationStatus.AUTHORIZED_ECO -> "Authorized ECO"
+                            AuthorizationStatus.AUTHORIZED_MAX -> "Authorized MAX"
+                            AuthorizationStatus.CHARGE_STOPPED_IN_APP -> "Charge stopped in app"
+                            AuthorizationStatus.CHARGE_PAUSED -> "Charge paused"
+                            else -> {"Unknown"}
+                        },
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.error_code),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = chargingAdvancedData.errorCode.toString(),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+        Log.d(TAG, "exiting GaaiChargingAdvancedDataCard with chargingAdvancedData = $chargingAdvancedData")
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-private fun DeviceDetailsScreenPreview() {
+private fun DeviceDetailsPreview() {
     GaaiTheme {
         DeviceDetailsBody(
             device =  Device(
                 pn = "12345-AB", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
             ),
-        state = DeviceDetailsViewState(
-            deviceName = "HOME2_",
+            state = DeviceDetailsViewState(
+                deviceName = "HOME2_",
+                deviceInformation= DeviceInformation(modelNumber = "12345", serialNumber= "67890",
+                    firmwareRevision = "1.23.4", hardwareRevision = "A1"),
+                chargingBasicData = ChargingBasicData(seconds =123u, discriminator = Discriminator.STOPPED,
+                    status = Status.PLUGGED, energy = 1234u, phaseCount = 2u),
+                chargingGridData = ChargingGridData(timestamp=0x662D0EFBu, l1=1, l2=2, l3=-1, consumed=12345, interval=345u),
+                chargingCarData = ChargingCarData(timestamp=0x662D0EFBu, l1=1, l2=2, l3=-1, p1=1111, p2 =22222, p3=3333),
+                chargingAdvancedData = ChargingAdvancedData(timestamp=0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower= 32,
+                    authorizationStatus = AuthorizationStatus(0), errorCode = 0 )
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeviceInformationPreview() {
+    GaaiTheme {
+        GaaiDeviceInformationCard(
             deviceInformation= DeviceInformation(modelNumber = "12345", serialNumber= "67890",
                 firmwareRevision = "1.23.4", hardwareRevision = "A1"),
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small)
+                )
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun ChargingBasicDataPreview() {
+    GaaiTheme {
+        GaaiChargingBasicDataCard(
             chargingBasicData = ChargingBasicData(seconds =123u, discriminator = Discriminator.STOPPED,
-                status = Status.PLUGGED, energy = 1234u, phaseCount = 2u),
+                    status = Status.PLUGGED, energy = 1234u, phaseCount = 2u),
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small)
+            )
+        )
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+private fun ChargingGridDataPreview() {
+    GaaiTheme {
+        GaaiChargingGridDataCard(
             chargingGridData = ChargingGridData(timestamp=0x662D0EFBu, l1=1, l2=2, l3=-1, consumed=12345, interval=345u),
-            chargingCarData = ChargingCarData(timestamp=0x662D0EFBu, l1=1, l2=2, l3=-1, p1=1111, p2 =22222, p3=3333)
-        ))
+            modifier = Modifier
+                 .padding(dimensionResource(id = R.dimen.padding_small)
+            )
+        )
     }
 }
 
@@ -636,5 +807,18 @@ private fun GaaiChargingCarDataCardPreview() {
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_small))
             )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GaaiChargingAdvancedDataCardPreview() {
+    GaaiTheme {
+        GaaiChargingAdvancedDataCard(
+            chargingAdvancedData = ChargingAdvancedData(timestamp=0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower= 32,
+                authorizationStatus = AuthorizationStatus(0), errorCode = 0 ),
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+        )
     }
 }

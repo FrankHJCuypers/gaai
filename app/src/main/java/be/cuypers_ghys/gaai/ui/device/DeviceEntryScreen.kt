@@ -154,7 +154,6 @@ fun DeviceEntryBody(
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun DeviceDataForm(
     deviceUiState: DeviceUiState,

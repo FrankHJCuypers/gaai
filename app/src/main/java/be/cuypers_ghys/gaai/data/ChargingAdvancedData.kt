@@ -75,26 +75,26 @@ data class AuthorizationStatus ( val authStatus: Byte) {
  */
 data class ChargingAdvancedData(
     /** Measurement time in Unix Time. */
-    val timestamp: UInt,
+    val timestamp: UInt = 0u,
     /**
      * Available capacity in A.
      */
-    val iAvailable: Short,
+    val iAvailable: Short = 0,
     /**
      * Total power consumption from the grid in W.
      */
-    val gridPower: Int,
+    val gridPower: Int = 0,
     /**
      * Total power consumption from the car in W.
      */
-    val carPower: Int,
+    val carPower: Int = 0,
     /**
      * Authorization status.
      *
      */
-    val authorizationStatus: AuthorizationStatus,
+    val authorizationStatus: AuthorizationStatus = AuthorizationStatus(0),
     /**
      * Error code returned by the Nexxtender Home. Values unknown.
      */
-    val errorCode: Byte,
+    val errorCode: Byte = 0,
 )

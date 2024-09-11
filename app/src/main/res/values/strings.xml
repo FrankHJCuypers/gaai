@@ -50,4 +50,9 @@
     <string name="l1_power">L1 power</string>
     <string name="l2_power">L2 power</string>
     <string name="l3_power">L3 power</string>
+    <string name="i_available">iAvailable</string>
+    <string name="grid_power">Grid power</string>
+    <string name="car_power">Car power</string>
+    <string name="authorization_status">Authorization status</string>
+    <string name="error_code">Error code</string>
 </resources>

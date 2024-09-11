@@ -22,6 +22,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.cuypers_ghys.gaai.ble.BleRepository
+import be.cuypers_ghys.gaai.data.ChargingAdvancedData
+import be.cuypers_ghys.gaai.data.ChargingAdvancedDataParser
 import be.cuypers_ghys.gaai.data.ChargingBasicData
 import be.cuypers_ghys.gaai.data.ChargingBasicDataParser
 import be.cuypers_ghys.gaai.data.ChargingCarData
@@ -76,17 +78,22 @@ class DeviceDetailsViewModel(
     private lateinit var nexxtenderHomeChargingBasicDataCharacteristic: ClientBleGattCharacteristic
     private lateinit var nexxtenderHomeChargingGridDataCharacteristic: ClientBleGattCharacteristic
     private lateinit var nexxtenderHomeChargingCarDataCharacteristic: ClientBleGattCharacteristic
+    private lateinit var nexxtenderHomeChargingAdvancedDataCharacteristic: ClientBleGattCharacteristic
 
     @SuppressLint("MissingPermission")
     private fun startGattClient(gaaiDevice: Device) = viewModelScope.launch{
+        Log.d(TAG, "Starting Gatt Client for gaaiDevice: $gaaiDevice")
+
         //Connect a Bluetooth LE device.
         val client = bleRepository.getClientBleGattConnection( gaaiDevice.mac, viewModelScope).also {
             this@DeviceDetailsViewModel.client = it
         }
 
         if (!client.isConnected) {
+            Log.d(TAG, "Gatt Client not connected.")
             return@launch
         }
+        Log.d(TAG, "Gatt Client connected. Discovering services.")
 
         //Discover services on the Bluetooth LE Device.
         val services = client.discoverServices()
@@ -111,6 +118,7 @@ class DeviceDetailsViewModel(
         nexxtenderHomeChargingBasicDataCharacteristic = nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC)!!
         nexxtenderHomeChargingGridDataCharacteristic = nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC)!!
         nexxtenderHomeChargingCarDataCharacteristic = nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_CAR_DATA_CHARACTERISTIC)!!
+        nexxtenderHomeChargingAdvancedDataCharacteristic = nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC)!!
 
 
 
@@ -129,11 +137,14 @@ class DeviceDetailsViewModel(
         Log.d(TAG, "Found the following chargingGridData: $chargingGridData")
 
         val chargingCarData =  ChargingCarDataParser.parse(nexxtenderHomeChargingCarDataCharacteristic.read().value)!!
-        Log.d(TAG, "Found the following chargingGridData: $chargingGridData")
+        Log.d(TAG, "Found the following chargingCarData: $chargingCarData")
+
+        val chargingAdvancedData =  ChargingAdvancedDataParser.parse(nexxtenderHomeChargingAdvancedDataCharacteristic.read().value)!!
+        Log.d(TAG, "Found the following chargingAdvancedData: $chargingAdvancedData")
 
         _state.value=_state.value.copy(deviceName = deviceName, deviceInformation=deviceInformation,
             chargingBasicData=chargingBasicData, chargingGridData= chargingGridData,
-            chargingCarData= chargingCarData)
+            chargingCarData= chargingCarData, chargingAdvancedData = chargingAdvancedData)
 
     }
 
@@ -168,4 +179,5 @@ data class DeviceDetailsViewState(
     val chargingBasicData : ChargingBasicData = ChargingBasicData(),
     val chargingGridData : ChargingGridData = ChargingGridData(),
     val chargingCarData : ChargingCarData = ChargingCarData(),
+    val chargingAdvancedData : ChargingAdvancedData = ChargingAdvancedData(),
 )
