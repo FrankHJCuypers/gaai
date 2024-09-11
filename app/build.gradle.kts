@@ -87,6 +87,11 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
+    // Include a slf4j implementation. libs.nordic.kotlin.ble uses it and without an implementation, no logging.
+    // Alternative is to include nordic-logger = { group = "no.nordicsemi.android.common", name = "logger", version.ref = "nordic-common" }?
+    // See Kotlin-BLE-Library, app_client packages, gradle script.
+    implementation("org.slf4j:slf4j-api:1.7.36")
+    implementation("org.slf4j:slf4j-simple:1.7.36")
 
 //    implementation(libs.androidx.room.common)
 
