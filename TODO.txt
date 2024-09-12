@@ -5,9 +5,16 @@
 // TODO: use DataByteArray.getIntValue(IntFormat.FORMAT_UINT16_LE, offset) to parse ints from BLE array. See e.g. Kotlin-BLE-Library/profile/src/main/java/...bps/BloodPressureMeasurementParser
 // TODO: Implement a version number and update procedure
 // TODO: Implement consistent Logging with Log.d etc...
-// TODO: Test what happens if Bluetooth is switched off?
+// TODO: Test if Bluetooth is enabled, and enable it if not.
+    See [https://developer.android.com/develop/connectivity/bluetooth/setup#kotlin] on how to do this.
+    Can not be done everywhere; I tried it and failed. Needs to be done from within a context?
+    See also how Nordic does it in their Android Common Library [https://github.com/NordicPlayground/Android-Common-Libraries/blob/main/permissions-ble/src/main/java/no/nordicsemi/android/common/permissions/ble/view/BluetoothDisabledView.kt]
+    It is part of the RequiredBluetooth & RequiredLocation used by the Nordic Kotlin-BLE-Library that I consulted to perform the BLE permissions in Gaai.
 // TODO: Document all classes/functions in KDoc
 // TODO: Allow to delete a device from the db in the app
 // TODO: Make sure no double entries can be created in the db.
 // TODO: GaaiTopAppBar() is just plain text. Add color and maybe the Gaai pictogram?
+// TODO: Move to the same logic as the ScannerView from the Nordic Kotlin-BLE-Library for Bluetooth permissions, using the  RequiredBluetooth & RequiredLocation composables.
+    I tried it once, but it requires teh use of Hilt for dependency injection and some other Nordic stuff, so I abandoned it.
+
 

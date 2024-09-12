@@ -17,6 +17,7 @@
 package be.cuypers_ghys.gaai
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import be.cuypers_ghys.gaai.data.AppContainer
 import be.cuypers_ghys.gaai.data.DefaultAppContainer
@@ -31,5 +32,11 @@ class GaaiApplication : Application() {
         super.onCreate()
         Log.d(TAG, "onCreate Called")
         container = DefaultAppContainer( this )
+        GaaiApplication.appContext = applicationContext
+    }
+
+    companion object {
+        lateinit  var appContext: Context
+            private set
     }
 }

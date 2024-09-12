@@ -55,4 +55,6 @@
     <string name="car_power">Car power</string>
     <string name="authorization_status">Authorization status</string>
     <string name="error_code">Error code</string>
+    <string name="bluetooth_disabled">Bluetooth disabled, but required by the app. Please enable.</string>
+    <string name="enable_bluetooth">Enable Bluetooth</string>
 </resources>

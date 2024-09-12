@@ -19,6 +19,9 @@ package be.cuypers_ghys.gaai.ui.permissions
 import android.Manifest
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 // Tag for logging
@@ -28,7 +31,26 @@ private const val TAG = "MissingPermissionsViewModel"
  * ViewModel to handle required permissions.
  * See [MissingPermissionsScreen].
  */
+// TODO: Move to the same logic as the ScannerView from the Nordic Kotlin-BLE-Library for Bluetooth permissions, using the  RequiredBluetooth & RequiredLocation composables.
+//  I tried it once, but it requires teh use of Hilt for dependency injection and some other Nordic stuff, so I abandoned it.
 class MissingPermissionsViewModel : ViewModel() {
+
+    /**
+     * Holds current BLE ui state
+     */
+    // TODO: the bleUiState is tracked in the viewModel, while the isBluetoothEnabledState is tracked in the MissingPermissions screen.
+    //  Can this be streamlined?
+    var bleUiState by mutableStateOf(BleUiState())
+        private set
+
+    /**
+     * Updates the [bleUiState] with the value provided in the argument.
+     * @param isBluetoothEnabledState Is ble enabled?.
+     */
+    fun updateUiState(isBluetoothEnabledState: Boolean) {
+        Log.d(TAG, "Updating isBluetoothEnabledState to $isBluetoothEnabledState")
+        bleUiState = bleUiState.copy( isBluetoothEnabledState =  isBluetoothEnabledState)
+    }
 
     var permissions: List<String> = emptyList()
 
@@ -54,3 +76,10 @@ class MissingPermissionsViewModel : ViewModel() {
         }
     }
 }
+
+/**
+ * Represents Ui State for BLE.
+ */
+data class BleUiState(
+    val isBluetoothEnabledState: Boolean = false,
+)

@@ -15,6 +15,12 @@
  */
 package be.cuypers_ghys.gaai.ui.permissions
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,11 +36,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
@@ -97,16 +106,74 @@ fun MissingPermissionsComponent(
 ) {
     Log.d(TAG, "Required permissions: $viewModel.permissions")
 
-    // rememberMultiplePermissionsState) is a composable, so can not be called from a ViewModel.
+    // rememberMultiplePermissionsState() is a composable, so can not be called from a ViewModel.
     val multiplePermissionsState = rememberMultiplePermissionsState(
         permissions = viewModel.permissions,
     )
+    val context = LocalContext.current
+    val isBluetoothEnabledState = isBluetoothEnabledState(context)
+    viewModel.updateUiState(isBluetoothEnabledState)
 
     Log.d(TAG, "permissionState: $multiplePermissionsState.")
+    Log.d(TAG, "isBluetoothEnabledState: $isBluetoothEnabledState.")
+
+    // broadcast receiver to receive the Bluetooth enabled event.
+    val bluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent?) {
+            val action = intent?.action
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                val state = intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                when (state) {
+                    BluetoothAdapter.STATE_OFF -> {
+                    }
+                    BluetoothAdapter.STATE_TURNING_OFF -> {
+                    }
+                    BluetoothAdapter.STATE_ON -> {
+                        viewModel.updateUiState(isBluetoothEnabledState(context))
+                    }
+                    BluetoothAdapter.STATE_TURNING_ON -> {
+                    }
+                }
+            }
+        }
+    }
+
+    // register the receiver
+    val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+    registerReceiver(context, bluetoothReceiver, filter, RECEIVER_NOT_EXPORTED)
+
     if (multiplePermissionsState.allPermissionsGranted) {
         Log.d(TAG, "All permissions granted")
-        navigateToHome()
+        if (viewModel.bleUiState.isBluetoothEnabledState ) {
+            Log.d(TAG, "Bluetooth enabled")
+            context.unregisterReceiver(bluetoothReceiver)
+            navigateToHome()
+        }
+        else {
+            // TODO: Factorize to its own Composable?
+            Column (
+                modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Text(
+                    text = stringResource(R.string.bluetooth_disabled)
+                    )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = {
+                    Log.d(TAG, "enabling Bluetooth")
+                    enableBluetooth(context)
+                    Log.d(TAG, "Updating Ui Bluetooth state")
+
+                    viewModel.updateUiState(isBluetoothEnabledState(context))
+                }) {
+                    Text(stringResource(R.string.enable_bluetooth))
+                }
+            }
+
+        }
     } else {
+        // TODO: Factorize to its own Composable?
         Column (
             modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -123,6 +190,22 @@ fun MissingPermissionsComponent(
             }
         }
     }
+}
+
+fun enableBluetooth(context: Context) {
+    context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+}
+
+private fun isBluetoothEnabledState(context :Context) :Boolean
+{
+    val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.getAdapter()
+    if (bluetoothAdapter == null) {
+        Log.d(TAG, "Bluetooth not supported")
+    }
+    val enabled = bluetoothAdapter?.isEnabled == true
+    Log.d(TAG, "isBluetoothEnabledState return $enabled")
+    return enabled
 }
 
 /**
@@ -160,10 +243,11 @@ private fun getTextToShowGivenPermissions(
             }
         }
     }
-    textToShow.append(if (revokedPermissionsSize == 1) stringResource(R.string.permission_is) else stringResource(
-        R.string.permissions_are
+    textToShow.append(
+        if (revokedPermissionsSize == 1) stringResource(R.string.permission_is)
+        else stringResource(R.string.permissions_are )
     )
-    )
+
     textToShow.append(
         if (shouldShowRationale) {
             stringResource(R.string.permissions_required)
