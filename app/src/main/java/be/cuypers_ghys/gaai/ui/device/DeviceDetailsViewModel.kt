@@ -95,6 +95,14 @@ class DeviceDetailsViewModel(
         }
         Log.d(TAG, "Gatt Client connected. Discovering services.")
 
+        /*
+         * Bluetooth caches the BLE GATT table.
+         * That can be a problem when analyzing the protocol with WireShark,
+         * because from the log, it can not map handles to UUIDs.
+         * If mapping is required for debugging purposes, uncomment the next line.
+         */
+        // client.clearServicesCache()
+
         //Discover services on the Bluetooth LE Device.
         val services = client.discoverServices()
         configureGatt(services)
