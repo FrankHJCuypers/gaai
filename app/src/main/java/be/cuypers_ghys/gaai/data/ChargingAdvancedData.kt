@@ -46,6 +46,7 @@ data class AuthorizationStatus ( val authStatus: Byte) {
        }
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     companion object {
         const val UNAUTHORIZED_BIT = 0
         const val AUTHORIZED_DEFAULT_BIT = 1

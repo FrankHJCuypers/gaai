@@ -50,8 +50,7 @@ data class TouTime (
      */
     @OptIn(ExperimentalMaterial3Api::class)
     constructor(timePickerState: TimePickerState) :
-            this(timePickerState.hour, timePickerState.minute) {
-    }
+            this(timePickerState.hour, timePickerState.minute)
 
     /**
      * Converts the time into a readable string.

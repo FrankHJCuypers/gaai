@@ -127,7 +127,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
     /**
      * Updates the [deviceUiState] with the BLE scan result.
      */
-    suspend fun updateUiState(scanResult: BleScanResult) {
+    private suspend fun updateUiState(scanResult: BleScanResult) {
         val deviceDetails = deviceUiState.deviceDetails.copy(
             mac = scanResult.device.address,
             serviceDataValue = serviceDataFilter.data.fromUint32BE(0).toInt()

@@ -200,7 +200,7 @@ class DeviceDetailsViewModel(
         }.launchIn(viewModelScope)
 
         // Read Configuration Data
-        nexxtenderHomeGenericStatusCharacteristic.getNotifications().onEach() {
+        nexxtenderHomeGenericStatusCharacteristic.getNotifications().onEach {
             Log.d(TAG, "Found Generic Status: $it")
             val status = it.value.fromUint16LE(0).toInt()
             Log.d(TAG, "Converted status: $status")

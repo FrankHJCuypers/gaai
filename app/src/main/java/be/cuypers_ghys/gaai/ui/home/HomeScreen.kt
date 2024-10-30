@@ -193,7 +193,6 @@ private fun DevicesList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GaaiDeviceItem(
     device: Device,
@@ -294,7 +293,6 @@ internal fun GaaiDeviceCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
     val color = when (dismissState.dismissDirection) {

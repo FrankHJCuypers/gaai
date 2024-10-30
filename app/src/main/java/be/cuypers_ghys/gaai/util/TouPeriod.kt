@@ -37,15 +37,14 @@ data class TouPeriod(
      * @param endTime End time in minutes since midnight.
      */
     constructor(startTime: Short, endTime: Short) :
-        this(startTime = TouTime(startTime), endTime = TouTime(endTime)){
-    }
+        this(startTime = TouTime(startTime), endTime = TouTime(endTime))
 
     /**
      * Converts the period into a readable string.
      * @return Time on HH:mm format
      */
     override fun toString(): String {
-        return String.format(Locale.getDefault(), "%s - %s", startTime.toString(), endTime.toString());
+        return String.format(Locale.getDefault(), "%s - %s", startTime.toString(), endTime.toString())
     }
 
 

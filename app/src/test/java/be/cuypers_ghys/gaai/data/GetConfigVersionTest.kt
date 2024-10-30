@@ -39,7 +39,6 @@ class GetConfigVersionTest {
          *
          * @return Stream of arguments to test
          */
-        @OptIn(ExperimentalStdlibApi::class)
         @JvmStatic
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(

@@ -101,7 +101,7 @@ object ConfigDataParserComposer {
         when ( configVersion ) {
             ConfigVersion.CONFIG_1_0 -> if (configGetData.size !=  13) return null
             ConfigVersion.CONFIG_1_1 -> if (configGetData.size !=  15) return null
-            ConfigVersion.CONFIG_CBOR -> return parseConfig_CBOR(configGetData);
+            ConfigVersion.CONFIG_CBOR -> return parseConfig_CBOR(configGetData)
         }
 
         val crc =  configGetData.fromUint16LE(configGetData.size-2)

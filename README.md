@@ -107,8 +107,6 @@ Useful information can be found at
 - [Discord chat](https://discord.gg/PTpExQJsWA) related to 
   [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
   and Nexxtmove for Home Assistant](https://github.com/geertmeersman/nexxtmove)
-- [Android Nexxtmove app](https://play.google.com/store/apps/details?id=com.powerdale.nexxtender)
-- [Android Nexxtender Installer app](https://play.google.com/store/apps/details?id=com.powerdale.homeinstaller)
 
 ## License
 
