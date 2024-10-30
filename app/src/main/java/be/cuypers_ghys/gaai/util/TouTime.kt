@@ -58,7 +58,7 @@ data class TouTime (
      * @return Time on HH:mm format
      */
     override fun toString(): String {
-        return hourMinutesFormatter.format(getCalendar().time)
+        return format(getCalendar().time)
     }
 
     fun getCalendar(): Calendar{
@@ -83,8 +83,8 @@ data class TouTime (
         /**
          * Format the time.
          */
-        fun format( time: Date) {
-            hourMinutesFormatter.format(time)
+        fun format( time: Date): String {
+            return hourMinutesFormatter.format(time)
         }
     }
 }
