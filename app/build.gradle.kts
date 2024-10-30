@@ -91,15 +91,15 @@ dependencies {
     // Include a slf4j implementation. libs.nordic.kotlin.ble uses it and without an implementation, no logging.
     // Alternative is to include nordic-logger = { group = "no.nordicsemi.android.common", name = "logger", version.ref = "nordic-common" }?
     // See Kotlin-BLE-Library, app_client packages, gradle script.
-    implementation("org.slf4j:slf4j-api:1.7.36")
-    implementation("org.slf4j:slf4j-simple:1.7.36")
+    implementation(libs.slf4j.api)
+    implementation(libs.slf4j.simple)
 
 //    implementation(libs.androidx.room.common)
 
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
-    implementation("io.github.g00fy2:versioncompare:1.5.0")
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.versioncompare)
 
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)

@@ -6,6 +6,7 @@ coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxDatetime = "0.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.10.01"
@@ -17,6 +18,9 @@ navigationCompose = "2.8.3"
 ksp = "2.0.10-1.0.24"
 accompanist = "0.34.0"
 lifecycleRuntimeComposeAndroid = "2.8.7"
+slf4jApi = "1.7.36"
+slf4jSimple = "1.7.36"
+versioncompare = "1.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +39,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 nordic-kotlin-ble-profile = { module = "no.nordicsemi.android.kotlin.ble:profile", version.ref = "nordicKotlinBLE" }
 nordic-kotlin-ble-scanner = { module = "no.nordicsemi.android.kotlin.ble:scanner", version.ref = "nordicKotlinBLE" }
 nordic-kotlin-ble-client = { module = "no.nordicsemi.android.kotlin.ble:client", version.ref = "nordicKotlinBLE" }
@@ -46,6 +51,9 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
+versioncompare = { module = "io.github.g00fy2:versioncompare", version.ref = "versioncompare" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
