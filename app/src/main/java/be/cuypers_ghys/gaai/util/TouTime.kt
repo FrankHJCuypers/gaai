@@ -16,6 +16,7 @@
 
 package be.cuypers_ghys.gaai.util
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
 import java.text.SimpleDateFormat
@@ -77,6 +78,7 @@ data class TouTime (
     }
 
     companion object {
+        @SuppressLint("ConstantLocale")
         val hourMinutesFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
         /**
          * Format the time.
