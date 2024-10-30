@@ -41,7 +41,6 @@ interface BleRepository {
      * Uses the Application Context.
      * @param macAddress MAC address of a device.
      * @param options Connection options.
-     * @param logger Logger which is responsible for displaying logs from the BLE device.
      * @return [ClientBleGatt] with initiated connection based on [options] provided.
      */
     suspend fun getClientBleGattConnection(macAddress: String,
