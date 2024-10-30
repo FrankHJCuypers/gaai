@@ -16,7 +16,7 @@ navigationRuntimeKtx = "2.8.3"
 navigationCompose = "2.8.3"
 ksp = "2.0.10-1.0.24"
 accompanist = "0.34.0"
-lifecycleRuntimeComposeAndroid = "2.8.5"
+lifecycleRuntimeComposeAndroid = "2.8.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
