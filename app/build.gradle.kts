@@ -53,6 +53,7 @@ android {
     }
 
     // Needed for JUnit5 to work
+    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests.all { it.useJUnitPlatform() }
     }
@@ -98,6 +99,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+    implementation("io.github.g00fy2:versioncompare:1.5.0")
+
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)

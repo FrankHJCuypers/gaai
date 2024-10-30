@@ -46,52 +46,57 @@ enum class ConfigVersion {
  */
 data class ConfigData(
     /** Maximum allowed grid consumption limit in A. */
-    val maxGrid: UByte,
+    val maxGrid: UByte = 0U,
 
     /**
      * Maximum allowed charging speed in A for the device.
      * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
      */
-    val maxDevice: UByte,
+    val maxDevice: UByte = 0U,
 
     /**
      * Default charging mode.
      */
-    val mode: Mode,
+    val mode: Mode = Mode.UNKNOWN,
 
     /** Minimum charging speed in A for the device. */
-    val safe: UByte,
+    val safe: UByte = 0U,
 
     /**
      * Codes the network type.
      * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
      */
-    val networkType: NetWorkType,
+    val networkType: NetWorkType = NetWorkType.UNKNOWN,
 
     /** Off peak charging start time of each weekday. Coded in minutes since midnight. */
-    val touWeekStart: Short,
+    val touWeekStart: Short = 0,
 
     /** Off peak charging end time of each weekday. Coded in minutes since midnight. */
-    val touWeekEnd: Short,
+    val touWeekEnd: Short = 0,
 
     /** Off peak charging start time of each weekend day. Coded in minutes since midnight. */
-    val touWeekendStart: Short,
+    val touWeekendStart: Short = 0,
 
     /** Off peak charging end time of each weekend day. Coded in minutes since midnight. */
-    val touWeekendEnd: Short,
+    val touWeekendEnd: Short = 0,
 
     /**
      * ?
      * Only available in [ConfigVersion.CONFIG_CBOR].
      */
-    val minDevice: UByte,
+    val minDevice: UByte = 0U,
 
     /**
      * ?
      * Only available in [ConfigVersion.CONFIG_CBOR].
      */
-    val iCapacity: UByte,
+    val iCapacity: UByte = 0U,
 
     /** Which configuration is used?. */
-    val configVersion: ConfigVersion
+    val configVersion: ConfigVersion = ConfigVersion.CONFIG_1_0,
+
+    /**
+     * Does this configuration still have its default values; i.e. not overwritten yet?
+     */
+    val default: Boolean = true
 )

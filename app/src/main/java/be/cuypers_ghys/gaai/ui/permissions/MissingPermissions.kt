@@ -199,7 +199,7 @@ fun enableBluetooth(context: Context) {
 private fun isBluetoothEnabledState(context :Context) :Boolean
 {
     val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.getAdapter()
+    val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
     if (bluetoothAdapter == null) {
         Log.d(TAG, "Bluetooth not supported")
     }

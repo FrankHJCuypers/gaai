@@ -17,6 +17,10 @@
 package be.cuypers_ghys.gaai.util
 
 /**
+ * @author Frank HJ Cuypers
+ */
+
+/**
  * Writes the *value* as a 2-byte Little Endian value at position *offset* in the ByteArray.
  * @param offset Offset to start writing in the ByteArray.
  * @param value Value to write in the ByteArray.

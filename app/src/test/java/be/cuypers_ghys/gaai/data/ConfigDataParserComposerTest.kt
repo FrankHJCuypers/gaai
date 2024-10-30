@@ -68,6 +68,39 @@ class ConfigDataParserComposerTest {
 
     @ParameterizedTest
     @MethodSource("usedCombinationsProvider")
+    fun parseGeneral_VerifyResultsFromKnownTestVectors(configData : ByteArray,
+                                                expectedMaxGrid: Int,
+                                                expectedMaxDevice: Int,
+                                                expectedMinDevice: Int,
+                                                expectedMode: Mode,
+                                                expectedSafe: Int,
+                                                expectedNetworkType: NetWorkType,
+                                                expectedTouWeekStart: Int,
+                                                expectedTouWeekEnd: Int,
+                                                expectedTouWeekendStart: Int,
+                                                expectedTouWeekendEnd: Int,
+                                                expectedICapacity: Int,
+                                                expectedConfigurationVersion: ConfigVersion) {
+
+        val computedConfigGetData = ConfigDataParserComposer.parse(configData, expectedConfigurationVersion)
+
+        assertNotNull(computedConfigGetData)
+        assertEquals(expectedMaxGrid.toUByte(), computedConfigGetData!!.maxGrid)
+        assertEquals(expectedMaxDevice.toUByte(), computedConfigGetData.maxDevice)
+        assertEquals(expectedMinDevice.toUByte(), computedConfigGetData.minDevice)
+        assertEquals(expectedMode, computedConfigGetData.mode)
+        assertEquals(expectedSafe.toUByte(), computedConfigGetData.safe)
+        assertEquals(expectedNetworkType, computedConfigGetData.networkType)
+        assertEquals(expectedTouWeekStart.toShort(), computedConfigGetData.touWeekStart)
+        assertEquals(expectedTouWeekEnd.toShort(), computedConfigGetData.touWeekEnd)
+        assertEquals(expectedTouWeekendStart.toShort(), computedConfigGetData.touWeekendStart)
+        assertEquals(expectedTouWeekendEnd.toShort(), computedConfigGetData.touWeekendEnd)
+        assertEquals(expectedICapacity.toUByte(), computedConfigGetData.iCapacity)
+        assertEquals(expectedConfigurationVersion, computedConfigGetData.configVersion)
+    }
+
+    @ParameterizedTest
+    @MethodSource("usedCombinationsProvider")
     fun compose_VerifyResultsFromKnownTestVectors(expectedConfigData : ByteArray,
                                                   maxGrid: Int,
                                                   maxDevice: Int,
@@ -88,7 +121,7 @@ class ConfigDataParserComposerTest {
             touWeekStart.toShort(),
             touWeekEnd.toShort(),
             touWeekendStart.toShort(),
-            touWeekendEnd.toShort(), minDevice.toUByte(), iCapacity.toUByte(), configurationVersion )
+            touWeekendEnd.toShort(), minDevice.toUByte(), iCapacity.toUByte(), configurationVersion, false )
         val configDataArray = ConfigDataParserComposer.compose(configData)
 
         if ( configurationVersion == ConfigVersion.CONFIG_CBOR) {

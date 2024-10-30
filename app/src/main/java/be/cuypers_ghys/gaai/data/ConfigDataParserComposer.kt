@@ -23,6 +23,7 @@ import be.cuypers_ghys.gaai.util.toUint16LE
 import com.google.iot.cbor.CborInteger
 import com.google.iot.cbor.CborMap
 import com.google.iot.cbor.CborObject
+import io.github.g00fy2.versioncompare.Version
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 
 /** Enumerates all CONFIG_CBOR keys. s*/
@@ -97,9 +98,10 @@ object ConfigDataParserComposer {
      *      Null if *configGetData* is not 13 or 15 bytes long or the CRC16 is not correct.
      */
     fun parse(configGetData: ByteArray, configVersion : ConfigVersion): ConfigData? {
-        if ((configGetData.size !=  13) && (configGetData.size !=  15))
-        {
-            return null
+        when ( configVersion ) {
+            ConfigVersion.CONFIG_1_0 -> if (configGetData.size !=  13) return null
+            ConfigVersion.CONFIG_1_1 -> if (configGetData.size !=  15) return null
+            ConfigVersion.CONFIG_CBOR -> return parseConfig_CBOR(configGetData);
         }
 
         val crc =  configGetData.fromUint16LE(configGetData.size-2)
@@ -147,7 +149,8 @@ object ConfigDataParserComposer {
             touWeekendEnd,
             0u,
             0u,
-            configVersion
+            configVersion,
+            false
         )
     }
 
@@ -177,6 +180,25 @@ object ConfigDataParserComposer {
         Mode.ECO_OPEN -> 4
         Mode.MAX_OPEN -> 5
         else -> 0x69
+    }
+
+    val VERSION_1_1_0 =  Version ("1.1.0")
+    val VERSION_3_50 =  Version ("3.50")
+
+    /**
+     * Determines the ConfigVersion to be used for the specified firmwareRevision.
+     * @param firmwareRevision The Firmware Revision as a string.
+     * @return The required ConfigVersion
+     */
+    fun getConfigVersion( firmwareRevision: String) : ConfigVersion {
+        val version = Version(firmwareRevision)
+        return if ( version < VERSION_1_1_0) {
+            ConfigVersion.CONFIG_1_0
+        } else if ( version >= VERSION_3_50 ) {
+            ConfigVersion.CONFIG_CBOR
+        } else {
+            ConfigVersion.CONFIG_1_1
+        }
     }
 
     /**
@@ -245,7 +267,8 @@ object ConfigDataParserComposer {
             touWeekendEnd,
             minDevice,
             iCapacity,
-            configVersion
+            configVersion,
+            false
         )
     }
 

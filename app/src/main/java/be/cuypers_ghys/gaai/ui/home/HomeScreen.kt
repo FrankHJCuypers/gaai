@@ -235,7 +235,7 @@ fun GaaiDeviceItem(
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
-// TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
+// TODO: factorize to its own file, since it is also used in DeviceEntryScreen.kt and DeviceDetailScreen.kt
 internal fun GaaiDeviceCard(
     device: Device, modifier: Modifier = Modifier
 ) {

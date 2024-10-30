@@ -62,7 +62,7 @@ fun GaaiNavHost(
 
         composable(
             route = DeviceDetailsDestination.routeWithArgs,
-            arguments = listOf(navArgument(DeviceDetailsDestination.deviceIdArg) {
+            arguments = listOf(navArgument(DeviceDetailsDestination.DEVICE_ID_ARG) {
                 type = NavType.IntType
             })
         ) {

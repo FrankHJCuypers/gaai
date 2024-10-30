@@ -17,6 +17,6 @@
 // TODO: Move to the same logic as the ScannerView from the Nordic Kotlin-BLE-Library for Bluetooth permissions, using the  RequiredBluetooth & RequiredLocation composables.
     I tried it once, but it requires teh use of Hilt for dependency injection and some other Nordic stuff, so I abandoned it.
 // TODO: Set the bluetooth PIN programmatically, without user action.
-// TODO: If the bluetooth PIN can not be set programmatically, include/dispplay it in GaaiDeviceCard()
+// TODO: If the bluetooth PIN can not be set programmatically, include/display it in GaaiDeviceCard()
 
 
