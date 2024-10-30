@@ -90,6 +90,7 @@ sealed class Filter(
  * @property uuid The service data UUID to filter by.
  * @property data The service data to filter by.
  */
+@Suppress("ArrayInDataClass")
 data class WithServiceData(
     val uuid: ParcelUuid, val data: ByteArray
 ): Filter(
