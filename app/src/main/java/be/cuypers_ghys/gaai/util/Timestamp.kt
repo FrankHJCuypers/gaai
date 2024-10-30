@@ -28,34 +28,32 @@ import kotlinx.datetime.toLocalDateTime
  */
 object Timestamp {
 
+    private val format = LocalDateTime.Format {
+        year()
+        char('-')
+        monthNumber()
+        char('-')
+        dayOfMonth()
+
+        char(' ')
+
+        hour()
+        char(':')
+        minute()
+        char(':')
+        second()
+    }
+
     /**
      * Converts the timestamp into a readable string.
      * @param timeStamp As received from the Nexxtender Home.
      * @return String representation of the timestamp.
-     *  null if the productNumberString did not match the [REGEX] regular expression.
      */
-    // TODO: Use format without T and Z letters. Note that commented out java.time format crashes the app.
     // TODO: junit tests
     fun toString(timeStamp: UInt): String {
-//        return java.time.format.DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
-//            .format(java.time.Instant.ofEpochSecond(timeStamp.toLong()))
         val gmtTime = Instant.fromEpochSeconds(timeStamp.toLong())
         val localDateTime = gmtTime.toLocalDateTime(TimeZone.currentSystemDefault())
-        val format = LocalDateTime.Format {
-            year()
-            char('-')
-            monthNumber()
-            char('-')
-            dayOfMonth()
 
-            char(' ')
-
-            hour()
-            char(':')
-            minute()
-            char(':')
-            second()
-        }
 
         return format.format(localDateTime)
     }
