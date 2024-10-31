@@ -41,8 +41,7 @@ data class TouTime (
      * @param minutes minutes part of the time.
      */
     constructor(hours: Int, minutes: Int) :
-        this((hours * 60 + minutes).toShort()) {
-    }
+        this((hours * 60 + minutes).toShort())
 
     /**
      * Creates an instance with the specified [timePickerState].

@@ -76,6 +76,7 @@ class ChargingGridDataParserTest {
          */
         @OptIn(ExperimentalStdlibApi::class)
         @JvmStatic
+        @Suppress("unused")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("1234567890ABCDEF1234567890ABEEDB".hexToByteArray(), 0x78563412, 0xAB90, 0xEFCD, 0x3412, 0x7856, 0xAB90),

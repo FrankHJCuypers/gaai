@@ -73,6 +73,7 @@ class TouTimeTest {
          * @return Stream of arguments to test
          */
         @JvmStatic
+        @Suppress("unused")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of(1234, 20, 34, "20:34"),

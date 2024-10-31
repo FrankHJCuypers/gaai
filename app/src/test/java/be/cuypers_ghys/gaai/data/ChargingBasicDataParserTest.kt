@@ -78,7 +78,7 @@ class ChargingBasicDataParserTest {
          *
          * @return Stream of arguments to test
          */
-        @Suppress("SpellCheckingInspection")
+        @Suppress("SpellCheckingInspection", "RedundantSuppression")
         @OptIn(ExperimentalStdlibApi::class)
         @JvmStatic
         fun usedCombinationsProvider(): Stream<Arguments> {

@@ -65,7 +65,7 @@ import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 private const val TAG = "DeviceDetailsViewModel"
 
 fun DataByteArray.Companion.fromUShort( command : Int) : DataByteArray {
-    return DataByteArray.from( (command and 0xFF).toByte(), ((command shr 8) and 0xFF).toByte() )
+    return from( (command and 0xFF).toByte(), ((command shr 8) and 0xFF).toByte() )
 }
 
 /**
@@ -316,7 +316,7 @@ class DeviceDetailsViewModel(
         writeGenericCommand(command)
     }
 
-    fun getDevice(deviceId: Int) = runBlocking {
+    private fun getDevice(deviceId: Int) = runBlocking {
         Log.d(TAG, "Getting Device with id $deviceId")
         return@runBlocking devicesRepository.getDeviceStream(deviceId).first()
     }

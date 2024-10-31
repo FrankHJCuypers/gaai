@@ -16,6 +16,7 @@
 
 package be.cuypers_ghys.gaai.data
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 object OperationAndStatusIDs {
     const val LOADER = 0x0000
     const val EVENT = 0x1000

@@ -29,6 +29,7 @@ import be.cuypers_ghys.gaai.ui.home.HomeViewModel
 import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsViewModel
 
 // Tag for logging
+@Suppress("unused")
 private const val TAG = "AppViewModelProvider"
 
 /**

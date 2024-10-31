@@ -14,8 +14,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.MODBUS
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
@@ -25,6 +28,9 @@ import com.google.iot.cbor.CborMap
 import com.google.iot.cbor.CborObject
 import io.github.g00fy2.versioncompare.Version
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
+
+// Tag for logging
+private const val TAG = "ConfigDataParser"
 
 /** Enumerates all CONFIG_CBOR keys. s*/
 @Suppress("SpellCheckingInspection")
@@ -54,6 +60,7 @@ enum class CborKey(val keyNum: Int) {
  *
  * @author Frank HJ Cuypers
  */
+@Suppress("MemberVisibilityCanBePrivate")
 object ConfigDataParserComposer {
     /**
      * Parses a byte array with the contents of the Config Get operation in Config_1_0 format into an
@@ -182,8 +189,8 @@ object ConfigDataParserComposer {
         else -> 0x69
     }
 
-    val VERSION_1_1_0 =  Version ("1.1.0")
-    val VERSION_3_50 =  Version ("3.50")
+    private val VERSION_1_1_0 =  Version ("1.1.0")
+    private val VERSION_3_50 =  Version ("3.50")
 
     /**
      * Determines the ConfigVersion to be used for the specified firmwareRevision.
@@ -239,8 +246,7 @@ object ConfigDataParserComposer {
             val intKey = entry.key as? CborInteger
             if ( (intValue!= null ) && (intKey != null)) {
                 val rawInt = intValue.intValueExact()
-                val rawKey = intKey.intValueExact()
-                when( rawKey ){
+                when(val rawKey = intKey.intValueExact()){
                     CborKey.ChargeMode.keyNum -> mode = getMode(rawInt)
                     CborKey.IMax.keyNum -> maxGrid = rawInt.toUByte()
                     CborKey.IEvseMax.keyNum -> maxDevice = rawInt.toUByte()
@@ -252,6 +258,12 @@ object ConfigDataParserComposer {
                     CborKey.TouWeekendStart.keyNum -> touWeekendStart = rawInt.toShort()
                     CborKey.TouWeekendStop.keyNum -> touWeekendEnd = rawInt.toShort()
                     CborKey.ICapacity.keyNum -> iCapacity = rawInt.toUByte()
+                    CborKey.BlePin.keyNum, CborKey.ModbusSlaveAddress.keyNum,
+                    CborKey.CycleRate.keyNum,CborKey.SolarMode.keyNum,CborKey.ChargingPhases.keyNum,
+                    CborKey.Timezone.keyNum,CborKey.RelayOffPeriod.keyNum,
+                    CborKey.ExternalRegulation.keyNum ->
+                        Log.d(TAG, "parseConfig_CBOR found unused key $rawKey")
+                    else -> Log.d(TAG, "parseConfig_CBOR found unsupported key $rawKey")
                 }
             }
         }
@@ -323,7 +335,7 @@ object ConfigDataParserComposer {
      * @return Byte array with the compose configuration.
      */
     @Suppress("FunctionName")
-    fun composeConfig_CBOR(configGetData: ConfigData): ByteArray {
+    private fun composeConfig_CBOR(configGetData: ConfigData): ByteArray {
         assert(configGetData.configVersion == ConfigVersion.CONFIG_CBOR)
 
         val dataMap = HashMap<CborObject,CborObject>()

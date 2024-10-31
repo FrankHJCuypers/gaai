@@ -157,6 +157,7 @@ fun DeviceEntryBody(
 @Composable
 fun DeviceDataForm(
     deviceUiState: DeviceUiState,
+    @Suppress("unused")
     modifier: Modifier = Modifier
 ){
     if ( (deviceUiState.entryState == EntryState.DEVICE_FOUND )

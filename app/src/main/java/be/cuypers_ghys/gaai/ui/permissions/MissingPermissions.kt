@@ -70,6 +70,7 @@ object MissingPermissionsDestination : NavigationDestination {
 @Composable
 fun MissingPermissionsScreen(
     navigateToHome: () -> Unit,
+    @Suppress("unused")
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = false
 ) {

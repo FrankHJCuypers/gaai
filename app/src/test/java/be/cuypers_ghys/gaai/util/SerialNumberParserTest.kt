@@ -116,6 +116,7 @@ class SerialNumberParserTest {
          * @return Stream of arguments to test
          */
         @JvmStatic
+        @Suppress("unused")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("2303-00005-E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),

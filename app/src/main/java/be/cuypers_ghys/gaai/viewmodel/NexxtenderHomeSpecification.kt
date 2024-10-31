@@ -21,10 +21,10 @@ import java.util.UUID
 object NexxtenderHomeSpecification {
 
     /** Base to convert 16-bit UUIDs into 128-bit UUIDs. */
-    const val UUID_BLE_SHORT_BASE = "0000%s-0000-1000-8000-00805f9b34fb"
+    private const val UUID_BLE_SHORT_BASE = "0000%s-0000-1000-8000-00805f9b34fb"
 
     /** Base to convert 8-bit Nexxtender Home service or characteristic into 128-bit UUIDs. */
-    const val UUID_NEXXTENDER_HOME_SHORT_BASE = "fd47416a-95fb-4206-88b5-b4a8045f75"
+    private const val UUID_NEXXTENDER_HOME_SHORT_BASE = "fd47416a-95fb-4206-88b5-b4a8045f75"
 
     /** BLE Generic Access Service UUID. */
     val UUID_BLE_GENERIC_ACCESS_SERVICE: UUID = from16bitString("1800")

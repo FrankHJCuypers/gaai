@@ -88,6 +88,7 @@ class ProductNumberParserTest {
          * @return Stream of arguments to test
          */
         @JvmStatic
+        @Suppress("unused")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("60211-A2", 60211, 0xA2),

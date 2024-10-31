@@ -47,7 +47,7 @@ class CRC8CCITT {
      * @param data The byte to add.
      * @return The current value of the CRC, unsigned.
      */
-    fun update(data: Byte): Int {
+    private fun update(data: Byte): Int {
         var ch = data.toInt() and 0xFF
         ch = (ch xor this.crc) and 0xFF
         for (i in 0..7) {

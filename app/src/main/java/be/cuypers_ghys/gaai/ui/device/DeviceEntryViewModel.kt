@@ -250,22 +250,3 @@ fun DeviceDetails.toDevice(): Device = Device(
     mac = mac,
     serviceDataValue = serviceDataValue
 )
-
-/**
- * Extension function to convert [Device] to [DeviceUiState]
- */
-fun Device.toDeviceUiState(entryState: EntryState = EntryState.INPUTTING): DeviceUiState = DeviceUiState(
-    deviceDetails = this.toDeviceDetails(),
-    entryState = entryState
-)
-
-/**
- * Extension function to convert [Device] to [DeviceDetails]
- */
-fun Device.toDeviceDetails(): DeviceDetails = DeviceDetails(
-    id = id,
-    pn = pn,
-    sn = sn,
-    mac = mac,
-    serviceDataValue = serviceDataValue
-)

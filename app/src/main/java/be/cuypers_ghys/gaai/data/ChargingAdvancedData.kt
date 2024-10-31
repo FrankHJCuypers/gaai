@@ -16,9 +16,6 @@
 
 package be.cuypers_ghys.gaai.data
 
-import android.content.Context
-import be.cuypers_ghys.gaai.R
-
 /**
  * Codes the bits in the authorization status.
  *
@@ -29,21 +26,9 @@ import be.cuypers_ghys.gaai.R
 // TODO: create Junit tests for this class.
 data class AuthorizationStatus ( val authStatus: Byte) {
 
+    @Suppress("unused")
     fun isSet(bit: Int ) : Boolean {
         return ((1 shl bit) and authStatus.toInt()) != 0
-    }
-
-        // TODO: move to a view. This is representation stuff.
-    fun toString(context : Context): String {
-       return when (authStatus) {
-           AUTHORIZED_MAX -> context.getString(R.string.authorized_max)
-           AUTHORIZED_ECO -> context.getString(R.string.authorized_eco)
-           AUTHORIZED_DEFAULT -> context.getString(R.string.authorized_default)
-           CHARGE_STOPPED_IN_APP-> context.getString(R.string.charge_stopped_in_app)
-           CHARGE_PAUSED -> context.getString(R.string.charge_paused)
-           UNAUTHORIZED -> context.getString(R.string.unauthorized)
-           else -> context.getString(R.string.unknown)
-       }
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -51,10 +36,12 @@ data class AuthorizationStatus ( val authStatus: Byte) {
         const val UNAUTHORIZED_BIT = 0
         const val AUTHORIZED_DEFAULT_BIT = 1
         const val CHARGE_STOPPED_IN_APP_BIT = 2
+        @Suppress("unused")
         const val RFU1_BIT = 3
         const val CHARGE_PAUSED_BIT = 4
         const val MAX_BIT = 5
         const val ECO_BIT = 6
+        @Suppress("unused")
         const val RFU2_BIT = 7
         const val UNAUTHORIZED = (1 shl UNAUTHORIZED_BIT).toByte()
         const val AUTHORIZED = 1 shl AUTHORIZED_DEFAULT_BIT

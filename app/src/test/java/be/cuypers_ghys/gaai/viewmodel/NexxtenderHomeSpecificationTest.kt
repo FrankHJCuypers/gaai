@@ -38,6 +38,7 @@ class NexxtenderHomeSpecificationTest {
          * @return Stream of arguments to test
          */
         @JvmStatic
+        @Suppress("unused")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of("00001800-0000-1000-8000-00805f9b34fb", NexxtenderHomeSpecification.UUID_BLE_GENERIC_ACCESS_SERVICE),

@@ -103,6 +103,7 @@ object DeviceDetailsDestination : NavigationDestination {
 @Composable
 fun DeviceDetailsScreen(
     // TODO: remove unused navigateBack? What is difference with onNavigateUp? Is correct one used?
+    @Suppress("unused")
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
@@ -789,13 +790,13 @@ internal fun GaaiChargingAdvancedDataCard(
                     Text(
                         text = when (chargingAdvancedData.authorizationStatus.authStatus)
                         {
-                            AuthorizationStatus.UNAUTHORIZED -> "Unauthorized"
-                            AuthorizationStatus.AUTHORIZED_DEFAULT -> "Authorized Default"
-                            AuthorizationStatus.AUTHORIZED_ECO -> "Authorized ECO"
-                            AuthorizationStatus.AUTHORIZED_MAX -> "Authorized MAX"
-                            AuthorizationStatus.CHARGE_STOPPED_IN_APP -> "Charge stopped in app"
-                            AuthorizationStatus.CHARGE_PAUSED -> "Charge paused"
-                            else -> {"Unknown"}
+                            AuthorizationStatus.UNAUTHORIZED -> stringResource(R.string.unauthorized)
+                            AuthorizationStatus.AUTHORIZED_DEFAULT -> stringResource(R.string.authorized_default)
+                            AuthorizationStatus.AUTHORIZED_ECO -> stringResource(R.string.authorized_eco)
+                            AuthorizationStatus.AUTHORIZED_MAX -> stringResource(R.string.authorized_max)
+                            AuthorizationStatus.CHARGE_STOPPED_IN_APP -> stringResource(R.string.charge_stopped_in_app)
+                            AuthorizationStatus.CHARGE_PAUSED -> stringResource(R.string.charge_paused)
+                            else -> stringResource(R.string.unknown)
                         },
                         style = MaterialTheme.typography.titleMedium
                     )
@@ -1094,17 +1095,6 @@ private fun modeToText(mode: Mode) = when (mode) {
     Mode.ECO_PRIVATE -> stringResource(R.string.eco_private)
     else -> {
         stringResource(R.string.unknown)
-    }
-}
-
-@Composable
-private fun textToMode(text: String) = when (text) {
-    stringResource(R.string.max_open) -> Mode.MAX_OPEN
-    stringResource(R.string.max_private) -> Mode.MAX_PRIVATE
-    stringResource(R.string.eco_open) -> Mode.ECO_OPEN
-    stringResource(R.string.eco_private) -> Mode.ECO_PRIVATE
-    else -> {
-        Mode.UNKNOWN
     }
 }
 

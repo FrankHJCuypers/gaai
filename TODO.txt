@@ -11,12 +11,12 @@
     See also how Nordic does it in their Android Common Library [https://github.com/NordicPlayground/Android-Common-Libraries/blob/main/permissions-ble/src/main/java/no/nordicsemi/android/common/permissions/ble/view/BluetoothDisabledView.kt]
     It is part of the RequiredBluetooth & RequiredLocation used by the Nordic Kotlin-BLE-Library that I consulted to perform the BLE permissions in Gaai.
 // TODO: Document all classes/functions in KDoc
-// TODO: Allow to delete a device from the db in the app
-// TODO: Make sure no double entries can be created in the db.
 // TODO: GaaiTopAppBar() is just plain text. Add color and maybe the Gaai pictogram?
 // TODO: Move to the same logic as the ScannerView from the Nordic Kotlin-BLE-Library for Bluetooth permissions, using the  RequiredBluetooth & RequiredLocation composables.
     I tried it once, but it requires teh use of Hilt for dependency injection and some other Nordic stuff, so I abandoned it.
 // TODO: Set the bluetooth PIN programmatically, without user action.
 // TODO: If the bluetooth PIN can not be set programmatically, include/display it in GaaiDeviceCard()
+// TODO: Complete missing local unit tests (Junit)
+// TODO: Write *Instrumented Tests* (androidTests)
 
 

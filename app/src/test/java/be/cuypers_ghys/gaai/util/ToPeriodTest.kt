@@ -42,6 +42,7 @@ class ToPeriodTest {
          * @return Stream of arguments to test
          */
         @JvmStatic
+        @Suppress("unused")
         fun usedCombinationsProvider(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of(720, 1234, "12:00 - 20:34"),
