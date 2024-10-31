@@ -25,39 +25,39 @@ import java.util.regex.Pattern
  */
 object ProductNumberParser {
 
-    /**
-     * Regex that matches the product number string.
-     * The product number is the PN of the Nexxtender Home,
-     * as displayed on the sticker at the bottom of the box.
-     * Its format is as follows:
-     * - PN: AAAAA-RR
-     *
-     * with
-     * - AAAAA: Model Number String, 5 decimal digits.
-     * - RR: Hardware Revision String, 2 hexadecimal digits.
-     *
-     *   The '-' is allowed to be absent.
-     */
-    private const val REGEX: String =
-        "^([0-9]{5})(?:-|)([0-9a-fA-F]{2})$"
+  /**
+   * Regex that matches the product number string.
+   * The product number is the PN of the Nexxtender Home,
+   * as displayed on the sticker at the bottom of the box.
+   * Its format is as follows:
+   * - PN: AAAAA-RR
+   *
+   * with
+   * - AAAAA: Model Number String, 5 decimal digits.
+   * - RR: Hardware Revision String, 2 hexadecimal digits.
+   *
+   *   The '-' is allowed to be absent.
+   */
+  private const val REGEX: String =
+    "^([0-9]{5})(?:-|)([0-9a-fA-F]{2})$"
 
-    /**
-     * Parses a string in the format specified by [REGEX], representing a product number.
-     * @param productNumberString The input string to parse.
-     * @return A [ProductNumber] holding the parsed result.
-     *  null if the productNumberString did not match the [REGEX] regular expression.
-     */
-    fun parse(productNumberString: String): ProductNumber? {
-        val matcher = Pattern.compile(REGEX).matcher(productNumberString)
-        if (matcher.find() && matcher.groupCount() == 2) {
-            // We verified that matcher.groupCount() == 2, so groups 1 to 2 will not return null
-            val modelNumberString = matcher.group(1)!!
-            val hardwareRevisionString = matcher.group(2)!!
-            return ProductNumber(
-                modelNumberString.toUInt(),
-                hardwareRevisionString.toUByte(16)
-            )
-        }
-        return null
+  /**
+   * Parses a string in the format specified by [REGEX], representing a product number.
+   * @param productNumberString The input string to parse.
+   * @return A [ProductNumber] holding the parsed result.
+   *  null if the productNumberString did not match the [REGEX] regular expression.
+   */
+  fun parse(productNumberString: String): ProductNumber? {
+    val matcher = Pattern.compile(REGEX).matcher(productNumberString)
+    if (matcher.find() && matcher.groupCount() == 2) {
+      // We verified that matcher.groupCount() == 2, so groups 1 to 2 will not return null
+      val modelNumberString = matcher.group(1)!!
+      val hardwareRevisionString = matcher.group(2)!!
+      return ProductNumber(
+        modelNumberString.toUInt(),
+        hardwareRevisionString.toUByte(16)
+      )
     }
+    return null
+  }
 }

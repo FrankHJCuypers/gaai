@@ -36,28 +36,32 @@ private const val TAG = "AppViewModelProvider"
  * Provides Factory to create instance of ViewModel for the entire Gaai app
  */
 object AppViewModelProvider {
-    val Factory = viewModelFactory {
+  val Factory = viewModelFactory {
 
-        // Initializer for DeviceEntryViewModel
-        initializer {
-            DeviceEntryViewModel(gaaiApplication().container.devicesRepository, gaaiApplication().container.bleRepository)
-        }
-
-        // Initializer for DeviceDetailsViewModel
-        initializer {
-            DeviceDetailsViewModel( this.createSavedStateHandle(), gaaiApplication().container.devicesRepository, gaaiApplication().container.bleRepository)
-        }
-
-        // Initializer for HomeViewModel
-        initializer {
-            HomeViewModel(gaaiApplication().container.devicesRepository)
-        }
-
-        // Initializer for MissingPermissionsViewModel
-        initializer {
-            MissingPermissionsViewModel()
-        }
+    // Initializer for DeviceEntryViewModel
+    initializer {
+      DeviceEntryViewModel(gaaiApplication().container.devicesRepository, gaaiApplication().container.bleRepository)
     }
+
+    // Initializer for DeviceDetailsViewModel
+    initializer {
+      DeviceDetailsViewModel(
+        this.createSavedStateHandle(),
+        gaaiApplication().container.devicesRepository,
+        gaaiApplication().container.bleRepository
+      )
+    }
+
+    // Initializer for HomeViewModel
+    initializer {
+      HomeViewModel(gaaiApplication().container.devicesRepository)
+    }
+
+    // Initializer for MissingPermissionsViewModel
+    initializer {
+      MissingPermissionsViewModel()
+    }
+  }
 }
 
 /**
@@ -65,4 +69,4 @@ object AppViewModelProvider {
  * [GaaiApplication].
  */
 fun CreationExtras.gaaiApplication(): GaaiApplication =
-    (this[AndroidViewModelFactory.APPLICATION_KEY] as GaaiApplication)
+  (this[AndroidViewModelFactory.APPLICATION_KEY] as GaaiApplication)

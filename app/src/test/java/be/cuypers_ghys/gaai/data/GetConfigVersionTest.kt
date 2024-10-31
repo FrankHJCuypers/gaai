@@ -26,36 +26,38 @@ import java.util.stream.Stream
  */
 class GetConfigVersionTest {
 
-    @ParameterizedTest
-    @MethodSource("usedCombinationsProvider")
-    fun parse_VerifyResultsFromKnownTestVectors(version: String,
-                                                expectedConfigVersion: ConfigVersion ) {
-        assertEquals(expectedConfigVersion, ConfigDataParserComposer.getConfigVersion(version) )
-    }
+  @ParameterizedTest
+  @MethodSource("usedCombinationsProvider")
+  fun parse_VerifyResultsFromKnownTestVectors(
+    version: String,
+    expectedConfigVersion: ConfigVersion
+  ) {
+    assertEquals(expectedConfigVersion, ConfigDataParserComposer.getConfigVersion(version))
+  }
 
-    companion object {
-        /**
-         * Returns the test vectors.
-         *
-         * @return Stream of arguments to test
-         */
-        @JvmStatic
-        fun usedCombinationsProvider(): Stream<Arguments> {
-            return Stream.of(
-                Arguments.of("0.0",  ConfigVersion.CONFIG_1_0),
-                Arguments.of("0.0.0",  ConfigVersion.CONFIG_1_0),
-                Arguments.of("0.5.4",  ConfigVersion.CONFIG_1_0),
-                Arguments.of("1.0.0",  ConfigVersion.CONFIG_1_0),
-                Arguments.of("1.0.999",  ConfigVersion.CONFIG_1_0),
-                Arguments.of("1.1",  ConfigVersion.CONFIG_1_1),
-                Arguments.of("1.1.0",  ConfigVersion.CONFIG_1_1),
-                Arguments.of("1.1.1",  ConfigVersion.CONFIG_1_1),
-                Arguments.of("3.49.1",  ConfigVersion.CONFIG_1_1),
-                Arguments.of("3.50",  ConfigVersion.CONFIG_CBOR),
-                Arguments.of("3.50.0",  ConfigVersion.CONFIG_CBOR),
-                Arguments.of("3.50.1",  ConfigVersion.CONFIG_CBOR),
-                Arguments.of("4.5.6",  ConfigVersion.CONFIG_CBOR),
-            )
-        }
+  companion object {
+    /**
+     * Returns the test vectors.
+     *
+     * @return Stream of arguments to test
+     */
+    @JvmStatic
+    fun usedCombinationsProvider(): Stream<Arguments> {
+      return Stream.of(
+        Arguments.of("0.0", ConfigVersion.CONFIG_1_0),
+        Arguments.of("0.0.0", ConfigVersion.CONFIG_1_0),
+        Arguments.of("0.5.4", ConfigVersion.CONFIG_1_0),
+        Arguments.of("1.0.0", ConfigVersion.CONFIG_1_0),
+        Arguments.of("1.0.999", ConfigVersion.CONFIG_1_0),
+        Arguments.of("1.1", ConfigVersion.CONFIG_1_1),
+        Arguments.of("1.1.0", ConfigVersion.CONFIG_1_1),
+        Arguments.of("1.1.1", ConfigVersion.CONFIG_1_1),
+        Arguments.of("3.49.1", ConfigVersion.CONFIG_1_1),
+        Arguments.of("3.50", ConfigVersion.CONFIG_CBOR),
+        Arguments.of("3.50.0", ConfigVersion.CONFIG_CBOR),
+        Arguments.of("3.50.1", ConfigVersion.CONFIG_CBOR),
+        Arguments.of("4.5.6", ConfigVersion.CONFIG_CBOR),
+      )
     }
+  }
 }

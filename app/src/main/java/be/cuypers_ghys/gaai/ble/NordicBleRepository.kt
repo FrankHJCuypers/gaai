@@ -27,15 +27,15 @@ import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
  * Local devices database
  */
 class NordicBleRepository(override val context: Context, override val scanner: BleScanner) : BleRepository {
-    @SuppressLint("MissingPermission")
-    override fun getScannerState()= scanner.scan()
+  @SuppressLint("MissingPermission")
+  override fun getScannerState() = scanner.scan()
 
-    @SuppressLint("MissingPermission")
-    override suspend fun getClientBleGattConnection(
-        macAddress: String,
-        scope: CoroutineScope,
-        options: BleGattConnectOptions
-    ): ClientBleGatt {
-        return ClientBleGatt.connect(context, macAddress, scope, options)
-    }
+  @SuppressLint("MissingPermission")
+  override suspend fun getClientBleGattConnection(
+    macAddress: String,
+    scope: CoroutineScope,
+    options: BleGattConnectOptions
+  ): ClientBleGatt {
+    return ClientBleGatt.connect(context, macAddress, scope, options)
+  }
 }

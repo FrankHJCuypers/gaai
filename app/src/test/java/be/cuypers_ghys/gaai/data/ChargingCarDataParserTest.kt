@@ -29,61 +29,91 @@ import java.util.stream.Stream
  */
 class ChargingCarDataParserTest {
 
-    @ParameterizedTest
-    @MethodSource("usedCombinationsProvider")
-    fun parse_VerifyResultsFromKnownTestVectors(chargingCarData : ByteArray,
-                                                expectedTimeStamp: Long,
-                                                expectedL1: Int,
-                                                expectedL2 : Int,
-                                                expectedL3: Int,
-                                                expectedP1: Int,
-                                                expectedP2: Int,
-                                                expectedP3: Int) {
-        val computedChargingCarData = ChargingCarDataParser.parse(chargingCarData)
-        assertNotNull(computedChargingCarData)
-        assertEquals(expectedTimeStamp.toUInt(), computedChargingCarData!!.timestamp)
-        assertEquals(expectedL1.toShort(), computedChargingCarData.l1)
-        assertEquals(expectedL2.toShort(), computedChargingCarData.l2)
-        assertEquals(expectedL3.toShort(), computedChargingCarData.l3)
-        assertEquals(expectedP1.toShort(), computedChargingCarData.p1)
-        assertEquals(expectedP2.toShort(), computedChargingCarData.p2)
-        assertEquals(expectedP3.toShort(), computedChargingCarData.p3)
-    }
+  @ParameterizedTest
+  @MethodSource("usedCombinationsProvider")
+  fun parse_VerifyResultsFromKnownTestVectors(
+    chargingCarData: ByteArray,
+    expectedTimeStamp: Long,
+    expectedL1: Int,
+    expectedL2: Int,
+    expectedL3: Int,
+    expectedP1: Int,
+    expectedP2: Int,
+    expectedP3: Int
+  ) {
+    val computedChargingCarData = ChargingCarDataParser.parse(chargingCarData)
+    assertNotNull(computedChargingCarData)
+    assertEquals(expectedTimeStamp.toUInt(), computedChargingCarData!!.timestamp)
+    assertEquals(expectedL1.toShort(), computedChargingCarData.l1)
+    assertEquals(expectedL2.toShort(), computedChargingCarData.l2)
+    assertEquals(expectedL3.toShort(), computedChargingCarData.l3)
+    assertEquals(expectedP1.toShort(), computedChargingCarData.p1)
+    assertEquals(expectedP2.toShort(), computedChargingCarData.p2)
+    assertEquals(expectedP3.toShort(), computedChargingCarData.p3)
+  }
 
-    @OptIn(ExperimentalStdlibApi::class)
-    @Suppress("SpellCheckingInspection")    @Test
-    fun parse_ChargingCarDataLengthToShort() {
-        assertNull(ChargingCarDataParser.parse("1234567890ABCDEF1234567890ABCDEF18".hexToByteArray()))
-    }
+  @OptIn(ExperimentalStdlibApi::class)
+  @Suppress("SpellCheckingInspection")
+  @Test
+  fun parse_ChargingCarDataLengthToShort() {
+    assertNull(ChargingCarDataParser.parse("1234567890ABCDEF1234567890ABCDEF18".hexToByteArray()))
+  }
 
-    @OptIn(ExperimentalStdlibApi::class)
-    @Test
-    fun parse_ChargingCarDataLengthToLong() {
-        assertNull(ChargingCarDataParser.parse("1234567890ABCDEF1234567890ABCDEF18E7FFFF".hexToByteArray()))
-    }
+  @OptIn(ExperimentalStdlibApi::class)
+  @Test
+  fun parse_ChargingCarDataLengthToLong() {
+    assertNull(ChargingCarDataParser.parse("1234567890ABCDEF1234567890ABCDEF18E7FFFF".hexToByteArray()))
+  }
 
+  @OptIn(ExperimentalStdlibApi::class)
+  @Suppress("SpellCheckingInspection")
+  @Test
+  fun parse_ChargingCarDataIncorrectCRC16() {
+    assertNull(ChargingBasicDataParser.parse("1234567890ABCDEF1234567890ABCDEF6969".hexToByteArray()))
+  }
+
+  companion object {
+    /**
+     * Returns the test vectors.
+     *
+     * @return Stream of arguments to test
+     */
     @OptIn(ExperimentalStdlibApi::class)
+    @JvmStatic
     @Suppress("SpellCheckingInspection")
-    @Test
-    fun parse_ChargingCarDataIncorrectCRC16() {
-        assertNull(ChargingBasicDataParser.parse("1234567890ABCDEF1234567890ABCDEF6969".hexToByteArray()))
+    fun usedCombinationsProvider(): Stream<Arguments> {
+      return Stream.of(
+        Arguments.of(
+          "1234567890ABCDEF1234567890ABCDEF18E7".hexToByteArray(),
+          0x78563412,
+          0xAB90,
+          0xEFCD,
+          0x3412,
+          0x7856,
+          0xAB90,
+          0xEFCD
+        ),
+        Arguments.of(
+          "11223344556677889900AABBCCDDEEFF1DED".hexToByteArray(),
+          0x44332211,
+          0x6655,
+          0x8877,
+          0x0099,
+          0xBBAA,
+          0xDDCC,
+          0xFFEE
+        ),
+        Arguments.of(
+          "2E0F2D66000000000000000000000000C903".hexToByteArray(),
+          0x662D0F2E,
+          0x0000,
+          0x0000,
+          0x0000,
+          0x0000,
+          0x0000,
+          0x0000
+        ),
+      )
     }
-
-    companion object {
-        /**
-         * Returns the test vectors.
-         *
-         * @return Stream of arguments to test
-         */
-        @OptIn(ExperimentalStdlibApi::class)
-        @JvmStatic
-        @Suppress("SpellCheckingInspection")
-        fun usedCombinationsProvider(): Stream<Arguments> {
-            return Stream.of(
-                Arguments.of("1234567890ABCDEF1234567890ABCDEF18E7".hexToByteArray(), 0x78563412, 0xAB90, 0xEFCD, 0x3412, 0x7856, 0xAB90, 0xEFCD),
-                Arguments.of("11223344556677889900AABBCCDDEEFF1DED".hexToByteArray(), 0x44332211, 0x6655, 0x8877, 0x0099, 0xBBAA, 0xDDCC, 0xFFEE),
-                Arguments.of("2E0F2D66000000000000000000000000C903".hexToByteArray(), 0x662D0F2E, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000),
-            )
-        }
-    }
+  }
 }

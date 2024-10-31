@@ -29,41 +29,39 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  * @author Frank HJ Cuypers
  */
 object ChargingAdvancedDataParser {
-    /**
-     * Parses a byte array with the contents of the Charging Car Data BLE Characteristic into an
-     * [ChargingAdvancedData].
-     * @param chargingAdvancedData Byte array with the value read from the Charging Car Data BLE
-     * Characteristic.
-     * @return A [ChargingAdvancedData] holding the parsed result.
-     *      Null if *chargingAdvancedData* is not 18 bytes long or the CRC16 is not correct.
-     */
-    fun parse(chargingAdvancedData: ByteArray): ChargingAdvancedData? {
-        if ( chargingAdvancedData.size !=  18 )
-        {
-            return null
-        }
-
-        val crc =  chargingAdvancedData.fromUint16LE(16)
-        val computedCrc = CRC16.MODBUS(chargingAdvancedData,0, 16).toUShort()
-        if ( computedCrc != crc )
-        {
-            return null
-        }
-
-        val timestamp = chargingAdvancedData.fromUint32LE(0)
-        val iAvailable = chargingAdvancedData.fromInt16LE(4)
-        val gridPower = chargingAdvancedData.fromInt32LE(6)
-        val carPower = chargingAdvancedData.fromInt32LE(10)
-        val authorizationStatus = AuthorizationStatus(chargingAdvancedData[14])
-        val errorCode = chargingAdvancedData[15]
-
-        return  ChargingAdvancedData(
-            timestamp,
-            iAvailable,
-            gridPower,
-            carPower,
-            authorizationStatus,
-            errorCode
-        )
+  /**
+   * Parses a byte array with the contents of the Charging Car Data BLE Characteristic into an
+   * [ChargingAdvancedData].
+   * @param chargingAdvancedData Byte array with the value read from the Charging Car Data BLE
+   * Characteristic.
+   * @return A [ChargingAdvancedData] holding the parsed result.
+   *      Null if *chargingAdvancedData* is not 18 bytes long or the CRC16 is not correct.
+   */
+  fun parse(chargingAdvancedData: ByteArray): ChargingAdvancedData? {
+    if (chargingAdvancedData.size != 18) {
+      return null
     }
+
+    val crc = chargingAdvancedData.fromUint16LE(16)
+    val computedCrc = CRC16.MODBUS(chargingAdvancedData, 0, 16).toUShort()
+    if (computedCrc != crc) {
+      return null
+    }
+
+    val timestamp = chargingAdvancedData.fromUint32LE(0)
+    val iAvailable = chargingAdvancedData.fromInt16LE(4)
+    val gridPower = chargingAdvancedData.fromInt32LE(6)
+    val carPower = chargingAdvancedData.fromInt32LE(10)
+    val authorizationStatus = AuthorizationStatus(chargingAdvancedData[14])
+    val errorCode = chargingAdvancedData[15]
+
+    return ChargingAdvancedData(
+      timestamp,
+      iAvailable,
+      gridPower,
+      carPower,
+      authorizationStatus,
+      errorCode
+    )
+  }
 }

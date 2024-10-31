@@ -25,11 +25,11 @@ import be.cuypers_ghys.gaai.data.DefaultAppContainer
 private const val TAG = "GaaiApplication"
 
 class GaaiApplication : Application() {
-    /** AppContainer instance used by the rest of classes to obtain dependencies */
-    lateinit var container: AppContainer
-    override fun onCreate() {
-        super.onCreate()
-        Log.d(TAG, "onCreate Called")
-        container = DefaultAppContainer( this )
-    }
+  /** AppContainer instance used by the rest of classes to obtain dependencies */
+  lateinit var container: AppContainer
+  override fun onCreate() {
+    super.onCreate()
+    Log.d(TAG, "onCreate Called")
+    container = DefaultAppContainer(this)
+  }
 }

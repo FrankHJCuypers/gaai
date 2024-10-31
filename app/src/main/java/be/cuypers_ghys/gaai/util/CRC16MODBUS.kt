@@ -33,5 +33,5 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  */
 @Suppress("FunctionName")
 fun CRC16.MODBUS(data: ByteArray, offset: Int, length: Int): Int {
-    return CRC(0x8005, 0xFFFF, data, offset, length, refin = true, refout = true, xorout = 0x0000)
+  return CRC(0x8005, 0xFFFF, data, offset, length, refin = true, refout = true, xorout = 0x0000)
 }

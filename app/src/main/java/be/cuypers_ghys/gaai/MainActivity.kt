@@ -31,16 +31,16 @@ import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 private const val TAG = "MainActivity"
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate Called")
-        enableEdgeToEdge()
-        setContent {
-            GaaiTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    GaaiApp()
-                }
-            }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Log.d(TAG, "onCreate Called")
+    enableEdgeToEdge()
+    setContent {
+      GaaiTheme {
+        Surface(modifier = Modifier.fillMaxSize()) {
+          GaaiApp()
         }
+      }
     }
+  }
 }

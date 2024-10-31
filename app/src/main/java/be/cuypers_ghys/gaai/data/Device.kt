@@ -23,35 +23,36 @@ import androidx.room.PrimaryKey
 /**
  * Entity data class represents a single row in the database.
  */
-@Entity(tableName = "devices",
-    indices = [Index( value = ["mac"], unique = true), Index( value = ["pn","sn"], unique = true)]
+@Entity(
+  tableName = "devices",
+  indices = [Index(value = ["mac"], unique = true), Index(value = ["pn", "sn"], unique = true)]
 )
 data class Device(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+  @PrimaryKey(autoGenerate = true)
+  val id: Int = 0,
 
-    /**
-     * The Product Number (PN) as printed on the bottom of the device.
-     * pn+[sn]  must be unique.
-     */
-    val pn: String,
+  /**
+   * The Product Number (PN) as printed on the bottom of the device.
+   * pn+[sn]  must be unique.
+   */
+  val pn: String,
 
-    /**
-     * The Serial Number (SN) as printed on the bottom of the device.
-     * [pn]+sn  must be unique.
-     */
-    val sn: String,
+  /**
+   * The Serial Number (SN) as printed on the bottom of the device.
+   * [pn]+sn  must be unique.
+   */
+  val sn: String,
 
-    /**
-     * The device's MAC as found after scanning for the [serviceDataValue].
-     * The MAC must be unique.
-     */
-    val mac: String,
+  /**
+   * The device's MAC as found after scanning for the [serviceDataValue].
+   * The MAC must be unique.
+   */
+  val mac: String,
 
-    /**
-     * The value that this device advertises in the
-     * [UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE][be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE].
-     * Supposedly also unique.
-     */
-    val serviceDataValue: Int
+  /**
+   * The value that this device advertises in the
+   * [UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE][be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE].
+   * Supposedly also unique.
+   */
+  val serviceDataValue: Int
 )

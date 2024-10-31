@@ -22,28 +22,28 @@ import kotlinx.coroutines.flow.Flow
  * Repository that provides insert, update, delete, and retrieve of [Device] from a given data source.
  */
 interface DevicesRepository {
-    /**
-     * Retrieve all the devices from the the given data source.
-     */
-    fun getAllDevicesStream(): Flow<List<Device>>
+  /**
+   * Retrieve all the devices from the the given data source.
+   */
+  fun getAllDevicesStream(): Flow<List<Device>>
 
-    /**
-     * Retrieve a device from the given data source that matches with the [id].
-     */
-    fun getDeviceStream(id: Int): Flow<Device?>
+  /**
+   * Retrieve a device from the given data source that matches with the [id].
+   */
+  fun getDeviceStream(id: Int): Flow<Device?>
 
-    /**
-     * @return true if this device can be inserted with [insertDevice].
-     */
-    suspend fun canInsert(device:Device) : Boolean
+  /**
+   * @return true if this device can be inserted with [insertDevice].
+   */
+  suspend fun canInsert(device: Device): Boolean
 
-    /**
-     * Insert device in the data source
-     */
-    suspend fun insertDevice(device: Device)
+  /**
+   * Insert device in the data source
+   */
+  suspend fun insertDevice(device: Device)
 
-    /**
-     * Delete device from the data source
-     */
-    suspend fun deleteDevice(device: Device)
+  /**
+   * Delete device from the data source
+   */
+  suspend fun deleteDevice(device: Device)
 }

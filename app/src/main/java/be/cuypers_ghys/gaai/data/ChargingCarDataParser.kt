@@ -28,43 +28,41 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  * @author Frank HJ Cuypers
  */
 object ChargingCarDataParser {
-    /**
-     * Parses a byte array with the contents of the Charging Car Data BLE Characteristic into an
-     * [ChargingCarData].
-     * @param chargingCarData Byte array with the value read from the Charging Car Data BLE
-     * Characteristic.
-     * @return A [ChargingCarData] holding the parsed result.
-     *      Null if *ChargingCarData* is not 18 bytes long or the CRC16 is not correct.
-     */
-    fun parse(chargingCarData: ByteArray): ChargingCarData? {
-        if ( chargingCarData.size !=  18 )
-        {
-            return null
-        }
-
-        val crc =  chargingCarData.fromUint16LE(16)
-        val computedCrc = CRC16.MODBUS(chargingCarData,0, 16).toUShort()
-        if ( computedCrc != crc )
-        {
-            return null
-        }
-
-        val timestamp = chargingCarData.fromUint32LE(0)
-        val l1 = chargingCarData.fromInt16LE(4)
-        val l2 = chargingCarData.fromInt16LE(6)
-        val l3 = chargingCarData.fromInt16LE(8)
-        val p1 = chargingCarData.fromInt16LE(10)
-        val p2 = chargingCarData.fromInt16LE(12)
-        val p3 = chargingCarData.fromInt16LE(14)
-
-        return ChargingCarData(
-            timestamp,
-            l1,
-            l2,
-            l3,
-            p1,
-            p2,
-            p3
-        )
+  /**
+   * Parses a byte array with the contents of the Charging Car Data BLE Characteristic into an
+   * [ChargingCarData].
+   * @param chargingCarData Byte array with the value read from the Charging Car Data BLE
+   * Characteristic.
+   * @return A [ChargingCarData] holding the parsed result.
+   *      Null if *ChargingCarData* is not 18 bytes long or the CRC16 is not correct.
+   */
+  fun parse(chargingCarData: ByteArray): ChargingCarData? {
+    if (chargingCarData.size != 18) {
+      return null
     }
+
+    val crc = chargingCarData.fromUint16LE(16)
+    val computedCrc = CRC16.MODBUS(chargingCarData, 0, 16).toUShort()
+    if (computedCrc != crc) {
+      return null
+    }
+
+    val timestamp = chargingCarData.fromUint32LE(0)
+    val l1 = chargingCarData.fromInt16LE(4)
+    val l2 = chargingCarData.fromInt16LE(6)
+    val l3 = chargingCarData.fromInt16LE(8)
+    val p1 = chargingCarData.fromInt16LE(10)
+    val p2 = chargingCarData.fromInt16LE(12)
+    val p3 = chargingCarData.fromInt16LE(14)
+
+    return ChargingCarData(
+      timestamp,
+      l1,
+      l2,
+      l3,
+      p1,
+      p2,
+      p3
+    )
+  }
 }

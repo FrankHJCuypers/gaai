@@ -29,86 +29,86 @@ package be.cuypers_ghys.gaai.util
  * @author Frank HJ Cuypers
  */
 class CRC8CCITT {
-    /** The current value of theCRC.  */
-    private var crc = INITIAL_VALUE
+  /** The current value of theCRC.  */
+  private var crc = INITIAL_VALUE
 
-    /** Constructor  */
-    init {
-        reset()
-    }
+  /** Constructor  */
+  init {
+    reset()
+  }
 
-    /** Resets the CRC to the initial state.  */
-    fun reset() {
-        crc = INITIAL_VALUE
+  /** Resets the CRC to the initial state.  */
+  fun reset() {
+    crc = INITIAL_VALUE
+  }
+
+  /**
+   * Add byte to the CRC.
+   * @param data The byte to add.
+   * @return The current value of the CRC, unsigned.
+   */
+  private fun update(data: Byte): Int {
+    var ch = data.toInt() and 0xFF
+    ch = (ch xor this.crc) and 0xFF
+    for (i in 0..7) {
+      ch = if ((ch and 0x80) != 0) {
+        ch shl 1 xor POLYNOMIAL
+      } else {
+        ch shl 1
+      }
+      ch = ch and 0xFF
     }
+    this.crc = ch
+    return this.crc
+  }
+
+  /**
+   * Add bytes to the CRC.
+   * @param data The bytes to add.
+   * @param offset Start offset in *data*.
+   * @param length Length of the bytes from *data*.
+   * @return The current value of the CRC, unsigned.
+   */
+  //@JvmOverloads
+  fun update(data: ByteArray, offset: Int = 0, length: Int = data.size): Int {
+    var dataOffset = offset
+    var remaining = length
+    while (remaining > 0) {
+      update(data[dataOffset])
+      remaining--
+      dataOffset++
+    }
+    return this.crc
+  }
+
+  /**
+   * Add integer to the CRC.
+   * @param data The integer to add.
+   * @return The current value of the CRC, unsigned.
+   */
+  @Suppress("unused")
+  fun update(data: Int): Int {
+    // Add in Little Endian
+    update(data.toByte())
+    update((data shr 8).toByte())
+    update((data shr 16).toByte())
+    return update((data shr 24).toByte())
+  }
+
+  companion object {
+    /** The initial value  */
+    const val INITIAL_VALUE: Int = 0x0
+
+    /** Normal Polynomial.  */
+    const val POLYNOMIAL: Int = 0x07
 
     /**
-     * Add byte to the CRC.
-     * @param data The byte to add.
-     * @return The current value of the CRC, unsigned.
+     * Returns the size in bytes of the CRC value.
+     * @return The size in bytes.
      */
-    private fun update(data: Byte): Int {
-        var ch = data.toInt() and 0xFF
-        ch = (ch xor this.crc) and 0xFF
-        for (i in 0..7) {
-            ch = if ((ch and 0x80) != 0) {
-                ch shl 1 xor POLYNOMIAL
-            } else {
-                ch shl 1
-            }
-            ch = ch and 0xFF
-        }
-        this.crc = ch
-        return this.crc
+    @Suppress("unused", "SameReturnValue")
+    fun size(): Int {
+      return 1
     }
-
-    /**
-     * Add bytes to the CRC.
-     * @param data The bytes to add.
-     * @param offset Start offset in *data*.
-     * @param length Length of the bytes from *data*.
-     * @return The current value of the CRC, unsigned.
-     */
-    //@JvmOverloads
-    fun update(data: ByteArray, offset: Int = 0, length: Int = data.size): Int {
-        var dataOffset = offset
-        var remaining = length
-        while (remaining > 0) {
-            update(data[dataOffset])
-            remaining--
-            dataOffset++
-        }
-        return this.crc
-    }
-
-    /**
-     * Add integer to the CRC.
-     * @param data The integer to add.
-     * @return The current value of the CRC, unsigned.
-     */
-    @Suppress("unused")
-    fun update(data: Int): Int {
-        // Add in Little Endian
-        update(data.toByte())
-        update((data shr 8).toByte())
-        update((data shr 16).toByte())
-        return update((data shr 24).toByte())
-    }
-
-    companion object {
-        /** The initial value  */
-        const val INITIAL_VALUE: Int = 0x0
-
-        /** Normal Polynomial.  */
-        const val POLYNOMIAL: Int = 0x07
-
-        /**
-         * Returns the size in bytes of the CRC value.
-         * @return The size in bytes.
-         */
-        @Suppress("unused", "SameReturnValue")
-        fun size(): Int {
-            return 1
-        }
-    }
+  }
 }

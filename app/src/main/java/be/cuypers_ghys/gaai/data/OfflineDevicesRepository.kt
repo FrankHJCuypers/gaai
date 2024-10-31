@@ -22,13 +22,13 @@ import kotlinx.coroutines.flow.Flow
  * Local devices database
  */
 class OfflineDevicesRepository(private val deviceDao: DeviceDao) : DevicesRepository {
-    override fun getAllDevicesStream(): Flow<List<Device>> = deviceDao.getAllDevices()
+  override fun getAllDevicesStream(): Flow<List<Device>> = deviceDao.getAllDevices()
 
-    override fun getDeviceStream(id: Int): Flow<Device?> = deviceDao.getDevice(id)
+  override fun getDeviceStream(id: Int): Flow<Device?> = deviceDao.getDevice(id)
 
-    override suspend fun canInsert(device:Device)  = deviceDao.canInsert(device)
+  override suspend fun canInsert(device: Device) = deviceDao.canInsert(device)
 
-    override suspend fun insertDevice(device: Device) = deviceDao.insert(device)
+  override suspend fun insertDevice(device: Device) = deviceDao.insert(device)
 
-    override suspend fun deleteDevice(device: Device) = deviceDao.delete(device)
+  override suspend fun deleteDevice(device: Device) = deviceDao.delete(device)
 }

@@ -25,8 +25,8 @@ import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
  * Dependency Injection container at the application level.
  */
 interface AppContainer {
-    val devicesRepository: DevicesRepository
-    val bleRepository: BleRepository
+  val devicesRepository: DevicesRepository
+  val bleRepository: BleRepository
 }
 
 /**
@@ -35,20 +35,20 @@ interface AppContainer {
  *
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
-class DefaultAppContainer(context : Context): AppContainer {
+class DefaultAppContainer(context: Context) : AppContainer {
 //    private val gaaiBleService : GaaiBleService = DummyGaaiBleService()
 
-    /**
-     * Implementation for [DevicesRepository].
-     */
-    override val devicesRepository : DevicesRepository by lazy {
-        OfflineDevicesRepository(GaaiDatabase.getDatabase(context).deviceDao())
-    }
+  /**
+   * Implementation for [DevicesRepository].
+   */
+  override val devicesRepository: DevicesRepository by lazy {
+    OfflineDevicesRepository(GaaiDatabase.getDatabase(context).deviceDao())
+  }
 
-    /**
-     * Implementation for [BleRepository].
-     */
-    override val bleRepository : BleRepository by lazy {
-        NordicBleRepository(context, BleScanner(context))
-    }
+  /**
+   * Implementation for [BleRepository].
+   */
+  override val bleRepository: BleRepository by lazy {
+    NordicBleRepository(context, BleScanner(context))
+  }
 }

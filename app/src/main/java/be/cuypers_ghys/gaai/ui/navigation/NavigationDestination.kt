@@ -20,15 +20,15 @@ package be.cuypers_ghys.gaai.ui.navigation
  * Interface to describe the navigation destinations for the app
  */
 interface NavigationDestination {
-    /**
-     * Unique name to define the path for a composable
-     */
-    @Suppress("unused")
-    val route: String
+  /**
+   * Unique name to define the path for a composable
+   */
+  @Suppress("unused")
+  val route: String
 
-    /**
-     * String resource id to that contains title to be displayed for the screen.
-     */
-    @Suppress("unused")
-    val titleRes: Int
+  /**
+   * String resource id to that contains title to be displayed for the screen.
+   */
+  @Suppress("unused")
+  val titleRes: Int
 }

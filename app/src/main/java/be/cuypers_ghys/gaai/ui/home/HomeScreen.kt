@@ -82,8 +82,8 @@ import kotlinx.coroutines.launch
 private const val TAG = "HomeScreen"
 
 object HomeDestination : NavigationDestination {
-    override val route = "home"
-    override val titleRes = R.string.app_name
+  override val route = "home"
+  override val titleRes = R.string.app_name
 }
 
 /**
@@ -92,257 +92,262 @@ object HomeDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navigateToDeviceEntry: () -> Unit,
-    navigateToDeviceDetails: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+  navigateToDeviceEntry: () -> Unit,
+  navigateToDeviceDetails: (Int) -> Unit,
+  modifier: Modifier = Modifier,
+  viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val homeUiState by viewModel.homeUiState.collectAsState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+  val coroutineScope = rememberCoroutineScope()
+  val homeUiState by viewModel.homeUiState.collectAsState()
+  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            GaaiTopAppBar(
-                title = stringResource(HomeDestination.titleRes),
-                canNavigateBack = false,
-                scrollBehavior = scrollBehavior
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = navigateToDeviceEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier
-                    .padding(
-                        end = WindowInsets.safeDrawing.asPaddingValues()
-                            .calculateEndPadding(LocalLayoutDirection.current)
-                    )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.device_entry_title)
-                )
-            }
-        },
-    ) { innerPadding ->
-        HomeBody(
-            deviceList = homeUiState.deviceList,
-            onDeviceClick = navigateToDeviceDetails,
-            onDeviceRemove = {
-                coroutineScope.launch {
-                viewModel.removeDevice(it)}
-            },
-            modifier = modifier.fillMaxSize(),
-            contentPadding = innerPadding,
+  Scaffold(
+    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    topBar = {
+      GaaiTopAppBar(
+        title = stringResource(HomeDestination.titleRes),
+        canNavigateBack = false,
+        scrollBehavior = scrollBehavior
+      )
+    },
+    floatingActionButton = {
+      FloatingActionButton(
+        onClick = navigateToDeviceEntry,
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier
+          .padding(
+            end = WindowInsets.safeDrawing.asPaddingValues()
+              .calculateEndPadding(LocalLayoutDirection.current)
+          )
+      ) {
+        Icon(
+          imageVector = Icons.Default.Add,
+          contentDescription = stringResource(R.string.device_entry_title)
         )
-    }
+      }
+    },
+  ) { innerPadding ->
+    HomeBody(
+      deviceList = homeUiState.deviceList,
+      onDeviceClick = navigateToDeviceDetails,
+      onDeviceRemove = {
+        coroutineScope.launch {
+          viewModel.removeDevice(it)
+        }
+      },
+      modifier = modifier.fillMaxSize(),
+      contentPadding = innerPadding,
+    )
+  }
 }
 
 @Composable
 private fun HomeBody(
-    deviceList: List<Device>,
-    onDeviceClick: (Int) -> Unit,
-    onDeviceRemove: (Device) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+  deviceList: List<Device>,
+  onDeviceClick: (Int) -> Unit,
+  onDeviceRemove: (Device) -> Unit,
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
-    ) {
-        if (deviceList.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_item_description),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(contentPadding),
-            )
-        } else {
-            DevicesList(
-                deviceList = deviceList,
-                onDeviceClick = { onDeviceClick(it.id) },
-                onDeviceRemove = { onDeviceRemove(it)},
-                contentPadding = contentPadding,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
-            )
-        }
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = modifier,
+  ) {
+    if (deviceList.isEmpty()) {
+      Text(
+        text = stringResource(R.string.no_item_description),
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.padding(contentPadding),
+      )
+    } else {
+      DevicesList(
+        deviceList = deviceList,
+        onDeviceClick = { onDeviceClick(it.id) },
+        onDeviceRemove = { onDeviceRemove(it) },
+        contentPadding = contentPadding,
+        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+      )
     }
+  }
 }
 
 @Composable
 private fun DevicesList(
-    deviceList: List<Device>,
-    onDeviceClick: (Device) -> Unit,
-    onDeviceRemove: (Device) -> Unit,
-    contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+  deviceList: List<Device>,
+  onDeviceClick: (Device) -> Unit,
+  onDeviceRemove: (Device) -> Unit,
+  contentPadding: PaddingValues,
+  modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = contentPadding
-    ) {
-        items(items = deviceList, key = { it.id }) { device ->
-            GaaiDeviceItem(device = device,
-                onDeviceClick=onDeviceClick,
-                onDeviceRemove=onDeviceRemove,
-                modifier = Modifier
-                    .clickable { onDeviceClick(device) })
-        }
+  LazyColumn(
+    modifier = modifier,
+    contentPadding = contentPadding
+  ) {
+    items(items = deviceList, key = { it.id }) { device ->
+      GaaiDeviceItem(device = device,
+        onDeviceClick = onDeviceClick,
+        onDeviceRemove = onDeviceRemove,
+        modifier = Modifier
+          .clickable { onDeviceClick(device) })
     }
+  }
 }
 
 @Composable
 fun GaaiDeviceItem(
-    device: Device,
-    onDeviceClick: (Device) -> Unit,
-    onDeviceRemove: (Device) -> Unit,
-    modifier: Modifier = Modifier
+  device: Device,
+  onDeviceClick: (Device) -> Unit,
+  onDeviceRemove: (Device) -> Unit,
+  modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val currentDevice by rememberUpdatedState(device)
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = {
-            when(it) {
-                SwipeToDismissBoxValue.StartToEnd -> {
-                    onDeviceRemove(currentDevice)
-                    Toast.makeText(context,
-                        context.getString(R.string.device_deleted), Toast.LENGTH_SHORT).show()
-                }
-                SwipeToDismissBoxValue.EndToStart -> {
-                    // Disabled in call to SwipeToDismissBox()
-                }
-                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
-            }
-            return@rememberSwipeToDismissBoxState true
-        },
-        // positional threshold of 25%
-        positionalThreshold = { it * .25f }
-    )
-    SwipeToDismissBox(
-        state = dismissState,
-        enableDismissFromEndToStart = false,
-        modifier = modifier,
-        backgroundContent = { DismissBackground(dismissState)}
-        ) {
-            GaaiDeviceCard(device,modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding_small))
-                .clickable { onDeviceClick(device) })
-    }
+  val context = LocalContext.current
+  val currentDevice by rememberUpdatedState(device)
+  val dismissState = rememberSwipeToDismissBoxState(
+    confirmValueChange = {
+      when (it) {
+        SwipeToDismissBoxValue.StartToEnd -> {
+          onDeviceRemove(currentDevice)
+          Toast.makeText(
+            context,
+            context.getString(R.string.device_deleted), Toast.LENGTH_SHORT
+          ).show()
+        }
+
+        SwipeToDismissBoxValue.EndToStart -> {
+          // Disabled in call to SwipeToDismissBox()
+        }
+
+        SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
+      }
+      return@rememberSwipeToDismissBoxState true
+    },
+    // positional threshold of 25%
+    positionalThreshold = { it * .25f }
+  )
+  SwipeToDismissBox(
+    state = dismissState,
+    enableDismissFromEndToStart = false,
+    modifier = modifier,
+    backgroundContent = { DismissBackground(dismissState) }
+  ) {
+    GaaiDeviceCard(device, modifier = Modifier
+      .padding(dimensionResource(id = R.dimen.padding_small))
+      .clickable { onDeviceClick(device) })
+  }
 }
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryScreen.kt and DeviceDetailScreen.kt
 internal fun GaaiDeviceCard(
-    device: Device, modifier: Modifier = Modifier
+  device: Device, modifier: Modifier = Modifier
 ) {
-    Log.d(TAG, "Entered GaaiDeviceCard with device = $device")
-    Card(
-        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+  Log.d(TAG, "Entered GaaiDeviceCard with device = $device")
+  Card(
+    modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+  ) {
+    Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically
     ) {
-        Row (
-            modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically
+      Icon(
+        painter = painterResource(R.drawable.rounded_ev_charger_24),
+        contentDescription = stringResource(id = R.string.ev_charger_content_desc)
+      )
+
+      Spacer(modifier = Modifier.width(16.dp))
+
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .weight(1f)
+      ) {
+        Row(
+          modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(
-                painter = painterResource(R.drawable.rounded_ev_charger_24),
-                contentDescription = stringResource(id = R.string.ev_charger_content_desc)
-            )
+          Log.d(TAG, "GaaiDeviceCard printing first line")
 
-            Spacer(modifier = Modifier.width(16.dp))
+          Text(
+            text = device.pn,
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
+            text = device.sn,
+            style = MaterialTheme.typography.titleMedium
+          )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Log.d(TAG, "GaaiDeviceCard printing first line")
-
-                    Text(
-                        text = device.pn,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Spacer(Modifier.weight(1f))
-                    Text(
-                            text = device.sn,
-                    style = MaterialTheme.typography.titleMedium
-                    )
-
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = device.mac,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Spacer(Modifier.weight(1f))
-                    Text(
-                        text = "0x"+device.serviceDataValue.toHexString(),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
         }
-        Log.d(TAG, "exiting GaaiDeviceCard with device = $device")
+        Row(
+          modifier = Modifier.fillMaxWidth()
+        ) {
+          Text(
+            text = device.mac,
+            style = MaterialTheme.typography.bodyMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
+            text = "0x" + device.serviceDataValue.toHexString(),
+            style = MaterialTheme.typography.bodyMedium
+          )
+        }
+      }
     }
+    Log.d(TAG, "exiting GaaiDeviceCard with device = $device")
+  }
 }
 
 @Composable
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
-    val color = when (dismissState.dismissDirection) {
-        SwipeToDismissBoxValue.StartToEnd -> RedA400
-        SwipeToDismissBoxValue.EndToStart -> RedA400
-        SwipeToDismissBoxValue.Settled -> Color.Transparent
-    }
+  val color = when (dismissState.dismissDirection) {
+    SwipeToDismissBoxValue.StartToEnd -> RedA400
+    SwipeToDismissBoxValue.EndToStart -> RedA400
+    SwipeToDismissBoxValue.Settled -> Color.Transparent
+  }
 
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color)
-            .padding(12.dp, 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Icon(
-            Icons.Default.Delete,
-            contentDescription = stringResource(R.string.delete)
-        )
-        Spacer(modifier = Modifier)
-    }
+  Row(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color)
+      .padding(12.dp, 8.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+  ) {
+    Icon(
+      Icons.Default.Delete,
+      contentDescription = stringResource(R.string.delete)
+    )
+    Spacer(modifier = Modifier)
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun HomeBodyPreview() {
-   GaaiTheme {
-        HomeBody(listOf(
-            Device(1, "60211-A2", "2303-00005-E3","FF:B8:37:72:4F:F8", 0x17030005),
-            Device(2, "60211-A2", "2303-00006-E3", "FF:B8:37:72:4F:F7", 0x17030006),
-            Device(3, "60211-A2", "2303-00007-E3", "FF:B8:37:72:4F:F6", 0x17030007),
-        ), onDeviceClick = {}, onDeviceRemove = {})
-    }
+  GaaiTheme {
+    HomeBody(listOf(
+      Device(1, "60211-A2", "2303-00005-E3", "FF:B8:37:72:4F:F8", 0x17030005),
+      Device(2, "60211-A2", "2303-00006-E3", "FF:B8:37:72:4F:F7", 0x17030006),
+      Device(3, "60211-A2", "2303-00007-E3", "FF:B8:37:72:4F:F6", 0x17030007),
+    ), onDeviceClick = {}, onDeviceRemove = {})
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun HomeBodyEmptyListPreview() {
-    GaaiTheme {
-        HomeBody(listOf(), onDeviceClick = {}, onDeviceRemove = {})
-    }
+  GaaiTheme {
+    HomeBody(listOf(), onDeviceClick = {}, onDeviceRemove = {})
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DevicePreview() {
-    GaaiTheme {
-        GaaiDeviceCard(
-            Device(1, "60211-A2", "2303-00005-E3", "FF:B8:37:72:4F:F8", 0x17030005),
-        )
-    }
+  GaaiTheme {
+    GaaiDeviceCard(
+      Device(1, "60211-A2", "2303-00005-E3", "FF:B8:37:72:4F:F8", 0x17030005),
+    )
+  }
 }

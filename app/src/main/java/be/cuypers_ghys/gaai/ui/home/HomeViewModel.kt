@@ -30,25 +30,25 @@ import kotlinx.coroutines.flow.stateIn
  */
 class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewModel() {
 
-    suspend fun removeDevice(device: Device) {
-        devicesRepository.deleteDevice(device)
-    }
+  suspend fun removeDevice(device: Device) {
+    devicesRepository.deleteDevice(device)
+  }
 
-    /**
-     * Holds home ui state. The list of devices are retrieved from [DevicesRepository] and mapped to
-     * [HomeUiState]
-     */
-    val homeUiState: StateFlow<HomeUiState> =
-        devicesRepository.getAllDevicesStream().map { HomeUiState(it) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = HomeUiState()
-            )
+  /**
+   * Holds home ui state. The list of devices are retrieved from [DevicesRepository] and mapped to
+   * [HomeUiState]
+   */
+  val homeUiState: StateFlow<HomeUiState> =
+    devicesRepository.getAllDevicesStream().map { HomeUiState(it) }
+      .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+        initialValue = HomeUiState()
+      )
 
-    companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
-    }
+  companion object {
+    private const val TIMEOUT_MILLIS = 5_000L
+  }
 }
 
 /**

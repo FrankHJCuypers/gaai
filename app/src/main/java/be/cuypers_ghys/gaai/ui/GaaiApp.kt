@@ -40,33 +40,33 @@ import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
  */
 @Composable
 fun GaaiApp(navController: NavHostController = rememberNavController()) {
-    GaaiNavHost(navController = navController)
+  GaaiNavHost(navController = navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GaaiTopAppBar(
-    title: String,
-    canNavigateBack: Boolean,
-    modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior?=null,
-    navigateUp: () -> Unit = {}
+  title: String,
+  canNavigateBack: Boolean,
+  modifier: Modifier = Modifier,
+  scrollBehavior: TopAppBarScrollBehavior? = null,
+  navigateUp: () -> Unit = {}
 ) {
-    CenterAlignedTopAppBar(
-        title = { Text(title) },
-        modifier = modifier,
-        scrollBehavior = scrollBehavior,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(string.back_button)
-                    )
-                }
-            }
+  CenterAlignedTopAppBar(
+    title = { Text(title) },
+    modifier = modifier,
+    scrollBehavior = scrollBehavior,
+    navigationIcon = {
+      if (canNavigateBack) {
+        IconButton(onClick = navigateUp) {
+          Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(string.back_button)
+          )
         }
-    )
+      }
+    }
+  )
 }
 
 
@@ -74,15 +74,19 @@ fun GaaiTopAppBar(
 @Preview(showBackground = true)
 @Composable
 fun GaaiTopAppBarPreview() {
-    GaaiTheme {
-        GaaiTopAppBar(title="Gaai", canNavigateBack=true, scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior())
-    }
+  GaaiTheme {
+    GaaiTopAppBar(
+      title = "Gaai",
+      canNavigateBack = true,
+      scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    )
+  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GaaiAppBarPreview() {
-    GaaiTheme {
-        GaaiApp()
-    }
+  GaaiTheme {
+    GaaiApp()
+  }
 }

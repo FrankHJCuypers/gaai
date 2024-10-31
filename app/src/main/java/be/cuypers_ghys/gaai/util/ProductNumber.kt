@@ -22,6 +22,6 @@ package be.cuypers_ghys.gaai.util
  * @author Frank HJ Cuypers
  */
 data class ProductNumber(
-    val modelNumber: UInt,
-    val hardwareRevision: UByte
+  val modelNumber: UInt,
+  val hardwareRevision: UByte
 )

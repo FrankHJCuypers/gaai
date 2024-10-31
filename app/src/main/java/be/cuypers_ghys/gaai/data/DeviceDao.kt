@@ -30,31 +30,31 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface DeviceDao {
-    @Query("SELECT * from devices ORDER BY sn ASC")
-    fun getAllDevices(): Flow<List<Device>>
+  @Query("SELECT * from devices ORDER BY sn ASC")
+  fun getAllDevices(): Flow<List<Device>>
 
-    @Query("SELECT * from devices WHERE id = :id")
-    fun getDevice(id: Int): Flow<Device>
+  @Query("SELECT * from devices WHERE id = :id")
+  fun getDevice(id: Int): Flow<Device>
 
-    @Query("SELECT COUNT(*) from devices WHERE mac = :mac")
-    suspend fun count(mac: String) : Int
+  @Query("SELECT COUNT(*) from devices WHERE mac = :mac")
+  suspend fun count(mac: String): Int
 
-    @Query("SELECT COUNT(*) from devices WHERE pn = :pn AND sn = :sn")
-    suspend fun count(pn: String, sn:String) : Int
+  @Query("SELECT COUNT(*) from devices WHERE pn = :pn AND sn = :sn")
+  suspend fun count(pn: String, sn: String): Int
 
-    @Transaction
-    suspend fun canInsert(device:Device) : Boolean {
-        return (count(device.mac) == 0) and (count(device.pn, device.sn) == 0)
-    }
+  @Transaction
+  suspend fun canInsert(device: Device): Boolean {
+    return (count(device.mac) == 0) and (count(device.pn, device.sn) == 0)
+  }
 
-    // Specify the conflict strategy as IGNORE, when the user tries to add an
-    // existing Item into the database Room ignores the conflict.
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(device: Device)
+  // Specify the conflict strategy as IGNORE, when the user tries to add an
+  // existing Item into the database Room ignores the conflict.
+  @Insert(onConflict = OnConflictStrategy.IGNORE)
+  suspend fun insert(device: Device)
 
-    @Update
-    suspend fun update(device: Device)
+  @Update
+  suspend fun update(device: Device)
 
-    @Delete
-    suspend fun delete(device: Device)
+  @Delete
+  suspend fun delete(device: Device)
 }

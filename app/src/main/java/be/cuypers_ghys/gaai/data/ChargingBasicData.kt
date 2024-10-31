@@ -20,14 +20,14 @@ package be.cuypers_ghys.gaai.data
  * Discriminator.
  */
 enum class Discriminator {
-    STARTED, CHARGING, STOPPED, UNKNOWN
+  STARTED, CHARGING, STOPPED, UNKNOWN
 }
 
 /**
  * Status.
  */
 enum class Status {
-    PLUGGED, CHARGING, FAULT, UNKNOWN
+  PLUGGED, CHARGING, FAULT, UNKNOWN
 }
 
 /**
@@ -36,16 +36,16 @@ enum class Status {
  * @author Frank HJ Cuypers
  */
 data class ChargingBasicData(
-    /** Number of seconds since start of charging? */
-    val seconds: UShort =0u,
-    /** State of the discriminator. */
-    val discriminator: Discriminator = Discriminator.UNKNOWN,
-    /** State of the charger. */
-    val status : Status = Status.UNKNOWN,
-    /** Not yet decoded Status */
-    val rawStatus: Byte = 0,
-    /** Total energy in Wh charged during this session? */
-    val energy: UInt = 0u,
-    /** Charging Phase Count?*/
-    val phaseCount: UByte =0u
+  /** Number of seconds since start of charging? */
+  val seconds: UShort = 0u,
+  /** State of the discriminator. */
+  val discriminator: Discriminator = Discriminator.UNKNOWN,
+  /** State of the charger. */
+  val status: Status = Status.UNKNOWN,
+  /** Not yet decoded Status */
+  val rawStatus: Byte = 0,
+  /** Total energy in Wh charged during this session? */
+  val energy: UInt = 0u,
+  /** Charging Phase Count?*/
+  val phaseCount: UByte = 0u
 )

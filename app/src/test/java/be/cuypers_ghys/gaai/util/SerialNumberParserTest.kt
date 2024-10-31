@@ -27,103 +27,111 @@ import java.util.stream.Stream
  */
 class SerialNumberParserTest {
 
-    @ParameterizedTest
-    @MethodSource("usedCombinationsProvider")
-    fun verifyResultsFromKnownCorrectTestVectors(serialNumberString: String, expectedYear: Int, expectedMonth: Int, expectedNumber: Int, expectedUnknown: Int, expectedSerialNumber: Int, expectedSerialNumberString: String) {
-        val computedSerialNumber = SerialNumberParser.parse(serialNumberString)
-        Assertions.assertNotNull(computedSerialNumber)
-        Assertions.assertEquals(expectedYear.toUByte(), computedSerialNumber!!.year)
-        Assertions.assertEquals(expectedMonth.toUByte(), computedSerialNumber.month)
-        Assertions.assertEquals(expectedNumber.toUInt(), computedSerialNumber.number)
-        Assertions.assertEquals(expectedUnknown.toUByte(), computedSerialNumber.unknown)
+  @ParameterizedTest
+  @MethodSource("usedCombinationsProvider")
+  fun verifyResultsFromKnownCorrectTestVectors(
+    serialNumberString: String,
+    expectedYear: Int,
+    expectedMonth: Int,
+    expectedNumber: Int,
+    expectedUnknown: Int,
+    expectedSerialNumber: Int,
+    expectedSerialNumberString: String
+  ) {
+    val computedSerialNumber = SerialNumberParser.parse(serialNumberString)
+    Assertions.assertNotNull(computedSerialNumber)
+    Assertions.assertEquals(expectedYear.toUByte(), computedSerialNumber!!.year)
+    Assertions.assertEquals(expectedMonth.toUByte(), computedSerialNumber.month)
+    Assertions.assertEquals(expectedNumber.toUInt(), computedSerialNumber.number)
+    Assertions.assertEquals(expectedUnknown.toUByte(), computedSerialNumber.unknown)
 
-        val calcHexSerialNumber = SerialNumberParser.calcHexSerialNumber(computedSerialNumber)
-        Assertions.assertEquals(expectedSerialNumber.toLong(), calcHexSerialNumber.toLong())
+    val calcHexSerialNumber = SerialNumberParser.calcHexSerialNumber(computedSerialNumber)
+    Assertions.assertEquals(expectedSerialNumber.toLong(), calcHexSerialNumber.toLong())
 
-        val calcHexSerialNumberString = SerialNumberParser.calcHexSerialNumberString(computedSerialNumber)
-        Assertions.assertEquals(expectedSerialNumberString, calcHexSerialNumberString)
+    val calcHexSerialNumberString = SerialNumberParser.calcHexSerialNumberString(computedSerialNumber)
+    Assertions.assertEquals(expectedSerialNumberString, calcHexSerialNumberString)
+  }
+
+  @Test
+  fun parse_colonInsteadOfDash() {
+    Assertions.assertNull(SerialNumberParser.parse("2303:00005:E3"))
+  }
+
+  @Test
+  fun parse_pipeInsteadOfDash() {
+    Assertions.assertNull(SerialNumberParser.parse("2303|00005|E3"))
+  }
+
+  @Test
+  fun parse_YYMMToShort() {
+    Assertions.assertNull(SerialNumberParser.parse("230-00005-E3"))
+  }
+
+  @Test
+  fun parse_YYMMToLong() {
+    Assertions.assertNull(SerialNumberParser.parse("23030-00005-E3"))
+  }
+
+  @Test
+  fun parse_YYMMHex() {
+    Assertions.assertNull(SerialNumberParser.parse("230A-00005-E3"))
+  }
+
+  @Test
+  fun parse_YYMMNotHex() {
+    Assertions.assertNull(SerialNumberParser.parse("230Z-00005-E3"))
+  }
+
+  @Test
+  fun parse_SSSSSToShort() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-0005-E3"))
+  }
+
+  @Test
+  fun parse_SSSSSToLong() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-000905-E3"))
+  }
+
+  @Test
+  fun parse_SSSSSHex() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-00A05-E3"))
+  }
+
+  @Test
+  fun parse_SSSSSNotHex() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-K0005-E3"))
+  }
+
+  @Test
+  fun parse_UUToShort() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-00005-E"))
+  }
+
+  @Test
+  fun parse_UUToLong() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-00005-E34"))
+  }
+
+  @Test
+  fun parse_UUNotHex() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-00005-Z3"))
+  }
+
+  companion object {
+    /**
+     * Returns the test vectors.
+     *
+     * @return Stream of arguments to test
+     */
+    @JvmStatic
+    @Suppress("unused")
+    fun usedCombinationsProvider(): Stream<Arguments> {
+      return Stream.of(
+        Arguments.of("2303-00005-E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),
+        Arguments.of("230300005E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),
+        Arguments.of("2303-00005E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),
+        Arguments.of("230300005-E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),
+      )
     }
-
-    @Test
-    fun parse_colonInsteadOfDash() {
-        Assertions.assertNull(SerialNumberParser.parse("2303:00005:E3"))
-    }
-
-    @Test
-    fun parse_pipeInsteadOfDash() {
-        Assertions.assertNull(SerialNumberParser.parse("2303|00005|E3"))
-    }
-
-    @Test
-    fun parse_YYMMToShort() {
-        Assertions.assertNull(SerialNumberParser.parse("230-00005-E3"))
-    }
-
-    @Test
-    fun parse_YYMMToLong() {
-        Assertions.assertNull(SerialNumberParser.parse("23030-00005-E3"))
-    }
-
-    @Test
-    fun parse_YYMMHex() {
-        Assertions.assertNull(SerialNumberParser.parse("230A-00005-E3"))
-    }
-
-    @Test
-    fun parse_YYMMNotHex() {
-        Assertions.assertNull(SerialNumberParser.parse("230Z-00005-E3"))
-    }
-
-    @Test
-    fun parse_SSSSSToShort() {
-        Assertions.assertNull(SerialNumberParser.parse("2303-0005-E3"))
-    }
-
-    @Test
-    fun parse_SSSSSToLong() {
-        Assertions.assertNull(SerialNumberParser.parse("2303-000905-E3"))
-    }
-
-    @Test
-    fun parse_SSSSSHex() {
-        Assertions.assertNull(SerialNumberParser.parse("2303-00A05-E3"))
-    }
-
-    @Test
-    fun parse_SSSSSNotHex() {
-        Assertions.assertNull(SerialNumberParser.parse("2303-K0005-E3"))
-    }
-
-    @Test
-    fun parse_UUToShort() {
-        Assertions.assertNull(SerialNumberParser.parse("2303-00005-E"))
-    }
-
-    @Test
-    fun parse_UUToLong() {
-        Assertions.assertNull(SerialNumberParser.parse("2303-00005-E34"))
-    }
-
-    @Test
-    fun parse_UUNotHex() {
-        Assertions.assertNull(SerialNumberParser.parse("2303-00005-Z3"))
-    }
-
-    companion object {
-        /**
-         * Returns the test vectors.
-         *
-         * @return Stream of arguments to test
-         */
-        @JvmStatic
-        @Suppress("unused")
-        fun usedCombinationsProvider(): Stream<Arguments> {
-            return Stream.of(
-                Arguments.of("2303-00005-E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),
-                Arguments.of("230300005E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),
-                Arguments.of("2303-00005E3", 0x17, 0x03,5, 0xE3, 0x17030005, "17030005"),
-                Arguments.of("230300005-E3", 0x17, 0x03, 5, 0xE3, 0x17030005, "17030005"),
-            )
-        }
-    }
+  }
 }

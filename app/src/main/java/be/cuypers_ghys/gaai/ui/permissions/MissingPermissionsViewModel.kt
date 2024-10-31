@@ -35,51 +35,49 @@ private const val TAG = "MissingPermissionsViewModel"
 //  I tried it once, but it requires teh use of Hilt for dependency injection and some other Nordic stuff, so I abandoned it.
 class MissingPermissionsViewModel : ViewModel() {
 
-    /**
-     * Holds current BLE ui state
-     */
-    // TODO: the bleUiState is tracked in the viewModel, while the isBluetoothEnabledState is tracked in the MissingPermissions screen.
-    //  Can this be streamlined?
-    var bleUiState by mutableStateOf(BleUiState())
-        private set
+  /**
+   * Holds current BLE ui state
+   */
+  // TODO: the bleUiState is tracked in the viewModel, while the isBluetoothEnabledState is tracked in the MissingPermissions screen.
+  //  Can this be streamlined?
+  var bleUiState by mutableStateOf(BleUiState())
+    private set
 
-    /**
-     * Updates the [bleUiState] with the value provided in the argument.
-     * @param isBluetoothEnabledState Is ble enabled?.
-     */
-    fun updateUiState(isBluetoothEnabledState: Boolean) {
-        Log.d(TAG, "Updating isBluetoothEnabledState to $isBluetoothEnabledState")
-        bleUiState = bleUiState.copy( isBluetoothEnabledState =  isBluetoothEnabledState)
+  /**
+   * Updates the [bleUiState] with the value provided in the argument.
+   * @param isBluetoothEnabledState Is ble enabled?.
+   */
+  fun updateUiState(isBluetoothEnabledState: Boolean) {
+    Log.d(TAG, "Updating isBluetoothEnabledState to $isBluetoothEnabledState")
+    bleUiState = bleUiState.copy(isBluetoothEnabledState = isBluetoothEnabledState)
+  }
+
+  var permissions: List<String> = emptyList()
+
+  init {
+    Log.d(TAG, "SDK_INT: $(Build.VERSION.SDK_INT)")
+    if (Build.VERSION.SDK_INT <= 30) {
+      Log.d(TAG, "SDK <= 30")
+      permissions = listOf(
+        Manifest.permission.ACCESS_FINE_LOCATION
+      )
     }
-
-    var permissions: List<String> = emptyList()
-
-    init {
-        Log.d(TAG, "SDK_INT: $(Build.VERSION.SDK_INT)")
-        if (Build.VERSION.SDK_INT <= 30)
-        {
-            Log.d(TAG, "SDK <= 30")
-            permissions = listOf(
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        { // 4.
-            Log.d(TAG, "SDK >= 30")
-            permissions = permissions.plus(
-                listOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                )
-            )
-        }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // 4.
+      Log.d(TAG, "SDK >= 30")
+      permissions = permissions.plus(
+        listOf(
+          Manifest.permission.ACCESS_FINE_LOCATION,
+          Manifest.permission.BLUETOOTH_SCAN,
+          Manifest.permission.BLUETOOTH_CONNECT,
+        )
+      )
     }
+  }
 }
 
 /**
  * Represents Ui State for BLE.
  */
 data class BleUiState(
-    val isBluetoothEnabledState: Boolean = false,
+  val isBluetoothEnabledState: Boolean = false,
 )

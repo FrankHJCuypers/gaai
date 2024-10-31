@@ -24,35 +24,37 @@ package be.cuypers_ghys.gaai.data
 // TODO: Make it a an enum like [Discriminator] and move the parsing logic to [ChargingAdvancedDataParser]
 // like for the other Parsers
 // TODO: create Junit tests for this class.
-data class AuthorizationStatus ( val authStatus: Byte) {
+data class AuthorizationStatus(val authStatus: Byte) {
+
+  @Suppress("unused")
+  fun isSet(bit: Int): Boolean {
+    return ((1 shl bit) and authStatus.toInt()) != 0
+  }
+
+  @Suppress("MemberVisibilityCanBePrivate")
+  companion object {
+    const val UNAUTHORIZED_BIT = 0
+    const val AUTHORIZED_DEFAULT_BIT = 1
+    const val CHARGE_STOPPED_IN_APP_BIT = 2
 
     @Suppress("unused")
-    fun isSet(bit: Int ) : Boolean {
-        return ((1 shl bit) and authStatus.toInt()) != 0
-    }
+    const val RFU1_BIT = 3
+    const val CHARGE_PAUSED_BIT = 4
+    const val MAX_BIT = 5
+    const val ECO_BIT = 6
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    companion object {
-        const val UNAUTHORIZED_BIT = 0
-        const val AUTHORIZED_DEFAULT_BIT = 1
-        const val CHARGE_STOPPED_IN_APP_BIT = 2
-        @Suppress("unused")
-        const val RFU1_BIT = 3
-        const val CHARGE_PAUSED_BIT = 4
-        const val MAX_BIT = 5
-        const val ECO_BIT = 6
-        @Suppress("unused")
-        const val RFU2_BIT = 7
-        const val UNAUTHORIZED = (1 shl UNAUTHORIZED_BIT).toByte()
-        const val AUTHORIZED = 1 shl AUTHORIZED_DEFAULT_BIT
-        const val CHARGE_STOPPED_IN_APP = (1 shl CHARGE_STOPPED_IN_APP_BIT).toByte()
-        const val CHARGE_PAUSED = (1 shl CHARGE_PAUSED_BIT).toByte()
-        const val MAX = 1 shl MAX_BIT
-        const val ECO = 1 shl ECO_BIT
-        const val AUTHORIZED_DEFAULT = (AUTHORIZED).toByte()
-        const val AUTHORIZED_MAX = (AUTHORIZED or MAX).toByte()
-        const val AUTHORIZED_ECO = (AUTHORIZED or ECO).toByte()
-    }
+    @Suppress("unused")
+    const val RFU2_BIT = 7
+    const val UNAUTHORIZED = (1 shl UNAUTHORIZED_BIT).toByte()
+    const val AUTHORIZED = 1 shl AUTHORIZED_DEFAULT_BIT
+    const val CHARGE_STOPPED_IN_APP = (1 shl CHARGE_STOPPED_IN_APP_BIT).toByte()
+    const val CHARGE_PAUSED = (1 shl CHARGE_PAUSED_BIT).toByte()
+    const val MAX = 1 shl MAX_BIT
+    const val ECO = 1 shl ECO_BIT
+    const val AUTHORIZED_DEFAULT = (AUTHORIZED).toByte()
+    const val AUTHORIZED_MAX = (AUTHORIZED or MAX).toByte()
+    const val AUTHORIZED_ECO = (AUTHORIZED or ECO).toByte()
+  }
 }
 
 
@@ -62,27 +64,27 @@ data class AuthorizationStatus ( val authStatus: Byte) {
  * @author Frank HJ Cuypers
  */
 data class ChargingAdvancedData(
-    /** Measurement time in Unix Time. */
-    val timestamp: UInt = 0u,
-    /**
-     * Available capacity in A.
-     */
-    val iAvailable: Short = 0,
-    /**
-     * Total power consumption from the grid in W.
-     */
-    val gridPower: Int = 0,
-    /**
-     * Total power consumption from the car in W.
-     */
-    val carPower: Int = 0,
-    /**
-     * Authorization status.
-     *
-     */
-    val authorizationStatus: AuthorizationStatus = AuthorizationStatus(0),
-    /**
-     * Error code returned by the Nexxtender Home. Values unknown.
-     */
-    val errorCode: Byte = 0,
+  /** Measurement time in Unix Time. */
+  val timestamp: UInt = 0u,
+  /**
+   * Available capacity in A.
+   */
+  val iAvailable: Short = 0,
+  /**
+   * Total power consumption from the grid in W.
+   */
+  val gridPower: Int = 0,
+  /**
+   * Total power consumption from the car in W.
+   */
+  val carPower: Int = 0,
+  /**
+   * Authorization status.
+   *
+   */
+  val authorizationStatus: AuthorizationStatus = AuthorizationStatus(0),
+  /**
+   * Error code returned by the Nexxtender Home. Values unknown.
+   */
+  val errorCode: Byte = 0,
 )

@@ -21,7 +21,7 @@ package be.cuypers_ghys.gaai.data
  * Charging mode.
  */
 enum class Mode {
-    ECO_PRIVATE, MAX_PRIVATE, ECO_OPEN, MAX_OPEN, UNKNOWN
+  ECO_PRIVATE, MAX_PRIVATE, ECO_OPEN, MAX_OPEN, UNKNOWN
 }
 
 /**
@@ -29,14 +29,14 @@ enum class Mode {
  */
 @Suppress("SpellCheckingInspection")
 enum class NetWorkType {
-    MONO_TRIN, TRI, UNKNOWN
+  MONO_TRIN, TRI, UNKNOWN
 }
 
 /**
  * Codes the Configuration version type.
  */
 enum class ConfigVersion {
-    CONFIG_1_0, CONFIG_1_1, CONFIG_CBOR
+  CONFIG_1_0, CONFIG_1_1, CONFIG_CBOR
 }
 
 /**
@@ -45,58 +45,58 @@ enum class ConfigVersion {
  * @author Frank HJ Cuypers
  */
 data class ConfigData(
-    /** Maximum allowed grid consumption limit in A. */
-    val maxGrid: UByte = 0U,
+  /** Maximum allowed grid consumption limit in A. */
+  val maxGrid: UByte = 0U,
 
-    /**
-     * Maximum allowed charging speed in A for the device.
-     * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
-     */
-    val maxDevice: UByte = 0U,
+  /**
+   * Maximum allowed charging speed in A for the device.
+   * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
+   */
+  val maxDevice: UByte = 0U,
 
-    /**
-     * Default charging mode.
-     */
-    val mode: Mode = Mode.UNKNOWN,
+  /**
+   * Default charging mode.
+   */
+  val mode: Mode = Mode.UNKNOWN,
 
-    /** Minimum charging speed in A for the device. */
-    val safe: UByte = 0U,
+  /** Minimum charging speed in A for the device. */
+  val safe: UByte = 0U,
 
-    /**
-     * Codes the network type.
-     * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
-     */
-    val networkType: NetWorkType = NetWorkType.UNKNOWN,
+  /**
+   * Codes the network type.
+   * Only available in [ConfigVersion.CONFIG_1_1] and [ConfigVersion.CONFIG_CBOR].
+   */
+  val networkType: NetWorkType = NetWorkType.UNKNOWN,
 
-    /** Off peak charging start time of each weekday. Coded in minutes since midnight. */
-    val touWeekStart: Short = 0,
+  /** Off peak charging start time of each weekday. Coded in minutes since midnight. */
+  val touWeekStart: Short = 0,
 
-    /** Off peak charging end time of each weekday. Coded in minutes since midnight. */
-    val touWeekEnd: Short = 0,
+  /** Off peak charging end time of each weekday. Coded in minutes since midnight. */
+  val touWeekEnd: Short = 0,
 
-    /** Off peak charging start time of each weekend day. Coded in minutes since midnight. */
-    val touWeekendStart: Short = 0,
+  /** Off peak charging start time of each weekend day. Coded in minutes since midnight. */
+  val touWeekendStart: Short = 0,
 
-    /** Off peak charging end time of each weekend day. Coded in minutes since midnight. */
-    val touWeekendEnd: Short = 0,
+  /** Off peak charging end time of each weekend day. Coded in minutes since midnight. */
+  val touWeekendEnd: Short = 0,
 
-    /**
-     * ?
-     * Only available in [ConfigVersion.CONFIG_CBOR].
-     */
-    val minDevice: UByte = 0U,
+  /**
+   * ?
+   * Only available in [ConfigVersion.CONFIG_CBOR].
+   */
+  val minDevice: UByte = 0U,
 
-    /**
-     * ?
-     * Only available in [ConfigVersion.CONFIG_CBOR].
-     */
-    val iCapacity: UByte = 0U,
+  /**
+   * ?
+   * Only available in [ConfigVersion.CONFIG_CBOR].
+   */
+  val iCapacity: UByte = 0U,
 
-    /** Which configuration is used?. */
-    val configVersion: ConfigVersion = ConfigVersion.CONFIG_1_0,
+  /** Which configuration is used?. */
+  val configVersion: ConfigVersion = ConfigVersion.CONFIG_1_0,
 
-    /**
-     * Does this configuration still have its default values; i.e. not overwritten yet?
-     */
-    val default: Boolean = true
+  /**
+   * Does this configuration still have its default values; i.e. not overwritten yet?
+   */
+  val default: Boolean = true
 )

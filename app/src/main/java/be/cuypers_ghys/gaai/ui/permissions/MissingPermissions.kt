@@ -58,8 +58,8 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 private const val TAG = "MissingPermissions"
 
 object MissingPermissionsDestination : NavigationDestination {
-    override val route = "permission"
-    override val titleRes = R.string.permissions
+  override val route = "permission"
+  override val titleRes = R.string.permissions
 }
 
 /**
@@ -69,30 +69,30 @@ object MissingPermissionsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MissingPermissionsScreen(
-    navigateToHome: () -> Unit,
-    @Suppress("unused")
-    modifier: Modifier = Modifier,
-    canNavigateBack: Boolean = false
+  navigateToHome: () -> Unit,
+  @Suppress("unused")
+  modifier: Modifier = Modifier,
+  canNavigateBack: Boolean = false
 ) {
-    Scaffold(
-        topBar = {
-            GaaiTopAppBar(
-                title = stringResource(MissingPermissionsDestination.titleRes),
-                canNavigateBack = canNavigateBack,
-            )
-        }
-    ) { innerPadding ->
-        MissingPermissionsComponent(
-            navigateToHome = navigateToHome,
-            modifier = Modifier
-                .padding(
-                    start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-                    top = innerPadding.calculateTopPadding(),
-                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-                )
-                .fillMaxWidth()
-        )
+  Scaffold(
+    topBar = {
+      GaaiTopAppBar(
+        title = stringResource(MissingPermissionsDestination.titleRes),
+        canNavigateBack = canNavigateBack,
+      )
     }
+  ) { innerPadding ->
+    MissingPermissionsComponent(
+      navigateToHome = navigateToHome,
+      modifier = Modifier
+          .padding(
+              start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+              top = innerPadding.calculateTopPadding(),
+              end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+          )
+          .fillMaxWidth()
+    )
+  }
 }
 
 /**
@@ -101,112 +101,113 @@ fun MissingPermissionsScreen(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MissingPermissionsComponent(
-    navigateToHome: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: MissingPermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+  navigateToHome: () -> Unit,
+  modifier: Modifier = Modifier,
+  viewModel: MissingPermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    Log.d(TAG, "Required permissions: $viewModel.permissions")
+  Log.d(TAG, "Required permissions: $viewModel.permissions")
 
-    // rememberMultiplePermissionsState() is a composable, so can not be called from a ViewModel.
-    val multiplePermissionsState = rememberMultiplePermissionsState(
-        permissions = viewModel.permissions,
-    )
-    val context = LocalContext.current
-    val isBluetoothEnabledState = isBluetoothEnabledState(context)
-    viewModel.updateUiState(isBluetoothEnabledState)
+  // rememberMultiplePermissionsState() is a composable, so can not be called from a ViewModel.
+  val multiplePermissionsState = rememberMultiplePermissionsState(
+    permissions = viewModel.permissions,
+  )
+  val context = LocalContext.current
+  val isBluetoothEnabledState = isBluetoothEnabledState(context)
+  viewModel.updateUiState(isBluetoothEnabledState)
 
-    Log.d(TAG, "permissionState: $multiplePermissionsState.")
-    Log.d(TAG, "isBluetoothEnabledState: $isBluetoothEnabledState.")
+  Log.d(TAG, "permissionState: $multiplePermissionsState.")
+  Log.d(TAG, "isBluetoothEnabledState: $isBluetoothEnabledState.")
 
-    // broadcast receiver to receive the Bluetooth enabled event.
-    val bluetoothReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent?) {
-            val action = intent?.action
-            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                val state = intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
-                when (state) {
-                    BluetoothAdapter.STATE_OFF -> {
-                    }
-                    BluetoothAdapter.STATE_TURNING_OFF -> {
-                    }
-                    BluetoothAdapter.STATE_ON -> {
-                        viewModel.updateUiState(isBluetoothEnabledState(context))
-                    }
-                    BluetoothAdapter.STATE_TURNING_ON -> {
-                    }
-                }
-            }
+  // broadcast receiver to receive the Bluetooth enabled event.
+  val bluetoothReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent?) {
+      val action = intent?.action
+      if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+        val state = intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+        when (state) {
+          BluetoothAdapter.STATE_OFF -> {
+          }
+
+          BluetoothAdapter.STATE_TURNING_OFF -> {
+          }
+
+          BluetoothAdapter.STATE_ON -> {
+            viewModel.updateUiState(isBluetoothEnabledState(context))
+          }
+
+          BluetoothAdapter.STATE_TURNING_ON -> {
+          }
         }
+      }
     }
+  }
 
-    // register the receiver
-    val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-    registerReceiver(context, bluetoothReceiver, filter, RECEIVER_NOT_EXPORTED)
+  // register the receiver
+  val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+  registerReceiver(context, bluetoothReceiver, filter, RECEIVER_NOT_EXPORTED)
 
-    if (multiplePermissionsState.allPermissionsGranted) {
-        Log.d(TAG, "All permissions granted")
-        if (viewModel.bleUiState.isBluetoothEnabledState ) {
-            Log.d(TAG, "Bluetooth enabled")
-            context.unregisterReceiver(bluetoothReceiver)
-            navigateToHome()
-        }
-        else {
-            // TODO: Factorize to its own Composable?
-            Column (
-                modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = stringResource(R.string.bluetooth_disabled)
-                    )
-
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = {
-                    Log.d(TAG, "enabling Bluetooth")
-                    enableBluetooth(context)
-                    Log.d(TAG, "Updating Ui Bluetooth state")
-
-                    viewModel.updateUiState(isBluetoothEnabledState(context))
-                }) {
-                    Text(stringResource(R.string.enable_bluetooth))
-                }
-            }
-
-        }
+  if (multiplePermissionsState.allPermissionsGranted) {
+    Log.d(TAG, "All permissions granted")
+    if (viewModel.bleUiState.isBluetoothEnabledState) {
+      Log.d(TAG, "Bluetooth enabled")
+      context.unregisterReceiver(bluetoothReceiver)
+      navigateToHome()
     } else {
-        // TODO: Factorize to its own Composable?
-        Column (
-            modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Text(
-                text = getTextToShowGivenPermissions(
-                    multiplePermissionsState.revokedPermissions,
-                    multiplePermissionsState.shouldShowRationale
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { multiplePermissionsState.launchMultiplePermissionRequest() }) {
-                Text(stringResource(R.string.request_permissions))
-            }
+      // TODO: Factorize to its own Composable?
+      Column(
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Text(
+          text = stringResource(R.string.bluetooth_disabled)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = {
+          Log.d(TAG, "enabling Bluetooth")
+          enableBluetooth(context)
+          Log.d(TAG, "Updating Ui Bluetooth state")
+
+          viewModel.updateUiState(isBluetoothEnabledState(context))
+        }) {
+          Text(stringResource(R.string.enable_bluetooth))
         }
+      }
+
     }
+  } else {
+    // TODO: Factorize to its own Composable?
+    Column(
+      modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      Text(
+        text = getTextToShowGivenPermissions(
+          multiplePermissionsState.revokedPermissions,
+          multiplePermissionsState.shouldShowRationale
+        )
+      )
+      Spacer(modifier = Modifier.height(8.dp))
+      Button(onClick = { multiplePermissionsState.launchMultiplePermissionRequest() }) {
+        Text(stringResource(R.string.request_permissions))
+      }
+    }
+  }
 }
 
 fun enableBluetooth(context: Context) {
-    context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+  context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
 }
 
-private fun isBluetoothEnabledState(context :Context) :Boolean
-{
-    val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
-    if (bluetoothAdapter == null) {
-        Log.d(TAG, "Bluetooth not supported")
-    }
-    val enabled = bluetoothAdapter?.isEnabled == true
-    Log.d(TAG, "isBluetoothEnabledState return $enabled")
-    return enabled
+private fun isBluetoothEnabledState(context: Context): Boolean {
+  val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+  val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
+  if (bluetoothAdapter == null) {
+    Log.d(TAG, "Bluetooth not supported")
+  }
+  val enabled = bluetoothAdapter?.isEnabled == true
+  Log.d(TAG, "isBluetoothEnabledState return $enabled")
+  return enabled
 }
 
 /**
@@ -220,51 +221,53 @@ private fun isBluetoothEnabledState(context :Context) :Boolean
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun getTextToShowGivenPermissions(
-    permissions: List<PermissionState>,
-    shouldShowRationale: Boolean
+  permissions: List<PermissionState>,
+  shouldShowRationale: Boolean
 ): String {
-    val revokedPermissionsSize = permissions.size
-    if (revokedPermissionsSize == 0) return ""
+  val revokedPermissionsSize = permissions.size
+  if (revokedPermissionsSize == 0) return ""
 
-    val textToShow = StringBuilder().apply {
-        append(stringResource(R.string.the_space))
+  val textToShow = StringBuilder().apply {
+    append(stringResource(R.string.the_space))
+  }
+
+  for (i in permissions.indices) {
+    textToShow.append(permissions[i].permission)
+    when {
+      revokedPermissionsSize > 1 && i == revokedPermissionsSize - 2 -> {
+        textToShow.append(stringResource(R.string.command_and_space))
+      }
+
+      i == revokedPermissionsSize - 1 -> {
+        textToShow.append(" ")
+      }
+
+      else -> {
+        textToShow.append(", ")
+      }
     }
+  }
+  textToShow.append(
+    if (revokedPermissionsSize == 1) stringResource(R.string.permission_is)
+    else stringResource(R.string.permissions_are)
+  )
 
-    for (i in permissions.indices) {
-        textToShow.append(permissions[i].permission)
-        when {
-            revokedPermissionsSize > 1 && i == revokedPermissionsSize - 2 -> {
-                textToShow.append(stringResource(R.string.command_and_space))
-            }
-            i == revokedPermissionsSize - 1 -> {
-                textToShow.append(" ")
-            }
-            else -> {
-                textToShow.append(", ")
-            }
-        }
+  textToShow.append(
+    if (shouldShowRationale) {
+      stringResource(R.string.permissions_required)
+    } else {
+      stringResource(R.string.permissions_denied)
     }
-    textToShow.append(
-        if (revokedPermissionsSize == 1) stringResource(R.string.permission_is)
-        else stringResource(R.string.permissions_are )
-    )
-
-    textToShow.append(
-        if (shouldShowRationale) {
-            stringResource(R.string.permissions_required)
-        } else {
-            stringResource(R.string.permissions_denied)
-        }
-    )
-    Log.d(TAG, "Returned text: $textToShow")
-    return textToShow.toString()
+  )
+  Log.d(TAG, "Returned text: $textToShow")
+  return textToShow.toString()
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun MissingPermissionsComponentPreview() {
-    GaaiTheme {
-        MissingPermissionsComponent(navigateToHome = {})
-    }
+  GaaiTheme {
+    MissingPermissionsComponent(navigateToHome = {})
+  }
 }

@@ -28,27 +28,27 @@ import java.util.stream.Stream
  */
 class ToPeriodTest {
 
-    @ParameterizedTest
-    @MethodSource("usedCombinationsProvider")
-    fun verifyResultsFromKnownTestVectors( startTime: Int, endTime: Int, expectedString: String) {
-        val touPeriod = TouPeriod(startTime.toShort(), endTime.toShort())
-        Assertions.assertEquals(expectedString, touPeriod.toString())
-    }
+  @ParameterizedTest
+  @MethodSource("usedCombinationsProvider")
+  fun verifyResultsFromKnownTestVectors(startTime: Int, endTime: Int, expectedString: String) {
+    val touPeriod = TouPeriod(startTime.toShort(), endTime.toShort())
+    Assertions.assertEquals(expectedString, touPeriod.toString())
+  }
 
-    companion object {
-        /**
-         * Returns the test vectors.
-         *
-         * @return Stream of arguments to test
-         */
-        @JvmStatic
-        @Suppress("unused")
-        fun usedCombinationsProvider(): Stream<Arguments> {
-            return Stream.of(
-                Arguments.of(720, 1234, "12:00 - 20:34"),
-                Arguments.of(754, 1425, "12:34 - 23:45"),
-                Arguments.of(0, 1439, "00:00 - 23:59"),
-            )
-        }
+  companion object {
+    /**
+     * Returns the test vectors.
+     *
+     * @return Stream of arguments to test
+     */
+    @JvmStatic
+    @Suppress("unused")
+    fun usedCombinationsProvider(): Stream<Arguments> {
+      return Stream.of(
+        Arguments.of(720, 1234, "12:00 - 20:34"),
+        Arguments.of(754, 1425, "12:34 - 23:45"),
+        Arguments.of(0, 1439, "00:00 - 23:59"),
+      )
     }
+  }
 }

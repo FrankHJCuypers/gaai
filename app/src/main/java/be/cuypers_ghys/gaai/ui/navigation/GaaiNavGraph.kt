@@ -37,45 +37,45 @@ import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsScreen
  */
 @Composable
 fun GaaiNavHost(
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
+  navController: NavHostController,
+  modifier: Modifier = Modifier,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = MissingPermissionsDestination.route,
-        modifier = modifier
-    ) {
-        composable(route = HomeDestination.route) {
-            HomeScreen(
-                navigateToDeviceEntry = { navController.navigate(DeviceEntryDestination.route) },
-                navigateToDeviceDetails = {
-                    navController.navigate("${DeviceDetailsDestination.route}/${it}")
-                }
-            )
+  NavHost(
+    navController = navController,
+    startDestination = MissingPermissionsDestination.route,
+    modifier = modifier
+  ) {
+    composable(route = HomeDestination.route) {
+      HomeScreen(
+        navigateToDeviceEntry = { navController.navigate(DeviceEntryDestination.route) },
+        navigateToDeviceDetails = {
+          navController.navigate("${DeviceDetailsDestination.route}/${it}")
         }
-        composable(route = DeviceEntryDestination.route) {
-            DeviceEntryScreen(
-                navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() }
-            )
-        }
-
-        composable(
-            route = DeviceDetailsDestination.routeWithArgs,
-            arguments = listOf(navArgument(DeviceDetailsDestination.DEVICE_ID_ARG) {
-                type = NavType.IntType
-            })
-        ) {
-            DeviceDetailsScreen(
-                navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() }
-            )
-        }
-
-        composable(route = MissingPermissionsDestination.route) {
-            MissingPermissionsScreen(
-                navigateToHome = { navController.navigate(HomeDestination.route)  },
-            )
-        }
+      )
     }
+    composable(route = DeviceEntryDestination.route) {
+      DeviceEntryScreen(
+        navigateBack = { navController.popBackStack() },
+        onNavigateUp = { navController.navigateUp() }
+      )
+    }
+
+    composable(
+      route = DeviceDetailsDestination.routeWithArgs,
+      arguments = listOf(navArgument(DeviceDetailsDestination.DEVICE_ID_ARG) {
+        type = NavType.IntType
+      })
+    ) {
+      DeviceDetailsScreen(
+        navigateBack = { navController.popBackStack() },
+        onNavigateUp = { navController.navigateUp() }
+      )
+    }
+
+    composable(route = MissingPermissionsDestination.route) {
+      MissingPermissionsScreen(
+        navigateToHome = { navController.navigate(HomeDestination.route) },
+      )
+    }
+  }
 }

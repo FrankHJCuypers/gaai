@@ -31,56 +31,54 @@ import java.util.stream.Stream
  */
 class TouTimeTest {
 
-    @ParameterizedTest
-    @MethodSource("usedCombinationsProvider")
-    fun verifyResultsFromKnownTestVectors( time: Int, expectedHours: Int, expectedMinutes: Int, expectedString: String) {
-        val touTime = TouTime(time.toShort())
-        val expectedCalendar = Calendar.getInstance()
-        expectedCalendar.set(Calendar.HOUR_OF_DAY, expectedHours)
-        expectedCalendar.set(Calendar.MINUTE,expectedMinutes)
-        expectedCalendar.isLenient = false
-        Assertions.assertEquals(expectedCalendar.isLenient, touTime.getCalendar().isLenient)
-        Assertions.assertEquals(expectedCalendar.firstDayOfWeek, touTime.getCalendar().firstDayOfWeek)
-        Assertions.assertEquals(expectedCalendar.minimalDaysInFirstWeek, touTime.getCalendar().minimalDaysInFirstWeek)
-        Assertions.assertEquals(expectedCalendar.getTimeZone() , touTime.getCalendar().getTimeZone() )
-        Assertions.assertEquals(expectedCalendar.get(Calendar.HOUR_OF_DAY) , touTime.getCalendar().get(Calendar.HOUR_OF_DAY) )
-        Assertions.assertEquals(expectedCalendar.get(Calendar.MINUTE) , touTime.getCalendar().get(Calendar.MINUTE) )
-        Assertions.assertEquals(expectedString, touTime.toString())
-    }
+  @ParameterizedTest
+  @MethodSource("usedCombinationsProvider")
+  fun verifyResultsFromKnownTestVectors(time: Int, expectedHours: Int, expectedMinutes: Int, expectedString: String) {
+    val touTime = TouTime(time.toShort())
+    val expectedCalendar = Calendar.getInstance()
+    expectedCalendar.set(Calendar.HOUR_OF_DAY, expectedHours)
+    expectedCalendar.set(Calendar.MINUTE, expectedMinutes)
+    expectedCalendar.isLenient = false
+    Assertions.assertEquals(expectedCalendar.isLenient, touTime.getCalendar().isLenient)
+    Assertions.assertEquals(expectedCalendar.firstDayOfWeek, touTime.getCalendar().firstDayOfWeek)
+    Assertions.assertEquals(expectedCalendar.minimalDaysInFirstWeek, touTime.getCalendar().minimalDaysInFirstWeek)
+    Assertions.assertEquals(expectedCalendar.getTimeZone(), touTime.getCalendar().getTimeZone())
+    Assertions.assertEquals(expectedCalendar.get(Calendar.HOUR_OF_DAY), touTime.getCalendar().get(Calendar.HOUR_OF_DAY))
+    Assertions.assertEquals(expectedCalendar.get(Calendar.MINUTE), touTime.getCalendar().get(Calendar.MINUTE))
+    Assertions.assertEquals(expectedString, touTime.toString())
+  }
 
-    @Test
-    fun timeOverflow()
-    {
-        val touTime = TouTime(2000)
-        assertThrows(IllegalArgumentException::class.java) {
-            touTime.getCalendar().get(Calendar.HOUR_OF_DAY)
-        }
+  @Test
+  fun timeOverflow() {
+    val touTime = TouTime(2000)
+    assertThrows(IllegalArgumentException::class.java) {
+      touTime.getCalendar().get(Calendar.HOUR_OF_DAY)
     }
+  }
 
-    @Test
-    fun timeNegative()
-    {
-        val touTime = TouTime(-1)
-        assertThrows(IllegalArgumentException::class.java) {
-            touTime.getCalendar().get(Calendar.HOUR_OF_DAY)
-        }
+  @Test
+  fun timeNegative() {
+    val touTime = TouTime(-1)
+    assertThrows(IllegalArgumentException::class.java) {
+      touTime.getCalendar().get(Calendar.HOUR_OF_DAY)
     }
+  }
 
-    companion object {
-        /**
-         * Returns the test vectors.
-         *
-         * @return Stream of arguments to test
-         */
-        @JvmStatic
-        @Suppress("unused")
-        fun usedCombinationsProvider(): Stream<Arguments> {
-            return Stream.of(
-                Arguments.of(1234, 20, 34, "20:34"),
-                Arguments.of(0, 0, 0, "00:00"),
-                Arguments.of(720, 12,0, "12:00"),
-                Arguments.of(1439, 23,59, "23:59"),
-            )
-        }
+  companion object {
+    /**
+     * Returns the test vectors.
+     *
+     * @return Stream of arguments to test
+     */
+    @JvmStatic
+    @Suppress("unused")
+    fun usedCombinationsProvider(): Stream<Arguments> {
+      return Stream.of(
+        Arguments.of(1234, 20, 34, "20:34"),
+        Arguments.of(0, 0, 0, "00:00"),
+        Arguments.of(720, 12, 0, "12:00"),
+        Arguments.of(1439, 23, 59, "23:59"),
+      )
     }
+  }
 }

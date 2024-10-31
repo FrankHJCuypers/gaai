@@ -28,24 +28,24 @@ import java.util.Locale
  * @author Frank HJ Cuypers
  */
 data class TouPeriod(
-    var startTime: TouTime,
-    var endTime: TouTime
+  var startTime: TouTime,
+  var endTime: TouTime
 ) {
-    /**
-     * Creates an instance with the specified times.
-     * @param startTime Start time in minutes since midnight.
-     * @param endTime End time in minutes since midnight.
-     */
-    constructor(startTime: Short, endTime: Short) :
-        this(startTime = TouTime(startTime), endTime = TouTime(endTime))
+  /**
+   * Creates an instance with the specified times.
+   * @param startTime Start time in minutes since midnight.
+   * @param endTime End time in minutes since midnight.
+   */
+  constructor(startTime: Short, endTime: Short) :
+      this(startTime = TouTime(startTime), endTime = TouTime(endTime))
 
-    /**
-     * Converts the period into a readable string.
-     * @return Time on HH:mm format
-     */
-    override fun toString(): String {
-        return String.format(Locale.getDefault(), "%s - %s", startTime.toString(), endTime.toString())
-    }
+  /**
+   * Converts the period into a readable string.
+   * @return Time on HH:mm format
+   */
+  override fun toString(): String {
+    return String.format(Locale.getDefault(), "%s - %s", startTime.toString(), endTime.toString())
+  }
 
 
 }

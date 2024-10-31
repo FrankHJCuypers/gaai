@@ -22,30 +22,30 @@ package be.cuypers_ghys.gaai.data
  * @author Frank HJ Cuypers
  */
 data class ChargingGridData(
-    /** Measurement time in Unix Time. */
-    val timestamp: UInt=0u,
-    /**
-     * Grid phase L1 current in dA.
-     * A negative value indicates that a power surplus is delivered to the Grid.
-     * That can only happen in case there are solar panels and solar power is more than what is
-     * consumed by the house and the EV.
-     */
-    val l1: Short=0,
-    /**
-     * Grid phase L2 current in dA.
-     * @see l1
-     */
-    val l2: Short=0,
-    /**
-     * Grid phase L3 current in dA.
-     * @see l1
-     */
-    val l3: Short=0,
-    /**
-     * Total grid power consumption in Watt.
-     * @see l1
-     */
-    val consumed : Short=0,
-    /** Counter that goes from 0 to 900 (15 minutes)? */
-    val interval: UShort=0u,
+  /** Measurement time in Unix Time. */
+  val timestamp: UInt = 0u,
+  /**
+   * Grid phase L1 current in dA.
+   * A negative value indicates that a power surplus is delivered to the Grid.
+   * That can only happen in case there are solar panels and solar power is more than what is
+   * consumed by the house and the EV.
+   */
+  val l1: Short = 0,
+  /**
+   * Grid phase L2 current in dA.
+   * @see l1
+   */
+  val l2: Short = 0,
+  /**
+   * Grid phase L3 current in dA.
+   * @see l1
+   */
+  val l3: Short = 0,
+  /**
+   * Total grid power consumption in Watt.
+   * @see l1
+   */
+  val consumed: Short = 0,
+  /** Counter that goes from 0 to 900 (15 minutes)? */
+  val interval: UShort = 0u,
 )

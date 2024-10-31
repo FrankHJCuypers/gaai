@@ -15,6 +15,7 @@
  */
 
 package be.cuypers_ghys.gaai.util
+
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -28,33 +29,33 @@ import kotlinx.datetime.toLocalDateTime
  */
 object Timestamp {
 
-    private val format = LocalDateTime.Format {
-        year()
-        char('-')
-        monthNumber()
-        char('-')
-        dayOfMonth()
+  private val format = LocalDateTime.Format {
+    year()
+    char('-')
+    monthNumber()
+    char('-')
+    dayOfMonth()
 
-        char(' ')
+    char(' ')
 
-        hour()
-        char(':')
-        minute()
-        char(':')
-        second()
-    }
+    hour()
+    char(':')
+    minute()
+    char(':')
+    second()
+  }
 
-    /**
-     * Converts the timestamp into a readable string.
-     * @param timeStamp As received from the Nexxtender Home.
-     * @return String representation of the timestamp.
-     */
-    // TODO: junit tests
-    fun toString(timeStamp: UInt): String {
-        val gmtTime = Instant.fromEpochSeconds(timeStamp.toLong())
-        val localDateTime = gmtTime.toLocalDateTime(TimeZone.currentSystemDefault())
+  /**
+   * Converts the timestamp into a readable string.
+   * @param timeStamp As received from the Nexxtender Home.
+   * @return String representation of the timestamp.
+   */
+  // TODO: junit tests
+  fun toString(timeStamp: UInt): String {
+    val gmtTime = Instant.fromEpochSeconds(timeStamp.toLong())
+    val localDateTime = gmtTime.toLocalDateTime(TimeZone.currentSystemDefault())
 
 
-        return format.format(localDateTime)
-    }
+    return format.format(localDateTime)
+  }
 }

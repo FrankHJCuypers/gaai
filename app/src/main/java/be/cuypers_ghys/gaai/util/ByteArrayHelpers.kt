@@ -26,8 +26,8 @@ package be.cuypers_ghys.gaai.util
  * @param value Value to write in the ByteArray.
  */
 fun ByteArray.toUint16LE(offset: Int, value: UInt) {
-    this[offset] = (value and 0xFFu).toByte()
-    this[offset+1] = (value shr 8).toByte()
+  this[offset] = (value and 0xFFu).toByte()
+  this[offset + 1] = (value shr 8).toByte()
 }
 
 /**
@@ -36,8 +36,8 @@ fun ByteArray.toUint16LE(offset: Int, value: UInt) {
  * @param value Value to write in the ByteArray.
  */
 fun ByteArray.toUint16BE(offset: Int, value: UInt) {
-    this[offset] = (value shr 8).toByte()
-    this[offset+1] = (value and 0xFFu).toByte()
+  this[offset] = (value shr 8).toByte()
+  this[offset + 1] = (value and 0xFFu).toByte()
 }
 
 /**
@@ -46,10 +46,10 @@ fun ByteArray.toUint16BE(offset: Int, value: UInt) {
  * @param value Value to write in the ByteArray.
  */
 fun ByteArray.toUint32LE(offset: Int, value: UInt) {
-    this[offset] = (value).toByte()
-    this[offset+1] = (value shr 8).toByte()
-    this[offset+2] = (value shr 16).toByte()
-    this[offset+3] = (value shr 24).toByte()
+  this[offset] = (value).toByte()
+  this[offset + 1] = (value shr 8).toByte()
+  this[offset + 2] = (value shr 16).toByte()
+  this[offset + 3] = (value shr 24).toByte()
 }
 
 /**
@@ -58,10 +58,10 @@ fun ByteArray.toUint32LE(offset: Int, value: UInt) {
  * @param value Value to write in the ByteArray.
  */
 fun ByteArray.toUint32BE(offset: Int, value: UInt) {
-    this[offset] = (value shr 24).toByte()
-    this[offset+1] = (value shr 16).toByte()
-    this[offset+2] = (value shr 8).toByte()
-    this[offset+3] = value.toByte()
+  this[offset] = (value shr 24).toByte()
+  this[offset + 1] = (value shr 16).toByte()
+  this[offset + 2] = (value shr 8).toByte()
+  this[offset + 3] = value.toByte()
 }
 
 /**
@@ -69,8 +69,8 @@ fun ByteArray.toUint32BE(offset: Int, value: UInt) {
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
  */
-fun ByteArray.fromUint16LE(offset: Int) :UShort {
-    return (( this[offset].toUInt() and 0xFFu) or (this[offset+1].toUInt() shl 8)).toUShort()
+fun ByteArray.fromUint16LE(offset: Int): UShort {
+  return ((this[offset].toUInt() and 0xFFu) or (this[offset + 1].toUInt() shl 8)).toUShort()
 }
 
 /**
@@ -78,11 +78,11 @@ fun ByteArray.fromUint16LE(offset: Int) :UShort {
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
  */
-fun ByteArray.fromUint32LE(offset: Int) :UInt {
-    return (( this[offset].toUInt() and 0xFFu)
-            or ((this[offset+1].toUInt() and 0xFFu) shl 8)
-            or ((this[offset+2].toUInt() and 0xFFu) shl 16)
-            or ((this[offset+3].toUInt() and 0xFFu) shl 24))
+fun ByteArray.fromUint32LE(offset: Int): UInt {
+  return ((this[offset].toUInt() and 0xFFu)
+      or ((this[offset + 1].toUInt() and 0xFFu) shl 8)
+      or ((this[offset + 2].toUInt() and 0xFFu) shl 16)
+      or ((this[offset + 3].toUInt() and 0xFFu) shl 24))
 }
 
 /**
@@ -90,11 +90,11 @@ fun ByteArray.fromUint32LE(offset: Int) :UInt {
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
  */
-fun ByteArray.fromUint32BE(offset: Int) :UInt {
-    return ( (( this[offset].toUInt() and 0xFFu) shl 24)
-            or ((this[offset+1].toUInt() and 0xFFu) shl 16)
-            or ((this[offset+2].toUInt() and 0xFFu) shl 8)
-            or (this[offset+3].toUInt() and 0xFFu))
+fun ByteArray.fromUint32BE(offset: Int): UInt {
+  return (((this[offset].toUInt() and 0xFFu) shl 24)
+      or ((this[offset + 1].toUInt() and 0xFFu) shl 16)
+      or ((this[offset + 2].toUInt() and 0xFFu) shl 8)
+      or (this[offset + 3].toUInt() and 0xFFu))
 }
 
 /**
@@ -102,8 +102,8 @@ fun ByteArray.fromUint32BE(offset: Int) :UInt {
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
  */
-fun ByteArray.fromInt16LE(offset: Int) :Short {
-    return (( this[offset].toInt() and 0xFF) or (this[offset+1].toInt() shl 8)).toShort()
+fun ByteArray.fromInt16LE(offset: Int): Short {
+  return ((this[offset].toInt() and 0xFF) or (this[offset + 1].toInt() shl 8)).toShort()
 }
 
 /**
@@ -111,9 +111,9 @@ fun ByteArray.fromInt16LE(offset: Int) :Short {
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
  */
-fun ByteArray.fromInt32LE(offset: Int) :Int {
-    return (( this[offset].toInt() and 0xFF)
-            or ((this[offset+1].toInt() and 0xFF) shl 8)
-            or ((this[offset+2].toInt() and 0xFF) shl 16)
-            or ((this[offset+3].toInt() and 0xFF) shl 24))
+fun ByteArray.fromInt32LE(offset: Int): Int {
+  return ((this[offset].toInt() and 0xFF)
+      or ((this[offset + 1].toInt() and 0xFF) shl 8)
+      or ((this[offset + 2].toInt() and 0xFF) shl 16)
+      or ((this[offset + 3].toInt() and 0xFF) shl 24))
 }

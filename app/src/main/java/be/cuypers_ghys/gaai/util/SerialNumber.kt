@@ -22,8 +22,8 @@ package be.cuypers_ghys.gaai.util
  * @author Frank HJ Cuypers
  */
 data class SerialNumber(
-    val year: UByte,
-    val month: UByte,
-    val number: UInt,
-    val unknown: UByte
+  val year: UByte,
+  val month: UByte,
+  val number: UInt,
+  val unknown: UByte
 )

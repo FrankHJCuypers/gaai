@@ -28,41 +28,39 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  * @author Frank HJ Cuypers
  */
 object ChargingGridDataParser {
-    /**
-     * Parses a byte array with the contents of the Charging Grid Data BLE Characteristic into an
-     * [ChargingGridData].
-     * @param chargingGridData Byte array with the value read from the Charging Grid Data BLE
-     * Characteristic.
-     * @return A [ChargingGridData] holding the parsed result.
-     *      Null if *chargingGridData* is not 16 bytes long or the CRC16 is not correct.
-     */
-    fun parse(chargingGridData: ByteArray): ChargingGridData? {
-        if ( chargingGridData.size !=  16 )
-        {
-            return null
-        }
-
-        val crc =  chargingGridData.fromUint16LE(14)
-        val computedCrc = CRC16.MODBUS(chargingGridData,0, 14).toUShort()
-        if ( computedCrc != crc )
-        {
-            return null
-        }
-
-        val timestamp = chargingGridData.fromUint32LE(0)
-        val l1 = chargingGridData.fromInt16LE(4)
-        val l2 = chargingGridData.fromInt16LE(6)
-        val l3 = chargingGridData.fromInt16LE(8)
-        val consumed = chargingGridData.fromInt16LE(10)
-        val interval = chargingGridData.fromUint16LE(12)
-
-        return ChargingGridData(
-            timestamp,
-            l1,
-            l2,
-            l3,
-            consumed,
-            interval
-        )
+  /**
+   * Parses a byte array with the contents of the Charging Grid Data BLE Characteristic into an
+   * [ChargingGridData].
+   * @param chargingGridData Byte array with the value read from the Charging Grid Data BLE
+   * Characteristic.
+   * @return A [ChargingGridData] holding the parsed result.
+   *      Null if *chargingGridData* is not 16 bytes long or the CRC16 is not correct.
+   */
+  fun parse(chargingGridData: ByteArray): ChargingGridData? {
+    if (chargingGridData.size != 16) {
+      return null
     }
+
+    val crc = chargingGridData.fromUint16LE(14)
+    val computedCrc = CRC16.MODBUS(chargingGridData, 0, 14).toUShort()
+    if (computedCrc != crc) {
+      return null
+    }
+
+    val timestamp = chargingGridData.fromUint32LE(0)
+    val l1 = chargingGridData.fromInt16LE(4)
+    val l2 = chargingGridData.fromInt16LE(6)
+    val l3 = chargingGridData.fromInt16LE(8)
+    val consumed = chargingGridData.fromInt16LE(10)
+    val interval = chargingGridData.fromUint16LE(12)
+
+    return ChargingGridData(
+      timestamp,
+      l1,
+      l2,
+      l3,
+      consumed,
+      interval
+    )
+  }
 }

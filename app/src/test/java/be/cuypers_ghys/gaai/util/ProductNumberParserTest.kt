@@ -27,73 +27,77 @@ import java.util.stream.Stream
  */
 class ProductNumberParserTest {
 
-    @ParameterizedTest
-    @MethodSource("usedCombinationsProvider")
-    fun verifyResultsFromKnownCorrectTestVectors(productNumberString: String, expectedModelNumber: Int, expectedHardwareRevision: Int) {
-        val computedProductNumber = ProductNumberParser.parse(productNumberString)
-        Assertions.assertNotNull(productNumberString)
-        Assertions.assertEquals(expectedModelNumber.toUInt(), computedProductNumber!!.modelNumber)
-        Assertions.assertEquals(expectedHardwareRevision.toUByte(), computedProductNumber.hardwareRevision)
-    }
+  @ParameterizedTest
+  @MethodSource("usedCombinationsProvider")
+  fun verifyResultsFromKnownCorrectTestVectors(
+    productNumberString: String,
+    expectedModelNumber: Int,
+    expectedHardwareRevision: Int
+  ) {
+    val computedProductNumber = ProductNumberParser.parse(productNumberString)
+    Assertions.assertNotNull(productNumberString)
+    Assertions.assertEquals(expectedModelNumber.toUInt(), computedProductNumber!!.modelNumber)
+    Assertions.assertEquals(expectedHardwareRevision.toUByte(), computedProductNumber.hardwareRevision)
+  }
 
-    @Test
-    fun parse_colonInsteadOfDash() {
-        Assertions.assertNull(SerialNumberParser.parse("60211:A2"))
-    }
+  @Test
+  fun parse_colonInsteadOfDash() {
+    Assertions.assertNull(SerialNumberParser.parse("60211:A2"))
+  }
 
-    @Test
-    fun parse_pipeInsteadOfDash() {
-        Assertions.assertNull(SerialNumberParser.parse("60211|A2"))
-    }
+  @Test
+  fun parse_pipeInsteadOfDash() {
+    Assertions.assertNull(SerialNumberParser.parse("60211|A2"))
+  }
 
-    @Test
-    fun parse_AAAAAToShort() {
-        Assertions.assertNull(SerialNumberParser.parse("6211-A2"))
-    }
+  @Test
+  fun parse_AAAAAToShort() {
+    Assertions.assertNull(SerialNumberParser.parse("6211-A2"))
+  }
 
-    @Test
-    fun parse_YYMMToLong() {
-        Assertions.assertNull(SerialNumberParser.parse("606211-A2"))
-    }
+  @Test
+  fun parse_YYMMToLong() {
+    Assertions.assertNull(SerialNumberParser.parse("606211-A2"))
+  }
 
-    @Test
-    fun parse_AAAAAHex() {
-        Assertions.assertNull(SerialNumberParser.parse("6021A-A2"))
-    }
+  @Test
+  fun parse_AAAAAHex() {
+    Assertions.assertNull(SerialNumberParser.parse("6021A-A2"))
+  }
 
-    @Test
-    fun parse_AAAAANotHex() {
-        Assertions.assertNull(SerialNumberParser.parse("6021Z-A2"))
-    }
+  @Test
+  fun parse_AAAAANotHex() {
+    Assertions.assertNull(SerialNumberParser.parse("6021Z-A2"))
+  }
 
-    @Test
-    fun parse_RRToShort() {
-        Assertions.assertNull(SerialNumberParser.parse("60211-A"))
-    }
+  @Test
+  fun parse_RRToShort() {
+    Assertions.assertNull(SerialNumberParser.parse("60211-A"))
+  }
 
-    @Test
-    fun parse_RRToLong() {
-        Assertions.assertNull(SerialNumberParser.parse("60211-A20"))
-    }
+  @Test
+  fun parse_RRToLong() {
+    Assertions.assertNull(SerialNumberParser.parse("60211-A20"))
+  }
 
-    @Test
-    fun parse_RRNotHex() {
-        Assertions.assertNull(SerialNumberParser.parse("60211-AK"))
-    }
+  @Test
+  fun parse_RRNotHex() {
+    Assertions.assertNull(SerialNumberParser.parse("60211-AK"))
+  }
 
-    companion object {
-        /**
-         * Returns the test vectors.
-         *
-         * @return Stream of arguments to test
-         */
-        @JvmStatic
-        @Suppress("unused")
-        fun usedCombinationsProvider(): Stream<Arguments> {
-            return Stream.of(
-                Arguments.of("60211-A2", 60211, 0xA2),
-                Arguments.of("60211A2", 60211, 0xA2),
-            )
-        }
+  companion object {
+    /**
+     * Returns the test vectors.
+     *
+     * @return Stream of arguments to test
+     */
+    @JvmStatic
+    @Suppress("unused")
+    fun usedCombinationsProvider(): Stream<Arguments> {
+      return Stream.of(
+        Arguments.of("60211-A2", 60211, 0xA2),
+        Arguments.of("60211A2", 60211, 0xA2),
+      )
     }
+  }
 }

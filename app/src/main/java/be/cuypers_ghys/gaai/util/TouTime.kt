@@ -32,57 +32,58 @@ import java.util.Locale
  *
  * @author Frank HJ Cuypers
  */
-data class TouTime (
-    val time: Short
-){
-    /**
-     * Creates an instance with the specified [hours] and [minutes].
-     * @param hours Hours part ot the time.
-     * @param minutes minutes part of the time.
-     */
-    constructor(hours: Int, minutes: Int) :
-        this((hours * 60 + minutes).toShort())
+data class TouTime(
+  val time: Short
+) {
+  /**
+   * Creates an instance with the specified [hours] and [minutes].
+   * @param hours Hours part ot the time.
+   * @param minutes minutes part of the time.
+   */
+  constructor(hours: Int, minutes: Int) :
+      this((hours * 60 + minutes).toShort())
+
+  /**
+   * Creates an instance with the specified [timePickerState].
+   * @param timePickerState Hours part ot the time.
+   */
+  @OptIn(ExperimentalMaterial3Api::class)
+  constructor(timePickerState: TimePickerState) :
+      this(timePickerState.hour, timePickerState.minute)
+
+  /**
+   * Converts the time into a readable string.
+   * @return Time on HH:mm format
+   */
+  override fun toString(): String {
+    return format(getCalendar().time)
+  }
+
+  fun getCalendar(): Calendar {
+    val cal = Calendar.getInstance()
+    cal.set(Calendar.HOUR_OF_DAY, getHours())
+    cal.set(Calendar.MINUTE, getMinutes())
+    cal.isLenient = false
+    return cal
+  }
+
+  fun getHours(): Int {
+    return time / 60
+  }
+
+  fun getMinutes(): Int {
+    return time % 60
+  }
+
+  companion object {
+    @SuppressLint("ConstantLocale")
+    val hourMinutesFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     /**
-     * Creates an instance with the specified [timePickerState].
-     * @param timePickerState Hours part ot the time.
+     * Format the time.
      */
-    @OptIn(ExperimentalMaterial3Api::class)
-    constructor(timePickerState: TimePickerState) :
-            this(timePickerState.hour, timePickerState.minute)
-
-    /**
-     * Converts the time into a readable string.
-     * @return Time on HH:mm format
-     */
-    override fun toString(): String {
-        return format(getCalendar().time)
+    fun format(time: Date): String {
+      return hourMinutesFormatter.format(time)
     }
-
-    fun getCalendar(): Calendar{
-        val cal = Calendar.getInstance()
-        cal.set(Calendar.HOUR_OF_DAY, getHours())
-        cal.set(Calendar.MINUTE, getMinutes())
-        cal.isLenient = false
-        return cal
-    }
-
-    fun getHours() : Int {
-        return time / 60
-    }
-
-    fun getMinutes() : Int {
-        return time % 60
-    }
-
-    companion object {
-        @SuppressLint("ConstantLocale")
-        val hourMinutesFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
-        /**
-         * Format the time.
-         */
-        fun format( time: Date): String {
-            return hourMinutesFormatter.format(time)
-        }
-    }
+  }
 }
