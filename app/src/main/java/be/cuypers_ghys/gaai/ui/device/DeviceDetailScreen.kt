@@ -479,7 +479,7 @@ internal fun GaaiChargingBasicDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingBasicData.energy.toInt().toString() + " Wh",
+            text = "%.3f kWh".format(chargingBasicData.energy.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -561,7 +561,7 @@ internal fun GaaiChargingGridDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingGridData.l1.toString() + " dA",
+            text = "%.1f A".format(chargingGridData.l1.toFloat() / 10.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -575,7 +575,7 @@ internal fun GaaiChargingGridDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingGridData.l2.toString() + " dA",
+            text = "%.1f A".format(chargingGridData.l2.toFloat() / 10.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -589,7 +589,7 @@ internal fun GaaiChargingGridDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingGridData.l3.toString() + " dA",
+            text = "%.1f A".format(chargingGridData.l3.toFloat() / 10.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -603,7 +603,7 @@ internal fun GaaiChargingGridDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingGridData.consumed.toString() + " W",
+            text = "%.3f kW".format(chargingGridData.consumed.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -685,7 +685,7 @@ internal fun GaaiChargingCarDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingCarData.l1.toString() + " dA",
+            text = "%.1f A".format(chargingCarData.l1.toFloat() / 10.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -699,7 +699,7 @@ internal fun GaaiChargingCarDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingCarData.l2.toString() + " dA",
+            text = "%.1f A".format(chargingCarData.l2.toFloat() / 10.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -713,7 +713,7 @@ internal fun GaaiChargingCarDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingCarData.l3.toString() + " dA",
+            text = "%.1f A".format(chargingCarData.l3.toFloat() / 10.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -727,7 +727,7 @@ internal fun GaaiChargingCarDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingCarData.p1.toString() + " W",
+            text = "%.3f kW".format(chargingCarData.p1.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -741,7 +741,7 @@ internal fun GaaiChargingCarDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingCarData.p2.toString() + " W",
+            text = "%.3f kW".format(chargingCarData.p2.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -755,7 +755,7 @@ internal fun GaaiChargingCarDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingCarData.p3.toString() + " W",
+            text = "%.3f kW".format(chargingCarData.p3.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -837,7 +837,7 @@ internal fun GaaiChargingAdvancedDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingAdvancedData.gridPower.toString() + " W",
+            text = "%.3f kW".format(chargingAdvancedData.gridPower.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -851,7 +851,7 @@ internal fun GaaiChargingAdvancedDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingAdvancedData.carPower.toString() + " W",
+            text = "%.3f kW".format(chargingAdvancedData.carPower.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
