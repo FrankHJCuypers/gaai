@@ -23,6 +23,8 @@ import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
 /**
  * Dependency Injection container at the application level.
+ *
+ * @author Frank HJ Cuypers
  */
 interface AppContainer {
   val devicesRepository: DevicesRepository
@@ -34,6 +36,8 @@ interface AppContainer {
  *  and [NordicBleRepository]
  *
  * Variables are initialized lazily and the same instance is shared across the whole app.
+ *
+ * @author Frank HJ Cuypers
  */
 class DefaultAppContainer(context: Context) : AppContainer {
 //    private val gaaiBleService : GaaiBleService = DummyGaaiBleService()

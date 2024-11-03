@@ -33,7 +33,11 @@ import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsDestination
 import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsScreen
 
 /**
- * Provides Navigation graph for the application.
+ * Provides the Navigation graph for the application.
+ * @param navController The []NavHostController] for this host.
+ * @param modifier The [Modifier] to be applied to this GaaiNavHost.
+ *
+ * @author Frank HJ Cuypers
  */
 @Composable
 fun GaaiNavHost(

@@ -26,35 +26,74 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Database access object to access the Gaai database
+ * Database access object to access the Gaai [GaaiDatabase] with Nexxtender Home devices.
+ *
+ * @author Frank HJ Cuypers
  */
 @Dao
 interface DeviceDao {
+  /**
+   * @return A Flow of all [Device]s ordered by [Device.sn] in the database.
+   */
   @Query("SELECT * from devices ORDER BY sn ASC")
   fun getAllDevices(): Flow<List<Device>>
 
+  /**
+   * @param id The unique [Device.id] of the record to return.
+   * @return A Flow of the [Device] matching the specified [Device. in] in the database.
+   */
   @Query("SELECT * from devices WHERE id = :id")
   fun getDevice(id: Int): Flow<Device>
 
+  /**
+   * @param mac The [Device.mac] of the records to count.
+   * @return A count of the [Device]s matching the specified [Device.mac] in the database.
+   */
   @Query("SELECT COUNT(*) from devices WHERE mac = :mac")
   suspend fun count(mac: String): Int
 
+  /**
+   * @param pn The [Device.pn] of the records to count.
+   * @param sn The [Device.sn] of the records to count.
+   * @return A count of the [Device]s matching the specified [Device.pn] and [Device.sn] in the database.
+   * Can only be 0 or 1, due to the unique index on pn+sn in [Device].
+   */
   @Query("SELECT COUNT(*) from devices WHERE pn = :pn AND sn = :sn")
   suspend fun count(pn: String, sn: String): Int
 
+  /**
+   * Tests if a [device] can be inserted in the database.
+   * @param device New device to test for insertion.
+   * @return False if a [Device] with the same MAC or sn+pn as [device] already exists in the database.
+   */
   @Transaction
   suspend fun canInsert(device: Device): Boolean {
     return (count(device.mac) == 0) and (count(device.pn, device.sn) == 0)
   }
 
-  // Specify the conflict strategy as IGNORE, when the user tries to add an
-  // existing Item into the database Room ignores the conflict.
+  /**
+   * Inserts a [device] in the database.
+   *
+   * The conflict strategy IGNORE is specified:
+   * when the user tries to add an existing [device] into the database,
+   * [Room](https://developer.android.com/training/data-storage/room) ignores the conflict.
+   *
+   * @param device New device to insert.
+   */
   @Insert(onConflict = OnConflictStrategy.IGNORE)
   suspend fun insert(device: Device)
 
+  /**
+   * Updates the specified [device] in the database.
+   * @param device New record for the device.
+   */
   @Update
   suspend fun update(device: Device)
 
+  /**
+   * Deletes the specified [device] from the database.
+   * @param device The device to delete.
+   */
   @Delete
   suspend fun delete(device: Device)
 }

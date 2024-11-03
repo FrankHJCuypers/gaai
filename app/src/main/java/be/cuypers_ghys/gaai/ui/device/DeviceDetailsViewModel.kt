@@ -64,12 +64,26 @@ import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 // Tag for logging
 private const val TAG = "DeviceDetailsViewModel"
 
+/**
+ * Creates a 2-byte DataByteArray with the value of *command* as a 2-byte Little Endian.
+ * @param command Value to write in the DataByteArray.
+ *
+ * @author Frank HJ Cuypers
+ */
+// TODO: use [ByteArrayHelpers.toUint16LE]
 fun DataByteArray.Companion.fromUShort(command: Int): DataByteArray {
   return from((command and 0xFF).toByte(), ((command shr 8) and 0xFF).toByte())
 }
 
 /**
- * ViewModel to show the device details.
+ * ViewModel to manage the state with the details of the [Device] with id [deviceId], to be used by [DeviceDetails].
+ *
+ * @param savedStateHandle [SavedStateHandle] passed by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider]
+ * @param devicesRepository The [DevicesRepository] to use.
+ * @param bleRepository The [BleRepository] to use.
+ * @constructor Called by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider].
+ *
+ * @author Frank HJ Cuypers
  */
 class DeviceDetailsViewModel(
   savedStateHandle: SavedStateHandle,
@@ -77,7 +91,14 @@ class DeviceDetailsViewModel(
   private val bleRepository: BleRepository
 ) : ViewModel() {
 
+  /**
+   * The id of the [Device] for which to build a state.
+   */
   private val deviceId: Int = checkNotNull(savedStateHandle[DeviceDetailsDestination.DEVICE_ID_ARG])
+
+  /**
+   * The [Device] corresponding with [deviceId].
+   */
   private val gaaiDevice = getDevice(deviceId)!!
 
   private val _device = MutableStateFlow<Device?>(null)
@@ -107,9 +128,13 @@ class DeviceDetailsViewModel(
   private lateinit var nexxtenderHomeGenericDataCharacteristic: ClientBleGattCharacteristic
   private lateinit var configVersion: ConfigVersion
 
-  /** New configuration value to be written to GENERIC_DATA*/
+  /** New configuration value to be written to GENERIC_DATA. */
   private lateinit var newConfigData: ConfigData
 
+  /**
+   * Starts a [ClientBleGatt] to communicate with the [gaaiDevice].
+   * @param gaaiDevice [Device] for which to start a [ClientBleGatt].
+   */
   @SuppressLint("MissingPermission")
   private fun startGattClient(gaaiDevice: Device) = viewModelScope.launch {
     Log.d(TAG, "Starting Gatt Client for gaaiDevice: $gaaiDevice")
@@ -138,6 +163,10 @@ class DeviceDetailsViewModel(
     configureGatt(services)
   }
 
+  /**
+   * Sets up the GATT services and characteristics required for the Nexxtender Home.
+   * @param services Entry point for finding services and characteristics.
+   */
   @SuppressLint("MissingPermission")
   private suspend fun configureGatt(services: ClientBleGattServices) {
     Log.d(TAG, "Found the following services: $services")
@@ -249,28 +278,54 @@ class DeviceDetailsViewModel(
     sendConfigOperationGet()
   }
 
+  /**
+   * Writes [newConfigData] to the [Generic Data]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * characteristic.
+   */
   private suspend fun writeNewConfigData() {
     writeGenericData(newConfigData)
   }
 
+  /**
+   * Writes [newConfigData] to the [Generic Data]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * characteristic.
+   * @param newConfigData The new [ConfigData] to write.
+   */
   @SuppressLint("MissingPermission")
   private suspend fun writeGenericData(newConfigData: ConfigData) {
     Log.d(TAG, "Writing Generic Data: $newConfigData")
     nexxtenderHomeGenericDataCharacteristic.write(DataByteArray(ConfigDataParserComposer.compose(newConfigData)))
   }
 
+  /**
+   * Writes [CONFIG_OPERATION_GET] or [CONFIG_OPERATION_CBOR_GET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
   private suspend fun sendConfigOperationGet() {
     val command =
       if (configVersion == ConfigVersion.CONFIG_CBOR) CONFIG_OPERATION_CBOR_GET else CONFIG_OPERATION_GET
     writeGenericCommand(command)
   }
 
+  /**
+   * Writes [command] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   * @param command The [OperationId][be.cuypers_ghys.gaai.data.OperationAndStatusIDs] to write.
+   */
   @SuppressLint("MissingPermission")
   private suspend fun writeGenericCommand(command: Int) {
     Log.d(TAG, "Writing Generic Command: $command")
     nexxtenderHomeGenericCommandCharacteristic.write(DataByteArray.fromUShort(command))
   }
 
+  /**
+   * Disconnects the [client] and executes [navigateBack].
+   * @param navigateBack Function called when this view model wants to navigate back to the previous view.
+   */
   fun navigateBack(navigateBack: () -> Unit) {
     viewModelScope.launch {
       client?.disconnect()
@@ -278,6 +333,12 @@ class DeviceDetailsViewModel(
     }
   }
 
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the [touPeriodWeek].
+   * @param touPeriodWeek New values for [ConfigData.touWeekStart] and [ConfigData.touWeekEnd].
+   */
   fun sendConfigOperationSetTouWeek(touPeriodWeek: TouPeriod) {
     viewModelScope.launch {
       newConfigData = _state.value.configData.copy(
@@ -288,16 +349,28 @@ class DeviceDetailsViewModel(
     }
   }
 
-  fun sendConfigOperationSetTouWeekend(touPeriodWeek: TouPeriod) {
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the [touPeriodWeekend].
+   * @param touPeriodWeekend New values for [ConfigData.touWeekendStart] and [ConfigData.touWeekendEnd].
+   */
+  fun sendConfigOperationSetTouWeekend(touPeriodWeekend: TouPeriod) {
     viewModelScope.launch {
       newConfigData = _state.value.configData.copy(
-        touWeekendStart = touPeriodWeek.startTime.time,
-        touWeekendEnd = touPeriodWeek.endTime.time
+        touWeekendStart = touPeriodWeekend.startTime.time,
+        touWeekendEnd = touPeriodWeekend.endTime.time
       )
       sendConfigOperationSet()
     }
   }
 
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the [maxGrid].
+   * @param maxGrid New values for [ConfigData.maxGrid].
+   */
   fun sendConfigOperationSetMaxGrid(maxGrid: UByte) {
     viewModelScope.launch {
       newConfigData = _state.value.configData.copy(
@@ -307,6 +380,12 @@ class DeviceDetailsViewModel(
     }
   }
 
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the [maxDevice].
+   * @param maxDevice New values for [ConfigData.maxDevice].
+   */
   fun sendConfigOperationSetMaxDevice(maxDevice: UByte) {
     viewModelScope.launch {
       newConfigData = _state.value.configData.copy(
@@ -316,6 +395,12 @@ class DeviceDetailsViewModel(
     }
   }
 
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the [mode].
+   * @param mode New values for [ConfigData.mode].
+   */
   fun sendConfigOperationSetMode(mode: Mode) {
     viewModelScope.launch {
       newConfigData = _state.value.configData.copy(
@@ -325,6 +410,11 @@ class DeviceDetailsViewModel(
     }
   }
 
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
   private suspend fun sendConfigOperationSet() {
     if (newConfigData.default) {
       Log.d(TAG, "New Config Data is still default: $newConfigData")
@@ -336,6 +426,10 @@ class DeviceDetailsViewModel(
     writeGenericCommand(command)
   }
 
+  /**
+   * Loads the [Device] corresponding with [deviceId] from the database.
+   * @param deviceId The id of the [device] to load.
+   */
   private fun getDevice(deviceId: Int) = runBlocking {
     Log.d(TAG, "Getting Device with id $deviceId")
     return@runBlocking devicesRepository.getDeviceStream(deviceId).first()
@@ -344,7 +438,7 @@ class DeviceDetailsViewModel(
 
 
 /**
- * Represents DeviceInformation fields.
+ * Represents Device Information fields.
  */
 data class DeviceInformation(
   val modelNumber: String = "",

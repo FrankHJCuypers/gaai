@@ -81,13 +81,27 @@ import kotlinx.coroutines.launch
 // Tag for logging
 private const val TAG = "HomeScreen"
 
+/**
+ * The [NavigationDestination] information for the [HomeScreen].
+ *
+ * @author Frank HJ Cuypers
+ */
 object HomeDestination : NavigationDestination {
   override val route = "home"
   override val titleRes = R.string.app_name
 }
 
 /**
- * Entry route for Home screen
+ * Implements the screens, including app bars, for displaying all known Nexxtender Home devices,
+ * including the case there are none yet, connect to them, delete them,
+ * and allows to add new ones based on their SN and PN and to connect to it.
+ * @param navigateToDeviceEntry Function to be called when [HomeScreen] wants to add a new device.
+ * @param navigateToDeviceDetails Function to be called when [HomeScreen] wants to connect to a known device and show
+ *  its details.
+ * @param modifier The [Modifier] to be applied to this HomeScreen.
+ * @param viewModel The [HomeViewModel] to be associated with this [HomeScreen].
+ *
+ * @author Frank HJ Cuypers
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,6 +155,20 @@ fun HomeScreen(
   }
 }
 
+/**
+ * Implements the screens for displaying all known Nexxtender Home devices,
+ * including the case there are none yet, connect to them, delete them,
+ * and allows to add new ones based on their SN and PN.
+ * @param deviceList The list of known [Devices][Device].
+ * @param onDeviceClick Function to be called when [HomeBody] wants to connect to a known device and show
+ *  its details.
+ * @param onDeviceRemove Function to be called when [HomeBody] wants to delete a known device from the list.
+ * @param modifier The [Modifier] to be applied to this [HomeBody].
+ * @param contentPadding Padding value to apply internal.
+ *
+ * @author Frank HJ Cuypers
+ */
+
 @Composable
 private fun HomeBody(
   deviceList: List<Device>,
@@ -172,6 +200,18 @@ private fun HomeBody(
   }
 }
 
+/**
+ * Implements a [LazyColumn] for displaying all known Nexxtender Home devices and
+ * connect to them.
+ * @param deviceList The list of known [Devices][Device].
+ * @param onDeviceClick Function to be called when [HomeBody] wants to connect to a known device and show
+ *  its details.
+ * @param onDeviceRemove Function to be called when [HomeBody] wants to delete a known device from the list.
+ * @param contentPadding Padding value to apply internal.
+ * @param modifier The [Modifier] to be applied to this [HomeBody].
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 private fun DevicesList(
   deviceList: List<Device>,
@@ -194,6 +234,17 @@ private fun DevicesList(
   }
 }
 
+/**
+ * Implements a [Card] displaying the details of the [device],
+ * connect to it or delete it by swiping the card to the right using a [SwipeToDismissBox].
+ * @param device The [Device] to display.
+ * @param onDeviceClick Function to be called when [GaaiDeviceItem] wants to connect to a known device and show
+ *  its details.
+ * @param onDeviceRemove Function to be called when [GaaiDeviceItem] wants to delete a known device from the list.
+ * @param modifier the [Modifier] to be applied to this [GaaiDeviceItem]
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun GaaiDeviceItem(
   device: Device,
@@ -237,6 +288,13 @@ fun GaaiDeviceItem(
   }
 }
 
+/**
+ * Implements a [Card] displaying the details of the [device].
+ * @param device The [Device] to display.
+ * @param modifier The [Modifier] to be applied to this [GaaiDeviceCard]
+ *
+ * @author Frank HJ Cuypers
+ */
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryScreen.kt and DeviceDetailScreen.kt
@@ -298,6 +356,12 @@ internal fun GaaiDeviceCard(
   }
 }
 
+/**
+ * A [Row] with the background to show when swiping the [SwipeToDismissBox] displaying the [GaaiDeviceItem] to the right.
+ * @param dismissState State if the [SwipeToDismissBox].
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
   val color = when (dismissState.dismissDirection) {

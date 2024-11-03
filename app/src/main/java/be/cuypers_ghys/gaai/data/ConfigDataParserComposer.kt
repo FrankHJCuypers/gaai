@@ -19,9 +19,9 @@
 package be.cuypers_ghys.gaai.data
 
 import android.util.Log
-import be.cuypers_ghys.gaai.util.MODBUS
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
+import be.cuypers_ghys.gaai.util.modBus
 import be.cuypers_ghys.gaai.util.toUint16LE
 import com.google.iot.cbor.CborInteger
 import com.google.iot.cbor.CborMap
@@ -111,7 +111,7 @@ object ConfigDataParserComposer {
     }
 
     val crc = configGetData.fromUint16LE(configGetData.size - 2)
-    val computedCrc = CRC16.MODBUS(configGetData, 0, configGetData.size - 2).toUShort()
+    val computedCrc = CRC16.modBus(configGetData, 0, configGetData.size - 2).toUShort()
     if (computedCrc != crc) {
       return null
     }
@@ -214,7 +214,7 @@ object ConfigDataParserComposer {
   @Suppress("FunctionName")
   fun parseConfig_CBOR(configGetData: ByteArray): ConfigData? {
     val crc = configGetData.fromUint16LE(configGetData.size - 2)
-    val computedCrc = CRC16.MODBUS(configGetData, 0, configGetData.size - 2).toUShort()
+    val computedCrc = CRC16.modBus(configGetData, 0, configGetData.size - 2).toUShort()
     if (computedCrc != crc) {
       return null
     }
@@ -318,7 +318,7 @@ object ConfigDataParserComposer {
     data.toUint16LE(offset, configGetData.touWeekendEnd.toUInt())
     offset += 2
 
-    val computedCrc = CRC16.MODBUS(data, 0, dataLength - 2).toUInt()
+    val computedCrc = CRC16.modBus(data, 0, dataLength - 2).toUInt()
     data.toUint16LE(offset, computedCrc)
     return data
   }
@@ -366,7 +366,7 @@ object ConfigDataParserComposer {
     // Note: toCborByteArray() does not output map pairs sorted by integer key value!
     val cborData = CborMap.create(rootMap).toCborByteArray()
 
-    val computedCrc = CRC16.MODBUS(cborData, 0, cborData.size).toUInt()
+    val computedCrc = CRC16.modBus(cborData, 0, cborData.size).toUInt()
     val computedCrcArray = ByteArray(2)
     computedCrcArray.toUint16LE(0, computedCrc)
     val cborDatWithCrc = cborData + computedCrcArray

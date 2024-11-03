@@ -30,15 +30,15 @@ object SerialNumberParser {
    * The serial number is the SN of the Nexxtender Home,
    * as displayed on the sticker at the bottom of the box.
    * Its format is as follows:
-   * - SN: YYMM-NNNNN-UU
+   * - SN: YYMM-NNNNN-UU.
    *
    * with
    * - YY: Year of production, 2 decimal digits.
    * - MM: Month of production, 2 decimal digits.
-   * - NNNNN: Serial number? 5 decimal digits (unique within YYMM?)
+   * - NNNNN: Serial number? 5 decimal digits (unique within YYMM?).
    * - UU: Unknown? 2 hexadecimal digits.
    *
-   *   The '-' is allowed to be absent.
+   * The '-' is allowed to be absent.
    */
   private const val REGEX: String =
     "^([0-9]{2})([0-9]{2})(?:-|)([0-9]{5})(?:-|)([0-9a-fA-F]{2})$"
@@ -71,9 +71,9 @@ object SerialNumberParser {
    * Returns an integer representing the *serialNumber* input.
    * @param serialNumber
    * @return A 4-byte unsigned integer 0xYY'MM'NNNN'.
-   *  YY' is the number that corresponds with the ASCII string YY.
-   *  MM' is the number that corresponds with the ASCII string MM.
-   *  NNNN' is the number that corresponds with the ASCII string NNNN.
+   *  + YY' is the number that corresponds with the ASCII string YY.
+   *  + MM' is the number that corresponds with the ASCII string MM.
+   *  + NNNN' is the number that corresponds with the ASCII string NNNNN.
    */
   fun calcHexSerialNumber(serialNumber: SerialNumber): UInt {
     val hexSerialNumber =

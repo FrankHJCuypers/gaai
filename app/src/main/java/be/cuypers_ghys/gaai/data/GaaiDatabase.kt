@@ -22,22 +22,33 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * Database class with a singleton Instance object.
+ * Gaai Database class with a singleton Instance object for handling the Nexxtender Home BLE devices.
+ *
+ * See [Save data in a local database using Room](https://developer.android.com/training/data-storage/room).
+ *
+ * @author Frank HJ Cuypers
  */
 @Database(entities = [Device::class], version = 2, exportSchema = false)
 abstract class GaaiDatabase : RoomDatabase() {
 
+  /**
+   * @return The Data Access Object (DAO) for accessing the [Device] table in the database.
+   */
   abstract fun deviceDao(): DeviceDao
 
   companion object {
     @Volatile
     private var Instance: GaaiDatabase? = null
 
+    /**
+     * @param context
+     * @return The singleton [GaaiDatabase]
+     */
     fun getDatabase(context: Context): GaaiDatabase {
       // if the Instance is not null, return it, otherwise create a new database instance.
       return Instance ?: synchronized(this) {
         Room.databaseBuilder(context, GaaiDatabase::class.java, "device_database")
-          /**
+          /*
            * Setting this option in your app's database builder means that Room
            * permanently deletes all data from the tables in your database when it
            * attempts to perform a migration with no defined migration path.

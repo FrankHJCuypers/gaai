@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.1"
+androidDocumentationPlugin = "1.9.20"
 cbor = "0.01.02"
 kotlin = "2.0.10"
 coreKtx = "1.15.0"
@@ -23,6 +24,7 @@ slf4jSimple = "1.7.36"
 versioncompare = "1.5.0"
 
 [libraries]
+android-documentation-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "androidDocumentationPlugin" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 cbor = { module = "com.google.iot.cbor:cbor", version.ref = "cbor" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -45,7 +47,7 @@ nordic-kotlin-ble-scanner = { module = "no.nordicsemi.android.kotlin.ble:scanner
 nordic-kotlin-ble-client = { module = "no.nordicsemi.android.kotlin.ble:client", version.ref = "nordicKotlinBLE" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-compiler = {group = "androidx.room", name = "room-compiler", version.ref = "room"}
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
@@ -59,8 +61,8 @@ versioncompare = { module = "io.github.g00fy2:versioncompare", version.ref = "ve
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-room = {id = "androidx.room", version.ref = "room"}
-devtools-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"  }
+room = { id = "androidx.room", version.ref = "room" }
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 
 

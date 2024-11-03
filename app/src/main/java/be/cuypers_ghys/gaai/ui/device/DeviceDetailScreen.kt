@@ -91,7 +91,11 @@ import kotlin.math.roundToInt
 // Tag for logging
 private const val TAG = "DeviceDetailsScreen"
 
-
+/**
+ * The [NavigationDestination] information for the [DeviceDetailsScreen].
+ *
+ * @author Frank HJ Cuypers
+ */
 object DeviceDetailsDestination : NavigationDestination {
   override val route = "device_detail"
   override val titleRes = R.string.device_details_title
@@ -99,6 +103,16 @@ object DeviceDetailsDestination : NavigationDestination {
   val routeWithArgs = "$route/{$DEVICE_ID_ARG}"
 }
 
+/**
+ * Implements the complete screen for displaying all the information received from the Nexxtender Home,
+ * including app bars.
+ * @param navigateBack Function to be called when [DeviceDetailsScreen] wants to navigate back.
+ * @param onNavigateUp Function to be called when [DeviceDetailsScreen] wants to navigate up.
+ * @param canNavigateBack Is the [DeviceDetailsScreen] allowed to navigate back?
+ * @param viewModel The [DeviceDetailsViewModel] to be associated with this [DeviceDetailsScreen].
+ *
+ * @author Frank HJ Cuypers
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceDetailsScreen(
@@ -145,6 +159,25 @@ fun DeviceDetailsScreen(
   }
 }
 
+/**
+ * Implements the body of the screen displaying all the information received from the Nexxtender Home.
+ * @param device The information for the [Device] determined by the [DeviceDetailsViewModel].
+ * @param state The state for the [Device] determined by the [DeviceDetailsViewModel].
+ *  The state includes all information received from the device over BLE.
+ * @param onTouWeekChange Function to be called when [DeviceDetailsScreen] wants to change the
+ *  device's [ConfigData.touWeekStart] and [ConfigData.touWeekEnd].
+ * @param onTouWeekendChange Function to be called when [DeviceDetailsScreen] wants to change the
+ *  device's [ConfigData.touWeekendStart] and [ConfigData.touWeekendEnd].
+ * @param onMaxGridChange Function to be called when [DeviceDetailsScreen] wants to change the
+ *  device's [ConfigData.maxGrid].
+ * @param onMaxDeviceChange Function to be called when [DeviceDetailsScreen] wants to change the
+ *  device's [ConfigData.maxDevice].
+ * @param onModeChange Function to be called when [DeviceDetailsScreen] wants to change the
+ *  device's [ConfigData.mode].
+ * @param modifier The [Modifier] to be applied to this DeviceDetailsBody.
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun DeviceDetailsBody(
   device: Device?,
@@ -219,6 +252,13 @@ fun DeviceDetailsBody(
   }
 }
 
+/**
+ * Implements a [Card] displaying the [deviceName].
+ * @param deviceName The name to display.
+ * @param modifier the [Modifier] to be applied to this GaaiDeviceNameCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiDeviceNameCard(
@@ -257,6 +297,13 @@ internal fun GaaiDeviceNameCard(
   }
 }
 
+/**
+ * Implements a [Card] displaying the [deviceInformation].
+ * @param deviceInformation The information to display.
+ * @param modifier the [Modifier] to be applied to this GaaiDeviceInformationCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiDeviceInformationCard(
@@ -346,6 +393,13 @@ internal fun GaaiDeviceInformationCard(
   }
 }
 
+/**
+ * Implements a [Card] displaying the [chargingBasicData].
+ * @param chargingBasicData The information to display.
+ * @param modifier the [Modifier] to be applied to this GaaiChargingBasicDataCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiChargingBasicDataCard(
@@ -449,6 +503,13 @@ internal fun GaaiChargingBasicDataCard(
   }
 }
 
+/**
+ * Implements a [Card] displaying the [chargingGridData].
+ * @param chargingGridData The information to display.
+ * @param modifier the [Modifier] to be applied to this GaaiChargingGridDataCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiChargingGridDataCard(
@@ -566,6 +627,13 @@ internal fun GaaiChargingGridDataCard(
   }
 }
 
+/**
+ * Implements a [Card] displaying the [chargingCarData].
+ * @param chargingCarData The information to display.
+ * @param modifier the [Modifier] to be applied to this GaaiChargingCarDataCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiChargingCarDataCard(
@@ -697,6 +765,13 @@ internal fun GaaiChargingCarDataCard(
   }
 }
 
+/**
+ * Implements a [Card] displaying the [chargingAdvancedData].
+ * @param chargingAdvancedData The information to display.
+ * @param modifier the [Modifier] to be applied to this GaaiChargingAdvancedDataCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiChargingAdvancedDataCard(
@@ -822,6 +897,19 @@ internal fun GaaiChargingAdvancedDataCard(
   }
 }
 
+/**
+ * Implements a [Row] displaying the [touPeriod].
+ * Also allows to change the displayed [TouPeriod.startTime] and [TouPeriod.endTime] in a dialog box.
+ * @param title The label to display next to the [touPeriod] information.
+ * @param touPeriod The period to display.
+ * @param onDismissRequest Function to be called when changing the [TouPeriod.startTime] and [TouPeriod.endTime]
+ * is cancelled by the user.
+ * @param onConfirmation Function to be called when changing the [TouPeriod.startTime] and [TouPeriod.endTime]
+ * is confirmed by the user.
+ * @param modifier the [Modifier] to be applied to this GaaiChargingAdvancedDataCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 internal fun TouPeriodRow(
   title: String,
@@ -873,6 +961,25 @@ internal fun TouPeriodRow(
   }
 }
 
+/**
+ * Implements a [Card] displaying the [configData] with the possibility to change some of the values on
+ * the Nexxtender Home device.
+ *
+ * @param configData The information to display and possibly change.
+ * @param onTouWeekChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.touWeekStart] and [ConfigData.touWeekEnd].
+ * @param onTouWeekendChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.touWeekendStart] and [ConfigData.touWeekendEnd].
+ * @param onMaxGridChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.maxGrid].
+ * @param onMaxDeviceChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.maxDevice].
+ * @param onModeChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.mode].
+ * @param modifier the [Modifier] to be applied to this GaaiConfigDataCard
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 internal fun GaaiConfigDataCard(
   configData: ConfigData,
@@ -1081,6 +1188,13 @@ internal fun GaaiConfigDataCard(
   }
 }
 
+/**
+ * Converts [mode] to a string value to display.
+ * @param mode
+ * @return The corresponding string.
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 private fun modeToText(mode: Mode) = when (mode) {
   Mode.MAX_OPEN -> stringResource(R.string.max_open)
@@ -1092,6 +1206,16 @@ private fun modeToText(mode: Mode) = when (mode) {
   }
 }
 
+/**
+ * Implements a [Dialog] displaying the [mode], allowing it to be changed.
+ *
+ * @param mode The [Mode] to display and possibly change
+ * @param onDismiss Function to be called when changing the [mode] is cancelled by the user.
+ * @param onConfirm Function to be called when changing the [mode] is confirmed by the user.
+ * @param modifier the [Modifier] to be applied to this ModeDialog.
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun ModeDialog(
   mode: Mode,
@@ -1177,6 +1301,17 @@ fun ModeDialog(
 
 }
 
+/**
+ * Implements a [Row] displaying the [time],
+ * allowing to change the displayed [TouTime] .
+ * @param name The label to display next to the [time] information.
+ * @param time The time to display.
+ * @param onDismissRequest Function to be called when changing the [TouTime] is cancelled by the user.
+ * @param onConfirmation Function to be called when changing the [TouTime] is confirmed by the user.
+ * @param modifier the [Modifier] to be applied to this TouTimeRow.
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun TouTimeRow(
   name: String,
@@ -1227,6 +1362,19 @@ fun TouTimeRow(
   }
 }
 
+/**
+ * Implements a [Dialog] displaying the [touPeriod],
+ * allowing to change the displayed [TouPeriod.startTime] and [TouPeriod.endTime].
+ * @param title The label to display next to the [touPeriod] information.
+ * @param touPeriod The period to display.
+ * @param onDismissRequest Function to be called when changing the [TouPeriod.startTime] and [TouPeriod.endTime]
+ * is cancelled by the user.
+ * @param onConfirmation Function to be called when changing the [TouPeriod.startTime] and [TouPeriod.endTime]
+ * is confirmed by the user.
+ * @param modifier the [Modifier] to be applied to this TouPeriodDialog.
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun TouPeriodDialog(
   title: String,
@@ -1296,6 +1444,19 @@ fun TouPeriodDialog(
   }
 }
 
+/**
+ * Implements a [Row] displaying the [value] in Ampere, allowing it to be changed.
+ *
+ * @param name The label to place with the [value]
+ * @param value The value in Ampere to display and possibly change.
+ * @param minValue The minimal value allowed for [value] when changing.
+ * @param maxValue The maximum value allowed for [value] when changing.
+ * @param onConfirm Function to be called when changing the [value] is confirmed by the user.
+ * @param onDismiss Function to be called when changing the [value] is cancelled by the user.
+ * @param modifier the [Modifier] to be applied to this AmpereRow
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun AmpereRow(
   name: String,
@@ -1349,6 +1510,19 @@ fun AmpereRow(
   }
 }
 
+/**
+ * Implements a [Dialog] with a slider, allowing [value] to be changed.
+ *
+ * @param name The label to place with the [value]
+ * @param value The initial value in Ampere to display and possibly change.
+ * @param minValue The minimal value allowed for [value] by the slider.
+ * @param maxValue The maximum value allowed for [value] by the slider.
+ * @param onConfirm Function to be called when changing the [value] is confirmed by the user.
+ * @param onDismiss Function to be called when changing the [value] is cancelled by the user.
+ * @param modifier the [Modifier] to be applied to this AmpereSliderDialog
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun AmpereSliderDialog(
   name: String,
@@ -1413,6 +1587,17 @@ fun AmpereSliderDialog(
   }
 }
 
+/**
+ * Implements a [Dialog] with a [TimePicker] displaying the [touTime],
+ * allowing to change the displayed [TouTime] .
+ * @param title The label to display next to the [touTime] information.
+ * @param touTime The initial time to display.
+ * @param onDismiss Function to be called when changing the [TouTime] is cancelled by the user.
+ * @param onConfirm Function to be called when changing the [TouTime] is confirmed by the user.
+ * @param modifier the [Modifier] to be applied to this DialTimePickerDialog
+ *
+ * @author Frank HJ Cuypers
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialTimePickerDialog(

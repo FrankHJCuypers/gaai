@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.DokkaConfiguration.Visibility
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.jetbrains.kotlin.android)
@@ -111,6 +113,23 @@ dependencies {
   debugImplementation(libs.androidx.ui.test.manifest)
   implementation(kotlin("script-runtime"))
 
-  runtimeOnly("org.jetbrains.dokka:android-documentation-plugin:1.9.20")
+  runtimeOnly(libs.android.documentation.plugin)
 }
 
+
+tasks.dokkaHtml {
+  outputDirectory.set(layout.buildDirectory.dir("documentation/html"))
+  dokkaSourceSets {
+    configureEach {
+      documentedVisibilities.set(
+        setOf(
+          Visibility.PUBLIC,
+          Visibility.PROTECTED,
+          Visibility.PACKAGE,
+          Visibility.PRIVATE,
+          Visibility.INTERNAL,
+        )
+      )
+    }
+  }
+}

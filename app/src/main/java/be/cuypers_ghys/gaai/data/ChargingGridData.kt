@@ -17,13 +17,15 @@
 package be.cuypers_ghys.gaai.data
 
 /**
- * Holds the result of the Charging Grid Data BLE Characteristic.
+ * Holds the result of the [Charging Grid Data BLE Characteristic]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC].
  *
  * @author Frank HJ Cuypers
  */
 data class ChargingGridData(
-  /** Measurement time in Unix Time. */
+  /** Measurement time in [Unix Time](https://en.wikipedia.org/wiki/Unix_time). */
   val timestamp: UInt = 0u,
+
   /**
    * Grid phase L1 current in dA.
    * A negative value indicates that a power surplus is delivered to the Grid.
@@ -31,21 +33,25 @@ data class ChargingGridData(
    * consumed by the house and the EV.
    */
   val l1: Short = 0,
+
   /**
    * Grid phase L2 current in dA.
    * @see l1
    */
   val l2: Short = 0,
+
   /**
    * Grid phase L3 current in dA.
    * @see l1
    */
   val l3: Short = 0,
+
   /**
    * Total grid power consumption in Watt.
    * @see l1
    */
   val consumed: Short = 0,
+
   /** Counter that goes from 0 to 900 (15 minutes)? */
   val interval: UShort = 0u,
 )

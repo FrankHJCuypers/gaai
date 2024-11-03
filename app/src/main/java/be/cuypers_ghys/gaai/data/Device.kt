@@ -21,7 +21,9 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * Entity data class represents a single row in the database.
+ * Entity data class represents a single row in the [GaaiDatabase] with Nexxtender Home devices.
+ *
+ * @author Frank HJ Cuypers
  */
 @Entity(
   tableName = "devices",
@@ -51,7 +53,7 @@ data class Device(
 
   /**
    * The value that this device advertises in the
-   * [UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE][be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE].
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE].
    * Supposedly also unique.
    */
   val serviceDataValue: Int

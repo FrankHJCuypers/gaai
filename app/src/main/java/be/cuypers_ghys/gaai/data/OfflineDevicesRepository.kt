@@ -19,7 +19,10 @@ package be.cuypers_ghys.gaai.data
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Local devices database
+ * A version of [DevicesRepository] that stores [Devices][Device] in a
+ * [Room](https://developer.android.com/training/data-storage/room) database.
+ *
+ * @author Frank HJ Cuypers
  */
 class OfflineDevicesRepository(private val deviceDao: DeviceDao) : DevicesRepository {
   override fun getAllDevicesStream(): Flow<List<Device>> = deviceDao.getAllDevices()

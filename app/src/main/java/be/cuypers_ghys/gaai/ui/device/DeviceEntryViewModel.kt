@@ -43,7 +43,9 @@ import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 private const val TAG = "DeviceEntryViewModel"
 
 /**
- * Possible entry states for this screen.
+ * Possible entry states for the ViewModel.
+ *
+ * @author Frank HJ Cuypers
  */
 enum class EntryState {
   /**
@@ -84,11 +86,12 @@ sealed class Filter(
 
 /**
  * Filter by service data.
- * Service data consists of a Service UUID and the data associated with the service.
- * BleScanResultData's serviceData returns a map of service UUID and its corresponding service data.
- * The filter passes only devices that have the given service data uuid and data.
- * @property uuid The service data UUID to filter by.
- * @property data The service data to filter by.
+ * Service data consists of a Service UUID and the Service Data associated with the service.
+ * BleScanResultData's [no.nordicsemi.android.kotlin.ble.core.scanner.BleScanRecord.serviceData] returns a map of
+ * service UUID and its corresponding Service Data.
+ * The filter passes only devices that have the given Service UUID uuid and Service Data.
+ * @property uuid The Service UUID to filter by.
+ * @property data The Service Data to filter by.
  */
 @Suppress("ArrayInDataClass")
 data class WithServiceData(
@@ -100,20 +103,26 @@ data class WithServiceData(
 )
 
 /**
- * ViewModel to validate and insert devices in the Room database.
+ * ViewModel to validate and insert new devices in the Room database.
+ *
+ * @param devicesRepository The [DevicesRepository] to use.
+ * @param bleRepository The [BleRepository] to use.
+ * @constructor Called by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider].
+ *
+ * @author Frank HJ Cuypers
  */
 class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, private val bleRepository: BleRepository) :
   ViewModel() {
 
   /**
-   * Holds current device ui state
+   * Holds current device ui state.
    */
   var deviceUiState by mutableStateOf(DeviceUiState())
     private set
 
   /**
-   * Updates the [deviceUiState] with the value provided in the argument. This method also triggers
-   * a validation for input values.
+   * Updates the [deviceUiState] with the value provided in the argument.
+   * This method also triggers a validation for input values.
    * @param deviceDetails The initial device details from which to compute the state.
    */
   fun updateUiState(deviceDetails: DeviceDetails) {
@@ -129,6 +138,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
 
   /**
    * Updates the [deviceUiState] with the BLE scan result.
+   * @param scanResult The BLE scan result.
    */
   private suspend fun updateUiState(scanResult: BleScanResult) {
     val deviceDetails = deviceUiState.deviceDetails.copy(
@@ -143,14 +153,15 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
   }
 
   /**
-   * Updates the [deviceUiState] with the EntryState.
+   * Updates the [deviceUiState] with the new [entryState].
+   * @param entryState New state.
    */
   fun updateUiState(entryState: EntryState) {
     deviceUiState = deviceUiState.copy(entryState = entryState)
   }
 
   /**
-   * Inserts an [Device] in the Room database
+   * Inserts the [Device] from [deviceUiState] in the Room database.
    */
   suspend fun saveDevice() {
     if (validateInput()) {
@@ -158,11 +169,19 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
     }
   }
 
+  /**
+   * The [WithServiceData] used to filter BLE scan results.
+   */
   private lateinit var serviceDataFilter: WithServiceData
+
+  /**
+   * The [Job] that is currently performing the BLE Scan.
+   */
   private var currentJob: Job? = null
 
   /**
-   * Scans an [Device] using BLE
+   * Perform a BLE scan for the [Device] that matches the [filterServiceData] filter and update the [deviceUiState]
+   * when found.
    */
   @SuppressLint("MissingPermission")
   fun scanDevice() {
@@ -189,16 +208,27 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
     }
   }
 
+  /**
+   * Cancel the [Job] performing the BLE scan.
+   */
   fun cancelScanDevice() {
     currentJob?.cancel()
   }
 
+  /**
+   * Verifies if the BLE scan result [result] matches the [serviceDataFilter].
+   * @return true if the [result] matches the [serviceDataFilter].
+   */
   private fun filterServiceData(result: BleScanResult): Boolean {
     val retVal = serviceDataFilter.filter(result)
 //        Log.d(TAG, "Filter uuid: ${serviceDataFilter.uuid}, found uuid ${result.data?.scanRecord?.serviceData}, result = $retVal");
     return retVal
   }
 
+  /**
+   * Returns the [WithServiceData] filter with the Service Data matching the [DeviceDetails.sn] specified by [uiState].
+   * @param uiState [DeviceUiState] from which the [DeviceDetails.sn] is used.
+   */
   private fun getWithServiceUuidFilter(uiState: DeviceDetails = deviceUiState.deviceDetails): WithServiceData =
     with(uiState) {
       val serialNumber = SerialNumberParser.parse(sn)
@@ -208,25 +238,37 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
       return WithServiceData(uuid = ParcelUuid(UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE), data = serviceData)
     }
 
+  /**
+   * Validates if the device sn specified by [uiState] is a correctly formatted sn.
+   * @param uiState [DeviceUiState] from which the [DeviceDetails.sn] is used.
+   */
   private fun validateSn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
     return with(uiState) {
       SerialNumberParser.parse(sn) != null
     }
   }
 
+  /**
+   * Validates if the device pn specified by [uiState] is a correctly formatted pn.
+   * @param uiState [DeviceUiState] from which the [DeviceDetails.pn] is used.
+   */
   private fun validatePn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
     return with(uiState) {
       ProductNumberParser.parse(pn) != null
     }
   }
 
+  /**
+   * Validates if the device sn and pn specified by [uiState] are correctly formatted sn and pn.
+   * @param uiState [DeviceUiState] from which the [DeviceDetails.sn] and [DeviceDetails.pn] aer used.
+   */
   private fun validateInput(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
     return validateSn(uiState) && validatePn(uiState)
   }
 }
 
 /**
- * Represents Ui State for a Device.
+ * Represents the UI State for the new [Device].
  */
 data class DeviceUiState(
   val deviceDetails: DeviceDetails = DeviceDetails(),
@@ -236,7 +278,7 @@ data class DeviceUiState(
 )
 
 /**
- * TODO: merge with [Device]?
+ * TODO: merge with [Device]? Note that [Device] has special annotations for Room.
  */
 data class DeviceDetails(
   val id: Int = 0,

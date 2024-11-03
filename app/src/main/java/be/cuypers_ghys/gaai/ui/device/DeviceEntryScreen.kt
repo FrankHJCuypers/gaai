@@ -47,12 +47,27 @@ import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import kotlinx.coroutines.launch
 
-
+/**
+ * The [NavigationDestination] information for the [DeviceEntryScreen].
+ *
+ * @author Frank HJ Cuypers
+ */
 object DeviceEntryDestination : NavigationDestination {
   override val route = "device_entry"
   override val titleRes = R.string.device_entry_title
 }
 
+/**
+ * Implements the complete screen for entering the information for a new Nexxtender Home device,
+ * and make a BLE connection to it.
+ * The screen includes app bars.
+ * @param navigateBack Function to be called when [DeviceEntryScreen] wants to navigate back.
+ * @param onNavigateUp Function to be called when [DeviceEntryScreen] wants to navigate up.
+ * @param canNavigateBack Is the [DeviceEntryScreen] allowed to navigate back?
+ * @param viewModel The [DeviceEntryViewModel] to be associated with this [DeviceEntryScreen].
+ *
+ * @author Frank HJ Cuypers
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceEntryScreen(
@@ -114,6 +129,17 @@ fun DeviceEntryScreen(
   }
 }
 
+/**
+ * Implements the body of the screen for entering the information for a new Nexxtender Home device,
+ * and make a BLE connection to it.
+ * @param deviceUiState The device state determined by the [DeviceEntryViewModel].
+ * @param onDeviceValueChange Function to execute when any of the values in the entry screen changes value.
+ * @param onButtonClick Function to execute when the user clicks the button on the screen.
+ * Depending on the internal state, the button has a different action.
+ * @param modifier The [Modifier] to be applied to this DeviceDetailsBody
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun DeviceEntryBody(
   deviceUiState: DeviceUiState,
@@ -121,7 +147,6 @@ fun DeviceEntryBody(
   onButtonClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-
   Column(
     modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
@@ -157,6 +182,13 @@ fun DeviceEntryBody(
   }
 }
 
+/**
+ * Displays the [GaaiDeviceCard] when the new device is found, or if it is a duplicate,
+ * @param deviceUiState The device state determined by the [DeviceEntryViewModel].
+ * @param modifier The [Modifier] to be applied to this DeviceDetailsBody
+ *
+ * @author Frank HJ Cuypers
+ */
 @Composable
 fun DeviceDataForm(
   deviceUiState: DeviceUiState,
@@ -177,11 +209,21 @@ fun DeviceDataForm(
         style = MaterialTheme.typography.labelSmall,
         modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
       )
-
     }
   }
 }
 
+/**
+ * Input form for entering the SN and PN of a new Nexxtender Home device,.
+ * @param deviceUiState The device state determined by the [DeviceEntryViewModel].
+ * @param modifier The [Modifier] to be applied to this DeviceDetailsBody
+ * @param onValueChange Function to execute when any of the values in the entry screen changes value.
+ * @param enabled controls the enabled state of the SN and PN input fields.
+ *  When false, they will not respond to user input,
+ *  and will appear visually disabled and disabled to accessibility services.
+ *
+ * @author Frank HJ Cuypers
+ */
 @Suppress(
   "SpellCheckingInspection"
 )

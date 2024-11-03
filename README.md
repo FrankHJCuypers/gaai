@@ -39,6 +39,11 @@ This app is developed in [Kotlin](https://developer.android.com/kotlin) with
 - [Kotlin coroutines](https://developer.android.com/kotlin/coroutines)
 - [Kotlin BLE Library for Android](https://github.com/NordicSemiconductor/Kotlin-BLE-Library)
 
+### Gradlew commands
+
+- `./gradlew.bat dokkaHtml` creates Html based documentation from the Kdoc documentation used for documenting the source
+  code.
+
 ## Source code format
 
 The Kotlin code is formatted according to the official

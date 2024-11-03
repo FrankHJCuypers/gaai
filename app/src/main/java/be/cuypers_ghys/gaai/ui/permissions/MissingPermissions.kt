@@ -15,6 +15,7 @@
  */
 package be.cuypers_ghys.gaai.ui.permissions
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
@@ -52,26 +53,34 @@ import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 // Tag for logging
 private const val TAG = "MissingPermissions"
 
+/**
+ * The [NavigationDestination] information for the [MissingPermissionsScreen].
+ *
+ * @author Frank HJ Cuypers
+ */
 object MissingPermissionsDestination : NavigationDestination {
   override val route = "permission"
   override val titleRes = R.string.permissions
 }
 
 /**
- * Screen handling the required Bluetooth permissions.
- * See [MissingPermissionsViewModel].
+ * Implements the complete screen for handling the required Bluetooth permissions, including app bars.
+ * @param navigateToHome Function to be called when [MissingPermissionsScreen] wants to navigate to the
+ *   [HomeScreen][be.cuypers_ghys.gaai.ui.home.HomeScreen].
+ * @param canNavigateBack Is the [MissingPermissionsScreen] allowed to navigate back?
+ *
+ * @author Frank HJ Cuypers
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MissingPermissionsScreen(
   navigateToHome: () -> Unit,
-  @Suppress("unused")
-  modifier: Modifier = Modifier,
   canNavigateBack: Boolean = false
 ) {
   Scaffold(
@@ -85,18 +94,24 @@ fun MissingPermissionsScreen(
     MissingPermissionsComponent(
       navigateToHome = navigateToHome,
       modifier = Modifier
-          .padding(
-              start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-              top = innerPadding.calculateTopPadding(),
-              end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
-          )
-          .fillMaxWidth()
+        .padding(
+          start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+          top = innerPadding.calculateTopPadding(),
+          end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+        )
+        .fillMaxWidth()
     )
   }
 }
 
 /**
+ * Implements the complete screen for handling the required Bluetooth permissions.
  * Based on [RequestMultiplePermissionsSample](https://github.com/google/accompanist/blob/main/sample/src/main/java/com/google/accompanist/sample/permissions/RequestMultiplePermissionsSample.kt)
+ * @param navigateToHome Function to be called when [MissingPermissionsScreen] wants to navigate to the
+ *   [HomeScreen][be.cuypers_ghys.gaai.ui.home.HomeScreen].
+ * @param modifier The [Modifier] to be applied to this DeviceDetailsBody.
+ *
+ * @author Frank HJ Cuypers
  */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -119,6 +134,7 @@ fun MissingPermissionsComponent(
   Log.d(TAG, "isBluetoothEnabledState: $isBluetoothEnabledState.")
 
   // broadcast receiver to receive the Bluetooth enabled event.
+  // TODO: Move to the ViewModel?
   val bluetoothReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
       val action = intent?.action
@@ -195,10 +211,23 @@ fun MissingPermissionsComponent(
   }
 }
 
-fun enableBluetooth(context: Context) {
+/**
+ * Shows a system activity that allows the user to turn on Bluetooth.
+ * @param context [Context] in which to start the activity.
+ *
+ * @author Frank HJ Cuypers
+ */
+private fun enableBluetooth(context: Context) {
   context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
 }
 
+/**
+ * Determines if Bluetooth is enabled.
+ * @param context
+ * @return true if Bluetooth is enabled.
+ *
+ * @author Frank HJ Cuypers
+ */
 private fun isBluetoothEnabledState(context: Context): Boolean {
   val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
   val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
@@ -211,12 +240,14 @@ private fun isBluetoothEnabledState(context: Context): Boolean {
 }
 
 /**
+ * Creates the text to present to the user when asking for permissions required by the app, but not yet granted.
+ * Based on [RequestMultiplePermissionsSample](https://github.com/google/accompanist/blob/main/sample/src/main/java/com/google/accompanist/sample/permissions/RequestMultiplePermissionsSample.kt)
+ *
+ * This function is made @Composable for easier string resource handling.
  * @param permissions List of required permission states.
  * @param shouldShowRationale Do we need to present a rationale for the permissions to the user?
  *
- * This function is made @Composable for easier string resource handling.
- *
- * Based on [RequestMultiplePermissionsSample](https://github.com/google/accompanist/blob/main/sample/src/main/java/com/google/accompanist/sample/permissions/RequestMultiplePermissionsSample.kt)
+ * @author Frank HJ Cuypers
  */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -263,11 +294,37 @@ private fun getTextToShowGivenPermissions(
   return textToShow.toString()
 }
 
-
+// TODO: this preview gives a "Render Problem" in Android Studio. Why?
 @Preview(showBackground = true)
 @Composable
 fun MissingPermissionsComponentPreview() {
   GaaiTheme {
     MissingPermissionsComponent(navigateToHome = {})
+  }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+class DummyPermissionState(
+  override val permission: String, override val status: PermissionStatus
+) : PermissionState {
+  override fun launchPermissionRequest() {
+  }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Preview(showBackground = true)
+@Composable
+private fun GetTextToShowGivenPermissions() {
+  GaaiTheme {
+    Text(
+      text = getTextToShowGivenPermissions(
+        listOf(
+          DummyPermissionState(Manifest.permission.ACCESS_FINE_LOCATION, PermissionStatus.Denied(true)),
+          DummyPermissionState(Manifest.permission.BLUETOOTH_SCAN, PermissionStatus.Denied(true)),
+          DummyPermissionState(Manifest.permission.BLUETOOTH_CONNECT, PermissionStatus.Denied(true))
+        ),
+        true
+      )
+    )
   }
 }

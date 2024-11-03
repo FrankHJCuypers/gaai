@@ -59,32 +59,38 @@ data class AuthorizationStatus(val authStatus: Byte) {
 
 
 /**
- * Holds the result of the Charging Advanced Data BLE Characteristic.
+ * Holds the result of the [Charging Advanced Data BLE Characteristic]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC].
  *
  * @author Frank HJ Cuypers
  */
 data class ChargingAdvancedData(
-  /** Measurement time in Unix Time. */
+  /** Measurement time in [Unix Time](https://en.wikipedia.org/wiki/Unix_time). */
   val timestamp: UInt = 0u,
+
   /**
    * Available capacity in A.
    */
   val iAvailable: Short = 0,
+
   /**
    * Total power consumption from the grid in W.
    */
   val gridPower: Int = 0,
+
   /**
    * Total power consumption from the car in W.
    */
   val carPower: Int = 0,
+
   /**
    * Authorization status.
    *
    */
   val authorizationStatus: AuthorizationStatus = AuthorizationStatus(0),
+
   /**
    * Error code returned by the Nexxtender Home. Values unknown.
    */
-  val errorCode: Byte = 0,
+  val errorCode: Byte = 0
 )

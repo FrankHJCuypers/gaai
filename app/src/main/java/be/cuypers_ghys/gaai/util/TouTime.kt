@@ -26,7 +26,7 @@ import java.util.Locale
 
 /**
  * Handles a Time Of Use (tou) time.
- *
+ * The tou is counted in minutes since midnight and can also be represented as HH:MM.
  * @property time Time in minutes since midnight.
  * @constructor Creates an instance with the specified time.
  *
@@ -44,21 +44,25 @@ data class TouTime(
       this((hours * 60 + minutes).toShort())
 
   /**
-   * Creates an instance with the specified [timePickerState].
-   * @param timePickerState Hours part ot the time.
+   * Creates an instance from the specified [timePickerState].
+   * @param timePickerState
    */
   @OptIn(ExperimentalMaterial3Api::class)
   constructor(timePickerState: TimePickerState) :
       this(timePickerState.hour, timePickerState.minute)
 
   /**
-   * Converts the time into a readable string.
+   * Converts the TouTime into a readable string.
    * @return Time on HH:mm format
    */
   override fun toString(): String {
     return format(getCalendar().time)
   }
 
+  /**
+   * Converts the TouTime into a [Calendar] instance.
+   * @return A [Calendar] instance.
+   */
   fun getCalendar(): Calendar {
     val cal = Calendar.getInstance()
     cal.set(Calendar.HOUR_OF_DAY, getHours())
@@ -67,20 +71,30 @@ data class TouTime(
     return cal
   }
 
+  /**
+   * Returns the hours since midnight.
+   */
   fun getHours(): Int {
     return time / 60
   }
 
+  /**
+   * Returns the minutes within the hour from the TouTime.
+   */
   fun getMinutes(): Int {
     return time % 60
   }
 
   companion object {
+    /**
+     * A formatter that returns the time as "HH:MM"
+     */
     @SuppressLint("ConstantLocale")
     val hourMinutesFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     /**
-     * Format the time.
+     * Format the [time] to a string.
+     * @return Time formatted as "HH:MM"
      */
     fun format(time: Date): String {
       return hourMinutesFormatter.format(time)

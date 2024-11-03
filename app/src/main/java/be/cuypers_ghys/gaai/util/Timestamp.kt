@@ -29,6 +29,9 @@ import kotlinx.datetime.toLocalDateTime
  */
 object Timestamp {
 
+  /**
+   * Formats a timeStamp as "YYYY-MM-DD HH:MM:ss".
+   */
   private val format = LocalDateTime.Format {
     year()
     char('-')
@@ -48,7 +51,7 @@ object Timestamp {
   /**
    * Converts the timestamp into a readable string.
    * @param timeStamp As received from the Nexxtender Home.
-   * @return String representation of the timestamp.
+   * @return String representation of the timestamp, according to [format][be.cuypers_ghys.gaai.util.Timestamp.format].
    */
   // TODO: junit tests
   fun toString(timeStamp: UInt): String {

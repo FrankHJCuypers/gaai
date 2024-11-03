@@ -28,17 +28,24 @@ import androidx.lifecycle.ViewModel
 private const val TAG = "MissingPermissionsViewModel"
 
 /**
- * ViewModel to handle required permissions.
- * See [MissingPermissionsScreen].
+ * ViewModel to handle required permissions, to be used by
+ * [MissingPermissionsScreen].
+ *
+ * @constructor Called by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider].
+ *
+ * @author Frank HJ Cuypers
  */
-// TODO: Move to the same logic as the ScannerView from the Nordic Kotlin-BLE-Library for Bluetooth permissions, using the  RequiredBluetooth & RequiredLocation composables.
-//  I tried it once, but it requires teh use of Hilt for dependency injection and some other Nordic stuff, so I abandoned it.
+// TODO: Move to the same logic as the ScannerView from the Nordic Kotlin-BLE-Library for Bluetooth permissions,
+//  using the  RequiredBluetooth & RequiredLocation composables.
+//  I tried it once, but it requires the use of Hilt for dependency injection and some other Nordic stuff,
+//  so I abandoned it.
 class MissingPermissionsViewModel : ViewModel() {
 
   /**
-   * Holds current BLE ui state
+   * Holds the current BLE ui state
    */
-  // TODO: the bleUiState is tracked in the viewModel, while the isBluetoothEnabledState is tracked in the MissingPermissions screen.
+  // TODO: the bleUiState is tracked in the viewModel, while the isBluetoothEnabledState is tracked in
+  //  the MissingPermissions screen.
   //  Can this be streamlined?
   var bleUiState by mutableStateOf(BleUiState())
     private set
@@ -52,7 +59,11 @@ class MissingPermissionsViewModel : ViewModel() {
     bleUiState = bleUiState.copy(isBluetoothEnabledState = isBluetoothEnabledState)
   }
 
-  var permissions: List<String> = emptyList()
+  /**
+   * List of required permissions.
+   * See [Manifest.permission].
+   */
+  var permissions = emptyList<String>()
 
   init {
     Log.d(TAG, "SDK_INT: $(Build.VERSION.SDK_INT)")

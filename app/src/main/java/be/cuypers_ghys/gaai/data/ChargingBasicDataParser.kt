@@ -20,14 +20,16 @@ import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 
 /**
- * Parses Charging Basic Data.
+ * Parses [Charging Basic Data]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC].
  *
  * @author Frank HJ Cuypers
  */
 object ChargingBasicDataParser {
   /**
-   * Parses a byte array with the contents of the Charging Basic Data BLE Characteristic into an
-   * [ChargingBasicData].
+   * Parses a byte array with the contents of the [Charging Basic Data]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC]
+   * into an [ChargingBasicData].
    * @param chargingBasicData Byte array with the value read from the Charging Basic Data BLE
    * Characteristic.
    * @return A [ChargingBasicData] holding the parsed result.

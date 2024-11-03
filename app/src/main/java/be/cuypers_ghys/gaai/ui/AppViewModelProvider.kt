@@ -33,7 +33,7 @@ import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsViewModel
 private const val TAG = "AppViewModelProvider"
 
 /**
- * Provides Factory to create instance of ViewModel for the entire Gaai app
+ * Provides a Factory to create instances of ViewModels for the entire Gaai app.
  */
 object AppViewModelProvider {
   val Factory = viewModelFactory {

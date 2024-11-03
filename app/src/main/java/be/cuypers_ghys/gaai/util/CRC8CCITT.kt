@@ -18,13 +18,14 @@ package be.cuypers_ghys.gaai.util
 /**
  * Implementation of CRC-8-CCITT.
  *
- * x^8^+x^2^+x+1 or 0x7 in normal presentation, no initial value and no XORing at the end.
+ * x<sup>8</sup>+x<sup>2</sup>+x+1 or 0x7 in normal presentation, no initial value and no XORing at the end.
  *
  * Non-optimized version.
  *
- * See also [CRC_8_CCITT](https://www.3dbrew.org/wiki/CRC-8-CCITT),
- * [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
- * and [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/).
+ * See also
+ * + [CRC_8_CCITT](https://www.3dbrew.org/wiki/CRC-8-CCITT)
+ * + [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
+ * + [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/)
  *
  * @author Frank HJ Cuypers
  */

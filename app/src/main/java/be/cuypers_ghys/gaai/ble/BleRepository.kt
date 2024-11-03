@@ -25,20 +25,27 @@ import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
 /**
- * Repository that provides BLE scanning for a [Device][be.cuypers_ghys.gaai.data.Device] .
+ * Repository that provides BLE scanning and GATT operations for a [Device][be.cuypers_ghys.gaai.data.Device].
+ *
+ * @property context The Application context.
+ * @property scanner The BLE scanner object.
+ * @constructor Sets up the BLE repository.
+ *
+ * @author Frank HJ Cuypers
  */
 interface BleRepository {
   val context: Context
   val scanner: BleScanner
 
   /**
-   * Starts scanning and emit results in the Flow. Automatically stops scanning when CoroutineScope of the Flow is closed.
+   * Starts scanning and emit results in the Flow.
+   * Automatically stops scanning when CoroutineScope of the Flow is closed.
    */
   fun getScannerState(): Flow<BleScanResult>
 
   /**
    * Connects to the specified device. Device is provided using mac address.
-   * Uses the Application Context.
+   * Uses the Application context.
    * @param macAddress MAC address of a device.
    * @param options Connection options.
    * @return [ClientBleGatt] with initiated connection based on [options] provided.

@@ -19,7 +19,7 @@ package be.cuypers_ghys.gaai.util
 import java.util.Locale
 
 /**
- * Handles a Time Of Use (tou) period with a start time and an end time.
+ * Handles a Time Of Use (tou) period with a [startTime] and an [endTime].
  *
  * @property startTime Start time.
  * @property endTime End time.
@@ -41,11 +41,9 @@ data class TouPeriod(
 
   /**
    * Converts the period into a readable string.
-   * @return Time on HH:mm format
+   * @return Time period in "HH:MM - HH:MM" format
    */
   override fun toString(): String {
     return String.format(Locale.getDefault(), "%s - %s", startTime.toString(), endTime.toString())
   }
-
-
 }

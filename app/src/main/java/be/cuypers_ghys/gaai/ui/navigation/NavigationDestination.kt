@@ -17,11 +17,14 @@
 package be.cuypers_ghys.gaai.ui.navigation
 
 /**
- * Interface to describe the navigation destinations for the app
+ * Interface to describe a navigation destinations for the app.
+ *
+ * @author Frank HJ Cuypers
+ *
  */
 interface NavigationDestination {
   /**
-   * Unique name to define the path for a composable
+   * Unique name to define the path for a composable.
    */
   @Suppress("unused")
   val route: String

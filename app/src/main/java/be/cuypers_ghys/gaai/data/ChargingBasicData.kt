@@ -17,35 +17,45 @@
 package be.cuypers_ghys.gaai.data
 
 /**
- * Discriminator.
+ * Possible discriminator values.
+ *
+ * @author Frank HJ Cuypers
  */
 enum class Discriminator {
   STARTED, CHARGING, STOPPED, UNKNOWN
 }
 
 /**
- * Status.
+ * Possible status values.
+ *
+ * @author Frank HJ Cuypers
  */
 enum class Status {
   PLUGGED, CHARGING, FAULT, UNKNOWN
 }
 
 /**
- * Holds the result of the Charging Basic Data BLE Characteristic.
+ * Holds the result of the [Charging Basic Data BLE Characteristic]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC]
  *
  * @author Frank HJ Cuypers
  */
 data class ChargingBasicData(
   /** Number of seconds since start of charging? */
   val seconds: UShort = 0u,
+
   /** State of the discriminator. */
   val discriminator: Discriminator = Discriminator.UNKNOWN,
+
   /** State of the charger. */
   val status: Status = Status.UNKNOWN,
-  /** Not yet decoded Status */
+
+  /** Not yet decoded [status] */
   val rawStatus: Byte = 0,
+
   /** Total energy in Wh charged during this session? */
   val energy: UInt = 0u,
+
   /** Charging Phase Count?*/
   val phaseCount: UByte = 0u
 )

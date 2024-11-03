@@ -32,7 +32,7 @@ class TestCRC16MODBUS {
   fun verifyResultsFromKnownTestVectors(sData: String, expectedCrc: Int) {
     val data = sData.hexToByteArray()
 
-    val computedCrc = CRC16.MODBUS(data, 0, data.size)
+    val computedCrc = CRC16.modBus(data, 0, data.size)
     Assertions.assertEquals(expectedCrc, computedCrc)
   }
 

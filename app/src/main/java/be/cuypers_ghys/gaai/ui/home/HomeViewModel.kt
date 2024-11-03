@@ -26,10 +26,18 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 /**
- * ViewModel to retrieve all devices in the Room database.
+ * ViewModel to manage all devices from the Room database, to be used by [HomeScreen].
+ * @param devicesRepository The [DevicesRepository] to use.
+ * @constructor Called by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider].
+ *
+ * @author Frank HJ Cuypers
  */
 class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewModel() {
 
+  /**
+   * Remove the [device] from the Room database.
+   * @param device The [Device] to delete.
+   */
   suspend fun removeDevice(device: Device) {
     devicesRepository.deleteDevice(device)
   }
@@ -47,6 +55,10 @@ class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewMode
       )
 
   companion object {
+    /**
+     * Delay (in milliseconds) between the disappearance of the last
+     * subscriber and the stopping of the sharing coroutine.
+     */
     private const val TIMEOUT_MILLIS = 5_000L
   }
 }

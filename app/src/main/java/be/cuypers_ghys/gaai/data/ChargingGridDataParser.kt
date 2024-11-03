@@ -16,21 +16,23 @@
 
 package be.cuypers_ghys.gaai.data
 
-import be.cuypers_ghys.gaai.util.MODBUS
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
+import be.cuypers_ghys.gaai.util.modBus
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 
 /**
- * Parses Charging Grid Data.
+ * Parses [Charging Grid Data]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC].
  *
  * @author Frank HJ Cuypers
  */
 object ChargingGridDataParser {
   /**
-   * Parses a byte array with the contents of the Charging Grid Data BLE Characteristic into an
-   * [ChargingGridData].
+   * Parses a byte array with the contents of the [Charging Grid Data BLE Characteristic]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC].
+   * into an [ChargingGridData].
    * @param chargingGridData Byte array with the value read from the Charging Grid Data BLE
    * Characteristic.
    * @return A [ChargingGridData] holding the parsed result.
@@ -42,7 +44,7 @@ object ChargingGridDataParser {
     }
 
     val crc = chargingGridData.fromUint16LE(14)
-    val computedCrc = CRC16.MODBUS(chargingGridData, 0, 14).toUShort()
+    val computedCrc = CRC16.modBus(chargingGridData, 0, 14).toUShort()
     if (computedCrc != crc) {
       return null
     }

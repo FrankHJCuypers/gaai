@@ -16,24 +16,26 @@
 
 package be.cuypers_ghys.gaai.data
 
-import be.cuypers_ghys.gaai.util.MODBUS
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromInt32LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
+import be.cuypers_ghys.gaai.util.modBus
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 
 /**
- * Parses Charging Advanced Data.
+ * Parses [Charging Advanced Data BLE Characteristic]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC].
  *
  * @author Frank HJ Cuypers
  */
 object ChargingAdvancedDataParser {
   /**
-   * Parses a byte array with the contents of the Charging Car Data BLE Characteristic into an
-   * [ChargingAdvancedData].
+   * Parses a byte array with the contents of the [Charging Advanced Data BLE Characteristic]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC]
+   * into an [ChargingAdvancedData].
    * @param chargingAdvancedData Byte array with the value read from the Charging Car Data BLE
-   * Characteristic.
+   *      Characteristic.
    * @return A [ChargingAdvancedData] holding the parsed result.
    *      Null if *chargingAdvancedData* is not 18 bytes long or the CRC16 is not correct.
    */
@@ -43,7 +45,7 @@ object ChargingAdvancedDataParser {
     }
 
     val crc = chargingAdvancedData.fromUint16LE(16)
-    val computedCrc = CRC16.MODBUS(chargingAdvancedData, 0, 16).toUShort()
+    val computedCrc = CRC16.modBus(chargingAdvancedData, 0, 16).toUShort()
     if (computedCrc != crc) {
       return null
     }

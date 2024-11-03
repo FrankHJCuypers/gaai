@@ -24,7 +24,16 @@ import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectOptions
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
 /**
- * Local devices database
+ * Repository that provides BLE scanning and GATT operations for a [Device][be.cuypers_ghys.gaai.data.Device]
+ * using the [Kotlin BLE Library for Android](https://github.com/NordicSemiconductor/Kotlin-BLE-Library).
+ * @property context The context.
+ * @property scanner The BLE scanner object.
+ * @constructor Sets up the BLE repository.
+ *
+ * @see [BleScanner.scan]
+ * @see [ClientBleGatt.connect]
+ *
+ * @author Frank HJ Cuypers
  */
 class NordicBleRepository(override val context: Context, override val scanner: BleScanner) : BleRepository {
   @SuppressLint("MissingPermission")

@@ -18,7 +18,9 @@ package be.cuypers_ghys.gaai.data
 
 
 /**
- * Charging mode.
+ * Codes the charging mode.
+ *
+ * @author Frank HJ Cuypers
  */
 enum class Mode {
   ECO_PRIVATE, MAX_PRIVATE, ECO_OPEN, MAX_OPEN, UNKNOWN
@@ -26,6 +28,8 @@ enum class Mode {
 
 /**
  * Codes the network type.
+ *
+ * @author Frank HJ Cuypers
  */
 @Suppress("SpellCheckingInspection")
 enum class NetWorkType {
@@ -34,14 +38,41 @@ enum class NetWorkType {
 
 /**
  * Codes the Configuration version type.
+ *
+ * @author Frank HJ Cuypers
  */
 enum class ConfigVersion {
   CONFIG_1_0, CONFIG_1_1, CONFIG_CBOR
 }
 
 /**
- * Holds the Configuration.
+ * Holds the Configuration result of the operations
+ * [CONFIG_OPERATION_SET][be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_SET],
+ * [CONFIG_OPERATION_GET][be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_GET],
+ * [CONFIG_OPERATION_CBOR_SET][be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_CBOR_SET] and
+ * [CONFIG_OPERATION_CBOR_GET][be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_CBOR_GET].
+ * These operations are available using the
+ * [Generic Command]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC],
+ * [Generic Status]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_STATUS_CHARACTERISTIC] and
+ * [Generic Data]
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+ * characteristics.
  *
+ *
+ * There are 3 variants of the configuration data.
+ * 1. [ConfigVersion.CONFIG_1_0] which is used by all firmware versions before
+ *   [VERSION_1_1_0][be.cuypers_ghys.gaai.data.ConfigDataParserComposer.VERSION_1_1_0].
+ * 2. [ConfigVersion.CONFIG_1_1] which is used by all firmware versions from
+ *   [VERSION_1_1_0][be.cuypers_ghys.gaai.data.ConfigDataParserComposer.VERSION_1_1_0]
+ *   to [VERSION_3_50][be.cuypers_ghys.gaai.data.ConfigDataParserComposer.VERSION_3_50].
+ *   Compared to [ConfigVersion.CONFIG_1_0] it adds the fields [maxDevice] and [networkType].
+ * 3. [ConfigVersion.CONFIG_CBOR] which is used by all firmware versions from
+ *   [VERSION_3_50][be.cuypers_ghys.gaai.data.ConfigDataParserComposer.VERSION_3_50]
+ *   Compared to [ConfigVersion.CONFIG_1_1] it adds the fields [minDevice] and [iCapacity].
+ *
+ * @see ConfigDataParserComposer.getConfigVersion()
  * @author Frank HJ Cuypers
  */
 data class ConfigData(

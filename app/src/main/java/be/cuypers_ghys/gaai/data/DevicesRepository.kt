@@ -19,31 +19,39 @@ package be.cuypers_ghys.gaai.data
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Repository that provides insert, update, delete, and retrieve of [Device] from a given data source.
+ * Repository that provides insert, update, delete and retrieve of [Device]s from a given data source.
+ *
+ * @author Frank HJ Cuypers
  */
 interface DevicesRepository {
   /**
-   * Retrieve all the devices from the the given data source.
+   * @return A Flow of all [Device]s ordered by [Device.sn] in the data source.
    */
   fun getAllDevicesStream(): Flow<List<Device>>
 
   /**
-   * Retrieve a device from the given data source that matches with the [id].
+   * @param id The unique [Device.id] of the record to return.
+   * @return A Flow of the [Device] matching the specified [Device. in] in the data source.
    */
   fun getDeviceStream(id: Int): Flow<Device?>
 
   /**
-   * @return true if this device can be inserted with [insertDevice].
+   * Tests if a [device] can be inserted in the database.
+   * @param device New device to test for insertion.
+   * @return False if a [Device] with the same MAC or sn+pn as [device] already exists in the data source.
    */
   suspend fun canInsert(device: Device): Boolean
 
   /**
-   * Insert device in the data source
+   * Inserts a [device] in the data source.
+   *
+   * @param device New device to insert.
    */
   suspend fun insertDevice(device: Device)
 
   /**
-   * Delete device from the data source
+   * Deletes the specified [device] from the data source.
+   * @param device The device to delete.
    */
   suspend fun deleteDevice(device: Device)
 }

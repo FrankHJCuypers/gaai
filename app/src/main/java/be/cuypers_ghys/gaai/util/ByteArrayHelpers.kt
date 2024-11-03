@@ -17,13 +17,10 @@
 package be.cuypers_ghys.gaai.util
 
 /**
- * @author Frank HJ Cuypers
- */
-
-/**
  * Writes the *value* as a 2-byte Little Endian value at position *offset* in the ByteArray.
  * @param offset Offset to start writing in the ByteArray.
  * @param value Value to write in the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.toUint16LE(offset: Int, value: UInt) {
   this[offset] = (value and 0xFFu).toByte()
@@ -34,6 +31,7 @@ fun ByteArray.toUint16LE(offset: Int, value: UInt) {
  * Writes the *value* as a 2-byte Big Endian value at position *offset* in the ByteArray.
  * @param offset Offset to start writing in the ByteArray.
  * @param value Value to write in the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.toUint16BE(offset: Int, value: UInt) {
   this[offset] = (value shr 8).toByte()
@@ -44,6 +42,7 @@ fun ByteArray.toUint16BE(offset: Int, value: UInt) {
  * Writes the *value* as a 4-byte Little Endian value at position *offset* in the ByteArray.
  * @param offset Offset to start writing in the ByteArray.
  * @param value Value to write in the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.toUint32LE(offset: Int, value: UInt) {
   this[offset] = (value).toByte()
@@ -56,6 +55,7 @@ fun ByteArray.toUint32LE(offset: Int, value: UInt) {
  * Writes the *value* as a 4-byte Big Endian value at position *offset* in the ByteArray.
  * @param offset Offset to start writing in the ByteArray.
  * @param value Value to write in the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.toUint32BE(offset: Int, value: UInt) {
   this[offset] = (value shr 24).toByte()
@@ -65,18 +65,20 @@ fun ByteArray.toUint32BE(offset: Int, value: UInt) {
 }
 
 /**
- * Reads the 2-byte Unsigned Little Endian value at position *offset* of the ByteArray.
+ * Reads the 2-byte unsigned Little Endian value at position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.fromUint16LE(offset: Int): UShort {
   return ((this[offset].toUInt() and 0xFFu) or (this[offset + 1].toUInt() shl 8)).toUShort()
 }
 
 /**
- * Reads the 4-byte Unsigned Little Endian value at position *offset* of the ByteArray.
+ * Reads the 4-byte unsigned Little Endian value at position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.fromUint32LE(offset: Int): UInt {
   return ((this[offset].toUInt() and 0xFFu)
@@ -86,9 +88,10 @@ fun ByteArray.fromUint32LE(offset: Int): UInt {
 }
 
 /**
- * Reads the 4-byte Unsigned Big Endian value at position *offset* of the ByteArray.
+ * Reads the 4-byte unsigned Big Endian value at position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.fromUint32BE(offset: Int): UInt {
   return (((this[offset].toUInt() and 0xFFu) shl 24)
@@ -101,15 +104,17 @@ fun ByteArray.fromUint32BE(offset: Int): UInt {
  * Reads the 2-byte signed Little Endian value ot position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.fromInt16LE(offset: Int): Short {
   return ((this[offset].toInt() and 0xFF) or (this[offset + 1].toInt() shl 8)).toShort()
 }
 
 /**
- * Reads the 4-byte Signed Little Endian value at position *offset* of the ByteArray.
+ * Reads the 4-byte signed Little Endian value at position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
+ * @author Frank HJ Cuypers
  */
 fun ByteArray.fromInt32LE(offset: Int): Int {
   return ((this[offset].toInt() and 0xFF)

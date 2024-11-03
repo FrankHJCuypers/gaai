@@ -4,20 +4,20 @@
 - [Enable Developer mode on Android](https://developer.android.com/studio/debug/dev-options).
   Instead of *USB debugging* you can also enable *Wireless debugging*, see
   [Android Debug Bridge (adb)](https://developer.android.com/tools/adb)
-- If `> adb devices` returns more then one device, then for adb commands that target a device, you 
+- If `> adb devices` returns more then one device, then for adb commands that target a device, you
   must specify the device with -s, like in `> adb -s 192.168.0.196:37473 bugreport zipFileName`.
 - Capturing a BLE log and analyze it with WireShark:
-  - On Android: 
-    - goto Settings->Developer Options and enable *Enable Bluetooth HCI snoop log*
-    - Disable and enable bluetooth. If you forget this, then the BLE log will only contain truncated ATT messages.
-    - Run Gaai and perform some bluetooth actions.
-    - Close Gaai
-  - On PC:
-    - run `> adb bugreport zipFileName`. This will download a `zipFileName.zip` in the current directory.
-    - Extract `FS\data\misc\bluetooth\logs\btsnoop_hci.log` from the zip file.
-    - Open btsnoop_hci.log in WireShark.
+    - On Android:
+        - goto Settings->Developer Options and enable *Enable Bluetooth HCI snoop log*
+        - Disable and enable bluetooth. If you forget this, then the BLE log will only contain truncated ATT messages.
+        - Run Gaai and perform some bluetooth actions.
+        - Close Gaai
+    - On PC:
+        - run `> adb bugreport zipFileName`. This will download a `zipFileName.zip` in the current directory.
+        - Extract `FS\data\misc\bluetooth\logs\btsnoop_hci.log` from the zip file.
+        - Open btsnoop_hci.log in WireShark.
 - Wireshark: add Nexxtender Home BLE UUIDs.
-  In Wireshark goto Edit->Preferences->Protocols->Bluetooth and press *Edit* after the 
+  In Wireshark goto Edit->Preferences->Protocols->Bluetooth and press *Edit* after the
   *Custom Bluetooth UUID names*. Here you can enter the UUIDs and corresponding names.
   In this screen you can also click on a link to the file that holds this configuration.
   Im my case the contents is

@@ -20,18 +20,22 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 /**
  * Implementation of CRC-16-MODBUS over the given range of bytes.
  *
- * x^16^+x^15^+x^2^+x+1 or 0x8005 in normal presentation, initial value 0xFFFF and no XORing at the end.
+ * x<sup>16</sup>+x<sup>15</sup>+x<sup>2</sup>+x+1 or 0x8005 in normal presentation,
+ * initial value 0xFFFF and no XORing at the end.
  *
- * See also [MODBUS](https://en.wikipedia.org/wiki/Modbus),
- * [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
- * and [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/).
+ * See also
+ * + [MODBUS](https://en.wikipedia.org/wiki/Modbus)
+ * + [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
+ * + [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/)
+ * + [no.nordicsemi.android.kotlin.ble.profile.common.CRC16.CRC]
  *
  * @param data   The input data block for computation.
  * @param offset Offset from where the range starts.
  * @param length Length of the range in bytes.
- * @return the CRC-16-MODBUS
+ * @return the CRC-16-MODBUS.
+ * @author Frank HJ Cuypers
+ *
  */
-@Suppress("FunctionName")
-fun CRC16.MODBUS(data: ByteArray, offset: Int, length: Int): Int {
+fun CRC16.modBus(data: ByteArray, offset: Int, length: Int): Int {
   return CRC(0x8005, 0xFFFF, data, offset, length, refin = true, refout = true, xorout = 0x0000)
 }

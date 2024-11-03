@@ -30,13 +30,13 @@ object ProductNumberParser {
    * The product number is the PN of the Nexxtender Home,
    * as displayed on the sticker at the bottom of the box.
    * Its format is as follows:
-   * - PN: AAAAA-RR
+   * - PN: AAAAA-RR.
    *
    * with
    * - AAAAA: Model Number String, 5 decimal digits.
    * - RR: Hardware Revision String, 2 hexadecimal digits.
    *
-   *   The '-' is allowed to be absent.
+   * The '-' is allowed to be absent.
    */
   private const val REGEX: String =
     "^([0-9]{5})(?:-|)([0-9a-fA-F]{2})$"
