@@ -1884,13 +1884,13 @@ private fun DeviceDetailsPreview() {
   GaaiTheme {
     DeviceDetailsBody(
       device = Device(
-        pn = "12345-AB", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
+        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678
       ),
       state = DeviceDetailsViewState(
         deviceName = "HOME2_",
         deviceInformation = DeviceInformation(
-          modelNumber = "12345", serialNumber = "67890",
-          firmwareRevision = "1.23.4", hardwareRevision = "A1"
+          modelNumber = "12345", serialNumber = "12345",
+          firmwareRevision = "1.23.4", hardwareRevision = "A2"
         ),
         chargingBasicData = ChargingBasicData(
           seconds = 123u, discriminator = Discriminator.STOPPED,

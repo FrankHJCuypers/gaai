@@ -299,7 +299,7 @@ private fun DeviceEntryScreenPreview() {
   GaaiTheme {
     DeviceEntryBody(deviceUiState = DeviceUiState(
       DeviceDetails(
-        pn = "60211-A2", sn = "2303-00005-E3"
+        pn = "12345-A2", sn = "6789-12345-E3"
       ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
     ), onDeviceValueChange = {}, onButtonClick = {})
   }
@@ -335,8 +335,8 @@ private fun DeviceEntryScreenScanCorrectPreview() {
   GaaiTheme {
     DeviceEntryBody(deviceUiState = DeviceUiState(
       DeviceDetails(
-        pn = "12-34", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
-      ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = false
+        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678
+      ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = true
     ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }
@@ -347,8 +347,8 @@ private fun DeviceEntryScreenScanDuplicatePreview() {
   GaaiTheme {
     DeviceEntryBody(deviceUiState = DeviceUiState(
       DeviceDetails(
-        pn = "12-34", sn = "1234-56789-00", mac = "11:22:33:44:55:66", serviceDataValue = 0x17030005
-      ), entryState = EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = false
+        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678
+      ), entryState = EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = true
     ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }

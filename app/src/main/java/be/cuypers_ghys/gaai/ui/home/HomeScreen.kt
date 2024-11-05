@@ -76,6 +76,7 @@ import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.ui.theme.RedA400
+import be.cuypers_ghys.gaai.util.PINCalculator
 import kotlinx.coroutines.launch
 
 // Tag for logging
@@ -346,6 +347,11 @@ internal fun GaaiDeviceCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
+            text = PINCalculator.pinForPNSN(device.pn, device.sn) ?: "PIN?",
+            style = MaterialTheme.typography.bodyMedium
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
             text = "0x" + device.serviceDataValue.toHexString(),
             style = MaterialTheme.typography.bodyMedium
           )
@@ -392,9 +398,9 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
 fun HomeBodyPreview() {
   GaaiTheme {
     HomeBody(listOf(
-      Device(1, "60211-A2", "2303-00005-E3", "FF:B8:37:72:4F:F8", 0x17030005),
-      Device(2, "60211-A2", "2303-00006-E3", "FF:B8:37:72:4F:F7", 0x17030006),
-      Device(3, "60211-A2", "2303-00007-E3", "FF:B8:37:72:4F:F6", 0x17030007),
+      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678),
+      Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222),
+      Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333),
     ), onDeviceClick = {}, onDeviceRemove = {})
   }
 }
@@ -412,7 +418,7 @@ fun HomeBodyEmptyListPreview() {
 fun DevicePreview() {
   GaaiTheme {
     GaaiDeviceCard(
-      Device(1, "60211-A2", "2303-00005-E3", "FF:B8:37:72:4F:F8", 0x17030005),
+      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678),
     )
   }
 }
