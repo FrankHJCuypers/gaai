@@ -77,6 +77,7 @@ import be.cuypers_ghys.gaai.data.Discriminator
 import be.cuypers_ghys.gaai.data.Mode
 import be.cuypers_ghys.gaai.data.NetWorkType
 import be.cuypers_ghys.gaai.data.Status
+import be.cuypers_ghys.gaai.data.TimeData
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
@@ -147,6 +148,8 @@ fun DeviceDetailsScreen(
       onMaxGridChange = viewModel::sendConfigOperationSetMaxGrid,
       onMaxDeviceChange = viewModel::sendConfigOperationSetMaxDevice,
       onModeChange = viewModel::sendConfigOperationSetMode,
+      onTimeGet = viewModel::sendTimeOperationGetTime,
+      onTimeSync = viewModel::sendTimeOperationSyncTime,
       modifier = Modifier
         .padding(
           start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
@@ -174,7 +177,11 @@ fun DeviceDetailsScreen(
  *  device's [ConfigData.maxDevice].
  * @param onModeChange Function to be called when [DeviceDetailsScreen] wants to change the
  *  device's [ConfigData.mode].
- * @param modifier The [Modifier] to be applied to this DeviceDetailsBody.
+ * @param onTimeGet Function to be called when [DeviceDetailsScreen] wants to read the
+ *  device's [TimeData.time].
+ * @param onTimeSync Function to be called when [DeviceDetailsScreen] wants to sync the
+ *  device's [TimeData.time] with the current time on the mobile phone.
+ * @param modifier The [Modifier] to be applied to this [DeviceDetailsBody].
  *
  * @author Frank HJ Cuypers
  */
@@ -187,6 +194,8 @@ fun DeviceDetailsBody(
   onMaxGridChange: (UByte) -> Unit,
   onMaxDeviceChange: (UByte) -> Unit,
   onModeChange: (Mode) -> Unit,
+  onTimeGet: () -> Unit,
+  onTimeSync: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entering DeviceDetailsBody, device = $device")
@@ -249,6 +258,15 @@ fun DeviceDetailsBody(
       modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
     )
+
+    GaaiTimeDataCard(
+      timeData = state.timeData,
+      onTimeGet = onTimeGet,
+      onTimeSync = onTimeSync,
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small))
+    )
+
   }
 }
 
@@ -1189,6 +1207,91 @@ internal fun GaaiConfigDataCard(
 }
 
 /**
+ * Implements a [Card] displaying the [timeData] with the possibility to get and set the time of
+ * the Nexxtender Home device.
+ *
+ * @param timeData The information to get or set.
+ * @param onTimeGet Function to be called when [GaaiTimeDataCard] wants to read the
+ *  device's [TimeData.time].
+ * @param onTimeSync Function to be called when [GaaiTimeDataCard] wants to sync the
+ *  device's [TimeData.time] with the current time on the mobile phone.
+ * @param modifier the [Modifier] to be applied to this [GaaiTimeDataCard]
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+internal fun GaaiTimeDataCard(
+  timeData: TimeData,
+  onTimeGet: () -> Unit,
+  onTimeSync: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Log.d(TAG, "Entered TimeConfigDataCard with timeData = $timeData")
+  Card(
+    modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+  ) {
+    Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .weight(1f)
+      ) {
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.time),
+            style = MaterialTheme.typography.titleLarge,
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.current_time),
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
+            text = if (timeData.time == 0u) "Not loaded yet" else Timestamp.toString(timeData.time),
+            style = MaterialTheme.typography.titleMedium
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Spacer(Modifier.weight(1f))
+          Button(onClick = {
+            Log.d(TAG, "GaaiTimeDataCard Get Time pressed")
+            onTimeGet()
+          }
+          ) {
+            Text(stringResource(R.string.get_time))
+          }
+          Spacer(Modifier.weight(1f))
+          Button(onClick = {
+            Log.d(TAG, "GaaiTimeDataCard Sync Time pressed")
+            onTimeSync()
+          }
+          ) {
+            Text(stringResource(R.string.sync_time))
+          }
+          Spacer(Modifier.weight(1f))
+        }
+      }
+    }
+    Log.d(TAG, "Exiting TimeConfigDataCard with timeData = $timeData")
+  }
+}
+
+/**
  * Converts [mode] to a string value to display.
  * @param mode
  * @return The corresponding string.
@@ -1700,7 +1803,9 @@ private fun DeviceDetailsPreview() {
       onTouWeekendChange = {},
       onMaxGridChange = {},
       onMaxDeviceChange = {},
-      onModeChange = {}
+      onModeChange = {},
+      onTimeGet = {},
+      onTimeSync = {}
     )
   }
 }
@@ -1891,5 +1996,35 @@ private fun ModeDialogUnknownPreview() {
       onDismiss = {},
       onConfirm = {},
     )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GaaiTimeDataCardPreview() {
+  GaaiTheme {
+    GaaiTimeDataCard(
+      timeData = TimeData(0x662D0EFBu),
+      onTimeGet = {},
+      onTimeSync = {},
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small)),
+
+      )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GaaiTimeDataCardTime0Preview() {
+  GaaiTheme {
+    GaaiTimeDataCard(
+      timeData = TimeData(0u),
+      onTimeGet = {},
+      onTimeSync = {},
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small)),
+
+      )
   }
 }

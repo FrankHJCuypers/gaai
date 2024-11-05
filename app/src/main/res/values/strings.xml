@@ -89,4 +89,8 @@
     <string name="choose_default_mode">Choose default mode</string>
     <string name="mono_tri_n">Mono/Tri+N</string>
     <string name="tri">Tri</string>
+    <string name="time">Time</string>
+    <string name="current_time">Current Time</string>
+    <string name="get_time">Get Time</string>
+    <string name="sync_time">Sync Time</string>
 </resources>

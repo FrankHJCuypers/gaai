@@ -46,6 +46,13 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_READY
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_READY_CBOR
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_SUCCESS
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_SUCCESS_CBOR
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_OPERATION_GET
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_OPERATION_SET
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_STATUS_POPPED
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_STATUS_READY
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_STATUS_SUCCESS
+import be.cuypers_ghys.gaai.data.TimeData
+import be.cuypers_ghys.gaai.data.TimeDataParserComposer
 import be.cuypers_ghys.gaai.util.TouPeriod
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
@@ -130,6 +137,9 @@ class DeviceDetailsViewModel(
 
   /** New configuration value to be written to GENERIC_DATA. */
   private lateinit var newConfigData: ConfigData
+
+  /** New time value to be written to GENERIC_DATA. */
+  private lateinit var newTimeData: TimeData
 
   /**
    * Starts a [ClientBleGatt] to communicate with the [gaaiDevice].
@@ -268,6 +278,21 @@ class DeviceDetailsViewModel(
           sendConfigOperationGet()
         }
 
+        TIME_STATUS_POPPED -> {
+          val timeData = TimeDataParserComposer.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
+          _state.value = _state.value.copy(timeData = timeData)
+        }
+
+        TIME_STATUS_READY -> {
+          writeNewTimeData()
+        }
+
+        // NOTE: Nexxtender Home seems to never send a TIME_STATUS_SUCCESS
+        TIME_STATUS_SUCCESS -> {
+          // Read configuration to sync with changes
+          sendConfigOperationGet()
+        }
+
         else -> {
           Log.d(TAG, "Unknown GENERIC_STATUS value: $status")
         }
@@ -276,6 +301,8 @@ class DeviceDetailsViewModel(
 
     configVersion = getConfigVersion(firmwareRevision)
     sendConfigOperationGet()
+    // Do not call sendTimeOperationGet() here! The sendConfigOperationGet() message sequence is still running
+    // and would interfere with sendTimeOperationGet()
   }
 
   /**
@@ -284,7 +311,20 @@ class DeviceDetailsViewModel(
    * characteristic.
    */
   private suspend fun writeNewConfigData() {
-    writeGenericData(newConfigData)
+    writeNewConfigDataToGenericData(newConfigData)
+  }
+
+  /**
+   * Writes [newTimeData] to the [Generic Data]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun writeNewTimeData() {
+    val time = (System.currentTimeMillis() / 1000).toUInt()
+    newTimeData = _state.value.timeData.copy(
+      time = time
+    )
+    writeNewTimeDataToGenericData(newTimeData)
   }
 
   /**
@@ -294,9 +334,33 @@ class DeviceDetailsViewModel(
    * @param newConfigData The new [ConfigData] to write.
    */
   @SuppressLint("MissingPermission")
-  private suspend fun writeGenericData(newConfigData: ConfigData) {
-    Log.d(TAG, "Writing Generic Data: $newConfigData")
-    nexxtenderHomeGenericDataCharacteristic.write(DataByteArray(ConfigDataParserComposer.compose(newConfigData)))
+  private suspend fun writeNewConfigDataToGenericData(newConfigData: ConfigData) {
+    Log.d(TAG, "Writing new Config data  '$newConfigData' to Generic Data")
+    writeNewDataToGenericData(DataByteArray(ConfigDataParserComposer.compose(newConfigData)))
+  }
+
+  /**
+   * Writes [newTimeData] to the [Generic Data]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * characteristic.
+   * @param newTimeData The new [TimeData] to write.
+   */
+  @SuppressLint("MissingPermission")
+  private suspend fun writeNewTimeDataToGenericData(newTimeData: TimeData) {
+    Log.d(TAG, "Writing new Time data  '$newTimeData' to Generic Data")
+    writeNewDataToGenericData(DataByteArray(TimeDataParserComposer.compose(newTimeData)))
+  }
+
+  /**
+   * Writes [newData] to the [Generic Data]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * characteristic.
+   * @param newData The new data to write.
+   */
+  @SuppressLint("MissingPermission")
+  private suspend fun writeNewDataToGenericData(newData: DataByteArray) {
+    Log.d(TAG, "Writing new data  '$newData' to Generic Data")
+    nexxtenderHomeGenericDataCharacteristic.write(newData)
   }
 
   /**
@@ -307,6 +371,26 @@ class DeviceDetailsViewModel(
   private suspend fun sendConfigOperationGet() {
     val command =
       if (configVersion == ConfigVersion.CONFIG_CBOR) CONFIG_OPERATION_CBOR_GET else CONFIG_OPERATION_GET
+    writeGenericCommand(command)
+  }
+
+  /**
+   * Writes [TIME_OPERATION_GET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun sendTimeOperationGet() {
+    val command = TIME_OPERATION_GET
+    writeGenericCommand(command)
+  }
+
+  /**
+   * Writes [TIME_OPERATION_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun sendTimeOperationSet() {
+    val command = TIME_OPERATION_SET
     writeGenericCommand(command)
   }
 
@@ -411,6 +495,28 @@ class DeviceDetailsViewModel(
   }
 
   /**
+   * Writes [TIME_OPERATION_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the time to the current time on the mobile phone.
+   */
+  fun sendTimeOperationSyncTime() {
+    viewModelScope.launch {
+      sendTimeOperationSet()
+    }
+  }
+
+  /**
+   * Writes [TIME_OPERATION_GET]  to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic].
+   */
+  fun sendTimeOperationGetTime() {
+    viewModelScope.launch {
+      sendTimeOperationGet()
+    }
+  }
+
+  /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
@@ -457,5 +563,10 @@ data class DeviceDetailsViewState(
   val chargingGridData: ChargingGridData = ChargingGridData(),
   val chargingCarData: ChargingCarData = ChargingCarData(),
   val chargingAdvancedData: ChargingAdvancedData = ChargingAdvancedData(),
-  val configData: ConfigData = ConfigData()
+  val configData: ConfigData = ConfigData(),
+  /**
+   * Time in [Unix Time](https://en.wikipedia.org/wiki/Unix_time) as reported by the TIME SET and TIME GET
+   * operations.
+   */
+  val timeData: TimeData = TimeData()
 )
