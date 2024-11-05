@@ -307,12 +307,24 @@ private fun DeviceEntryScreenPreview() {
 
 @Preview(showBackground = true)
 @Composable
+private fun DeviceEntryScreenScanningPreview() {
+  GaaiTheme {
+    DeviceEntryBody(deviceUiState = DeviceUiState(
+      DeviceDetails(
+        pn = "12345-A2", sn = "6789-12345-E3"
+      ), entryState = EntryState.SCANNING, isSnValid = true, isPnValid = true
+    ), onDeviceValueChange = {}, onButtonClick = {})
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
 private fun DeviceEntryScreenEmptyPreview() {
   GaaiTheme {
     DeviceEntryBody(deviceUiState = DeviceUiState(
       DeviceDetails(
         pn = "", sn = ""
-      ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+      ), entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
     ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }

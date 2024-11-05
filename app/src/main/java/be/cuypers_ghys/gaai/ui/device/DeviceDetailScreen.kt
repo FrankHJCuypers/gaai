@@ -2054,6 +2054,36 @@ private fun GaaiConfigDataCardPreview() {
 
 @Preview(showBackground = true)
 @Composable
+private fun GaaiConfigDataCardCborPreview() {
+  GaaiTheme {
+    GaaiConfigDataCard(
+      configData = ConfigData(
+        maxGrid = 50U,
+        maxDevice = 32U,
+        mode = Mode.MAX_PRIVATE,
+        safe = 6U,
+        networkType = NetWorkType.MONO_TRIN,
+        touWeekStart = 123,
+        touWeekEnd = 456,
+        touWeekendStart = 789,
+        touWeekendEnd = 333,
+        minDevice = 11U,
+        iCapacity = 22U,
+        configVersion = ConfigVersion.CONFIG_CBOR
+      ),
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small)),
+      onTouWeekChange = {},
+      onTouWeekendChange = {},
+      onMaxGridChange = {},
+      onMaxDeviceChange = {},
+      onModeChange = {}
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
 private fun TouPeriodDialogPreview() {
   GaaiTheme {
     TouPeriodDialog(
