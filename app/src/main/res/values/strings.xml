@@ -93,4 +93,10 @@
     <string name="current_time">Current Time</string>
     <string name="get_time">Get Time</string>
     <string name="sync_time">Sync Time</string>
+    <string name="loader">Loader</string>
+    <string name="start_charge_default">Start Charge Default</string>
+    <string name="start_charge_max">Start Charge Max</string>
+    <string name="start_charge_auto">Start Charge Auto</string>
+    <string name="start_charge_eco">Start Charge Eco</string>
+    <string name="stop_charging">Stop Charging</string>
 </resources>

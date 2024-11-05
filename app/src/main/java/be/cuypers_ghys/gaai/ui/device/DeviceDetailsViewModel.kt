@@ -46,6 +46,14 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_READY
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_READY_CBOR
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_SUCCESS
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_SUCCESS_CBOR
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_AUTO
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_DEFAULT
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_ECO
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_MAX
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_STOP_CHARGING
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_STATUS_UNLOCKED
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_STATUS_UNLOCKED_FORCE_ECO
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_STATUS_UNLOCKED_FORCE_MAX
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_OPERATION_GET
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_OPERATION_SET
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_STATUS_POPPED
@@ -310,11 +318,16 @@ class DeviceDetailsViewModel(
           writeNewTimeData()
         }
 
+        LOADER_STATUS_UNLOCKED, LOADER_STATUS_UNLOCKED_FORCE_MAX, LOADER_STATUS_UNLOCKED_FORCE_ECO -> {
+          // nop
+        }
+
         // NOTE: Nexxtender Home seems to never send a TIME_STATUS_SUCCESS
         TIME_STATUS_SUCCESS -> {
           // Read configuration to sync with changes
           sendConfigOperationGet()
         }
+
 
         else -> {
           Log.d(TAG, "Unknown GENERIC_STATUS value: $status")
@@ -562,6 +575,28 @@ class DeviceDetailsViewModel(
   private fun getDevice(deviceId: Int) = runBlocking {
     Log.d(TAG, "Getting Device with id $deviceId")
     return@runBlocking devicesRepository.getDeviceStream(deviceId).first()
+  }
+
+  /**
+   * Writes [loaderOperation] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   * @param loaderOperation Any of [LOADER_OPERATION_START_CHARGING_DEFAULT], [LOADER_OPERATION_START_CHARGING_MAX],
+   *  [LOADER_OPERATION_START_CHARGING_AUTO], [LOADER_OPERATION_START_CHARGING_ECO],
+   *  [LOADER_OPERATION_STOP_CHARGING]
+   */
+  fun sendLoaderOperation(loaderOperation: Int) {
+    viewModelScope.launch {
+      when (loaderOperation) {
+        LOADER_OPERATION_START_CHARGING_DEFAULT, LOADER_OPERATION_START_CHARGING_MAX,
+        LOADER_OPERATION_START_CHARGING_AUTO, LOADER_OPERATION_START_CHARGING_ECO, LOADER_OPERATION_STOP_CHARGING ->
+          writeGenericCommand(loaderOperation)
+
+        else -> {
+          Log.d(TAG, "sendChargeOperationStartDefault trying to send incorrect loaderOperation: $loaderOperation")
+        }
+      }
+    }
   }
 }
 

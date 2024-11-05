@@ -76,6 +76,11 @@ import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.Discriminator
 import be.cuypers_ghys.gaai.data.Mode
 import be.cuypers_ghys.gaai.data.NetWorkType
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_AUTO
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_DEFAULT
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_ECO
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_START_CHARGING_MAX
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.LOADER_OPERATION_STOP_CHARGING
 import be.cuypers_ghys.gaai.data.Status
 import be.cuypers_ghys.gaai.data.TimeData
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
@@ -150,6 +155,7 @@ fun DeviceDetailsScreen(
       onModeChange = viewModel::sendConfigOperationSetMode,
       onTimeGet = viewModel::sendTimeOperationGetTime,
       onTimeSync = viewModel::sendTimeOperationSyncTime,
+      onLoaderOperation = viewModel::sendLoaderOperation,
       modifier = Modifier
         .padding(
           start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
@@ -167,20 +173,21 @@ fun DeviceDetailsScreen(
  * @param device The information for the [Device] determined by the [DeviceDetailsViewModel].
  * @param state The state for the [Device] determined by the [DeviceDetailsViewModel].
  *  The state includes all information received from the device over BLE.
- * @param onTouWeekChange Function to be called when [DeviceDetailsScreen] wants to change the
+ * @param onTouWeekChange Function to be called when [DeviceDetailsBody] wants to change the
  *  device's [ConfigData.touWeekStart] and [ConfigData.touWeekEnd].
- * @param onTouWeekendChange Function to be called when [DeviceDetailsScreen] wants to change the
+ * @param onTouWeekendChange Function to be called when [DeviceDetailsBody] wants to change the
  *  device's [ConfigData.touWeekendStart] and [ConfigData.touWeekendEnd].
- * @param onMaxGridChange Function to be called when [DeviceDetailsScreen] wants to change the
+ * @param onMaxGridChange Function to be called when [DeviceDetailsBody] wants to change the
  *  device's [ConfigData.maxGrid].
- * @param onMaxDeviceChange Function to be called when [DeviceDetailsScreen] wants to change the
+ * @param onMaxDeviceChange Function to be called when [DeviceDetailsBody] wants to change the
  *  device's [ConfigData.maxDevice].
- * @param onModeChange Function to be called when [DeviceDetailsScreen] wants to change the
+ * @param onModeChange Function to be called when [DeviceDetailsBody] wants to change the
  *  device's [ConfigData.mode].
- * @param onTimeGet Function to be called when [DeviceDetailsScreen] wants to read the
+ * @param onTimeGet Function to be called when [DeviceDetailsBody] wants to read the
  *  device's [TimeData.time].
- * @param onTimeSync Function to be called when [DeviceDetailsScreen] wants to sync the
+ * @param onTimeSync Function to be called when [DeviceDetailsBody] wants to sync the
  *  device's [TimeData.time] with the current time on the mobile phone.
+ * @param onLoaderOperation Function to be called when [DeviceDetailsBody] wants to perform a loader operation.
  * @param modifier The [Modifier] to be applied to this [DeviceDetailsBody].
  *
  * @author Frank HJ Cuypers
@@ -196,6 +203,7 @@ fun DeviceDetailsBody(
   onModeChange: (Mode) -> Unit,
   onTimeGet: () -> Unit,
   onTimeSync: () -> Unit,
+  onLoaderOperation: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entering DeviceDetailsBody, device = $device")
@@ -267,6 +275,11 @@ fun DeviceDetailsBody(
         .padding(dimensionResource(id = R.dimen.padding_small))
     )
 
+    GaaiLoaderCard(
+      onLoaderOperation = onLoaderOperation,
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small))
+    )
   }
 }
 
@@ -1292,6 +1305,112 @@ internal fun GaaiTimeDataCard(
 }
 
 /**
+ * Implements a [Card] allowing to select one of the Nexxtender Home's loader operations.
+ * @param onLoaderOperation Function to be called when [GaaiLoaderCard] wants to perform a loader operation.
+ * @param modifier the [Modifier] to be applied to this [GaaiLoaderCard]
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+internal fun GaaiLoaderCard(
+  onLoaderOperation: (Int) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Log.d(TAG, "Entered GaaiLoaderCard ")
+  Card(
+    modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+  ) {
+    Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .weight(1f)
+      ) {
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.loader),
+            style = MaterialTheme.typography.titleLarge,
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Button(onClick = {
+            Log.d(TAG, "GaaiLoaderCard Start Charge Default")
+            onLoaderOperation(LOADER_OPERATION_START_CHARGING_DEFAULT)
+          }
+          ) {
+            Text(stringResource(R.string.start_charge_default))
+          }
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Button(onClick = {
+            Log.d(TAG, "GaaiLoaderCard Start Charge Max")
+            onLoaderOperation(LOADER_OPERATION_START_CHARGING_MAX)
+          }
+          ) {
+            Text(stringResource(R.string.start_charge_max))
+          }
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Button(onClick = {
+            Log.d(TAG, "GaaiLoaderCard Start Charge Auto")
+            onLoaderOperation(LOADER_OPERATION_START_CHARGING_AUTO)
+          }
+          ) {
+            Text(stringResource(R.string.start_charge_auto))
+          }
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Button(onClick = {
+            Log.d(TAG, "GaaiLoaderCard Start Charge Eco")
+            onLoaderOperation(LOADER_OPERATION_START_CHARGING_ECO)
+          }
+          ) {
+            Text(stringResource(R.string.start_charge_eco))
+          }
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Button(onClick = {
+            Log.d(TAG, "GaaiLoaderCard Stop Charge")
+            onLoaderOperation(LOADER_OPERATION_STOP_CHARGING)
+          }
+          ) {
+            Text(stringResource(R.string.stop_charging))
+          }
+        }
+
+      }
+    }
+    Log.d(TAG, "Exiting GaaiLoaderCard")
+  }
+}
+
+/**
  * Converts [mode] to a string value to display.
  * @param mode
  * @return The corresponding string.
@@ -1805,7 +1924,8 @@ private fun DeviceDetailsPreview() {
       onMaxDeviceChange = {},
       onModeChange = {},
       onTimeGet = {},
-      onTimeSync = {}
+      onTimeSync = {},
+      onLoaderOperation = {}
     )
   }
 }
@@ -2026,5 +2146,17 @@ private fun GaaiTimeDataCardTime0Preview() {
         .padding(dimensionResource(id = R.dimen.padding_small)),
 
       )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GaaiLoaderCardPreview() {
+  GaaiTheme {
+    GaaiLoaderCard(
+      onLoaderOperation = {},
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small)),
+    )
   }
 }
