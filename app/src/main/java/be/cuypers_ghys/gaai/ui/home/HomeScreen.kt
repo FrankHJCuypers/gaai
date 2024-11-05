@@ -357,7 +357,8 @@ internal fun GaaiDeviceCard(
 }
 
 /**
- * A [Row] with the background to show when swiping the [SwipeToDismissBox] displaying the [GaaiDeviceItem] to the right.
+ * A [Row] with the background to show when swiping the [SwipeToDismissBox] displaying the [GaaiDeviceItem]
+ * to the right.
  * @param dismissState State if the [SwipeToDismissBox].
  *
  * @author Frank HJ Cuypers

@@ -1,3 +1,5 @@
+@file:Suppress("LongLine", "LongLine")
+
 import org.jetbrains.dokka.DokkaConfiguration.Visibility
 
 plugins {
@@ -91,7 +93,8 @@ dependencies {
   implementation(libs.androidx.room.ktx)
 
   // Include a slf4j implementation. libs.nordic.kotlin.ble uses it and without an implementation, no logging.
-  // Alternative is to include nordic-logger = { group = "no.nordicsemi.android.common", name = "logger", version.ref = "nordic-common" }?
+  // Alternative is to include
+  // nordic-logger = { group = "no.nordicsemi.android.common", name = "logger", version.ref = "nordic-common" }?
   // See Kotlin-BLE-Library, app_client packages, gradle script.
   implementation(libs.slf4j.api)
   implementation(libs.slf4j.simple)

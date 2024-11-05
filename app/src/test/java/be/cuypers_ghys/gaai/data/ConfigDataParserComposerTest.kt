@@ -134,7 +134,8 @@ class ConfigDataParserComposerTest {
 
     if (configurationVersion == ConfigVersion.CONFIG_CBOR) {
       /**
-       * [ConfigDataParserComposer.compose] does not generate maps in which the pairs are sorted according to an integer key value.
+       * [ConfigDataParserComposer.compose] does not generate maps in which the pairs are sorted according to
+       * an integer key value.
        * So literally comparing expectedConfigData and configDataArray is not possible
        */
       val recomputedConfigData = ConfigDataParserComposer.parseConfig_CBOR(configDataArray)

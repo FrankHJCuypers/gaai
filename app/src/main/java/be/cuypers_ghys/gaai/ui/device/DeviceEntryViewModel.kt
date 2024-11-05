@@ -191,7 +191,8 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
       Log.d(TAG, "starting scan using filter $serviceDataFilter")
 
       /* Note from https://github.com/iDevicesInc/SweetBlue/wiki/Android-BLE-Issues:
-       * "Built-in scan filtering, at least pre-lollipop, does not work. You have to scan for all devices and do filtering yourself."
+       * "Built-in scan filtering, at least pre-lollipop, does not work.
+       * You have to scan for all devices and do filtering yourself."
        * So don't pass filters to BleScanner.scan() !
        * scan() returns a Flow of BleScanResult, which consists of ServerDevice and BleScanResultData.
        */
@@ -221,7 +222,8 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    */
   private fun filterServiceData(result: BleScanResult): Boolean {
     val retVal = serviceDataFilter.filter(result)
-//        Log.d(TAG, "Filter uuid: ${serviceDataFilter.uuid}, found uuid ${result.data?.scanRecord?.serviceData}, result = $retVal");
+//        Log.d(TAG,
+//        "Filter uuid: ${serviceDataFilter.uuid}, found uuid ${result.data?.scanRecord?.serviceData}, result = $retVal");
     return retVal
   }
 

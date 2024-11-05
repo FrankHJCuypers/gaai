@@ -85,7 +85,8 @@ fun DataByteArray.Companion.fromUShort(command: Int): DataByteArray {
 /**
  * ViewModel to manage the state with the details of the [Device] with id [deviceId], to be used by [DeviceDetails].
  *
- * @param savedStateHandle [SavedStateHandle] passed by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider]
+ * @param savedStateHandle [SavedStateHandle] passed by
+ *  [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider]
  * @param devicesRepository The [DevicesRepository] to use.
  * @param bleRepository The [BleRepository] to use.
  * @constructor Called by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider].
@@ -189,30 +190,52 @@ class DeviceDetailsViewModel(
     val deviceInformationService =
       services.findService(NexxtenderHomeSpecification.UUID_BLE_DEVICE_INFORMATION_SERVICE)!!
     modelNumberStringCharacteristic =
-      deviceInformationService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_MODEL_NUMBER_STRING_CHARACTERISTIC)!!
+      deviceInformationService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_BLE_MODEL_NUMBER_STRING_CHARACTERISTIC
+      )!!
     serialNumberStringCharacteristic =
-      deviceInformationService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_SERIAL_NUMBER_STRING_CHARACTERISTIC)!!
+      deviceInformationService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_BLE_SERIAL_NUMBER_STRING_CHARACTERISTIC
+      )!!
     firmwareRevisionStringCharacteristic =
-      deviceInformationService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_FIRMWARE_REVISION_STRING_CHARACTERISTIC)!!
+      deviceInformationService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_BLE_FIRMWARE_REVISION_STRING_CHARACTERISTIC
+      )!!
     hardwareRevisionStringCharacteristic =
-      deviceInformationService.findCharacteristic(NexxtenderHomeSpecification.UUID_BLE_HARDWARE_REVISION_STRING_CHARACTERISTIC)!!
+      deviceInformationService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_BLE_HARDWARE_REVISION_STRING_CHARACTERISTIC
+      )!!
 
     val nexxtenderGenericService =
       services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_CDR_SERVICE)!!
     nexxtenderHomeChargingBasicDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC)!!
+      nexxtenderGenericService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC
+      )!!
     nexxtenderHomeChargingGridDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC)!!
+      nexxtenderGenericService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC
+      )!!
     nexxtenderHomeChargingCarDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_CAR_DATA_CHARACTERISTIC)!!
+      nexxtenderGenericService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_CAR_DATA_CHARACTERISTIC
+      )!!
     nexxtenderHomeChargingAdvancedDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC)!!
+      nexxtenderGenericService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC
+      )!!
     nexxtenderHomeGenericCommandCharacteristic =
-      nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC)!!
+      nexxtenderGenericService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC
+      )!!
     nexxtenderHomeGenericStatusCharacteristic =
-      nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_STATUS_CHARACTERISTIC)!!
+      nexxtenderGenericService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_STATUS_CHARACTERISTIC
+      )!!
     nexxtenderHomeGenericDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC)!!
+      nexxtenderGenericService.findCharacteristic(
+        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC
+      )!!
 
     // Read static information
     val deviceName = deviceNameCharacteristic.read().value.toString(Charsets.UTF_8)

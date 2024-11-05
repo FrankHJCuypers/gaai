@@ -47,7 +47,7 @@ object TimeDataParserComposer {
    */
   fun compose(timeData: TimeData): ByteArray {
     val data = ByteArray(4)
-    var offset = 0
+    val offset = 0
     data.toUint32LE(offset, timeData.time)
     return data
   }

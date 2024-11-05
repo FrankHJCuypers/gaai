@@ -5,6 +5,7 @@ Notes for my understanding of the library.
 ## Modules
 
 The lib has several modules.
+
 - advertiser
 - app_client
 - app_server
@@ -27,22 +28,24 @@ For Gaai, the advertiser and the server* modules seem not relevant.
 The client* modules and the scanner modules are probably relevant.
 
 ## advertiser
+
 ## app_client
 
 Example app showing how to implement a client with the library?
 Depends on the modules advertiser, scanner, client, server, uiscanner.
 
 Based on the Blinky app.
-Why does it depend on advertiser and server, if it is a client app? 
+Why does it depend on advertiser and server, if it is a client app?
 
 It also depends on other nordic libs:
+
 - libs.nordic.ui
 - libs.nordic.theme, so includes the Nordic logo etc...
 - libs.nordic.navigation, encapsulates a lot of the navigation stuff with NavHost and NavController.
   Not clear what the differences are compared with the Cupcakes course.
-- libs.nordic.permissions.ble for instance for requiring bluetooth permission etc... 
+- libs.nordic.permissions.ble for instance for requiring bluetooth permission etc...
   Includes the screens needed to ask for permission.
-  Seems to use the composables  
+  Seems to use the composables
 - libs.nordic.logger
 
 So it uses nordic themes and navigation?
@@ -106,7 +109,8 @@ Depends on the modules core, mock, server-api.
 
 Junit tests and android tests for he library.
 
-Depends on the modules core, advertiser, scanner, profile, client, client-android, client-mock, client-api, client, mock, server, server-android, server-mock, server-api.
+Depends on the modules core, advertiser, scanner, profile, client, client-android, client-mock, client-api, client,
+mock, server, server-android, server-mock, server-api.
 
 Also uses hilt for dependency injection.
 

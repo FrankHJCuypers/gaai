@@ -29,7 +29,7 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  */
 object ChargingCarDataParser {
   /**
-   * Parses a byte array with the contents of the []Charging Car Data BLE Characteristic]
+   * Parses a byte array with the contents of the [Charging Car Data BLE Characteristic]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_CAR_DATA_CHARACTERISTIC]
    * into an [ChargingCarData].
    * @param chargingCarData Byte array with the value read from the Charging Car Data BLE

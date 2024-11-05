@@ -2,21 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Bluetooth permission copied form [Kotlin BLE Library for Android](https://github.com/NordicSemiconductor/Kotlin-BLE-Library) uiscanner AndroidManifest.xml -->
+    <!-- Bluetooth permission copied form
+    [Kotlin BLE Library for Android](https://github.com/NordicSemiconductor/Kotlin-BLE-Library)
+    uiscanner AndroidManifest.xml -->
     <!--
     Bluetooth permission is required on Android 4.3 - 11 in order to communicate with
     Bluetooth LE devices.
     -->
     <uses-permission
         android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30"/>
+        android:maxSdkVersion="30" />
     <!--
      Bluetooth Admin permission is required on Android 4.3 - 11 in order to scan for
      Bluetooth LE devices.
     -->
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30"/>
+        android:maxSdkVersion="30" />
     <!--
      Location permission is required from Android 6 to 11 to be able to scan for advertising
      Bluetooth LE devices. Some BLE devices, called beacons, may be used to position the phone.
@@ -29,11 +31,8 @@
      Without the ACCESS_FINE_LOCATION, beacons are not included in scanner results.
      So even in Android 12+ we ask for ACCESS_FINE_LOCATION.
     -->
-    <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--
      On Android 12 new set of Bluetooth permissions were added. BLUETOOTH_SCAN permission is
      needed to scan for Bluetooth LE devices. The "never for location" flag is set, as we are not
@@ -51,7 +50,7 @@
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:name=".GaaiApplication"
