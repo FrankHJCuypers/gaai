@@ -8,7 +8,13 @@ plugins {
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.room)
   alias(libs.plugins.devtools.ksp)
+  id("com.gladed.androidgitversion") version "0.4.14"
+}
 
+androidGitVersion {
+  codeFormat = "MNNPPP"
+  format = "%tag%%-count%%-gcommit%%-branch%%-dirty%"
+  untrackedIsDirty = true
 }
 
 android {
@@ -20,7 +26,8 @@ android {
     minSdk = 26
     targetSdk = 35
     versionCode = 1
-    versionName = "1.0"
+    versionCode = androidGitVersion.code()
+    versionName = androidGitVersion.name()
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables {
@@ -46,6 +53,7 @@ android {
   }
   buildFeatures {
     compose = true
+    buildConfig = true
   }
   composeOptions {
     kotlinCompilerExtensionVersion = "1.5.1"

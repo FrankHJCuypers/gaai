@@ -69,6 +69,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import be.cuypers_ghys.gaai.BuildConfig
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
@@ -120,7 +121,7 @@ fun HomeScreen(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
       GaaiTopAppBar(
-        title = stringResource(HomeDestination.titleRes),
+        title = stringResource(HomeDestination.titleRes) + " " + BuildConfig.VERSION_NAME,
         canNavigateBack = false,
         scrollBehavior = scrollBehavior
       )
