@@ -29,6 +29,7 @@ android {
     versionCode = androidGitVersion.code()
     versionName = androidGitVersion.name()
 
+    setProperty("archivesBaseName", "Gaai-v$versionCode($versionName)")
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables {
       useSupportLibrary = true
