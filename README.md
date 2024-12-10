@@ -6,7 +6,7 @@
 [![kotlin](    https://img.shields.io/badge/Kotlin-B125EA?style=for-the-badge&logo=kotlin&logoColor=white)](https://developer.android.com/kotlin)
 [![compose](https://img.shields.io/badge/Jetpack-Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://developer.android.com/compose)
 
-[![alpha](https://img.shields.io/badge/version-experimantal-red)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
+[![alpha](https://img.shields.io/badge/version-experimental-red)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
 
 [![github release](https://img.shields.io/github/v/release/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
 [![github release date](https://img.shields.io/github/release-date/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/releases)
@@ -78,11 +78,15 @@ Follow these steps:
 6. [Build and run Gaai](https://developer.android.com/studio/run)
    This might take some while the first time because Android Studio will also download all dependencies.
 
-## Install Gaai without Android Studio
+## Install Gaai using APK file
 
-TBD; in a first phase the idea is to publish an apk on GitHub that then can be
-[loaded](https://www.androidauthority.com/how-to-install-apks-31494/).
-If *Gaai* is sufficiently stable, Google Play is an option.
+An APK file generated from Gaai can be installed as described in
+[How to install third-party apps without the Google Play Store](https://www.androidauthority.com/how-to-install-apks-31494/)
+
+## Install Gaai using Google Play Store
+
+Once *Gaai* is sufficiently stable, distributing it via Google Play Store is an option to consider.
+For the moment it is not available.
 
 # Getting Started
 
@@ -314,7 +318,7 @@ Click on a button and the *Nexxtender Home* immediately switches to the correspo
 
 Useful information can be found at
 
-- [Nexxtender Information, Frank HJ Cuypers, Google Docs] (TBD)
+- [Nexxtender Home - Information, Frank HJ Cuyperss](https://drive.google.com/file/d/13jiP2eNxM1pQ_JHfogX7eo2q3q1o2YCM/view?usp=drive_link)
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
 - [Nexxtmove for Home Assistant](https://github.com/geertmeersman/nexxtmove)
 - [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
@@ -347,11 +351,14 @@ The developer
 *Gaai*
 
 - is only tested on a Google 6 Pro with API 34 (Android 14).
+  Basic scenarios seems to work on it, but further testing is required for other scenarios.
   In theory it should work from API 26 (Android 8), but that was not tested.
   Let me know if it works or not on other APIs than 34.
 - is only tested with a *Nexxtender Home* with Hardware version A2 and Firmware version 2.53.2.
 
 At this point *Gaai* should be considered an experimental app, for research purposes only.
+It is currently not suited for the layman, but only for those willing/knowledgeable to spend the necessary debugging
+time.
 
 If despite the preceding warnings, you decide to use *Gaai*, that is on your own responsibility.
 
