@@ -77,7 +77,6 @@ import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.ui.theme.RedA400
-import be.cuypers_ghys.gaai.util.PINCalculator
 import kotlinx.coroutines.launch
 
 // Tag for logging
@@ -345,11 +344,6 @@ internal fun GaaiDeviceCard(
           Text(
             text = device.mac,
             style = MaterialTheme.typography.bodyMedium,
-          )
-          Spacer(Modifier.weight(1f))
-          Text(
-            text = PINCalculator.pinForPNSN(device.pn, device.sn) ?: "PIN?",
-            style = MaterialTheme.typography.bodyMedium
           )
           Spacer(Modifier.weight(1f))
           Text(

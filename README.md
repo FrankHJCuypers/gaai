@@ -41,7 +41,7 @@ A bird name was chosen.
 - No additional hardware required.
 - Connects over [Bluetooth Low Energy (BLE)](https://en.wikipedia.org/wiki/Bluetooth_Low_Energy) to the
   *Nexxtender Home*.
-- Finds and connects to the device based on its PN and SN. No MAC or PIN required.
+- Finds and connects to the device based on its PN and SN. No MAC required.
 - Shows real time data from the *Nexxtender Home*: device information, charging status, current, power consumption, ...
 - Allows to control the *Nexxtender Home*: start and stop the charger in ECO or MAX mode,
   sync the time with the mobile phone.
@@ -120,10 +120,11 @@ in Android 12 and up:
 
 ## Bluetooth pairing
 
-The first time that*Gaai* connects to a *Nexxtender Home* device,
+The first time that *Gaai* connects to a *Nexxtender Home* device,
 *Gaai* will show a pop-up asking to enter the 6-digit PIN.
 After entering the PIN, pairing completes.
-See [Add a Nexxtender Home device](#add-a-Nexxtender-Home-device) for the PIN value.
+
+See [PIN value](#pin-value) for the PIN value.
 
 If the mobile phone user later removes the *Nexxtender Home* device from the "Bluetooth" menu in Android,
 the pairing information is lost and *Gaai* will not automatically open the pairing dialog again.
@@ -132,6 +133,18 @@ The only options to restore from this situation are either of:
 - pair the device from the Android "Bluetooth menu".
 - delete the *Nexxtender Home* from *Gaai* and then add it again.
   *Gaai* will now again ask to pair.
+
+### PIN value
+
+The Nexxtender Home charger installer that installed your charger and connected it with the Nexxtmove app on your
+mobile phone, has paired it with the Nexxtender Home using the correct PIN value.
+In general, the installer will not have provided you with that PIN value.
+As long as you use the same mobile phone to connect to the Nexxtender Home, both devices should stay paired and
+there is no issue.
+But when you need to move to another phone, you need the PIN value.
+If you don't have the PIN code, you can provide the Gaai Github repository owner with the PN and SN values
+as mentioned in [Add a Nexxtender Home device](#add-a-nexxtender-home-device)
+and he will calculate it for you.
 
 ## First start
 
@@ -175,7 +188,6 @@ Gaai shows a card with the details of the found device.
 + At the top right is the SN.
 + At the bottom left is the MAC.
 + At the bottom right is the Service Data used to find the BLE device based on its advertisement packet.
-+ At the bottom center is the PIN to use when pairing with this device.
 
 Press *Save* to save this device in *Gaai's* database.
 This will bring you back to the previous screen, now showing one device.
