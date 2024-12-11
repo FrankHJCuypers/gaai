@@ -25,8 +25,11 @@ Both the Nexxtmove app and the Nexxtmove.me website require a username and passw
 Without it, it is impossible to use the Nexxtmove app and therefore impossible to operate the *Nexxtender* Home charger,
 which has no UI or input device on its own.
 If you no longer have a valid username and password for the Nexxtmove app, using Gaai is an option.
-An other alternative is the
-[ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender).
+Other alternatives are
+
+- [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender).
+- [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
+- [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook)
 
 ## Gaai?
 
