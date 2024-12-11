@@ -9,6 +9,7 @@ plugins {
   alias(libs.plugins.room)
   alias(libs.plugins.devtools.ksp)
   id("com.gladed.androidgitversion") version "0.4.14"
+  base
 }
 
 androidGitVersion {
@@ -22,14 +23,16 @@ android {
   compileSdk = 35
 
   defaultConfig {
+    base {
+      versionCode = androidGitVersion.code()
+      versionName = androidGitVersion.name()
+      archivesName = "Gaai-v$versionCode-$versionName"
+    }
+
     applicationId = "be.cuypers_ghys.gaai"
     minSdk = 26
     targetSdk = 35
-    versionCode = 1
-    versionCode = androidGitVersion.code()
-    versionName = androidGitVersion.name()
 
-    setProperty("archivesBaseName", "Gaai-v$versionCode-$versionName")
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables {
       useSupportLibrary = true
