@@ -191,7 +191,7 @@ cancel the scan if it takes to long.
 ![Device Entry Empty](docs/images/DeviceEntryScanning.png)
 
 If you entered the correct PN and SN,
-*Gaai* should find the *Nexxtender Home* almost immediately and show the following screen.
+*Gaai* should find the *Nexxtender Home* in less then a few seconds and show the following screen.
 
 ![Device Entry Empty](docs/images/DeviceEntryFound.png)
 
