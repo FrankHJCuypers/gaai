@@ -24,7 +24,7 @@ billing information to the [Nexxtmove.me](https://www.nexxtmove.me/) website for
 Both the Nexxtmove app and the Nexxtmove.me website require a username and password to login.
 Without it, it is impossible to use the Nexxtmove app and therefore impossible to operate the *Nexxtender* Home charger,
 which has no UI or input device on its own.
-If you no longer have a valid username and password for the Nexxtmove app, using Gaai is an option.
+If you no longer have a valid username and password for the Nexxtmove app, using *Gaai* is an option.
 Other alternatives are
 
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender).
@@ -60,6 +60,12 @@ This app is developed in [Kotlin](https://developer.android.com/kotlin) with
 - [Kotlin coroutines](https://developer.android.com/kotlin/coroutines)
 - [Kotlin BLE Library for Android](https://github.com/NordicSemiconductor/Kotlin-BLE-Library)
 
+There are 3 ways to install *Gaai* on your Android phone:
+
+1. [Install Gaai using Android Studio on Windows](#install-gaai-using-android-studio-on-windows)
+2. [Install Gaai using APK file](#install-gaai-using-apk-file)
+3. [Install Gaai using Google Play Store](#install-gaai-using-google-play-store)
+
 ## Install Gaai using Android Studio on Windows
 
 *Gaai* can be installed on your Android phone using Android Studio.
@@ -83,8 +89,12 @@ Follow these steps:
 
 ## Install Gaai using APK file
 
-An APK file generated from Gaai can be installed as described in
-[How to install third-party apps without the Google Play Store](https://www.androidauthority.com/how-to-install-apks-31494/)
+An APK file generated from *Gaai* can be installed as described in
+[How to install third-party apps without the Google Play Store](https://www.androidauthority.com/how-to-install-apks-31494/).
+
+*Gaai* APK files are available for the official
+[releases](https://github.com/FrankHJCuypers/Gaai/releases) in the GitHub repo.
+Select a release, open its *assets* and select the APK file.
 
 ## Install Gaai using Google Play Store
 
@@ -145,7 +155,7 @@ In general, the installer will not have provided you with that PIN value.
 As long as you use the same mobile phone to connect to the Nexxtender Home, both devices should stay paired and
 there is no issue.
 But when you need to move to another phone, you need the PIN value.
-If you don't have the PIN code, you can provide the Gaai Github repository owner with the PN and SN values
+If you don't have the PIN code, you can provide the *Gaai* GitHub repository owner with the PN and SN values
 as mentioned in [Add a Nexxtender Home device](#add-a-nexxtender-home-device)
 and he will calculate it for you.
 
@@ -377,7 +387,12 @@ time.
 
 If despite the preceding warnings, you decide to use *Gaai*, that is on your own responsibility.
 
-# Support
+# Support and questions
 
-For support, questions, or feedback, please open an issue on
-the [GitHub repository](https://github.com/FrankHJCuypers/Gaai/issues/new).
+For support and questions have a look in the
+GitHub *Gaai* repo [Discussions](https://github.com/FrankHJCuypers/Gaai/discussions) and
+[Issues](https://github.com/FrankHJCuypers/Gaai/issues)
+sections for more information.
+Feel free to join a discussion or open a new discussion or issue if the information that
+you are looking for is not available.
+
