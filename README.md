@@ -1,5 +1,6 @@
 [![maintainer](https://img.shields.io/badge/maintainer-Frank%20HJ%20Cuypers-green?style=for-the-badge&logo=github)](https://github.com/frankhjcuypers)
 [![GitHub Discussions](https://img.shields.io/github/discussions/FrankHJCuypers/Gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/Gaai/discussions)
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/FrankHJCuypers/Gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/Gaai/issues)
 
 [![android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://www.android.com/)
 [![android studio](https://img.shields.io/badge/Android_Studio-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white)](https://developer.android.com/studio)
@@ -8,12 +9,13 @@
 
 [![alpha](https://img.shields.io/badge/version-experimental-red)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
 
-[![github release](https://img.shields.io/github/v/release/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
-[![github release date](https://img.shields.io/github/release-date/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/releases)
-[![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/Gaai)](LICENSE)
-[![Gitea Last Commit](https://img.shields.io/gitea/last-commit/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/commits)
-[![github contributors](https://img.shields.io/github/contributors/FrankHJCuypers/Gaai)](https://github.com/FrankHJCuypers/Gaai/graphs/contributors)
-[![github commit activity](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/main)
+[![GitHub release](https://img.shields.io/github/v/release/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
+[![GitHub release date](https://img.shields.io/github/release-date/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
+[![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/Gaai?logo=github)](LICENSE)
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits)
+[![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/graphs/contributors)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/main)
 
 # Nexxtender Home android app
 
