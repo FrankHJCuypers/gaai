@@ -16,6 +16,7 @@
 package be.cuypers_ghys.gaai.ui.permissions
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
@@ -217,6 +218,7 @@ fun MissingPermissionsComponent(
  *
  * @author Frank HJ Cuypers
  */
+@SuppressLint("MissingPermission")
 private fun enableBluetooth(context: Context) {
   context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
 }
