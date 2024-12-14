@@ -288,7 +288,7 @@ The fields "Max Device" and "Network Type" are only shown when the Nexxtender Ho
 In theory all these fields are configurable and can be changed.
 *Gaai* only allows to change the fields marked with ![edit outline](docs/images/mdi--edit-outline.png).
 For the fields "Safe" and "Network Type" *Gaai* does not implement the option to change the values,
-as it probably not wise to change these values if you don't know what you are doing.
+as it is probably not wise to change these values if you don't know what you are doing.
 Changing the values of "Min Device" and "iCapacity" is also not supported by *Gaai*;
 it is insufficiently clear what they are and if it is safe to change them.
 
