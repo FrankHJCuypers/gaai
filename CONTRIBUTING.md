@@ -36,8 +36,3 @@ use GitHub pull requests for this purpose. Consult
 
 Please note that this project is released with a [Contributor Convenant Code of Conduct](CODE_OF_CONDUCT.md).
 By participating in this project you agree to abide by its terms.
-
-# Gradlew commands
-
-- `./gradlew.bat dokkaHtml` creates Html based documentation from the Kdoc documentation used for documenting the source
-  code.
