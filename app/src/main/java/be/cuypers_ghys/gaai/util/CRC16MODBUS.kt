@@ -27,6 +27,7 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
  * + [MODBUS](https://en.wikipedia.org/wiki/Modbus)
  * + [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
  * + [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/)
+ * + [CRC-16/MODBUS calculator](https://crccalc.com/?crc=263b130bff13b97472d0143635984d0bb76c7bb6f45dfcc381&method=CRC-16/MODBUS&datatype=hex&outtype=hex)
  * + [no.nordicsemi.android.kotlin.ble.profile.common.CRC16.CRC]
  *
  * @param data   The input data block for computation.

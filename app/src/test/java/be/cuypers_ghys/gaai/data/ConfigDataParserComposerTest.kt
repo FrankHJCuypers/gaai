@@ -15,6 +15,9 @@
  */
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
+import io.mockk.every
+import io.mockk.mockkStatic
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -24,6 +27,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
+
 
 /**
  * @author Frank HJ Cuypers
@@ -47,6 +51,9 @@ class ConfigDataParserComposerTest {
     expectedICapacity: Int,
     expectedConfigurationVersion: ConfigVersion
   ) {
+
+    mockkStatic(Log::class)
+    every { Log.d(any(), any()) } returns 0
 
     val computedConfigGetData = when (expectedConfigurationVersion) {
       ConfigVersion.CONFIG_1_0 -> ConfigDataParserComposer.parseConfig_1_0(configData)
@@ -85,6 +92,8 @@ class ConfigDataParserComposerTest {
     expectedICapacity: Int,
     expectedConfigurationVersion: ConfigVersion
   ) {
+    mockkStatic(Log::class)
+    every { Log.d(any(), any()) } returns 0
 
     val computedConfigGetData = ConfigDataParserComposer.parse(configData, expectedConfigurationVersion)
 
@@ -191,6 +200,41 @@ class ConfigDataParserComposerTest {
   @Test
   fun parseConfig_CBOR_IncorrectCRC16() {
     assertNull(ConfigDataParserComposer.parseConfig_CBOR("A200A20101020101AB01000412051834060607186909000C19DEBC0D1912F00E1956340F199A781318696E71".hexToByteArray()))
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  @Suppress("SpellCheckingInspection")
+  @Test
+  fun parseConfig_CBOR_FirstTypeNotMapAndIncorrect() {
+    assertNull(ConfigDataParserComposer.parseConfig_CBOR("8200A20101020101AB01060418F00518F00618F007186909030C1977660D1999880E19BBAA0F19DDCC13189606AB".hexToByteArray()))
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  @Suppress("SpellCheckingInspection")
+  @Test
+  fun parseConfig_CBOR_FirstTypeNotMapAndCorrect() {
+    assertNull(ConfigDataParserComposer.parseConfig_CBOR("00BF40".hexToByteArray()))
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  @Suppress("SpellCheckingInspection")
+  @Test
+  fun parseConfig_CBOR_FirstTypeMapAndSubmap0Absent() {
+    assertNull(ConfigDataParserComposer.parseConfig_CBOR("A101AB01000412051834060607186909000C19DEBC0D1912F00E1956340F199A781318695599".hexToByteArray()))
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  @Suppress("SpellCheckingInspection")
+  @Test
+  fun parseConfig_CBOR_FirstTypeMapAndSubmap1Absent() {
+    assertNull(ConfigDataParserComposer.parseConfig_CBOR("A100A201010201C28F".hexToByteArray()))
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  @Suppress("SpellCheckingInspection")
+  @Test
+  fun parseConfig_CBOR_FirstTypeMapAndSubItem2NotMap() {
+    assertNull(ConfigDataParserComposer.parseConfig_CBOR("A200A2010102010101C464".hexToByteArray()))
   }
 
   companion object {
@@ -434,6 +478,21 @@ class ConfigDataParserComposerTest {
         ),
         Arguments.of(
           "A200A20101020101AB01060418F00518F00618F007186909030C1977660D1999880E19BBAA0F19DDCC1318963F53".hexToByteArray(),
+          0xF0,
+          0xF0,
+          0xF0,
+          Mode.UNKNOWN,
+          0x69,
+          NetWorkType.UNKNOWN,
+          0x7766,
+          0x9988,
+          0xBBAA,
+          0xDDCC,
+          0x96,
+          ConfigVersion.CONFIG_CBOR
+        ),
+        Arguments.of( // added all unused and an unknown tag
+          "A200A20101020101B40106020B030B0418F00518F00618F0071869080B09030A0B0B0B0C1977660D1999880E19BBAA0F19DDCC100B110B120B131896140B50B2".hexToByteArray(),
           0xF0,
           0xF0,
           0xF0,

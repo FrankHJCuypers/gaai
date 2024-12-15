@@ -26,6 +26,7 @@ import be.cuypers_ghys.gaai.util.toUint16LE
 import com.google.iot.cbor.CborInteger
 import com.google.iot.cbor.CborMap
 import com.google.iot.cbor.CborObject
+import com.google.iot.cbor.CborParseException
 import io.github.g00fy2.versioncompare.Version
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 
@@ -219,10 +220,16 @@ object ConfigDataParserComposer {
       return null
     }
 
-    val cborMap = CborMap.createFromCborByteArray(configGetData, 0, configGetData.size - 2) ?: return null
-    val subMap0 = cborMap.get(CborInteger.create(0)) ?: return null
-    val subMap1 = cborMap.get(CborInteger.create(1)) ?: return null
-    if (subMap1 !is CborMap) return null
+    val subMap1: CborObject
+
+    try {
+      val cborMap = CborMap.createFromCborByteArray(configGetData, 0, configGetData.size - 2)
+      val subMap0 = cborMap.get(CborInteger.create(0)) ?: return null
+      subMap1 = cborMap.get(CborInteger.create(1)) ?: return null
+      if (subMap1 !is CborMap) return null
+    } catch (e: CborParseException) {
+      return null
+    }
 
     var maxGrid: UByte = 0u
     var maxDevice: UByte = 0u

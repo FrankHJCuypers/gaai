@@ -42,47 +42,52 @@ class ProductNumberParserTest {
 
   @Test
   fun parse_colonInsteadOfDash() {
-    Assertions.assertNull(SerialNumberParser.parse("60211:A2"))
+    Assertions.assertNull(ProductNumberParser.parse("60211:A2"))
   }
 
   @Test
   fun parse_pipeInsteadOfDash() {
-    Assertions.assertNull(SerialNumberParser.parse("60211|A2"))
+    Assertions.assertNull(ProductNumberParser.parse("60211|A2"))
   }
 
   @Test
   fun parse_AAAAAToShort() {
-    Assertions.assertNull(SerialNumberParser.parse("6211-A2"))
+    Assertions.assertNull(ProductNumberParser.parse("6211-A2"))
   }
 
   @Test
   fun parse_YYMMToLong() {
-    Assertions.assertNull(SerialNumberParser.parse("606211-A2"))
+    Assertions.assertNull(ProductNumberParser.parse("606211-A2"))
   }
 
   @Test
   fun parse_AAAAAHex() {
-    Assertions.assertNull(SerialNumberParser.parse("6021A-A2"))
+    Assertions.assertNull(ProductNumberParser.parse("6021A-A2"))
   }
 
   @Test
   fun parse_AAAAANotHex() {
-    Assertions.assertNull(SerialNumberParser.parse("6021Z-A2"))
+    Assertions.assertNull(ProductNumberParser.parse("6021Z-A2"))
   }
 
   @Test
   fun parse_RRToShort() {
-    Assertions.assertNull(SerialNumberParser.parse("60211-A"))
+    Assertions.assertNull(ProductNumberParser.parse("60211-A"))
   }
 
   @Test
   fun parse_RRToLong() {
-    Assertions.assertNull(SerialNumberParser.parse("60211-A20"))
+    Assertions.assertNull(ProductNumberParser.parse("60211-A20"))
   }
 
   @Test
   fun parse_RRNotHex() {
-    Assertions.assertNull(SerialNumberParser.parse("60211-AK"))
+    Assertions.assertNull(ProductNumberParser.parse("60211-AK"))
+  }
+
+  @Test
+  fun parse_NotGroupCount2() {
+    Assertions.assertNull(ProductNumberParser.parse("60211"))
   }
 
   companion object {

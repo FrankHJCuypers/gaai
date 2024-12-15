@@ -26,11 +26,6 @@ package be.cuypers_ghys.gaai.data
 // TODO: create Junit tests for this class.
 data class AuthorizationStatus(val authStatus: Byte) {
 
-  @Suppress("unused")
-  fun isSet(bit: Int): Boolean {
-    return ((1 shl bit) and authStatus.toInt()) != 0
-  }
-
   @Suppress("MemberVisibilityCanBePrivate")
   companion object {
     const val UNAUTHORIZED_BIT = 0

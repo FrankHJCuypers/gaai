@@ -16,6 +16,7 @@
 package be.cuypers_ghys.gaai.util
 
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -24,7 +25,6 @@ import java.util.stream.Stream
 /**
  * @author Frank HJ Cuypers
  */
-
 class TestCRC8CCITT {
 
   @OptIn(ExperimentalStdlibApi::class)
@@ -36,6 +36,23 @@ class TestCRC8CCITT {
 
     val computedCrc = crc8Ccitt.update(data)
     Assertions.assertEquals(expectedCrc, computedCrc)
+  }
+
+  @Test
+  fun verifySize1() {
+    Assertions.assertEquals(1, CRC8CCITT.size())
+  }
+
+  @Test
+  fun verifyUpdateIntWithUpdateByteArray() {
+    val crc8Ccitt = CRC8CCITT()
+    val byteArrayValue = byteArrayOf(0xFF.toByte(), 0xFE.toByte(), 0xFD.toByte(), 0xFC.toByte())
+    val integerValue = 0xFCFDFEFF.toInt()
+    val computedByteArrayCrc = crc8Ccitt.update(byteArrayValue)
+    crc8Ccitt.reset()
+    val computedIntegerCrc = crc8Ccitt.update(integerValue)
+
+    Assertions.assertEquals(computedByteArrayCrc, computedIntegerCrc)
   }
 
   companion object {

@@ -67,7 +67,7 @@ class ChargingGridDataParserTest {
   @OptIn(ExperimentalStdlibApi::class)
   @Test
   fun parse_ChargingGridDataIncorrectCRC16() {
-    assertNull(ChargingBasicDataParser.parse("1234567890ABCDEF1234567890AB6969".hexToByteArray()))
+    assertNull(ChargingGridDataParser.parse("1234567890ABCDEF1234567890AB6969".hexToByteArray()))
   }
 
   companion object {

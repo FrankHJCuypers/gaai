@@ -16,6 +16,8 @@
 
 package be.cuypers_ghys.gaai.util
 
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TimePickerState
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -31,6 +33,7 @@ import java.util.stream.Stream
  */
 class TouTimeTest {
 
+  @OptIn(ExperimentalMaterial3Api::class)
   @ParameterizedTest
   @MethodSource("usedCombinationsProvider")
   fun verifyResultsFromKnownTestVectors(time: Int, expectedHours: Int, expectedMinutes: Int, expectedString: String) {
@@ -46,6 +49,13 @@ class TouTimeTest {
     Assertions.assertEquals(expectedCalendar.get(Calendar.HOUR_OF_DAY), touTime.getCalendar().get(Calendar.HOUR_OF_DAY))
     Assertions.assertEquals(expectedCalendar.get(Calendar.MINUTE), touTime.getCalendar().get(Calendar.MINUTE))
     Assertions.assertEquals(expectedString, touTime.toString())
+
+    val touTime2 = TouTime(expectedHours, expectedMinutes)
+    Assertions.assertEquals(touTime.time, touTime2.time)
+
+    val timePickerState = TimePickerState(initialHour = expectedHours, initialMinute = expectedMinutes, is24Hour = true)
+    val touTime3 = TouTime(timePickerState)
+    Assertions.assertEquals(touTime.time, touTime3.time)
   }
 
   @Test

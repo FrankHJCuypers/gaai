@@ -25,7 +25,7 @@ package be.cuypers_ghys.gaai.util
  * See also
  * + [CRC_8_CCITT](https://www.3dbrew.org/wiki/CRC-8-CCITT)
  * + [Cyclic_redundancy_check](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
- * + [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/)
+ * + [CRC-8/SMBUS calculator](https://crccalc.com/?crc=263b130bff13b97472d0143635984d0bb76c7bb6f45dfcc381&method=CRC-8/SMBUS&datatype=hex&outtype=hex)
  *
  * @author Frank HJ Cuypers
  */

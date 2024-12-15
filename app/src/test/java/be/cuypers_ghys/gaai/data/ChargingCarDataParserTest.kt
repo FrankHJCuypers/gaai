@@ -69,7 +69,7 @@ class ChargingCarDataParserTest {
   @Suppress("SpellCheckingInspection")
   @Test
   fun parse_ChargingCarDataIncorrectCRC16() {
-    assertNull(ChargingBasicDataParser.parse("1234567890ABCDEF1234567890ABCDEF6969".hexToByteArray()))
+    assertNull(ChargingCarDataParser.parse("1234567890ABCDEF1234567890ABCDEF6969".hexToByteArray()))
   }
 
   companion object {
