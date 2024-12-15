@@ -42,6 +42,7 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_CBOR_SET
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_GET
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_SET
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_POPPED
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_POPPED_CBOR
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_READY
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_READY_CBOR
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_STATUS_SUCCESS
@@ -292,7 +293,7 @@ class DeviceDetailsViewModel(
       val status = it.value.fromUint16LE(0).toInt()
       Log.d(TAG, "Converted status: $status")
       when (status) {
-        CONFIG_STATUS_POPPED -> {
+        CONFIG_STATUS_POPPED, CONFIG_STATUS_POPPED_CBOR -> {
           val configData = ConfigDataParserComposer.parse(
             nexxtenderHomeGenericDataCharacteristic.read().value,
             configVersion
