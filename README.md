@@ -98,6 +98,11 @@ An APK file generated from *Gaai* can be installed as described in
 [releases](https://github.com/FrankHJCuypers/Gaai/releases) in the GitHub repo.
 Select a release, open its *assets* and select the APK file.
 
+If the selected APK is a `-debug` version, it will install without questions.
+If it is a `-release` version, it is signed with the Gaai signature key and Android will perform some tests.
+If *Google Play Protect* recommends to scan the app, select "scan app" and wait for the scanning to complete.
+If the scanning is complete, select "Install app".
+
 ## Install Gaai using Google Play Store
 
 Once *Gaai* is sufficiently stable, distributing it via Google Play Store is an option to consider.

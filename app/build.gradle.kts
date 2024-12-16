@@ -1,6 +1,8 @@
 @file:Suppress("LongLine", "LongLine")
 
 import org.jetbrains.dokka.DokkaConfiguration.Visibility
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
   alias(libs.plugins.android.application)
@@ -18,7 +20,22 @@ androidGitVersion {
   untrackedIsDirty = true
 }
 
+// Read keystore properties from keystore.properties file, in the rootProject folder
+// For security reasons keystore.properties is NOT in git.
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
 android {
+  signingConfigs {
+    create("release") {
+      storeFile = file(keystoreProperties["storeFile"] as String)
+      keyPassword = keystoreProperties["keyPassword"] as String
+      storePassword = keystoreProperties["storePassword"] as String
+      keyAlias = keystoreProperties["keyAlias"] as String
+    }
+  }
+  
   namespace = "be.cuypers_ghys.gaai"
   compileSdk = 35
 
@@ -46,6 +63,7 @@ android {
         getDefaultProguardFile("proguard-android-optimize.txt"),
         "proguard-rules.pro"
       )
+      signingConfig = signingConfigs.getByName("release")
     }
   }
   compileOptions {
