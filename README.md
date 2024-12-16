@@ -29,7 +29,7 @@ which has no UI or input device on its own.
 If you no longer have a valid username and password for the Nexxtmove app, using *Gaai* is an option.
 Other alternatives are
 
-- [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender).
+- [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
 - [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
 - [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook)
 
@@ -44,6 +44,7 @@ A bird name was chosen.
 
 - Only requires to install *Gaai*.
 - No additional hardware required.
+- No www.Nexxtmove.me account required.
 - Connects over [Bluetooth Low Energy (BLE)](https://en.wikipedia.org/wiki/Bluetooth_Low_Energy) to the
   *Nexxtender Home*.
 - Finds and connects to the device based on its PN and SN. No MAC required.
@@ -53,43 +54,24 @@ A bird name was chosen.
 - Allows to configure the *Nexxtender Home*: default charging mode, max grid and max device current, off-peak hours.
 - Remembers the PN and SN of multiple devices.
 
-# Development
+The following features are **not** available:
 
-This app is developed in [Kotlin](https://developer.android.com/kotlin) with
-[Android Studio](https://developer.android.com/studio) using
+- Synchronization with the www.Nexxtmove.me website from Diego.
+- Management of badges (add, delete).
+- Download of Events, Metrics, charging information for billing, CDR, CCDT, ...
+- Firmware upload.
 
-- [Jetpack Compose](https://developer.android.com/develop/ui/compose)
-- [Kotlin coroutines](https://developer.android.com/kotlin/coroutines)
-- [Kotlin BLE Library for Android](https://github.com/NordicSemiconductor/Kotlin-BLE-Library)
+# Installing Gaai
 
 There are 3 ways to install *Gaai* on your Android phone:
 
-1. [Install Gaai using Android Studio on Windows](#install-gaai-using-android-studio-on-windows)
-2. [Install Gaai using APK file](#install-gaai-using-apk-file)
+1. [Install Gaai using APK file](#install-gaai-using-apk-file)
+2. [Install Gaai using Android Studio on Windows](#install-gaai-using-android-studio-on-windows)
 3. [Install Gaai using Google Play Store](#install-gaai-using-google-play-store)
 
-## Install Gaai using Android Studio on Windows
-
-*Gaai* can be installed on your Android phone using Android Studio.
-Follow these steps:
-
-1. Install the 64-bit version of [Git](https://git-scm.com/downloads/win).
-2. Install [Android Studio](https://developer.android.com/studio/install)
-3. In Android Studio select the menu item *File* -> *Settings* -> *Version Control* -> *Git* and make sure that the
-   *Path to Git executable* points to the git.exe that you just installed.
-4. [Clone GitHub Gaai project in Android Studio](https://www.geeksforgeeks.org/how-to-clone-android-project-from-github-in-android-studio/).
-   The required URL can be found by clicking on the ![Green Code>](docs/images/GreenCode.png)
-   button at the top of this page.
-   You might require a GitHub login to be able to clone a repo.
-   If you plan on contributing to *Gaai*, you better first fork the repo in GitHub and use the URL of your fork in
-   Android Studio.
-   Under *Directory* choose a directory where you want the project to be stored.
-   Press the *Clone* button.
-5. In Android Studio [Connect to your device using Wi-Fi](https://developer.android.com/studio/run/device#wireless).
-6. [Build and run Gaai](https://developer.android.com/studio/run)
-   This might take some while the first time because Android Studio will also download all dependencies.
-
 ## Install Gaai using APK file
+
+For most people, this is the preferred way of installing.
 
 An APK file generated from *Gaai* can be installed as described in
 [How to install third-party apps without the Google Play Store](https://www.androidauthority.com/how-to-install-apks-31494/).
@@ -102,6 +84,12 @@ If the selected APK is a `-debug` version, it will install without questions.
 If it is a `-release` version, it is signed with the Gaai signature key and Android will perform some tests.
 If *Google Play Protect* recommends to scan the app, select "scan app" and wait for the scanning to complete.
 If the scanning is complete, select "Install app".
+
+## Install Gaai using Android Studio on Windows
+
+*Gaai* can be installed on your Android phone using Android Studio.
+See [Environment setup](DEVELOPMENT.md#environment-setup).
+Only used by developers during development.
 
 ## Install Gaai using Google Play Store
 
@@ -369,6 +357,26 @@ This project is licensed under the GNU AGPLv3 License. See the [LICENSE](LICENSE
 - [NordicSemiconductor Kotlin-BLE-Library uiscanner](https://github.com/NordicSemiconductor/Kotlin-BLE-Library/tree/main/uiscanner)
   for the BLE library.
 
+# Supported Android versions and Nexxtender Home firmware versions
+
+In theory *Gaai* should work from API 26 (Android 8) and higher, but these are not all tested.
+For the Nexxtender Home firmware versions,
+there is insufficient documentation available to assess if it will work for older versions.
+
+The following table shows the version combinations for which it was confirmed that it works.
+Basic scenarios seems to work, but further testing is required for other scenarios.
+The first row is the main combination used for testing and debugging during development.
+The other rows are confirmed by other users.
+
+| Phone Model        | Android API (version) | Nexxtender Home firmware version |
+|--------------------|-----------------------|----------------------------------|
+| Google Pixel 6 Pro | 34 (14)               | 2.53.2                           |
+| Google Pixel 8 Pro | 35 (15)               | 2.53.2                           |
+| Nokia X10          | 34 (14)               | 2.53.2                           |
+| OnePlus Nord 2     | 33 (13)               | 3.65.0                           |
+
+There are currently no combinations for which it is confirmed that it does not work.
+
 # Disclaimer
 
 The developer
@@ -380,18 +388,12 @@ The developer
   However, if you still need the *Nexxtmove* app to upload charging information (for reimbursement or others),
   be very careful as there is no guarantee that it will not interfere.
 
-*Gaai*
+*Gaai* is only tested on a the phone versus Nexxtender Home versions as indicated in section
 
-- is only tested on a Google 6 Pro with API 34 (Android 14).
-  Basic scenarios seems to work on it, but further testing is required for other scenarios.
-  In theory it should work from API 26 (Android 8), but that was not tested.
-  Let me know if it works or not on other APIs than 34.
-- is only tested with a *Nexxtender Home* with Hardware version A2 and Firmware version 2.53.2.
-
-At this point *Gaai* should be considered an experimental app, for research purposes only.
-It is currently not suited for the layman, but only for those willing/knowledgeable to spend the necessary debugging
-time.
-
+At this point *Gaai* should be considered an alpha app, for trials only.
+It is currently not tested on sufficient combinations,
+so please expect to spend the necessary debugging time.
 If despite the preceding warnings, you decide to use *Gaai*, that is on your own responsibility.
+But we will do our best to help you. 
 
 

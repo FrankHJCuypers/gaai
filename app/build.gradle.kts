@@ -30,12 +30,12 @@ android {
   signingConfigs {
     create("release") {
       storeFile = file(keystoreProperties["storeFile"] as String)
-      keyPassword = keystoreProperties["keyPassword"] as String
       storePassword = keystoreProperties["storePassword"] as String
       keyAlias = keystoreProperties["keyAlias"] as String
+      keyPassword = keystoreProperties["keyPassword"] as String
     }
   }
-  
+
   namespace = "be.cuypers_ghys.gaai"
   compileSdk = 35
 
