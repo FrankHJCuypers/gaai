@@ -389,6 +389,7 @@ The developer
   be very careful as there is no guarantee that it will not interfere.
 
 *Gaai* is only tested on a the phone versus Nexxtender Home versions as indicated in section
+[Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-home-firmware-versions)
 
 At this point *Gaai* should be considered an alpha app, for trials only.
 It is currently not tested on sufficient combinations,
