@@ -66,7 +66,7 @@ class MissingPermissionsViewModel : ViewModel() {
   var permissions = emptyList<String>()
 
   init {
-    Log.d(TAG, "SDK_INT: $(Build.VERSION.SDK_INT)")
+    Log.d(TAG, "SDK_INT: ${Build.VERSION.SDK_INT}")
     if (Build.VERSION.SDK_INT <= 30) {
       Log.d(TAG, "SDK <= 30")
       permissions = listOf(
