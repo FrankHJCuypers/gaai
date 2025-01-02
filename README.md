@@ -374,6 +374,7 @@ The other rows are confirmed by other users.
 | Google Pixel 8 Pro | 35 (15)               | 2.53.2                           |
 | Nokia X10          | 34 (14)               | 2.53.2                           |
 | OnePlus Nord 2     | 33 (13)               | 3.65.0                           |
+| Samsung Galaxy J7  | 27 (8.1)              | 3.65.0                           |
 
 There are currently no combinations for which it is confirmed that it does not work.
 
