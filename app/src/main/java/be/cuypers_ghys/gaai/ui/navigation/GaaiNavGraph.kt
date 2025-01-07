@@ -16,6 +16,7 @@
 
 package be.cuypers_ghys.gaai.ui.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -32,6 +33,9 @@ import be.cuypers_ghys.gaai.ui.home.HomeScreen
 import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsDestination
 import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsScreen
 
+// Tag for logging
+private const val TAG = "GaaiNavGraph"
+
 /**
  * Provides the Navigation graph for the application.
  * @param navController The []NavHostController] for this host.
@@ -44,24 +48,32 @@ fun GaaiNavHost(
   navController: NavHostController,
   modifier: Modifier = Modifier,
 ) {
+  Log.d(TAG, "Entered GaaiNavHost with navController = ${navController.toString()}")
+
   NavHost(
     navController = navController,
+//    startDestination = HomeDestination.route,
     startDestination = MissingPermissionsDestination.route,
     modifier = modifier
   ) {
     composable(route = HomeDestination.route) {
+      Log.d(TAG, "Composable ${HomeDestination.route} is calling HomeScreen()")
       HomeScreen(
         navigateToDeviceEntry = { navController.navigate(DeviceEntryDestination.route) },
         navigateToDeviceDetails = {
           navController.navigate("${DeviceDetailsDestination.route}/${it}")
         }
       )
+      Log.d(TAG, "Composable ${HomeDestination.route} has exited HomeScreen()")
     }
+
     composable(route = DeviceEntryDestination.route) {
+      Log.d(TAG, "Composable ${DeviceEntryDestination.route} is calling DeviceEntryScreen()")
       DeviceEntryScreen(
         navigateBack = { navController.popBackStack() },
         onNavigateUp = { navController.navigateUp() }
       )
+      Log.d(TAG, "Composable ${DeviceEntryDestination.route} has exited DeviceEntryScreen()")
     }
 
     composable(
@@ -70,16 +82,30 @@ fun GaaiNavHost(
         type = NavType.IntType
       })
     ) {
+      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} is calling DeviceDetailsScreen()")
       DeviceDetailsScreen(
         navigateBack = { navController.popBackStack() },
         onNavigateUp = { navController.navigateUp() }
       )
+      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} has exited DeviceDetailScreen()")
     }
 
     composable(route = MissingPermissionsDestination.route) {
+      Log.d(TAG, "Composable ${MissingPermissionsDestination.route} is calling MissingPermissionsScreen()")
       MissingPermissionsScreen(
-        navigateToHome = { navController.navigate(HomeDestination.route) },
+        navigateToHome = {
+          Log.d(TAG, "Navigating to HomeDestination.route")
+          navController.navigate(HomeDestination.route) {
+            // Make sure user can not return to MissingPermissionsScreen
+            Log.d(TAG, "Popped up to MissingPermissionsDestination.route")
+            popUpTo(MissingPermissionsDestination.route) { inclusive = true }
+          }
+          Log.d(TAG, "Navigated to HomeDestination.route")
+        }
       )
+      Log.d(TAG, "Composable ${MissingPermissionsDestination.route} has exited MissingPermissionsScreen()")
     }
   }
+
+  Log.d(TAG, "Exited GaaiNavHost with navController = ${navController.toString()}")
 }

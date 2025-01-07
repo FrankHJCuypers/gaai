@@ -112,6 +112,8 @@ fun HomeScreen(
   modifier: Modifier = Modifier,
   viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+  Log.d(TAG, "Entered HomeScreen()")
+
   val coroutineScope = rememberCoroutineScope()
   val homeUiState by viewModel.homeUiState.collectAsState()
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -142,6 +144,7 @@ fun HomeScreen(
       }
     },
   ) { innerPadding ->
+    Log.d(TAG, "Entering HomeBody)")
     HomeBody(
       deviceList = homeUiState.deviceList,
       onDeviceClick = navigateToDeviceDetails,
@@ -154,6 +157,8 @@ fun HomeScreen(
       contentPadding = innerPadding,
     )
   }
+  Log.d(TAG, "Exiting HomeScreen()")
+
 }
 
 /**
@@ -178,11 +183,14 @@ private fun HomeBody(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
+  Log.d(TAG, "Entered HomeBody()")
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier,
   ) {
     if (deviceList.isEmpty()) {
+      Log.d(TAG, "HomeBody() deviceList is empty")
+
       Text(
         text = stringResource(R.string.no_item_description),
         textAlign = TextAlign.Center,
@@ -199,6 +207,7 @@ private fun HomeBody(
       )
     }
   }
+  Log.d(TAG, "Exiting HomeBody()")
 }
 
 /**
@@ -221,6 +230,7 @@ private fun DevicesList(
   contentPadding: PaddingValues,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "Entering DevicesList()")
   LazyColumn(
     modifier = modifier,
     contentPadding = contentPadding
@@ -233,6 +243,7 @@ private fun DevicesList(
           .clickable { onDeviceClick(device) })
     }
   }
+  Log.d(TAG, "Exiting DevicesList()")
 }
 
 /**
@@ -253,6 +264,8 @@ fun GaaiDeviceItem(
   onDeviceRemove: (Device) -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "Entering GaaiDeviceItem()")
+
   val context = LocalContext.current
   val currentDevice by rememberUpdatedState(device)
   val dismissState = rememberSwipeToDismissBoxState(
@@ -287,6 +300,7 @@ fun GaaiDeviceItem(
       .padding(dimensionResource(id = R.dimen.padding_small))
       .clickable { onDeviceClick(device) })
   }
+  Log.d(TAG, "Exiting GaaiDeviceItem()")
 }
 
 /**

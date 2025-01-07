@@ -16,6 +16,7 @@
 
 package be.cuypers_ghys.gaai.ui
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -35,12 +36,17 @@ import be.cuypers_ghys.gaai.R.string
 import be.cuypers_ghys.gaai.ui.navigation.GaaiNavHost
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 
+// Tag for logging
+private const val TAG = "GaaiApp"
+
 /**
  * Top level composable that represents screens for the application.
  */
 @Composable
 fun GaaiApp(navController: NavHostController = rememberNavController()) {
+  Log.d(TAG, "Entered GaaiApp with navController = ${navController.toString()}")
   GaaiNavHost(navController = navController)
+  Log.d(TAG, "Exiting GaaiApp ")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

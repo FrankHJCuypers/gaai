@@ -84,6 +84,7 @@ fun MissingPermissionsScreen(
   navigateToHome: () -> Unit,
   canNavigateBack: Boolean = false
 ) {
+  Log.d(TAG, "Entered MissingPermissionsScreen()")
   Scaffold(
     topBar = {
       GaaiTopAppBar(
@@ -92,6 +93,7 @@ fun MissingPermissionsScreen(
       )
     }
   ) { innerPadding ->
+    Log.d(TAG, "Calling MissingPermissionsComponent()")
     MissingPermissionsComponent(
       navigateToHome = navigateToHome,
       modifier = Modifier
@@ -103,6 +105,7 @@ fun MissingPermissionsScreen(
         .fillMaxWidth()
     )
   }
+  Log.d(TAG, "Exiting MissingPermissionsScreen()")
 }
 
 /**
@@ -121,7 +124,8 @@ fun MissingPermissionsComponent(
   modifier: Modifier = Modifier,
   viewModel: MissingPermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-  Log.d(TAG, "Required permissions: $viewModel.permissions")
+  Log.d(TAG, "Entered MissingPermissionsComponent()")
+  Log.d(TAG, "Required permissions: ${viewModel.permissions.joinToString()}")
 
   // rememberMultiplePermissionsState() is a composable, so can not be called from a ViewModel.
   val multiplePermissionsState = rememberMultiplePermissionsState(
@@ -131,7 +135,9 @@ fun MissingPermissionsComponent(
   val isBluetoothEnabledState = isBluetoothEnabledState(context)
   viewModel.updateUiState(isBluetoothEnabledState)
 
-  Log.d(TAG, "permissionState: $multiplePermissionsState.")
+  Log.d(TAG, "permissionState permissions: ${multiplePermissionsState.permissions.joinToString()}.")
+  Log.d(TAG, "permissionState revoked permissions: ${multiplePermissionsState.revokedPermissions.joinToString()}.")
+  Log.d(TAG, "permissionState all permissions granted: ${multiplePermissionsState.allPermissionsGranted}.")
   Log.d(TAG, "isBluetoothEnabledState: $isBluetoothEnabledState.")
 
   // broadcast receiver to receive the Bluetooth enabled event.
@@ -168,7 +174,9 @@ fun MissingPermissionsComponent(
     if (viewModel.bleUiState.isBluetoothEnabledState) {
       Log.d(TAG, "Bluetooth enabled")
       context.unregisterReceiver(bluetoothReceiver)
+      Log.d(TAG, "Calling navigateToHome()")
       navigateToHome()
+      Log.d(TAG, "Called navigateToHome()")
     } else {
       // TODO: Factorize to its own Composable?
       Column(
@@ -194,6 +202,7 @@ fun MissingPermissionsComponent(
     }
   } else {
     // TODO: Factorize to its own Composable?
+    Log.d(TAG, "Not all permissions granted")
     Column(
       modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
       horizontalAlignment = Alignment.CenterHorizontally
@@ -210,6 +219,7 @@ fun MissingPermissionsComponent(
       }
     }
   }
+  Log.d(TAG, "Exiting MissingPermissionsComponent()")
 }
 
 /**
@@ -260,6 +270,8 @@ private fun getTextToShowGivenPermissions(
   val revokedPermissionsSize = permissions.size
   if (revokedPermissionsSize == 0) return ""
 
+  Log.d(TAG, "Entered getTextToShowGivenPermissions()")
+
   val textToShow = StringBuilder().apply {
     append(stringResource(R.string.the_space))
   }
@@ -292,6 +304,7 @@ private fun getTextToShowGivenPermissions(
       stringResource(R.string.permissions_denied)
     }
   )
+  Log.d(TAG, "Exiting getTextToShowGivenPermissions()")
   Log.d(TAG, "Returned text: $textToShow")
   return textToShow.toString()
 }
