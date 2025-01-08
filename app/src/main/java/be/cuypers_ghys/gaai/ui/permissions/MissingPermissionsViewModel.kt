@@ -29,7 +29,7 @@ private const val TAG = "MissingPermissionsViewModel"
 
 /**
  * ViewModel to handle required permissions, to be used by
- * [MissingPermissionsScreen].
+ * [RequireBluetooth].
  *
  * @constructor Called by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider].
  *

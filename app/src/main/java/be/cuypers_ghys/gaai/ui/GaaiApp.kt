@@ -44,7 +44,7 @@ private const val TAG = "GaaiApp"
  */
 @Composable
 fun GaaiApp(navController: NavHostController = rememberNavController()) {
-  Log.d(TAG, "Entered GaaiApp with navController = ${navController.toString()}")
+  Log.d(TAG, "Entered GaaiApp with navController = $navController")
   GaaiNavHost(navController = navController)
   Log.d(TAG, "Exiting GaaiApp ")
 }

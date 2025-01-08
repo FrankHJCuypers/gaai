@@ -30,8 +30,6 @@ import be.cuypers_ghys.gaai.ui.device.DeviceEntryDestination
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryScreen
 import be.cuypers_ghys.gaai.ui.home.HomeDestination
 import be.cuypers_ghys.gaai.ui.home.HomeScreen
-import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsDestination
-import be.cuypers_ghys.gaai.ui.permissions.MissingPermissionsScreen
 
 // Tag for logging
 private const val TAG = "GaaiNavGraph"
@@ -48,12 +46,11 @@ fun GaaiNavHost(
   navController: NavHostController,
   modifier: Modifier = Modifier,
 ) {
-  Log.d(TAG, "Entered GaaiNavHost with navController = ${navController.toString()}")
+  Log.d(TAG, "Entered GaaiNavHost with navController = $navController")
 
   NavHost(
     navController = navController,
-//    startDestination = HomeDestination.route,
-    startDestination = MissingPermissionsDestination.route,
+    startDestination = HomeDestination.route,
     modifier = modifier
   ) {
     composable(route = HomeDestination.route) {
@@ -89,23 +86,7 @@ fun GaaiNavHost(
       )
       Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} has exited DeviceDetailScreen()")
     }
-
-    composable(route = MissingPermissionsDestination.route) {
-      Log.d(TAG, "Composable ${MissingPermissionsDestination.route} is calling MissingPermissionsScreen()")
-      MissingPermissionsScreen(
-        navigateToHome = {
-          Log.d(TAG, "Navigating to HomeDestination.route")
-          navController.navigate(HomeDestination.route) {
-            // Make sure user can not return to MissingPermissionsScreen
-            Log.d(TAG, "Popped up to MissingPermissionsDestination.route")
-            popUpTo(MissingPermissionsDestination.route) { inclusive = true }
-          }
-          Log.d(TAG, "Navigated to HomeDestination.route")
-        }
-      )
-      Log.d(TAG, "Composable ${MissingPermissionsDestination.route} has exited MissingPermissionsScreen()")
-    }
   }
 
-  Log.d(TAG, "Exited GaaiNavHost with navController = ${navController.toString()}")
+  Log.d(TAG, "Exited GaaiNavHost with navController = $navController")
 }

@@ -75,6 +75,7 @@ import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
+import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.ui.theme.RedA400
 import kotlinx.coroutines.launch
@@ -118,47 +119,48 @@ fun HomeScreen(
   val homeUiState by viewModel.homeUiState.collectAsState()
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-  Scaffold(
-    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    topBar = {
-      GaaiTopAppBar(
-        title = stringResource(HomeDestination.titleRes) + " " + BuildConfig.VERSION_NAME,
-        canNavigateBack = false,
-        scrollBehavior = scrollBehavior
-      )
-    },
-    floatingActionButton = {
-      FloatingActionButton(
-        onClick = navigateToDeviceEntry,
-        shape = MaterialTheme.shapes.medium,
-        modifier = Modifier
-          .padding(
-            end = WindowInsets.safeDrawing.asPaddingValues()
-              .calculateEndPadding(LocalLayoutDirection.current)
-          )
-      ) {
-        Icon(
-          imageVector = Icons.Default.Add,
-          contentDescription = stringResource(R.string.device_entry_title)
+  RequireBluetooth {
+    Scaffold(
+      modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+      topBar = {
+        GaaiTopAppBar(
+          title = stringResource(HomeDestination.titleRes) + " " + BuildConfig.VERSION_NAME,
+          canNavigateBack = false,
+          scrollBehavior = scrollBehavior
         )
-      }
-    },
-  ) { innerPadding ->
-    Log.d(TAG, "Entering HomeBody)")
-    HomeBody(
-      deviceList = homeUiState.deviceList,
-      onDeviceClick = navigateToDeviceDetails,
-      onDeviceRemove = {
-        coroutineScope.launch {
-          viewModel.removeDevice(it)
+      },
+      floatingActionButton = {
+        FloatingActionButton(
+          onClick = navigateToDeviceEntry,
+          shape = MaterialTheme.shapes.medium,
+          modifier = Modifier
+            .padding(
+              end = WindowInsets.safeDrawing.asPaddingValues()
+                .calculateEndPadding(LocalLayoutDirection.current)
+            )
+        ) {
+          Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = stringResource(R.string.device_entry_title)
+          )
         }
       },
-      modifier = modifier.fillMaxSize(),
-      contentPadding = innerPadding,
-    )
+    ) { innerPadding ->
+        Log.d(TAG, "Entering HomeBody)")
+        HomeBody(
+          deviceList = homeUiState.deviceList,
+          onDeviceClick = navigateToDeviceDetails,
+          onDeviceRemove = {
+            coroutineScope.launch {
+              viewModel.removeDevice(it)
+            }
+          },
+          modifier = modifier.fillMaxSize(),
+          contentPadding = innerPadding,
+        )
+    }
   }
   Log.d(TAG, "Exiting HomeScreen()")
-
 }
 
 /**
