@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.9.0"
 androidDocumentationPlugin = "1.9.20"
 cbor = "0.01.02"
 kotlin = "2.0.10"
