@@ -65,6 +65,15 @@ object NexxtenderHomeSpecification {
   /** Nexxtender Home Generic/CDR Service UUID. */
   val UUID_NEXXTENDER_HOME_GENERIC_CDR_SERVICE: UUID = fromNexxtenderHomeBase("c1")
 
+  /** Nexxtender Home CDR_COMMAND Characteristic UUID. */
+  val UUID_NEXXTENDER_HOME_CDR_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c2")
+
+  /** Nexxtender Home CDR_STATUS Characteristic UUID. */
+  val UUID_NEXXTENDER_HOME_CDR_STATUS_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c3")
+
+  /** Nexxtender Home CDR_RECORD Characteristic UUID. */
+  val UUID_NEXXTENDER_HOME_CDR_RECORD_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c4")
+
   /** Nexxtender Home GENERIC_COMMAND Characteristic UUID. */
   val UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("dd")
 

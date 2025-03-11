@@ -122,3 +122,8 @@ fun ByteArray.fromInt32LE(offset: Int): Int {
       or ((this[offset + 2].toInt() and 0xFF) shl 16)
       or ((this[offset + 3].toInt() and 0xFF) shl 24))
 }
+
+/**
+ * Converts a ByteArra into a hexadecimal string
+ */
+fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
