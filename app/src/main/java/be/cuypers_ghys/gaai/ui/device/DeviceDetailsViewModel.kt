@@ -519,6 +519,21 @@ class DeviceDetailsViewModel(
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the [maxDevice].
+   * @param safe New values for [ConfigData.safe].
+   */
+  fun sendConfigOperationSetSafe(safe: UByte) {
+    viewModelScope.launch {
+      newConfigData = _state.value.configData.copy(
+        safe = safe
+      )
+      sendConfigOperationSet()
+    }
+  }
+
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [mode].
    * @param mode New values for [ConfigData.mode].
    */
@@ -526,6 +541,21 @@ class DeviceDetailsViewModel(
     viewModelScope.launch {
       newConfigData = _state.value.configData.copy(
         mode = mode
+      )
+      sendConfigOperationSet()
+    }
+  }
+
+  /**
+   * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic, changing the [iCapacity].
+   * @param iCapacity New values for [ConfigData.iCapacity].
+   */
+  fun sendConfigOperationSetICapacity(iCapacity: UByte) {
+    viewModelScope.launch {
+      newConfigData = _state.value.configData.copy(
+        iCapacity = iCapacity
       )
       sendConfigOperationSet()
     }

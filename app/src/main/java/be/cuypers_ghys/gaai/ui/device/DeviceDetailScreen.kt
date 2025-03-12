@@ -152,7 +152,9 @@ fun DeviceDetailsScreen(
       onTouWeekendChange = viewModel::sendConfigOperationSetTouWeekend,
       onMaxGridChange = viewModel::sendConfigOperationSetMaxGrid,
       onMaxDeviceChange = viewModel::sendConfigOperationSetMaxDevice,
+      onSafeChange = viewModel::sendConfigOperationSetSafe,
       onModeChange = viewModel::sendConfigOperationSetMode,
+      onICapacityChange = viewModel::sendConfigOperationSetICapacity,
       onTimeGet = viewModel::sendTimeOperationGetTime,
       onTimeSync = viewModel::sendTimeOperationSyncTime,
       onLoaderOperation = viewModel::sendLoaderOperation,
@@ -181,8 +183,12 @@ fun DeviceDetailsScreen(
  *  device's [ConfigData.maxGrid].
  * @param onMaxDeviceChange Function to be called when [DeviceDetailsBody] wants to change the
  *  device's [ConfigData.maxDevice].
+ * @param onSafeChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.safe].
  * @param onModeChange Function to be called when [DeviceDetailsBody] wants to change the
  *  device's [ConfigData.mode].
+ * @param onICapacityChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.iCapacity].
  * @param onTimeGet Function to be called when [DeviceDetailsBody] wants to read the
  *  device's [TimeData.time].
  * @param onTimeSync Function to be called when [DeviceDetailsBody] wants to sync the
@@ -200,7 +206,9 @@ fun DeviceDetailsBody(
   onTouWeekendChange: (TouPeriod) -> Unit,
   onMaxGridChange: (UByte) -> Unit,
   onMaxDeviceChange: (UByte) -> Unit,
+  onSafeChange: (UByte) -> Unit,
   onModeChange: (Mode) -> Unit,
+  onICapacityChange: (UByte) -> Unit,
   onTimeGet: () -> Unit,
   onTimeSync: () -> Unit,
   onLoaderOperation: (Int) -> Unit,
@@ -261,8 +269,10 @@ fun DeviceDetailsBody(
       onTouWeekChange = onTouWeekChange,
       onTouWeekendChange = onTouWeekendChange,
       onMaxGridChange = onMaxGridChange,
+      onSafeChange = onSafeChange,
       onMaxDeviceChange = onMaxDeviceChange,
       onModeChange = onModeChange,
+      onICapacityChange = onICapacityChange,
       modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
     )
@@ -1003,10 +1013,14 @@ internal fun TouPeriodRow(
  *  device's [ConfigData.touWeekendStart] and [ConfigData.touWeekendEnd].
  * @param onMaxGridChange Function to be called when [GaaiConfigDataCard] wants to change the
  *  device's [ConfigData.maxGrid].
+ * @param onSafeChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.safe].
  * @param onMaxDeviceChange Function to be called when [GaaiConfigDataCard] wants to change the
  *  device's [ConfigData.maxDevice].
  * @param onModeChange Function to be called when [GaaiConfigDataCard] wants to change the
  *  device's [ConfigData.mode].
+ * @param onICapacityChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.iCapacity].
  * @param modifier the [Modifier] to be applied to this GaaiConfigDataCard
  *
  * @author Frank HJ Cuypers
@@ -1017,8 +1031,10 @@ internal fun GaaiConfigDataCard(
   onTouWeekChange: (TouPeriod) -> Unit,
   onTouWeekendChange: (TouPeriod) -> Unit,
   onMaxGridChange: (UByte) -> Unit,
+  onSafeChange: (UByte) -> Unit,
   onMaxDeviceChange: (UByte) -> Unit,
   onModeChange: (Mode) -> Unit,
+  onICapacityChange: (UByte) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entered GaaiConfigDataCard with configData = $configData")
@@ -1040,8 +1056,14 @@ internal fun GaaiConfigDataCard(
           modifier = modifier.fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically,
         ) {
+          var title = when (configData.configVersion) {
+            ConfigVersion.CONFIG_1_0 -> " 1.0"
+            ConfigVersion.CONFIG_1_1 -> " 1.1"
+            ConfigVersion.CONFIG_CBOR -> " CBOR"
+            else -> stringResource(R.string.unknown)
+          }
           Text(
-            text = stringResource(R.string.configuration),
+            text = stringResource(R.string.configuration) + title,
             style = MaterialTheme.typography.titleLarge,
           )
         }
@@ -1052,7 +1074,9 @@ internal fun GaaiConfigDataCard(
           verticalAlignment = Alignment.CenterVertically,
         ) {
           Text(
-            text = stringResource(R.string.mode),
+            text = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.charge_mode) else stringResource(
+              R.string.mode
+            ),
             style = MaterialTheme.typography.titleMedium,
           )
           Spacer(Modifier.weight(1f))
@@ -1082,8 +1106,11 @@ internal fun GaaiConfigDataCard(
             )
           }
         }
+
         AmpereRow(
-          name = stringResource(R.string.maxGrid),
+          name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_max) else stringResource(
+            R.string.maxGrid
+          ),
           value = configData.maxGrid,
           minValue = configData.safe,
           maxValue = 63u, // Largest allowed value in Belgium
@@ -1097,24 +1124,22 @@ internal fun GaaiConfigDataCard(
           modifier = modifier.fillMaxWidth()
         )
 
-        /**
-         * Only show Safe current; don't allow to change it.
-         * To dangerous to change it.
-         */
-        Row(
-          modifier = modifier.fillMaxWidth(),
-          verticalAlignment = Alignment.CenterVertically,
-        ) {
-          Text(
-            text = stringResource(R.string.safe),
-            style = MaterialTheme.typography.titleMedium,
-          )
-          Spacer(Modifier.weight(1f))
-          Text(
-            text = configData.safe.toString() + " A",
-            style = MaterialTheme.typography.titleMedium
-          )
-        }
+        AmpereRow(
+          name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_level_1) else stringResource(
+            R.string.safe
+          ),
+          value = configData.safe,
+          minValue = 0u,
+          maxValue = configData.maxDevice,
+          onConfirm = { newSafe ->
+            Log.d(TAG, "GaaiConfigDataCard Safe confirmed: $newSafe")
+            onSafeChange(newSafe)
+          },
+          onDismiss = {
+            Log.d(TAG, "GaaiConfigDataCard Safe dismissed")
+          },
+          modifier = modifier.fillMaxWidth()
+        )
 
         val weekDays = TouPeriod(configData.touWeekStart, configData.touWeekEnd)
         TouPeriodRow(
@@ -1146,7 +1171,9 @@ internal fun GaaiConfigDataCard(
 
         if (configData.configVersion != ConfigVersion.CONFIG_1_0) {
           AmpereRow(
-            name = stringResource(R.string.maxDevice),
+            name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_evse_max) else stringResource(
+              R.string.maxDevice
+            ),
             value = configData.maxDevice,
             minValue = configData.safe,
             maxValue = 32u,
@@ -1169,7 +1196,9 @@ internal fun GaaiConfigDataCard(
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Text(
-              text = stringResource(R.string.networkType),
+              text = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) "Phase Seq (Network Type)" else stringResource(
+                R.string.networkType
+              ),
               style = MaterialTheme.typography.titleMedium,
             )
             Spacer(Modifier.weight(1f))
@@ -1189,7 +1218,7 @@ internal fun GaaiConfigDataCard(
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Text(
-              text = stringResource(R.string.minDevice),
+              text = stringResource(R.string.i_evse_min),
               style = MaterialTheme.typography.titleMedium,
             )
             Spacer(Modifier.weight(1f))
@@ -1198,20 +1227,21 @@ internal fun GaaiConfigDataCard(
               style = MaterialTheme.typography.titleMedium
             )
           }
-          Row(
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-          ) {
-            Text(
-              text = stringResource(R.string.iCapacity),
-              style = MaterialTheme.typography.titleMedium,
-            )
-            Spacer(Modifier.weight(1f))
-            Text(
-              text = configData.iCapacity.toString() + " A",
-              style = MaterialTheme.typography.titleMedium
-            )
-          }
+
+          AmpereRow(
+            name = stringResource(R.string.iCapacity),
+            value = configData.iCapacity,
+            minValue = configData.safe,
+            maxValue = configData.maxGrid,
+            onConfirm = { newICapacity ->
+              Log.d(TAG, "GaaiConfigDataCard I Capacity confirmed: $newICapacity")
+              onICapacityChange(newICapacity)
+            },
+            onDismiss = {
+              Log.d(TAG, "GaaiConfigDataCard I Capacity dismissed")
+            },
+            modifier = modifier.fillMaxWidth()
+          )
         }
       }
     }
@@ -1922,6 +1952,8 @@ private fun DeviceDetailsPreview() {
       onTouWeekendChange = {},
       onMaxGridChange = {},
       onMaxDeviceChange = {},
+      onICapacityChange = {},
+      onSafeChange = {},
       onModeChange = {},
       onTimeGet = {},
       onTimeSync = {},
@@ -2024,7 +2056,39 @@ private fun GaaiChargingAdvancedDataCardPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun GaaiConfigDataCardPreview() {
+private fun GaaiConfigDataCardPreview_1_0() {
+  GaaiTheme {
+    GaaiConfigDataCard(
+      configData = ConfigData(
+        maxGrid = 50U,
+        maxDevice = 0U,
+        mode = Mode.MAX_PRIVATE,
+        safe = 6U,
+        networkType = NetWorkType.UNKNOWN,
+        touWeekStart = 123,
+        touWeekEnd = 456,
+        touWeekendStart = 789,
+        touWeekendEnd = 333,
+        minDevice = 11U,
+        iCapacity = 22U,
+        configVersion = ConfigVersion.CONFIG_1_0
+      ),
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small)),
+      onTouWeekChange = {},
+      onTouWeekendChange = {},
+      onMaxGridChange = {},
+      onMaxDeviceChange = {},
+      onICapacityChange = {},
+      onSafeChange = {},
+      onModeChange = {}
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GaaiConfigDataCardPreview_1_1() {
   GaaiTheme {
     GaaiConfigDataCard(
       configData = ConfigData(
@@ -2047,6 +2111,8 @@ private fun GaaiConfigDataCardPreview() {
       onTouWeekendChange = {},
       onMaxGridChange = {},
       onMaxDeviceChange = {},
+      onICapacityChange = {},
+      onSafeChange = {},
       onModeChange = {}
     )
   }
@@ -2077,6 +2143,8 @@ private fun GaaiConfigDataCardCborPreview() {
       onTouWeekendChange = {},
       onMaxGridChange = {},
       onMaxDeviceChange = {},
+      onICapacityChange = {},
+      onSafeChange = {},
       onModeChange = {}
     )
   }

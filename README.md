@@ -273,19 +273,41 @@ The Advanced Data card shows Advanced Data as measured by the *Nexxtender Home*.
 ### Configuration
 
 The Configuration card shows the data that can be configured in the *Nexxtender Home*.
-
-![Configuration Card](docs/images/ConfigurationCard.png)
-
-The fields "Min Device" and "iCapacity" are only shown when the Nexxtender Home firmware version is at least 3.50.
-The fields "Max Device" and "Network Type" are only shown when the Nexxtender Home firmware version is at least 1.1.0.
 In theory all these fields are configurable and can be changed.
 *Gaai* only allows to change the fields marked with ![edit outline](docs/images/mdi--edit-outline.png).
-For the fields "Safe" and "Network Type" *Gaai* does not implement the option to change the values,
-as it is probably not wise to change these values if you don't know what you are doing.
-Changing the values of "Min Device" and "iCapacity" is also not supported by *Gaai*;
-it is insufficiently clear what they are and if it is safe to change them.
+There are three different layouts, depending on the *Firmware Version*.
 
-Clicking on ![edit outline](docs/images/mdi--edit-outline.png) next to "Default mode" gives the following dialog screen:
+#### Configuration 1.0
+
+This is the layout for *Firmware Version* below 1.1.0.
+
+![Configuration Card1_0](docs/images/ConfigurationCard1_0.png)
+
+#### Configuration 1.1
+
+This is the layout for *Firmware Version* from 1.1.0 to 3.50.
+The fields "Max Device" and "Network Type" are added compared to the 1.0 format.
+
+![Configuration Card1_1](docs/images/ConfigurationCard1_1.png)
+
+For the field "Network Type" *Gaai* does not implement the option to change the value,
+as it is probably not wise to change this value if you don't know what you are doing.
+
+#### Configuration CBOR
+
+This is the layout for *Firmware Version* above and including 3.50.
+The fields "I EVSE Min" and "I Capacity" are added compared to the 1.1 format.
+Most other fields from versions 1.0 and 1.1 have a different name in CBOR format.
+
+![Configuration CardCBOR](docs/images/ConfigurationCardCBOR.png)
+
+For the field "I EVSE Min" *Gaai* does not implement the option to change the value,
+as the value does not seem to be used by the *Nexxtender Home*.
+
+#### Changing configuration
+
+Clicking on ![edit outline](docs/images/mdi--edit-outline.png) next to "Default Mode"/"Charge Mode" gives the following
+dialog screen:
 
 ![Default mode dialog](docs/images/DefaultModeDialog.png)
 
@@ -293,7 +315,7 @@ Select the required default charging mode and press OK to confirm.
 OK is grayed out if the choice is still "Unknown".
 Pressing Cancel does not change anything.
 
-Clicking on ![edit outline](docs/images/mdi--edit-outline.png) next to "Max Grid" or "Max Device"
+Clicking on ![edit outline](docs/images/mdi--edit-outline.png) next to any of the fields with a value expressed in A
 gives the following dialog screen:
 
 ![Ampere Slider Dialog](docs/images/AmpereSliderDialog.png)
