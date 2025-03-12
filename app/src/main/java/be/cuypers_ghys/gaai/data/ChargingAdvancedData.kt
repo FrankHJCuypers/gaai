@@ -64,7 +64,7 @@ data class ChargingAdvancedData(
   val timestamp: UInt = 0u,
 
   /**
-   * Available capacity in A.
+   * Available current in A.
    */
   val iAvailable: Short = 0,
 

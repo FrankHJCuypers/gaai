@@ -118,7 +118,7 @@ data class ConfigData(
   val minDevice: UByte = 0U,
 
   /**
-   * ?
+   * Peak grid current limit.
    * Only available in [ConfigVersion.CONFIG_CBOR].
    */
   val iCapacity: UByte = 0U,
