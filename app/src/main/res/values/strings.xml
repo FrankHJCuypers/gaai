@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Gaai</string>
-    <string name="authorized_max">Authorized max</string>
-    <string name="authorized_eco">Authorized eco</string>
-    <string name="authorized_default">Authorized default</string>
-    <string name="charge_stopped_in_app">Charge stopped in app</string>
-    <string name="charge_paused">Charge paused</string>
-    <string name="unauthorized">Unauthorized</string>
-    <string name="unknown">Unknown</string>
+    <string name="authorized_max">AUTHORIZED MAX</string>
+    <string name="authorized_eco">AUTHORIZED ECO</string>
+    <string name="authorized_default">AUTHORIZED DEFAULT</string>
+    <string name="charge_stopped_in_app">CHARGE STOPPED IN APP</string>
+    <string name="charge_paused">CHARGE PAUSED</string>
+    <string name="unauthorized">UNAUTHORIZED</string>
+    <string name="unknown">UNKNOWN</string>
     <string name="back_button">Back</string>
     <string name="device_entry_title">Add Device</string>
     <string name="no_item_description">Oops!\nNo devices registered yet.\nTap + to add.</string>

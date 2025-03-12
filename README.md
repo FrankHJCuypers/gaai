@@ -252,11 +252,28 @@ The Basic Data card shows Basic *Nexxtender Home* charging data.
 
 ![Basic Data Card](docs/images/BasicDataCard.png)
 
+| Field         | Description                                               |
+|---------------|-----------------------------------------------------------|
+| Seconds       | Number of seconds since start of charging                 |
+| Discriminator | Possible discriminator states: STARTED, CHARGING, STOPPED |
+| Status        | Possible states: PLUGGED, CHARGING, FAULT                 |
+| Energy        | Total energy in Wh charged during this session            |
+| Phase count   | Charging Phase Count                                      |
+
 ### Grid Data
 
 The Grid Data card shows Grid Data as measured by the *Nexxtender Home*.
 
 ![Grid Data Card](docs/images/GridDataCard.png)
+
+| Field      | Description                  |
+|------------|------------------------------|
+| Timestamp  | Current time                 |
+| L1 Current | Grid phase L1 current        |
+| L2 Current | Grid phase L2 current        |
+| L3 Current | Grid phase L3 current        |
+| Consumed   | Total grid power consumption |
+| Interval   | Cyclic counter from 1 to 900 |
 
 ### Car Data
 
@@ -264,11 +281,30 @@ The Car Data card shows Car Data as measured by the *Nexxtender Home*.
 
 ![Car Data Card](docs/images/CarDataCard.png)
 
+| Field      | Description                    |
+|------------|--------------------------------|
+| Timestamp  | Current time                   |
+| L1 Current | Car phase L1 current           |
+| L2 Current | Car phase L2 current           |
+| L3 Current | Car phase L3 current           |
+| L1 Power   | Car phase L1 power consumption |
+| L2 Power   | Car phase L2 power consumption |
+| L3 Power   | Car phase L3 power consumption |
+
 ### Advanced Data
 
 The Advanced Data card shows Advanced Data as measured by the *Nexxtender Home*.
 
 ![Advanced Data Card](docs/images/AdvancedDataCard.png)
+
+| Field                | Description                                                                                                            |
+|----------------------|------------------------------------------------------------------------------------------------------------------------|
+| Timestamp            | Current time                                                                                                           |
+| I Available          | Available current                                                                                                      |
+| Grid Power           | Total power consumption from the grid                                                                                  |
+| Car Power            | Total power consumption by the car                                                                                     |
+| Authorization Status | Possible states: UNAUTHORIZED, AUTHORIZED DEFAULT, UTHORIZED ECO, AUTHORIZED MAX, CHARGE STOPPED IN APP, CHARGE PAUSED |
+| Error Code           | Error code returned by the Nexxtender Home                                                                             |
 
 ### Configuration
 
@@ -283,12 +319,30 @@ This is the layout for *Firmware Version* below 1.1.0.
 
 ![Configuration Card1_0](docs/images/ConfigurationCard1_0.png)
 
+| Field        | Description                                                                                                                                                   |
+|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Default Mode | Possible default charging modes: ECO_PRIVATE, MAX_PRIVATE, ECO_OPEN, MAX_OPEN                                                                                 |
+| Max Grid     | Maximum allowed grid consumption. Set this equal or smaller to the value of the main grid fuses. Set this to a lower value if you have a peak tariff contract |
+| Safe         | Minimum charging current for the device. Certified chargers are required to provide a minimum of 6A                                                           |
+| Weekdays     | Off peak period for week days                                                                                                                                 |
+| Weekend      | Off peak period for weekend days                                                                                                                              |
+
 #### Configuration 1.1
 
 This is the layout for *Firmware Version* from 1.1.0 to 3.50.
 The fields "Max Device" and "Network Type" are added compared to the 1.0 format.
 
 ![Configuration Card1_1](docs/images/ConfigurationCard1_1.png)
+
+| Field        | Description                                                                           |
+|--------------|---------------------------------------------------------------------------------------|
+| Default Mode | See [Configuration 1.0](#configuration-10)                                            |
+| Max Grid     | See [Configuration 1.0](#configuration-10)                                            |
+| Safe         | See [Configuration 1.0](#configuration-10)                                            |
+| Weekdays     | See [Configuration 1.0](#configuration-10)                                            |
+| Weekend      | See [Configuration 1.0](#configuration-10)                                            |
+| Max Device   | Maximum allowed charging speed in A for the EV device. Safe <= Max Device <= Max Grid |
+| Network Type | Mono/Tri+N or Tri                                                                     |
 
 For the field "Network Type" *Gaai* does not implement the option to change the value,
 as it is probably not wise to change this value if you don't know what you are doing.
@@ -300,6 +354,17 @@ The fields "I EVSE Min" and "I Capacity" are added compared to the 1.1 format.
 Most other fields from versions 1.0 and 1.1 have a different name in CBOR format.
 
 ![Configuration CardCBOR](docs/images/ConfigurationCardCBOR.png)
+
+| Field                    | Description                                                                                                                                                                                     |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Charge Mode              | See *Default Mode* in [Configuration 1.1](#configuration-11)                                                                                                                                    |
+| I Max                    | See *Max Grid* in [Configuration 1.1](#configuration-11)                                                                                                                                        |
+| I Level 1                | See *Safe* in [Configuration 1.1](#configuration-11)                                                                                                                                            |
+| Weekdays                 | See [Configuration 1.1](#configuration-11)                                                                                                                                                      |
+| Weekend                  | See [Configuration 1.1](#configuration-11)                                                                                                                                                      |
+| Phase Seq (Network Type) | See *Network Type* in [Configuration 1.1](#configuration-11)                                                                                                                                    |
+| I EVSE Min               | Not used                                                                                                                                                                                        |
+| I Capacity               | Peak grid current limit. I Level 1 <= I Capacity <= I Max. You can set this to a lower value if you have a peak tariff contract. Configurations 1.0 and 1.1 behave as if I Capacity == Max Grid |
 
 For the field "I EVSE Min" *Gaai* does not implement the option to change the value,
 as the value does not seem to be used by the *Nexxtender Home*.
