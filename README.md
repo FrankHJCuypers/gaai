@@ -15,7 +15,7 @@
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits)
 [![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/graphs/contributors)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/main)
+[![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai/master?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/master)
 
 # Nexxtender Home android app
 
