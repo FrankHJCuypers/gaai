@@ -35,6 +35,8 @@ Other alternatives are
 - [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
 - [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook)
 
+*Gaai*'s source code is hosted on [Github](https://github.com/FrankHJCuypers/Gaai).
+
 ## Gaai?
 
 Choosing a short distinctive name for a project is always difficult.
