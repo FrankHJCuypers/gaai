@@ -1,3 +1,5 @@
+<meta name="google-site-verification" content="aIbjsFn9hlzewklZcNkHGOw9gGL_YMnqX1Ui1GuCDr4" />
+
 [![maintainer](https://img.shields.io/badge/maintainer-Frank%20HJ%20Cuypers-green?style=for-the-badge&logo=github)](https://github.com/frankhjcuypers)
 [![GitHub Discussions](https://img.shields.io/github/discussions/FrankHJCuypers/Gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/Gaai/discussions)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/FrankHJCuypers/Gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/Gaai/issues)
