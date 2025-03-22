@@ -430,7 +430,7 @@ Click on a button and the *Nexxtender Home* immediately switches to the correspo
 
 Useful information can be found at
 
-- [Nexxtender Home Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/Gaai/wiki/Nexxtender-Home-Information)
+- [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/Gaai/wiki/Nexxtender-Charger-Information)
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
 - [Nexxtmove for Home Assistant](https://github.com/geertmeersman/nexxtmove)
 - [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
