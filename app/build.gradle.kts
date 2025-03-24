@@ -115,6 +115,8 @@ dependencies {
 
   implementation(libs.androidx.room.runtime)
   implementation(libs.androidx.lifecycle.runtime.compose.android)
+  implementation(libs.androidx.junit.ktx)
+  implementation(libs.androidx.monitor)
   annotationProcessor(libs.androidx.room.compiler)
   // To use Kotlin annotation processing tool (kapt)
   //kapt(libs.androidx.room.compiler)

@@ -481,7 +481,7 @@ internal fun GaaiChargingBasicDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingBasicData.seconds.toString(),
+            text = "%3d s".format(chargingBasicData.seconds.toInt()),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -647,7 +647,7 @@ internal fun GaaiChargingGridDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = "%.3f kW".format(chargingGridData.consumed.toFloat() / 1000.0),
+            text = "%.3f kWh".format(chargingGridData.consumed.toFloat() / 1000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
@@ -661,7 +661,7 @@ internal fun GaaiChargingGridDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = chargingGridData.interval.toInt().toString(),
+            text = "%3d s".format(chargingGridData.interval.toInt()),
             style = MaterialTheme.typography.titleMedium
           )
         }

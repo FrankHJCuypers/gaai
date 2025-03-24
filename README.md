@@ -267,7 +267,7 @@ The Basic Data card shows Basic *Nexxtender Home* and *Nexxtender Mobile* chargi
 | Seconds       | Number of seconds since start of charging                 |
 | Discriminator | Possible discriminator states: STARTED, CHARGING, STOPPED |
 | Status        | Possible states: PLUGGED, CHARGING, FAULT                 |
-| Energy        | Total energy in Wh charged during this session            |
+| Energy        | Total energy in kWh charged during this session           |
 | Phase count   | Charging Phase Count                                      |
 
 ### Grid Data
@@ -277,14 +277,14 @@ It is not supported by the *Nexxtender Mobile*.
 
 ![Grid Data Card](docs/images/GridDataCard.png)
 
-| Field      | Description                  |
-|------------|------------------------------|
-| Timestamp  | Current time                 |
-| L1 Current | Grid phase L1 current        |
-| L2 Current | Grid phase L2 current        |
-| L3 Current | Grid phase L3 current        |
-| Consumed   | Total grid power consumption |
-| Interval   | Cyclic counter from 1 to 900 |
+| Field      | Description                                                                                                     |
+|------------|-----------------------------------------------------------------------------------------------------------------|
+| Timestamp  | Current time                                                                                                    |
+| L1 Current | Grid phase L1 current                                                                                           |
+| L2 Current | Grid phase L2 current                                                                                           |
+| L3 Current | Grid phase L3 current                                                                                           |
+| Consumed   | Total grid power consumption in Wh during this quarter. Set to 0 when ''interval'' is set to 0.                 |
+| Interval   | Counts the seconds in the current quarter. Is set to 0 every multiple of a quarter (hh:00, hh:15, hh:30, hh:45) |
 
 ### Car Data
 

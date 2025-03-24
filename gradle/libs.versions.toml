@@ -23,6 +23,8 @@ lifecycleRuntimeComposeAndroid = "2.8.7"
 slf4jApi = "1.7.36"
 slf4jSimple = "1.7.36"
 versioncompare = "1.5.0"
+junitKtx = "1.2.1"
+monitor = "1.7.2"
 
 [libraries]
 android-documentation-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "androidDocumentationPlugin" }
@@ -59,6 +61,8 @@ androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", nam
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
 versioncompare = { module = "io.github.g00fy2:versioncompare", version.ref = "versioncompare" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+androidx-monitor = { group = "androidx.test", name = "monitor", version.ref = "monitor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
