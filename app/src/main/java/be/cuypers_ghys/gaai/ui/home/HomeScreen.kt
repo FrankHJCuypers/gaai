@@ -329,8 +329,14 @@ internal fun GaaiDeviceCard(
       modifier = modifier,
       verticalAlignment = Alignment.CenterVertically
     ) {
+      val newPainter = when (device.type) {
+        ChargerType.MOBILE -> painterResource(R.drawable.ic_cable_mobile)
+        ChargerType.HOME -> painterResource(R.drawable.ic_cable_home)
+        else -> painterResource(R.drawable.rounded_ev_charger_24)
+      }
+
       Icon(
-        painter = painterResource(R.drawable.rounded_ev_charger_24),
+        painter = newPainter,
         contentDescription = stringResource(id = R.string.ev_charger_content_desc)
       )
 
