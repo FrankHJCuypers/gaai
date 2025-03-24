@@ -34,7 +34,7 @@ Other alternatives are
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
 - [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
 - [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook)
-- [NexxtenderBlackCable] (https://github.com/Noudicus/NexxtenderBlackCable)
+- [NexxtenderBlackCable](https://github.com/Noudicus/NexxtenderBlackCable)
 
 *Gaai*'s source code is hosted on [Github](https://github.com/FrankHJCuypers/Gaai).
 
