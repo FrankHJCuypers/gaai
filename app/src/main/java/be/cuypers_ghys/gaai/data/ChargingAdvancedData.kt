@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -85,7 +85,7 @@ data class ChargingAdvancedData(
   val authorizationStatus: AuthorizationStatus = AuthorizationStatus(0),
 
   /**
-   * Error code returned by the Nexxtender Home. Values unknown.
+   * Error code returned by the Nexxtender charger. Values unknown.
    */
   val errorCode: Byte = 0
 )

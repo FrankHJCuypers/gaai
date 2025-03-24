@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -87,11 +87,11 @@ class NexxtenderHomeSpecificationTest {
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75c0",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75c1",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_CDR_SERVICE
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_GENERIC_CDR_SERVICE
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75dd",
@@ -107,47 +107,47 @@ class NexxtenderHomeSpecificationTest {
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75c5",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CCDT_SERVICE
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_SERVICE
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75c6",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CCDT_COMMAND_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_COMMAND_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75c7",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CCDT_STATUS_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_STATUS_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75c8",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CCDT_RECORD_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_RECORD_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75c9",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_FIRMWARE_SERVICE
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_FIRMWARE_SERVICE
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75ca",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_FIRMWARE_COMMAND_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_FIRMWARE_COMMAND_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75cb",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_FIRMWARE_STATUS_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_FIRMWARE_STATUS_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75cc",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_FIRMWARE_WANTED_CHUNK_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_FIRMWARE_WANTED_CHUNK_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75cd",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_FIRMWARE_DATA_CHUNK_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_FIRMWARE_DATA_CHUNK_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75ce",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_SERVICE
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_SERVICE
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75cf",
-          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_BASIC_DATA_CHARACTERISTIC
         ),
         Arguments.of(
           "fd47416a-95fb-4206-88b5-b4a8045f75d0",

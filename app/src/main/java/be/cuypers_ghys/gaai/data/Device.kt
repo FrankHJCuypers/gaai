@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,22 @@
 
 package be.cuypers_ghys.gaai.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * Entity data class represents a single row in the [GaaiDatabase] with Nexxtender Home devices.
+ * Possible charger type values.
+ *
+ * @author Frank HJ Cuypers
+ */
+enum class ChargerType {
+  HOME, MOBILE, UNKNOWN
+}
+
+/**
+ * Entity data class represents a single row in the [GaaiDatabase] with Nexxtender charger devices.
  *
  * @author Frank HJ Cuypers
  */
@@ -53,8 +63,15 @@ data class Device(
 
   /**
    * The value that this device advertises in the
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE].
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE].
    * Supposedly also unique.
    */
-  val serviceDataValue: Int
+  val serviceDataValue: Int,
+
+  /**
+   * The charger type, based on the value that this device advertises in the
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_BLE_DEVICE_NAME_CHARACTERISTIC].
+   */
+  @ColumnInfo(name = "chargerType", defaultValue = "HOME")
+  val type: ChargerType = ChargerType.HOME
 )

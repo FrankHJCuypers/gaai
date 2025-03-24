@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -23,14 +23,14 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 
 /**
  * Parses [CCDT Record]
- * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CCDT_RECORD_CHARACTERISTIC].
+ * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_RECORD_CHARACTERISTIC].
  *
  * @author Frank HJ Cuypers
  */
 object CCDTRecordParser {
   /**
    * Parses a byte array with the contents of the [CCDT Record]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CCDT_RECORD_CHARACTERISTIC]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_RECORD_CHARACTERISTIC]
    * into an [CCDTRecord].
    * @param ccdtRecord Byte array with the value read from the CCDT Record Characteristic.
    * @return A [CCDTRecord] holding the parsed result.

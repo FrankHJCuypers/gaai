@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -27,7 +27,7 @@ object ProductNumberParser {
 
   /**
    * Regex that matches the product number string.
-   * The product number is the PN of the Nexxtender Home,
+   * The product number is the PN of the Nexxtender charger,
    * as displayed on the sticker at the bottom of the box.
    * Its format is as follows:
    * - PN: AAAAA-RR.

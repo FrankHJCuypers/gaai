@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,6 +22,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.cuypers_ghys.gaai.ble.BleRepository
+import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.ChargingAdvancedData
 import be.cuypers_ghys.gaai.data.ChargingAdvancedDataParser
 import be.cuypers_ghys.gaai.data.ChargingBasicData
@@ -180,15 +181,16 @@ class DeviceDetailsViewModel(
 
     //Discover services on the Bluetooth LE Device.
     val services = client.discoverServices()
-    configureGatt(services)
+    configureGatt(gaaiDevice, services)
   }
 
   /**
-   * Sets up the GATT services and characteristics required for the Nexxtender Home.
+   * Sets up the GATT services and characteristics required for the Nexxtender charger.
+   * @param gaaiDevice [Device] for which to configure GATT.
    * @param services Entry point for finding services and characteristics.
    */
   @SuppressLint("MissingPermission")
-  private suspend fun configureGatt(services: ClientBleGattServices) {
+  private suspend fun configureGatt(gaaiDevice: Device, services: ClientBleGattServices) {
     Log.d(TAG, "Found the following services: $services")
 
     // Remember needed service and characteristics which are used to communicate with the DK.
@@ -215,36 +217,45 @@ class DeviceDetailsViewModel(
         NexxtenderHomeSpecification.UUID_BLE_HARDWARE_REVISION_STRING_CHARACTERISTIC
       )!!
 
-    val nexxtenderGenericService =
-      services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_CDR_SERVICE)!!
-    nexxtenderHomeChargingBasicDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(
-        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC
-      )!!
-    nexxtenderHomeChargingGridDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(
-        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC
-      )!!
-    nexxtenderHomeChargingCarDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(
-        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_CAR_DATA_CHARACTERISTIC
-      )!!
-    nexxtenderHomeChargingAdvancedDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(
-        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC
-      )!!
-    nexxtenderHomeGenericCommandCharacteristic =
-      nexxtenderGenericService.findCharacteristic(
-        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC
-      )!!
-    nexxtenderHomeGenericStatusCharacteristic =
-      nexxtenderGenericService.findCharacteristic(
-        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_STATUS_CHARACTERISTIC
-      )!!
-    nexxtenderHomeGenericDataCharacteristic =
-      nexxtenderGenericService.findCharacteristic(
-        NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC
-      )!!
+    if (gaaiDevice.type == ChargerType.MOBILE) {
+      val nexxtenderChargingService =
+        services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_SERVICE)!!
+      nexxtenderHomeChargingBasicDataCharacteristic =
+        nexxtenderChargingService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_BASIC_DATA_CHARACTERISTIC
+        )!!
+    } else {
+      val nexxtenderGenericService =
+        services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_GENERIC_CDR_SERVICE)!!
+      nexxtenderHomeChargingBasicDataCharacteristic =
+        nexxtenderGenericService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_BASIC_DATA_CHARACTERISTIC
+        )!!
+      nexxtenderHomeChargingGridDataCharacteristic =
+        nexxtenderGenericService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC
+        )!!
+      nexxtenderHomeChargingCarDataCharacteristic =
+        nexxtenderGenericService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_CAR_DATA_CHARACTERISTIC
+        )!!
+      nexxtenderHomeChargingAdvancedDataCharacteristic =
+        nexxtenderGenericService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_CHARGING_ADVANCED_DATA_CHARACTERISTIC
+        )!!
+      nexxtenderHomeGenericCommandCharacteristic =
+        nexxtenderGenericService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC
+        )!!
+      nexxtenderHomeGenericStatusCharacteristic =
+        nexxtenderGenericService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_STATUS_CHARACTERISTIC
+        )!!
+      nexxtenderHomeGenericDataCharacteristic =
+        nexxtenderGenericService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC
+        )!!
+    }
 
     // Read static information
     val deviceName = deviceNameCharacteristic.read().value.toString(Charsets.UTF_8)
@@ -266,76 +277,77 @@ class DeviceDetailsViewModel(
       Log.d(TAG, "Found the following notification of changed chargingBasicData: $newChargingBasicData")
     }.launchIn(viewModelScope)
 
-    nexxtenderHomeChargingGridDataCharacteristic.getNotifications().onEach {
-      val newChargingGridData = ChargingGridDataParser.parse(it.value)!!
-      //_state is a MutableStateFlow which propagates data to UI.
-      _state.value = _state.value.copy(chargingGridData = newChargingGridData)
-      Log.d(TAG, "Found the following notification of changed chargingGridData: $newChargingGridData")
-    }.launchIn(viewModelScope)
+    if (gaaiDevice.type != ChargerType.MOBILE) {
+      nexxtenderHomeChargingGridDataCharacteristic.getNotifications().onEach {
+        val newChargingGridData = ChargingGridDataParser.parse(it.value)!!
+        //_state is a MutableStateFlow which propagates data to UI.
+        _state.value = _state.value.copy(chargingGridData = newChargingGridData)
+        Log.d(TAG, "Found the following notification of changed chargingGridData: $newChargingGridData")
+      }.launchIn(viewModelScope)
 
-    nexxtenderHomeChargingCarDataCharacteristic.getNotifications().onEach {
-      val newChargingCarData = ChargingCarDataParser.parse(it.value)!!
-      //_state is a MutableStateFlow which propagates data to UI.
-      _state.value = _state.value.copy(chargingCarData = newChargingCarData)
-      Log.d(TAG, "Found the following notification of changed chargingCarData: $newChargingCarData")
-    }.launchIn(viewModelScope)
+      nexxtenderHomeChargingCarDataCharacteristic.getNotifications().onEach {
+        val newChargingCarData = ChargingCarDataParser.parse(it.value)!!
+        //_state is a MutableStateFlow which propagates data to UI.
+        _state.value = _state.value.copy(chargingCarData = newChargingCarData)
+        Log.d(TAG, "Found the following notification of changed chargingCarData: $newChargingCarData")
+      }.launchIn(viewModelScope)
 
-    nexxtenderHomeChargingAdvancedDataCharacteristic.getNotifications().onEach {
-      val newChargingAdvancedData = ChargingAdvancedDataParser.parse(it.value)!!
-      //_state is a MutableStateFlow which propagates data to UI.
-      _state.value = _state.value.copy(chargingAdvancedData = newChargingAdvancedData)
-      Log.d(TAG, "Found the following notification of changed chargingAdvancedData: $newChargingAdvancedData")
-    }.launchIn(viewModelScope)
+      nexxtenderHomeChargingAdvancedDataCharacteristic.getNotifications().onEach {
+        val newChargingAdvancedData = ChargingAdvancedDataParser.parse(it.value)!!
+        //_state is a MutableStateFlow which propagates data to UI.
+        _state.value = _state.value.copy(chargingAdvancedData = newChargingAdvancedData)
+        Log.d(TAG, "Found the following notification of changed chargingAdvancedData: $newChargingAdvancedData")
+      }.launchIn(viewModelScope)
 
-    // Read Configuration Data
-    nexxtenderHomeGenericStatusCharacteristic.getNotifications().onEach {
-      Log.d(TAG, "Found Generic Status: $it")
-      val status = it.value.fromUint16LE(0).toInt()
-      Log.d(TAG, "Converted status: $status")
-      when (status) {
-        CONFIG_STATUS_POPPED, CONFIG_STATUS_POPPED_CBOR -> {
-          val configData = ConfigDataParserComposer.parse(
-            nexxtenderHomeGenericDataCharacteristic.read().value,
-            configVersion
-          )!!
-          _state.value = _state.value.copy(configData = configData)
+      // Read Configuration Data
+      nexxtenderHomeGenericStatusCharacteristic.getNotifications().onEach {
+        Log.d(TAG, "Found Generic Status: $it")
+        val status = it.value.fromUint16LE(0).toInt()
+        Log.d(TAG, "Converted status: $status")
+        when (status) {
+          CONFIG_STATUS_POPPED, CONFIG_STATUS_POPPED_CBOR -> {
+            val configData = ConfigDataParserComposer.parse(
+              nexxtenderHomeGenericDataCharacteristic.read().value,
+              configVersion
+            )!!
+            _state.value = _state.value.copy(configData = configData)
+          }
+
+          CONFIG_STATUS_READY, CONFIG_STATUS_READY_CBOR -> {
+            writeNewConfigData()
+          }
+
+          CONFIG_STATUS_SUCCESS, CONFIG_STATUS_SUCCESS_CBOR -> {
+            // Read configuration to sync with changes
+            sendConfigOperationGet()
+          }
+
+          TIME_STATUS_POPPED -> {
+            val timeData = TimeDataParserComposer.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
+            _state.value = _state.value.copy(timeData = timeData)
+          }
+
+          TIME_STATUS_READY -> {
+            writeNewTimeData()
+          }
+
+          LOADER_STATUS_UNLOCKED, LOADER_STATUS_UNLOCKED_FORCE_MAX, LOADER_STATUS_UNLOCKED_FORCE_ECO -> {
+            // nop
+          }
+
+          // NOTE: Nexxtender Home seems to never send a TIME_STATUS_SUCCESS
+          TIME_STATUS_SUCCESS -> {
+            // Read configuration to sync with changes
+            sendConfigOperationGet()
+          }
+
+
+          else -> {
+            Log.d(TAG, "Unknown GENERIC_STATUS value: $status")
+          }
         }
-
-        CONFIG_STATUS_READY, CONFIG_STATUS_READY_CBOR -> {
-          writeNewConfigData()
-        }
-
-        CONFIG_STATUS_SUCCESS, CONFIG_STATUS_SUCCESS_CBOR -> {
-          // Read configuration to sync with changes
-          sendConfigOperationGet()
-        }
-
-        TIME_STATUS_POPPED -> {
-          val timeData = TimeDataParserComposer.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
-          _state.value = _state.value.copy(timeData = timeData)
-        }
-
-        TIME_STATUS_READY -> {
-          writeNewTimeData()
-        }
-
-        LOADER_STATUS_UNLOCKED, LOADER_STATUS_UNLOCKED_FORCE_MAX, LOADER_STATUS_UNLOCKED_FORCE_ECO -> {
-          // nop
-        }
-
-        // NOTE: Nexxtender Home seems to never send a TIME_STATUS_SUCCESS
-        TIME_STATUS_SUCCESS -> {
-          // Read configuration to sync with changes
-          sendConfigOperationGet()
-        }
-
-
-        else -> {
-          Log.d(TAG, "Unknown GENERIC_STATUS value: $status")
-        }
-      }
-    }.launchIn(viewModelScope)
-
+      }.launchIn(viewModelScope)
+    }
     configVersion = getConfigVersion(firmwareRevision)
     sendConfigOperationGet()
     // Do not call sendTimeOperationGet() here! The sendConfigOperationGet() message sequence is still running

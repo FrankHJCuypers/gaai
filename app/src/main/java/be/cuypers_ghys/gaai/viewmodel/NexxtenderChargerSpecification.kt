@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -23,7 +23,7 @@ object NexxtenderHomeSpecification {
   /** Base to convert 16-bit UUIDs into 128-bit UUIDs. */
   private const val UUID_BLE_SHORT_BASE = "0000%s-0000-1000-8000-00805f9b34fb"
 
-  /** Base to convert 8-bit Nexxtender Home service or characteristic into 128-bit UUIDs. */
+  /** Base to convert 8-bit Nexxtender charger service or characteristic into 128-bit UUIDs. */
   private const val UUID_NEXXTENDER_HOME_SHORT_BASE = "fd47416a-95fb-4206-88b5-b4a8045f75"
 
   /** BLE Generic Access Service UUID. */
@@ -59,20 +59,20 @@ object NexxtenderHomeSpecification {
   /** BLE Hardware Revision String Characteristic UUID. */
   val UUID_BLE_HARDWARE_REVISION_STRING_CHARACTERISTIC: UUID = from16bitString("2a27")
 
-  /** Nexxtender Home Service Data Service UUID. */
-  val UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE: UUID = fromNexxtenderHomeBase("c0")
+  /** Nexxtender charger Service Data Service UUID. */
+  val UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE: UUID = fromNexxtenderHomeBase("c0")
 
-  /** Nexxtender Home Generic/CDR Service UUID. */
-  val UUID_NEXXTENDER_HOME_GENERIC_CDR_SERVICE: UUID = fromNexxtenderHomeBase("c1")
+  /** Nexxtender charger Generic/CDR Service UUID. */
+  val UUID_NEXXTENDER_CHARGER_GENERIC_CDR_SERVICE: UUID = fromNexxtenderHomeBase("c1")
 
-  /** Nexxtender Home CDR_COMMAND Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_CDR_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c2")
+  /** Nexxtender charger CDR_COMMAND Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_CDR_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c2")
 
-  /** Nexxtender Home CDR_STATUS Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_CDR_STATUS_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c3")
+  /** Nexxtender charger CDR_STATUS Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_CDR_STATUS_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c3")
 
-  /** Nexxtender Home CDR_RECORD Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_CDR_RECORD_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c4")
+  /** Nexxtender charger CDR_RECORD Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_CDR_RECORD_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c4")
 
   /** Nexxtender Home GENERIC_COMMAND Characteristic UUID. */
   val UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("dd")
@@ -83,38 +83,38 @@ object NexxtenderHomeSpecification {
   /** Nexxtender Home GENERIC_DATA Characteristic UUID. */
   val UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("df")
 
-  /** Nexxtender Home CCDT Service UUID. */
-  val UUID_NEXXTENDER_HOME_CCDT_SERVICE: UUID = fromNexxtenderHomeBase("c5")
+  /** Nexxtender charger CCDT Service UUID. */
+  val UUID_NEXXTENDER_CHARGER_CCDT_SERVICE: UUID = fromNexxtenderHomeBase("c5")
 
-  /** Nexxtender Home CCDT_COMMAND Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_CCDT_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c6")
+  /** Nexxtender charger CCDT_COMMAND Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_CCDT_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c6")
 
-  /** Nexxtender Home CCDT_STATUS Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_CCDT_STATUS_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c7")
+  /** Nexxtender charger CCDT_STATUS Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_CCDT_STATUS_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c7")
 
-  /** Nexxtender Home CCDT_RECORD Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_CCDT_RECORD_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c8")
+  /** Nexxtender charger CCDT_RECORD Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_CCDT_RECORD_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("c8")
 
-  /** Nexxtender Home FIRMWARE Service UUID. */
-  val UUID_NEXXTENDER_HOME_FIRMWARE_SERVICE: UUID = fromNexxtenderHomeBase("c9")
+  /** Nexxtender charger FIRMWARE Service UUID. */
+  val UUID_NEXXTENDER_CHARGER_FIRMWARE_SERVICE: UUID = fromNexxtenderHomeBase("c9")
 
-  /** Nexxtender Home FIRMWARE_COMMAND Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_FIRMWARE_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("ca")
+  /** Nexxtender charger FIRMWARE_COMMAND Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_FIRMWARE_COMMAND_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("ca")
 
-  /** Nexxtender Home FIRMWARE_STATUS Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_FIRMWARE_STATUS_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cb")
+  /** Nexxtender charger FIRMWARE_STATUS Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_FIRMWARE_STATUS_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cb")
 
-  /** Nexxtender Home FIRMWARE_WANTED_CHUNK Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_FIRMWARE_WANTED_CHUNK_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cc")
+  /** Nexxtender charger FIRMWARE_WANTED_CHUNK Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_FIRMWARE_WANTED_CHUNK_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cc")
 
-  /** Nexxtender Home FIRMWARE_DATA_CHUNK Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_FIRMWARE_DATA_CHUNK_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cd")
+  /** Nexxtender charger FIRMWARE_DATA_CHUNK Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_FIRMWARE_DATA_CHUNK_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cd")
 
-  /** Nexxtender Home CHARGING Service UUID. */
-  val UUID_NEXXTENDER_HOME_CHARGING_SERVICE: UUID = fromNexxtenderHomeBase("ce")
+  /** Nexxtender charger CHARGING Service UUID. */
+  val UUID_NEXXTENDER_CHARGER_CHARGING_SERVICE: UUID = fromNexxtenderHomeBase("ce")
 
-  /** Nexxtender Home CHARGING_BASIC_DATA Characteristic UUID. */
-  val UUID_NEXXTENDER_HOME_CHARGING_BASIC_DATA_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cf")
+  /** Nexxtender charger CHARGING_BASIC_DATA Characteristic UUID. */
+  val UUID_NEXXTENDER_CHARGER_CHARGING_BASIC_DATA_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("cf")
 
   /** Nexxtender Home CHARGING_GRID_DATA Characteristic UUID. */
   val UUID_NEXXTENDER_HOME_CHARGING_GRID_DATA_CHARACTERISTIC: UUID = fromNexxtenderHomeBase("d0")

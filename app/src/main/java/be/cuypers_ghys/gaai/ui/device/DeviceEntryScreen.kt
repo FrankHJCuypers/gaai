@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
+import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
@@ -58,7 +59,7 @@ object DeviceEntryDestination : NavigationDestination {
 }
 
 /**
- * Implements the complete screen for entering the information for a new Nexxtender Home device,
+ * Implements the complete screen for entering the information for a new Nexxtender charger device,
  * and make a BLE connection to it.
  * The screen includes app bars.
  * @param navigateBack Function to be called when [DeviceEntryScreen] wants to navigate back.
@@ -130,7 +131,7 @@ fun DeviceEntryScreen(
 }
 
 /**
- * Implements the body of the screen for entering the information for a new Nexxtender Home device,
+ * Implements the body of the screen for entering the information for a new Nexxtender charger device,
  * and make a BLE connection to it.
  * @param deviceUiState The device state determined by the [DeviceEntryViewModel].
  * @param onDeviceValueChange Function to execute when any of the values in the entry screen changes value.
@@ -170,13 +171,13 @@ fun DeviceEntryBody(
     ) {
       Text(
         text =
-        when (deviceUiState.entryState) {
-          EntryState.INPUTTING -> stringResource(R.string.scan_action)
-          EntryState.ENTRY_VALID -> stringResource(R.string.scan_action)
-          EntryState.SCANNING -> stringResource(R.string.cancel_scanning)
-          EntryState.DEVICE_FOUND -> stringResource(R.string.save_action)
-          EntryState.DUPLICATE_DEVICE_FOUND -> stringResource(R.string.cancel_scanning)
-        }
+          when (deviceUiState.entryState) {
+            EntryState.INPUTTING -> stringResource(R.string.scan_action)
+            EntryState.ENTRY_VALID -> stringResource(R.string.scan_action)
+            EntryState.SCANNING -> stringResource(R.string.cancel_scanning)
+            EntryState.DEVICE_FOUND -> stringResource(R.string.save_action)
+            EntryState.DUPLICATE_DEVICE_FOUND -> stringResource(R.string.cancel_scanning)
+          }
       )
     }
   }
@@ -214,7 +215,7 @@ fun DeviceDataForm(
 }
 
 /**
- * Input form for entering the SN and PN of a new Nexxtender Home device,.
+ * Input form for entering the SN and PN of a new Nexxtender charger device,.
  * @param deviceUiState The device state determined by the [DeviceEntryViewModel].
  * @param modifier The [Modifier] to be applied to this DeviceDetailsBody
  * @param onValueChange Function to execute when any of the values in the entry screen changes value.
@@ -297,11 +298,12 @@ fun DeviceInputForm(
 @Composable
 private fun DeviceEntryScreenPreview() {
   GaaiTheme {
-    DeviceEntryBody(deviceUiState = DeviceUiState(
-      DeviceDetails(
-        pn = "12345-A2", sn = "6789-12345-E3"
-      ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
-    ), onDeviceValueChange = {}, onButtonClick = {})
+    DeviceEntryBody(
+      deviceUiState = DeviceUiState(
+        DeviceDetails(
+          pn = "12345-A2", sn = "6789-12345-E3"
+        ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+      ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }
 
@@ -309,11 +311,12 @@ private fun DeviceEntryScreenPreview() {
 @Composable
 private fun DeviceEntryScreenScanningPreview() {
   GaaiTheme {
-    DeviceEntryBody(deviceUiState = DeviceUiState(
-      DeviceDetails(
-        pn = "12345-A2", sn = "6789-12345-E3"
-      ), entryState = EntryState.SCANNING, isSnValid = true, isPnValid = true
-    ), onDeviceValueChange = {}, onButtonClick = {})
+    DeviceEntryBody(
+      deviceUiState = DeviceUiState(
+        DeviceDetails(
+          pn = "12345-A2", sn = "6789-12345-E3"
+        ), entryState = EntryState.SCANNING, isSnValid = true, isPnValid = true
+      ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }
 
@@ -321,11 +324,12 @@ private fun DeviceEntryScreenScanningPreview() {
 @Composable
 private fun DeviceEntryScreenEmptyPreview() {
   GaaiTheme {
-    DeviceEntryBody(deviceUiState = DeviceUiState(
-      DeviceDetails(
-        pn = "", sn = ""
-      ), entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
-    ), onDeviceValueChange = {}, onButtonClick = {})
+    DeviceEntryBody(
+      deviceUiState = DeviceUiState(
+        DeviceDetails(
+          pn = "", sn = ""
+        ), entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
+      ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }
 
@@ -333,11 +337,12 @@ private fun DeviceEntryScreenEmptyPreview() {
 @Composable
 private fun DeviceEntryScreenPnIncorrectPreview() {
   GaaiTheme {
-    DeviceEntryBody(deviceUiState = DeviceUiState(
-      DeviceDetails(
-        pn = "12-34", sn = "1234-56789-00"
-      ), entryState = EntryState.INPUTTING, isSnValid = true, isPnValid = false
-    ), onDeviceValueChange = {}, onButtonClick = {})
+    DeviceEntryBody(
+      deviceUiState = DeviceUiState(
+        DeviceDetails(
+          pn = "12-34", sn = "1234-56789-00"
+        ), entryState = EntryState.INPUTTING, isSnValid = true, isPnValid = false
+      ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }
 
@@ -345,11 +350,16 @@ private fun DeviceEntryScreenPnIncorrectPreview() {
 @Composable
 private fun DeviceEntryScreenScanCorrectPreview() {
   GaaiTheme {
-    DeviceEntryBody(deviceUiState = DeviceUiState(
-      DeviceDetails(
-        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678
-      ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = true
-    ), onDeviceValueChange = {}, onButtonClick = {})
+    DeviceEntryBody(
+      deviceUiState = DeviceUiState(
+        DeviceDetails(
+          pn = "12345-A2",
+          sn = "6789-12345-E3",
+          mac = "FA:CA:DE:12:34:56",
+          serviceDataValue = 0x12345678,
+          type = ChargerType.HOME
+        ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = true
+      ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }
 
@@ -357,10 +367,12 @@ private fun DeviceEntryScreenScanCorrectPreview() {
 @Composable
 private fun DeviceEntryScreenScanDuplicatePreview() {
   GaaiTheme {
-    DeviceEntryBody(deviceUiState = DeviceUiState(
-      DeviceDetails(
-        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678
-      ), entryState = EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = true
-    ), onDeviceValueChange = {}, onButtonClick = {})
+    DeviceEntryBody(
+      deviceUiState = DeviceUiState(
+        DeviceDetails(
+          pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
+          type = ChargerType.HOME
+        ), entryState = EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = true
+      ), onDeviceValueChange = {}, onButtonClick = {})
   }
 }

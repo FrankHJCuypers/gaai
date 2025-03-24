@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -25,13 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.cuypers_ghys.gaai.ble.BleRepository
+import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.DevicesRepository
 import be.cuypers_ghys.gaai.util.ProductNumberParser
 import be.cuypers_ghys.gaai.util.SerialNumberParser
 import be.cuypers_ghys.gaai.util.fromUint32BE
 import be.cuypers_ghys.gaai.util.toUint32BE
-import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE
+import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.filter
@@ -141,9 +142,15 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param scanResult The BLE scan result.
    */
   private suspend fun updateUiState(scanResult: BleScanResult) {
+    val chargerType = when (scanResult.device.name) {
+      "HOME" -> ChargerType.HOME
+      "Mobile" -> ChargerType.MOBILE
+      else -> ChargerType.UNKNOWN
+    }
     val deviceDetails = deviceUiState.deviceDetails.copy(
       mac = scanResult.device.address,
-      serviceDataValue = serviceDataFilter.data.fromUint32BE(0).toInt()
+      serviceDataValue = serviceDataFilter.data.fromUint32BE(0).toInt(),
+      type = chargerType
     )
     val canInsert = devicesRepository.canInsert(deviceDetails.toDevice())
     deviceUiState = deviceUiState.copy(
@@ -237,7 +244,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
       val hexSerialNumber = SerialNumberParser.calcHexSerialNumber(serialNumber!!)
       val serviceData = ByteArray(4)
       serviceData.toUint32BE(0, hexSerialNumber)
-      return WithServiceData(uuid = ParcelUuid(UUID_NEXXTENDER_HOME_SERVICE_DATA_SERVICE), data = serviceData)
+      return WithServiceData(uuid = ParcelUuid(UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE), data = serviceData)
     }
 
   /**
@@ -287,7 +294,8 @@ data class DeviceDetails(
   val pn: String = "",
   val sn: String = "",
   val mac: String = "",
-  val serviceDataValue: Int = 0
+  val serviceDataValue: Int = 0,
+  val type: ChargerType = ChargerType.UNKNOWN
 )
 
 /**
@@ -298,5 +306,6 @@ fun DeviceDetails.toDevice(): Device = Device(
   pn = pn,
   sn = sn,
   mac = mac,
-  serviceDataValue = serviceDataValue
+  serviceDataValue = serviceDataValue,
+  type = type
 )

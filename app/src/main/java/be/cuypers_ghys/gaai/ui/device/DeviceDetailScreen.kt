@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -66,6 +66,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.AuthorizationStatus
+import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.ChargingAdvancedData
 import be.cuypers_ghys.gaai.data.ChargingBasicData
 import be.cuypers_ghys.gaai.data.ChargingCarData
@@ -110,7 +111,7 @@ object DeviceDetailsDestination : NavigationDestination {
 }
 
 /**
- * Implements the complete screen for displaying all the information received from the Nexxtender Home,
+ * Implements the complete screen for displaying all the information received from the Nexxtender charger,
  * including app bars.
  * @param navigateBack Function to be called when [DeviceDetailsScreen] wants to navigate back.
  * @param onNavigateUp Function to be called when [DeviceDetailsScreen] wants to navigate up.
@@ -171,7 +172,7 @@ fun DeviceDetailsScreen(
 }
 
 /**
- * Implements the body of the screen displaying all the information received from the Nexxtender Home.
+ * Implements the body of the screen displaying all the information received from the Nexxtender charger.
  * @param device The information for the [Device] determined by the [DeviceDetailsViewModel].
  * @param state The state for the [Device] determined by the [DeviceDetailsViewModel].
  *  The state includes all information received from the device over BLE.
@@ -246,50 +247,52 @@ fun DeviceDetailsBody(
         .padding(dimensionResource(id = R.dimen.padding_small))
     )
 
-    GaaiChargingGridDataCard(
-      chargingGridData = state.chargingGridData,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
+    if (device?.type != ChargerType.MOBILE) {
+      GaaiChargingGridDataCard(
+        chargingGridData = state.chargingGridData,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
 
-    GaaiChargingCarDataCard(
-      chargingCarData = state.chargingCarData,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
+      GaaiChargingCarDataCard(
+        chargingCarData = state.chargingCarData,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
 
-    GaaiChargingAdvancedDataCard(
-      chargingAdvancedData = state.chargingAdvancedData,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
+      GaaiChargingAdvancedDataCard(
+        chargingAdvancedData = state.chargingAdvancedData,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
 
-    GaaiConfigDataCard(
-      configData = state.configData,
-      onTouWeekChange = onTouWeekChange,
-      onTouWeekendChange = onTouWeekendChange,
-      onMaxGridChange = onMaxGridChange,
-      onSafeChange = onSafeChange,
-      onMaxDeviceChange = onMaxDeviceChange,
-      onModeChange = onModeChange,
-      onICapacityChange = onICapacityChange,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
+      GaaiConfigDataCard(
+        configData = state.configData,
+        onTouWeekChange = onTouWeekChange,
+        onTouWeekendChange = onTouWeekendChange,
+        onMaxGridChange = onMaxGridChange,
+        onSafeChange = onSafeChange,
+        onMaxDeviceChange = onMaxDeviceChange,
+        onModeChange = onModeChange,
+        onICapacityChange = onICapacityChange,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
 
-    GaaiTimeDataCard(
-      timeData = state.timeData,
-      onTimeGet = onTimeGet,
-      onTimeSync = onTimeSync,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
+      GaaiTimeDataCard(
+        timeData = state.timeData,
+        onTimeGet = onTimeGet,
+        onTimeSync = onTimeSync,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
 
-    GaaiLoaderCard(
-      onLoaderOperation = onLoaderOperation,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
+      GaaiLoaderCard(
+        onLoaderOperation = onLoaderOperation,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
+    }
   }
 }
 
@@ -1910,14 +1913,70 @@ fun DialTimePickerDialog(
 
 @Preview(showBackground = true)
 @Composable
-private fun DeviceDetailsPreview() {
+private fun DeviceDetailsHomePreview() {
   GaaiTheme {
     DeviceDetailsBody(
       device = Device(
-        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678
+        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
+        type = ChargerType.HOME
       ),
       state = DeviceDetailsViewState(
         deviceName = "HOME2_",
+        deviceInformation = DeviceInformation(
+          modelNumber = "12345", serialNumber = "12345",
+          firmwareRevision = "1.23.4", hardwareRevision = "A2"
+        ),
+        chargingBasicData = ChargingBasicData(
+          seconds = 123u, discriminator = Discriminator.STOPPED,
+          status = Status.PLUGGED, energy = 1234u, phaseCount = 2u
+        ),
+        chargingGridData = ChargingGridData(
+          timestamp = 0x662D0EFBu,
+          l1 = 1,
+          l2 = 2,
+          l3 = -1,
+          consumed = 12345,
+          interval = 345u
+        ),
+        chargingCarData = ChargingCarData(
+          timestamp = 0x662D0EFBu,
+          l1 = 1,
+          l2 = 2,
+          l3 = -1,
+          p1 = 1111,
+          p2 = 22222,
+          p3 = 3333
+        ),
+        chargingAdvancedData = ChargingAdvancedData(
+          timestamp = 0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower = 32,
+          authorizationStatus = AuthorizationStatus(0), errorCode = 0
+        )
+      ),
+      onTouWeekChange = {},
+      onTouWeekendChange = {},
+      onMaxGridChange = {},
+      onMaxDeviceChange = {},
+      onICapacityChange = {},
+      onSafeChange = {},
+      onModeChange = {},
+      onTimeGet = {},
+      onTimeSync = {},
+      onLoaderOperation = {}
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeviceDetailsMobilePreview() {
+  GaaiTheme {
+    DeviceDetailsBody(
+      device = Device(
+        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
+        type = ChargerType.MOBILE
+      ),
+      state = DeviceDetailsViewState(
+        deviceName = "Mobile2_",
         deviceInformation = DeviceInformation(
           modelNumber = "12345", serialNumber = "12345",
           firmwareRevision = "1.23.4", hardwareRevision = "A2"

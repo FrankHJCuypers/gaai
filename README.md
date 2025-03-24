@@ -19,14 +19,14 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/graphs/contributors)
 [![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai/master?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/master)
 
-# Nexxtender Home android app
+# Nexxtender Charger android app
 
-The goal of this app is to control the *Nexxtender Home* charger without requiring the
+The goal of this app is to control the *Nexxtender Home* and *Nexxtender Mobile* charger without requiring the
 [Android Nexxtmove](https://play.google.com/store/apps/details?id=com.powerdale.nexxtender) app.
-The Android Nexxtmove app is the official app for controlling the *Nexxtender Home* charger and for syncing
+The Android Nexxtmove app is the official app for controlling the *Nexxtender* chargers and for syncing
 billing information to the [Nexxtmove.me](https://www.nexxtmove.me/) website for refunding.
 Both the Nexxtmove app and the Nexxtmove.me website require a username and password to login.
-Without it, it is impossible to use the Nexxtmove app and therefore impossible to operate the *Nexxtender* Home charger,
+Without it, it is impossible to use the Nexxtmove app and therefore impossible to operate the *Nexxtender Home* charger,
 which has no UI or input device on its own.
 If you no longer have a valid username and password for the Nexxtmove app, using *Gaai* is an option.
 Other alternatives are
@@ -51,9 +51,10 @@ A bird name was chosen.
 - No additional hardware required.
 - No www.Nexxtmove.me account required.
 - Connects over [Bluetooth Low Energy (BLE)](https://en.wikipedia.org/wiki/Bluetooth_Low_Energy) to the
-  *Nexxtender Home*.
+  *Nexxtender Home* or *Nexxtender Mobile*.
 - Finds and connects to the device based on its PN and SN. No MAC required.
-- Shows real time data from the *Nexxtender Home*: device information, charging status, current, power consumption, ...
+- Shows real time data from the *Nexxtender Home* or *Nexxtender Mobile*: device information, charging status, current,
+  power consumption, ...
 - Allows to control the *Nexxtender Home*: start and stop the charger in ECO or MAX mode,
   sync the time with the mobile phone.
 - Allows to configure the *Nexxtender Home*: default charging mode, max grid and max device current, off-peak hours.
@@ -105,7 +106,7 @@ For the moment it is not available.
 
 ## Bluetooth
 
-*Gaai* uses BLE to connect to the *Nexxtender Home*,
+*Gaai* uses BLE to connect to the *Nexxtender Home* or *Nexxtender Mobile*,
 so make sure that Bluetooth is enabled on your mobile device.
 
 In addition, *Gaai* requires some Bluetooth related permissions in order to function.
@@ -133,49 +134,50 @@ in Android 12 and up:
 
 ## Bluetooth pairing
 
-The first time that *Gaai* connects to a *Nexxtender Home* device,
+The first time that *Gaai* connects to a *Nexxtender Home* or *Nexxtender Mobile* device,
 *Gaai* will show a pop-up asking to enter the 6-digit PIN.
 After entering the PIN, pairing completes.
 
 See [PIN value](#pin-value) for the PIN value.
 
-If the mobile phone user later removes the *Nexxtender Home* device from the "Bluetooth" menu in Android,
+If the mobile phone user later removes the *Nexxtender Home* or *Nexxtender Mobile* device from the "Bluetooth" menu in
+Android,
 the pairing information is lost and *Gaai* will not automatically open the pairing dialog again.
 The only options to restore from this situation are either of:
 
 - pair the device from the Android "Bluetooth menu".
-- delete the *Nexxtender Home* from *Gaai* and then add it again.
+- delete the *Nexxtender Home* or *Nexxtender Mobile* from *Gaai* and then add it again.
   *Gaai* will now again ask to pair.
 
 ### PIN value
 
-The Nexxtender Home charger installer that installed your charger and connected it with the Nexxtmove app on your
-mobile phone, has paired it with the Nexxtender Home using the correct PIN value.
+The Nexxtender charger installer that installed your charger and connected it with the Nexxtmove app on your
+mobile phone, has paired it with the Nexxtender charger using the correct PIN value.
 In general, the installer will not have provided you with that PIN value.
-As long as you use the same mobile phone to connect to the Nexxtender Home, both devices should stay paired and
+As long as you use the same mobile phone to connect to the Nexxtender charger, both devices should stay paired and
 there is no issue.
 But when you need to move to another phone, you need the PIN value.
 If you don't have the PIN code, you can provide the *Gaai* GitHub repository owner with the PN and SN values
-as mentioned in [Add a Nexxtender Home device](#add-a-nexxtender-home-device)
+as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-charger-device)
 and he will calculate it for you.
 
 ## First start
 
-When *Gaai* is started the first time, it has no *Nexxtender Home* devices in its database yet.
+When *Gaai* is started the first time, it has no *Nexxtender* devices in its database yet.
 *Gaai* will display a home screen like the following:
 
 ![Empty DB](docs/images/EmptyDB.png)
 
-At the bottom right is a button with a "+" that allows to add a *Nexxtender Home* device.
+At the bottom right is a button with a "+" that allows to add a *Nexxtender* device.
 
-## Add a Nexxtender Home device
+## Add a Nexxtender device
 
 When tapping the "+" in the home screen, the following dialog box appears:
 
 ![Device Entry Empty](docs/images/DeviceEntryEmpty.png)
 
 The *Scan device* button stays grayed out until a valid PN and SN are entered.
-The PN and SN of your *Nexxtender Home* can be found at the bottom of your device,
+The PN and SN of your *Nexxtender * can be found at the bottom of your device,
 as is shown in
 
 ![serial](https://github.com/geertmeersman/nexxtender/blob/main/images/serial.png).
@@ -184,21 +186,22 @@ When a valid PN and SN are entered, the *Scan Device* button become active.
 
 ![Device Entry Empty](docs/images/DeviceEntryCorrectSNPN.png)
 
-Make sure that you are close to the *Nexxtender Home* and that no other device is connected with it over BLE.
+Make sure that you are close to the *Nexxtender* device and that no other device is connected with it over BLE.
 Tap the *Scan Device* button. Scanning will start and the button will now show *Cancel Scanning* allowing you to
 cancel the scan if it takes to long.
 
 ![Device Entry Empty](docs/images/DeviceEntryScanning.png)
 
 If you entered the correct PN and SN,
-*Gaai* should find the *Nexxtender Home* in less then a few seconds and show the following screen.
+*Gaai* should find the *Nexxtender* in less then a few seconds and show the following screen.
 
 ![Device Entry Empty](docs/images/DeviceEntryFound.png)
 
 Gaai shows a card with the details of the found device.
 
-+ At the top left is the PN.
-+ At the top right is the SN.
++ At the top is the type of the Nexxtender Charger: HOME or MOBILE.
++ At the middle left is the PN.
++ At the middle right is the SN.
 + At the bottom left is the MAC.
 + At the bottom right is the Service Data used to find the BLE device based on its advertisement packet.
 
@@ -224,7 +227,7 @@ In this screen you can
 + Remove a device by swiping its card to the right.
 + Connect to the device by clicking on its card.
   This will open the [Device details](#device-details) screen.
-  Make sure that you are close to the *Nexxtender Home* and that no other device is connected with it over BLE.
+  Make sure that you are close to the *Nexxtender* charger and that no other device is connected with it over BLE.
 
 ## Device details
 
@@ -247,13 +250,15 @@ and try again.
 The card on the top is the same one as from the [List of Devices](#list-of-devices).
 
 The next cards show the device name and the Device Information.
-These contain general BLE information, not specific for *Nexxtender Home*.
+These contain general BLE information, not specific for a *Nexxtender* charger.
 
-The next cards contain specific *Nexxtender Home* information as reported by the device.
+The next cards contain specific *Nexxtender* charger information as reported by the device.
+The *Nexxtender Home* supports all cards.
+The *Nexxtender Mobile* only supportsthe [Basic Data Card](#basic-data-card).
 
 ### Basic Data
 
-The Basic Data card shows Basic *Nexxtender Home* charging data.
+The Basic Data card shows Basic *Nexxtender Home* and *Nexxtender Mobile* charging data.
 
 ![Basic Data Card](docs/images/BasicDataCard.png)
 
@@ -268,6 +273,7 @@ The Basic Data card shows Basic *Nexxtender Home* charging data.
 ### Grid Data
 
 The Grid Data card shows Grid Data as measured by the *Nexxtender Home*.
+It is not supported by the *Nexxtender Mobile*.
 
 ![Grid Data Card](docs/images/GridDataCard.png)
 
@@ -283,6 +289,7 @@ The Grid Data card shows Grid Data as measured by the *Nexxtender Home*.
 ### Car Data
 
 The Car Data card shows Car Data as measured by the *Nexxtender Home*.
+It is not supported by the *Nexxtender Mobile*.
 
 ![Car Data Card](docs/images/CarDataCard.png)
 
@@ -299,6 +306,7 @@ The Car Data card shows Car Data as measured by the *Nexxtender Home*.
 ### Advanced Data
 
 The Advanced Data card shows Advanced Data as measured by the *Nexxtender Home*.
+It is not supported by the *Nexxtender Mobile*.
 
 ![Advanced Data Card](docs/images/AdvancedDataCard.png)
 
@@ -314,6 +322,7 @@ The Advanced Data card shows Advanced Data as measured by the *Nexxtender Home*.
 ### Configuration
 
 The Configuration card shows the data that can be configured in the *Nexxtender Home*.
+It is not supported by the *Nexxtender Mobile*.
 In theory all these fields are configurable and can be changed.
 *Gaai* only allows to change the fields marked with ![edit outline](docs/images/mdi--edit-outline.png).
 There are three different layouts, depending on the *Firmware Version*.
@@ -409,6 +418,7 @@ Pressing Cancel does not change anything.
 ### Time
 
 The Time card allows to sync the time of the *Nexxtender Home* with the time on the phone.
+It is not supported by the *Nexxtender Mobile*.
 
 ![Time Card](docs/images/TimeCard.png)
 
@@ -421,6 +431,7 @@ Clicking "Sync Time" writes the current phone time to the *Nexxtender Home*.
 ### Loader
 
 The Loader card allows to start or switch the *Nexxtender Home* to charge in a specific mode or to stop it.
+It is not supported by the *Nexxtender Mobile*.
 
 ![Loader Card](docs/images/LoaderCard.png)
 
@@ -449,7 +460,7 @@ This project is licensed under the GNU AGPLv3 License. See the [LICENSE](LICENSE
 - [NordicSemiconductor Kotlin-BLE-Library uiscanner](https://github.com/NordicSemiconductor/Kotlin-BLE-Library/tree/main/uiscanner)
   for the BLE library.
 
-# Supported Android versions and Nexxtender Home firmware versions
+# Supported Android versions and Nexxtender Home/Mobile firmware versions
 
 In theory *Gaai* should work from API 26 (Android 8) and higher, but these are not all tested.
 For the Nexxtender Home firmware versions,
@@ -460,13 +471,13 @@ Basic scenarios seems to work, but further testing is required for other scenari
 The first row is the main combination used for testing and debugging during development.
 The other rows are confirmed by other users.
 
-| Phone Model        | Android API (version) | Nexxtender Home firmware version |
-|--------------------|-----------------------|----------------------------------|
-| Google Pixel 6 Pro | 34 (14)               | 2.53.2                           |
-| Google Pixel 8 Pro | 35 (15)               | 2.53.2                           |
-| Nokia X10          | 34 (14)               | 2.53.2                           |
-| OnePlus Nord 2     | 33 (13)               | 3.65.0                           |
-| Samsung Galaxy J7  | 27 (8.1)              | 3.65.0                           |
+| Phone Model        | Android API (version) | Nexxtender Home firmware version | Nexxtender Mobile firmware version |
+|--------------------|-----------------------|----------------------------------|------------------------------------|
+| Google Pixel 6 Pro | 34 (14)               | 2.53.2                           |                                    | 
+| Google Pixel 8 Pro | 35 (15)               | 2.53.2                           |                                    | 
+| Nokia X10          | 34 (14)               | 2.53.2                           |                                    |
+| OnePlus Nord 2     | 33 (13)               | 3.65.0                           |                                    |
+| Samsung Galaxy J7  | 27 (8.1)              | 3.65.0                           |                                    |
 
 There are currently no combinations for which it is confirmed that it does not work.
 
@@ -481,7 +492,7 @@ The developer
   However, if you still need the *Nexxtmove* app to upload charging information (for reimbursement or others),
   be very careful as there is no guarantee that it will not interfere.
 
-*Gaai* is only tested on a the phone versus Nexxtender Home versions as indicated in section
+*Gaai* is only tested on a the phone versus Nexxtender Home/Mobile versions as indicated in section
 [Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-home-firmware-versions)
 
 At this point *Gaai* should be considered an alpha app, for trials only.

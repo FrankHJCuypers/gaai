@@ -81,7 +81,7 @@ Depends on the modules core, client-api and server-api.
 ## profile
 
 Seems to contain message parsers for several standard BLE profiles.
-Interesting as example for Gaai on how to parse Nexxtender Home messages.
+Interesting as example for Gaai on how to parse Nexxtender Charger messages.
 
 Depends on the module core.
 

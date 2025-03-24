@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -26,7 +26,7 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Database access object to access the Gaai [GaaiDatabase] with Nexxtender Home devices.
+ * Database access object to access the Gaai [GaaiDatabase] with Nexxtender charger devices.
  *
  * @author Frank HJ Cuypers
  */

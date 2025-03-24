@@ -27,7 +27,7 @@
      Since Android 10 ACCESS_FINE_LOCATION is required and for that, the COARSE one also needs
      to be specified.
 
-     The Nexxtender Home announces itself as a beacon.
+     The Nexxtender Home/Mobile announces itself as a beacon.
      Without the ACCESS_FINE_LOCATION, beacons are not included in scanner results.
      So even in Android 12+ we ask for ACCESS_FINE_LOCATION.
     -->

@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -71,6 +71,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.BuildConfig
 import be.cuypers_ghys.gaai.R
+import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
@@ -94,7 +95,7 @@ object HomeDestination : NavigationDestination {
 }
 
 /**
- * Implements the screens, including app bars, for displaying all known Nexxtender Home devices,
+ * Implements the screens, including app bars, for displaying all known Nexxtender charger devices,
  * including the case there are none yet, connect to them, delete them,
  * and allows to add new ones based on their SN and PN and to connect to it.
  * @param navigateToDeviceEntry Function to be called when [HomeScreen] wants to add a new device.
@@ -146,25 +147,25 @@ fun HomeScreen(
         }
       },
     ) { innerPadding ->
-        Log.d(TAG, "Entering HomeBody)")
-        HomeBody(
-          deviceList = homeUiState.deviceList,
-          onDeviceClick = navigateToDeviceDetails,
-          onDeviceRemove = {
-            coroutineScope.launch {
-              viewModel.removeDevice(it)
-            }
-          },
-          modifier = modifier.fillMaxSize(),
-          contentPadding = innerPadding,
-        )
+      Log.d(TAG, "Entering HomeBody)")
+      HomeBody(
+        deviceList = homeUiState.deviceList,
+        onDeviceClick = navigateToDeviceDetails,
+        onDeviceRemove = {
+          coroutineScope.launch {
+            viewModel.removeDevice(it)
+          }
+        },
+        modifier = modifier.fillMaxSize(),
+        contentPadding = innerPadding,
+      )
     }
   }
   Log.d(TAG, "Exiting HomeScreen()")
 }
 
 /**
- * Implements the screens for displaying all known Nexxtender Home devices,
+ * Implements the screens for displaying all known Nexxtender charger devices,
  * including the case there are none yet, connect to them, delete them,
  * and allows to add new ones based on their SN and PN.
  * @param deviceList The list of known [Devices][Device].
@@ -213,7 +214,7 @@ private fun HomeBody(
 }
 
 /**
- * Implements a [LazyColumn] for displaying all known Nexxtender Home devices and
+ * Implements a [LazyColumn] for displaying all known Nexxtender charger devices and
  * connect to them.
  * @param deviceList The list of known [Devices][Device].
  * @param onDeviceClick Function to be called when [HomeBody] wants to connect to a known device and show
@@ -238,7 +239,8 @@ private fun DevicesList(
     contentPadding = contentPadding
   ) {
     items(items = deviceList, key = { it.id }) { device ->
-      GaaiDeviceItem(device = device,
+      GaaiDeviceItem(
+        device = device,
         onDeviceClick = onDeviceClick,
         onDeviceRemove = onDeviceRemove,
         modifier = Modifier
@@ -298,9 +300,10 @@ fun GaaiDeviceItem(
     modifier = modifier,
     backgroundContent = { DismissBackground(dismissState) }
   ) {
-    GaaiDeviceCard(device, modifier = Modifier
-      .padding(dimensionResource(id = R.dimen.padding_small))
-      .clickable { onDeviceClick(device) })
+    GaaiDeviceCard(
+      device, modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small))
+        .clickable { onDeviceClick(device) })
   }
   Log.d(TAG, "Exiting GaaiDeviceItem()")
 }
@@ -338,6 +341,14 @@ internal fun GaaiDeviceCard(
           .fillMaxWidth()
           .weight(1f)
       ) {
+        Row(
+          modifier = Modifier.fillMaxWidth()
+        ) {
+          Text(
+            text = device.type.toString(),
+            style = MaterialTheme.typography.titleMedium,
+          )
+        }
         Row(
           modifier = Modifier.fillMaxWidth()
         ) {
@@ -408,11 +419,12 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
 @Composable
 fun HomeBodyPreview() {
   GaaiTheme {
-    HomeBody(listOf(
-      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678),
-      Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222),
-      Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333),
-    ), onDeviceClick = {}, onDeviceRemove = {})
+    HomeBody(
+      listOf(
+        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
+        Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
+        Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+      ), onDeviceClick = {}, onDeviceRemove = {})
   }
 }
 
@@ -426,10 +438,30 @@ fun HomeBodyEmptyListPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DevicePreview() {
+fun DevicePreviewHOME() {
   GaaiTheme {
     GaaiDeviceCard(
-      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678),
+      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DevicePreviewMOBILE() {
+  GaaiTheme {
+    GaaiDeviceCard(
+      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
+    )
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DevicePreviewUNKNOWN() {
+  GaaiTheme {
+    GaaiDeviceCard(
+      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
     )
   }
 }

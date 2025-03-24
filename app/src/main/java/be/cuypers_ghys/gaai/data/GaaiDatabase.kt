@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,18 +17,19 @@
 package be.cuypers_ghys.gaai.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * Gaai Database class with a singleton Instance object for handling the Nexxtender Home BLE devices.
+ * Gaai Database class with a singleton Instance object for handling the Nexxtender charger BLE devices.
  *
  * See [Save data in a local database using Room](https://developer.android.com/training/data-storage/room).
  *
  * @author Frank HJ Cuypers
  */
-@Database(entities = [Device::class], version = 2, exportSchema = false)
+@Database(entities = [Device::class], version = 3, autoMigrations = [AutoMigration(from = 2, to = 3)])
 abstract class GaaiDatabase : RoomDatabase() {
 
   /**
@@ -59,4 +60,6 @@ abstract class GaaiDatabase : RoomDatabase() {
       }
     }
   }
+
+
 }

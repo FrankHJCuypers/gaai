@@ -1,5 +1,5 @@
 /*
- * Project Gaai: one app to control the Nexxtender Home charger.
+ * Project Gaai: one app to control the Nexxtender chargers.
  * Copyright © 2024, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -23,7 +23,7 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 
 /**
- * Handles the Timestamp fields in data coming from the Nexxtender Home.
+ * Handles the Timestamp fields in data coming from the Nexxtender charger.
  *
  * @author Frank HJ Cuypers
  */
@@ -50,7 +50,7 @@ object Timestamp {
 
   /**
    * Converts the timestamp into a readable string.
-   * @param timeStamp As received from the Nexxtender Home.
+   * @param timeStamp As received from the Nexxtender charger.
    * @return String representation of the timestamp, according to [format][be.cuypers_ghys.gaai.util.Timestamp.format].
    */
   // TODO: junit tests
