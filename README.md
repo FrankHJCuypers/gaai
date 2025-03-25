@@ -180,7 +180,7 @@ The *Scan device* button stays grayed out until a valid PN and SN are entered.
 The PN and SN of your *Nexxtender * can be found at the bottom of your device,
 as is shown in
 
-![serial](https://github.com/geertmeersman/nexxtender/blob/main/images/serial.png).
+![serial](docs/images/sn.webp).
 
 When a valid PN and SN are entered, the *Scan Device* button become active.
 
