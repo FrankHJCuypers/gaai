@@ -64,7 +64,7 @@ object DeviceEntryDestination : NavigationDestination {
  * The screen includes app bars.
  * @param navigateBack Function to be called when [DeviceEntryScreen] wants to navigate back.
  * @param onNavigateUp Function to be called when [DeviceEntryScreen] wants to navigate up.
- * @param canNavigateBack Is the [DeviceEntryScreen] allowed to navigate back?
+ * @param canNavigateUp Is the [DeviceEntryScreen] allowed to navigate back?
  * @param viewModel The [DeviceEntryViewModel] to be associated with this [DeviceEntryScreen].
  *
  * @author Frank HJ Cuypers
@@ -74,7 +74,7 @@ object DeviceEntryDestination : NavigationDestination {
 fun DeviceEntryScreen(
   navigateBack: () -> Unit,
   onNavigateUp: () -> Unit,
-  canNavigateBack: Boolean = true,
+  canNavigateUp: Boolean = true,
   viewModel: DeviceEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
   val coroutineScope = rememberCoroutineScope()
@@ -82,7 +82,7 @@ fun DeviceEntryScreen(
     topBar = {
       GaaiTopAppBar(
         title = stringResource(DeviceEntryDestination.titleRes),
-        canNavigateBack = canNavigateBack,
+        canNavigateUp = canNavigateUp,
         navigateUp = onNavigateUp
       )
     }

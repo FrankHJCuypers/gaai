@@ -24,6 +24,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import be.cuypers_ghys.gaai.ui.device.BadgeListDestination
+import be.cuypers_ghys.gaai.ui.device.BadgeListScreen
 import be.cuypers_ghys.gaai.ui.device.DeviceDetailsDestination
 import be.cuypers_ghys.gaai.ui.device.DeviceDetailsScreen
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryDestination
@@ -81,11 +83,28 @@ fun GaaiNavHost(
     ) {
       Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} is calling DeviceDetailsScreen()")
       DeviceDetailsScreen(
-        navigateBack = { navController.popBackStack() },
-        onNavigateUp = { navController.navigateUp() }
+        onNavigateUp = { navController.navigateUp() },
+        navigateToBadgeList = {
+          navController.navigate("${BadgeListDestination.route}/${it}")
+        }
+
       )
       Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} has exited DeviceDetailScreen()")
     }
+
+    composable(
+      route = BadgeListDestination.routeWithArgs,
+      arguments = listOf(navArgument(DeviceDetailsDestination.DEVICE_ID_ARG) {
+        type = NavType.IntType
+      })
+    ) {
+      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} is calling DeviceDetailsScreen()")
+      BadgeListScreen(
+        onNavigateUp = { navController.navigateUp() },
+      )
+      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} has exited DeviceDetailScreen()")
+    }
+
   }
 
   Log.d(TAG, "Exited GaaiNavHost with navController = $navController")

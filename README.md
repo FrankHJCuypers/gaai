@@ -58,12 +58,12 @@ A bird name was chosen.
 - Allows to control the *Nexxtender Home*: start and stop the charger in ECO or MAX mode,
   sync the time with the mobile phone.
 - Allows to configure the *Nexxtender Home*: default charging mode, max grid and max device current, off-peak hours.
+- Management of badges (add, delete).
 - Remembers the PN and SN of multiple devices.
 
 The following features are **not** available:
 
 - Synchronization with the www.Nexxtmove.me website from Diego.
-- Management of badges (add, delete).
 - Download of Events, Metrics, charging information for billing, CDR, CCDT, ...
 - Firmware upload.
 
@@ -436,6 +436,43 @@ It is not supported by the *Nexxtender Mobile*.
 ![Loader Card](docs/images/LoaderCard.png)
 
 Click on a button and the *Nexxtender Home* immediately switches to the corresponding state.
+
+### Badges
+
+The Badges card allows to go to the [Badge list](#badge-list) screen.
+
+![Badges Card](docs/images/BadgesCard.png)
+
+Click on the button to go to the [Badge list](#badge-list) screen.
+
+## Badge list
+
+This screen shows the list of RF badges registered by the charger.
+Gaai does not keep a database of registered badges; it only shows the live list as known by the charger.
+If there are no badges registered yet, the screen will look like:
+
+![Empty Badge List](docs/images/BadgeListEmpty.png)
+
+If there are already badges registered, the screen will show them:
+
+![Example Badge List](docs/images/BadgeListThree.png)
+
+Each row shows 1 registered badge.
+Each badge has an [ISO/IEC 14443-3](https://en.wikipedia.org/wiki/ISO/IEC_14443) UID number that can either be 4,
+7 or 10 bytes in length.
+Each badge also has a *Charge Type* that indicates if this badge will start charging in MAX mode or DEFAULT mode.
+The BLE protocol with the charger does unfortunately not report this *Charge Type*,
+so Gaai will report them as UNKNOWN.
+
+In this screen you can
+
+- Register another badge by clicking either the "+ DEFAULT" or "+ MAX" button at the bottom right to register the badge
+  with the corresponding *Charge Type*.
+  A message will be shown to hold the new badge against the charger.
+  The charger will register the new badge and Gaai automatically updates its list of registered badges.
+  -Remove a device by swiping the card entry that corresponds with the badge to the right.
+
+Make sure that you are close to the *Nexxtender* charger and that no other device is connected with it over BLE.
 
 # Links
 

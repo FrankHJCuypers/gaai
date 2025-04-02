@@ -116,52 +116,82 @@ fun HomeScreen(
 ) {
   Log.d(TAG, "Entered HomeScreen()")
 
-  val coroutineScope = rememberCoroutineScope()
   val homeUiState by viewModel.homeUiState.collectAsState()
-  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
   RequireBluetooth {
-    Scaffold(
-      modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-      topBar = {
-        GaaiTopAppBar(
-          title = stringResource(HomeDestination.titleRes) + " " + BuildConfig.VERSION_NAME,
-          canNavigateBack = false,
-          scrollBehavior = scrollBehavior
-        )
-      },
-      floatingActionButton = {
-        FloatingActionButton(
-          onClick = navigateToDeviceEntry,
-          shape = MaterialTheme.shapes.medium,
-          modifier = Modifier
-            .padding(
-              end = WindowInsets.safeDrawing.asPaddingValues()
-                .calculateEndPadding(LocalLayoutDirection.current)
-            )
-        ) {
-          Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = stringResource(R.string.device_entry_title)
+    HomeScreenNoViewModel(
+      navigateToDeviceEntry, navigateToDeviceDetails, viewModel::removeDevice, homeUiState, modifier
+    )
+  }
+}
+
+/**
+ * Implements the screens, including app bars, for displaying all known Nexxtender charger devices,
+ * including the case there are none yet, connect to them, delete them,
+ * and allows to add new ones based on their SN and PN and to connect to it.
+ * @param navigateToDeviceEntry Function to be called when [HomeScreen] wants to add a new device.
+ * @param navigateToDeviceDetails Function to be called when [HomeScreen] wants to connect to a known device and show
+ *  its details.
+ * @param removeDevice Function to be called when [HomeScreen] wants to remove a known device.
+ * @param homeUiState
+ * @param modifier The [Modifier] to be applied to this HomeScreen.
+ *
+ * @author Frank HJ Cuypers
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenNoViewModel(
+  navigateToDeviceEntry: () -> Unit,
+  navigateToDeviceDetails: (Int) -> Unit,
+  removeDevice: suspend (Device) -> Unit,
+  homeUiState: HomeUiState,
+  modifier: Modifier = Modifier,
+) {
+  Log.d(TAG, "Entered HomeScreenNoViewModel()")
+
+  val coroutineScope = rememberCoroutineScope()
+  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+  Scaffold(
+    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    topBar = {
+      GaaiTopAppBar(
+        title = stringResource(HomeDestination.titleRes) + " " + BuildConfig.VERSION_NAME,
+        canNavigateUp = false,
+        scrollBehavior = scrollBehavior
+      )
+    },
+    floatingActionButton = {
+      FloatingActionButton(
+        onClick = navigateToDeviceEntry,
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier
+          .padding(
+            end = WindowInsets.safeDrawing.asPaddingValues()
+              .calculateEndPadding(LocalLayoutDirection.current)
           )
+      ) {
+        Icon(
+          imageVector = Icons.Default.Add,
+          contentDescription = stringResource(R.string.device_entry_title)
+        )
+      }
+    },
+  ) { innerPadding ->
+    Log.d(TAG, "Entering HomeBody)")
+    HomeBody(
+      deviceList = homeUiState.deviceList,
+      onDeviceClick = navigateToDeviceDetails,
+      onDeviceRemove = {
+        coroutineScope.launch {
+          removeDevice(it)
         }
       },
-    ) { innerPadding ->
-      Log.d(TAG, "Entering HomeBody)")
-      HomeBody(
-        deviceList = homeUiState.deviceList,
-        onDeviceClick = navigateToDeviceDetails,
-        onDeviceRemove = {
-          coroutineScope.launch {
-            viewModel.removeDevice(it)
-          }
-        },
-        modifier = modifier.fillMaxSize(),
-        contentPadding = innerPadding,
-      )
-    }
+      modifier = modifier.fillMaxSize(),
+      contentPadding = innerPadding,
+    )
   }
-  Log.d(TAG, "Exiting HomeScreen()")
+  Log.d(TAG, "Exiting HomeScreenNoViewModel()")
 }
 
 /**
@@ -431,6 +461,23 @@ fun HomeBodyPreview() {
         Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
         Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
       ), onDeviceClick = {}, onDeviceRemove = {})
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenNoViewModelPreview() {
+  GaaiTheme {
+    HomeScreenNoViewModel(
+      navigateToDeviceEntry = {}, navigateToDeviceDetails = {}, removeDevice = {}, homeUiState =
+        HomeUiState(
+          listOf(
+            Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
+            Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
+            Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+          )
+        )
+    )
   }
 }
 

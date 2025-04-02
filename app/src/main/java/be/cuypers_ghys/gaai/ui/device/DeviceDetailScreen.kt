@@ -113,9 +113,9 @@ object DeviceDetailsDestination : NavigationDestination {
 /**
  * Implements the complete screen for displaying all the information received from the Nexxtender charger,
  * including app bars.
- * @param navigateBack Function to be called when [DeviceDetailsScreen] wants to navigate back.
  * @param onNavigateUp Function to be called when [DeviceDetailsScreen] wants to navigate up.
- * @param canNavigateBack Is the [DeviceDetailsScreen] allowed to navigate back?
+ * @param navigateToBadgeList Function to be called when [DeviceDetailsScreen] wants to show list of badges.
+ * @param canNavigateUp Is the [DeviceDetailsScreen] allowed to navigate back?
  * @param viewModel The [DeviceDetailsViewModel] to be associated with this [DeviceDetailsScreen].
  *
  * @author Frank HJ Cuypers
@@ -124,25 +124,25 @@ object DeviceDetailsDestination : NavigationDestination {
 @Composable
 fun DeviceDetailsScreen(
   // TODO: remove unused navigateBack? What is difference with onNavigateUp? Is correct one used?
-  @Suppress("unused")
-  navigateBack: () -> Unit,
   onNavigateUp: () -> Unit,
-  canNavigateBack: Boolean = true,
+  navigateToBadgeList: (Int) -> Unit,
+  canNavigateUp: Boolean = true,
   viewModel: DeviceDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
   Log.d(TAG, "Entering DeviceDetailsScreen")
-  val coroutineScope = rememberCoroutineScope()
+  rememberCoroutineScope()
   Scaffold(
     topBar = {
       GaaiTopAppBar(
         title = stringResource(DeviceDetailsDestination.titleRes),
-        canNavigateBack = canNavigateBack,
-        navigateUp = { viewModel.navigateBack(onNavigateUp) }
+        canNavigateUp = canNavigateUp,
+        navigateUp = { viewModel.navigateUp(onNavigateUp) }
       )
     }
   ) { innerPadding ->
     Log.d(TAG, "Before Entering DeviceDetailsBody")
 
+    val deviceId = viewModel.deviceId
     val state by viewModel.state.collectAsStateWithLifecycle()
     val device by viewModel.device.collectAsStateWithLifecycle()
 
@@ -159,6 +159,7 @@ fun DeviceDetailsScreen(
       onTimeGet = viewModel::sendTimeOperationGetTime,
       onTimeSync = viewModel::sendTimeOperationSyncTime,
       onLoaderOperation = viewModel::sendLoaderOperation,
+      navigateToBadgeList = { navigateToBadgeList(deviceId) },
       modifier = Modifier
         .padding(
           start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
@@ -195,6 +196,7 @@ fun DeviceDetailsScreen(
  * @param onTimeSync Function to be called when [DeviceDetailsBody] wants to sync the
  *  device's [TimeData.time] with the current time on the mobile phone.
  * @param onLoaderOperation Function to be called when [DeviceDetailsBody] wants to perform a loader operation.
+ * @param navigateToBadgeList Function to be called when [DeviceDetailsBody] wants to show list of badges.
  * @param modifier The [Modifier] to be applied to this [DeviceDetailsBody].
  *
  * @author Frank HJ Cuypers
@@ -213,6 +215,7 @@ fun DeviceDetailsBody(
   onTimeGet: () -> Unit,
   onTimeSync: () -> Unit,
   onLoaderOperation: (Int) -> Unit,
+  navigateToBadgeList: () -> Unit,
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entering DeviceDetailsBody, device = $device")
@@ -289,6 +292,12 @@ fun DeviceDetailsBody(
 
       GaaiLoaderCard(
         onLoaderOperation = onLoaderOperation,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
+
+      GaaiBadgesCard(
+        navigateToBadgeList = navigateToBadgeList,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
@@ -1059,11 +1068,10 @@ internal fun GaaiConfigDataCard(
           modifier = modifier.fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically,
         ) {
-          var title = when (configData.configVersion) {
+          val title = when (configData.configVersion) {
             ConfigVersion.CONFIG_1_0 -> " 1.0"
             ConfigVersion.CONFIG_1_1 -> " 1.1"
             ConfigVersion.CONFIG_CBOR -> " CBOR"
-            else -> stringResource(R.string.unknown)
           }
           Text(
             text = stringResource(R.string.configuration) + title,
@@ -1077,9 +1085,8 @@ internal fun GaaiConfigDataCard(
           verticalAlignment = Alignment.CenterVertically,
         ) {
           Text(
-            text = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.charge_mode) else stringResource(
-              R.string.mode
-            ),
+            text = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.charge_mode)
+            else stringResource(R.string.mode),
             style = MaterialTheme.typography.titleMedium,
           )
           Spacer(Modifier.weight(1f))
@@ -1437,6 +1444,59 @@ internal fun GaaiLoaderCard(
           }
         }
 
+      }
+    }
+    Log.d(TAG, "Exiting GaaiLoaderCard")
+  }
+}
+
+/**
+ * Implements a [Card] allowing to go to the list of [Badge]s.
+ * @param navigateToBadgeList Function to be called when [DeviceDetailsScreen] wants to show list of badges.
+ * @param modifier the [Modifier] to be applied to this [GaaiLoaderCard]
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+internal fun GaaiBadgesCard(
+  navigateToBadgeList: () -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Log.d(TAG, "Entered GaaiBadgesCard ")
+  Card(
+    modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+  ) {
+    Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .weight(1f)
+      ) {
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.badges),
+            style = MaterialTheme.typography.titleLarge,
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Button(onClick = {
+            Log.d(TAG, "GaaiBadgesCard Badges")
+            navigateToBadgeList()
+          }
+          ) {
+            Text(stringResource(R.string.badges))
+          }
+        }
       }
     }
     Log.d(TAG, "Exiting GaaiLoaderCard")
@@ -1961,7 +2021,8 @@ private fun DeviceDetailsHomePreview() {
       onModeChange = {},
       onTimeGet = {},
       onTimeSync = {},
-      onLoaderOperation = {}
+      onLoaderOperation = {},
+      navigateToBadgeList = { }
     )
   }
 }
@@ -2016,7 +2077,8 @@ private fun DeviceDetailsMobilePreview() {
       onModeChange = {},
       onTimeGet = {},
       onTimeSync = {},
-      onLoaderOperation = {}
+      onLoaderOperation = {},
+      navigateToBadgeList = { }
     )
   }
 }
@@ -2317,3 +2379,16 @@ private fun GaaiLoaderCardPreview() {
     )
   }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun GaaiBadgesCardPreview() {
+  GaaiTheme {
+    GaaiBadgesCard(
+      navigateToBadgeList = {},
+      modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small)),
+    )
+  }
+}
+

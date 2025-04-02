@@ -22,7 +22,7 @@ package be.cuypers_ghys.gaai.data
  * @author Frank HJ Cuypers
  */
 // TODO: Make it a an enum like [Discriminator] and move the parsing logic to [ChargingAdvancedDataParser]
-// like for the other Parsers
+//  like for the other Parsers
 // TODO: create Junit tests for this class.
 data class AuthorizationStatus(val authStatus: Byte) {
 

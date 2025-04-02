@@ -53,7 +53,7 @@ fun GaaiApp(navController: NavHostController = rememberNavController()) {
 @Composable
 fun GaaiTopAppBar(
   title: String,
-  canNavigateBack: Boolean,
+  canNavigateUp: Boolean,
   modifier: Modifier = Modifier,
   scrollBehavior: TopAppBarScrollBehavior? = null,
   navigateUp: () -> Unit = {}
@@ -63,11 +63,11 @@ fun GaaiTopAppBar(
     modifier = modifier,
     scrollBehavior = scrollBehavior,
     navigationIcon = {
-      if (canNavigateBack) {
+      if (canNavigateUp) {
         IconButton(onClick = navigateUp) {
           Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(string.back_button)
+            contentDescription = stringResource(string.up)
           )
         }
       }
@@ -83,7 +83,7 @@ fun GaaiTopAppBarPreview() {
   GaaiTheme {
     GaaiTopAppBar(
       title = "Gaai",
-      canNavigateBack = true,
+      canNavigateUp = true,
       scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     )
   }

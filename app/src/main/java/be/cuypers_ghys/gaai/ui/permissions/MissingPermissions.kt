@@ -158,8 +158,8 @@ class DummyPermissionState(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequireBluetooth(
-  viewModel: MissingPermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory),
   modifier: Modifier = Modifier,
+  viewModel: MissingPermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory),
   content: @Composable () -> Unit
 ) {
   Log.d(TAG, "Entered RequireBluetooth()")

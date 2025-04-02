@@ -112,7 +112,7 @@ class DeviceDetailsViewModel(
   /**
    * The id of the [Device] for which to build a state.
    */
-  private val deviceId: Int = checkNotNull(savedStateHandle[DeviceDetailsDestination.DEVICE_ID_ARG])
+  val deviceId: Int = checkNotNull(savedStateHandle[DeviceDetailsDestination.DEVICE_ID_ARG])
 
   /**
    * The [Device] corresponding with [deviceId].
@@ -456,13 +456,13 @@ class DeviceDetailsViewModel(
   }
 
   /**
-   * Disconnects the [client] and executes [navigateBack].
-   * @param navigateBack Function called when this view model wants to navigate back to the previous view.
+   * Disconnects the [client] and executes [navigateUp].
+   * @param navigateUp Function called when this view model wants to navigate up to the previous view.
    */
-  fun navigateBack(navigateBack: () -> Unit) {
+  fun navigateUp(navigateUp: () -> Unit) {
     viewModelScope.launch {
       client?.disconnect()
-      navigateBack()
+      navigateUp()
     }
   }
 

@@ -47,26 +47,26 @@ data class Device(
    * The Product Number (PN) as printed on the bottom of the device.
    * pn+[sn]  must be unique.
    */
-  val pn: String,
+  val pn: String = "",
 
   /**
    * The Serial Number (SN) as printed on the bottom of the device.
    * [pn]+sn  must be unique.
    */
-  val sn: String,
+  val sn: String = "",
 
   /**
    * The device's MAC as found after scanning for the [serviceDataValue].
    * The MAC must be unique.
    */
-  val mac: String,
+  val mac: String = "",
 
   /**
    * The value that this device advertises in the
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE].
    * Supposedly also unique.
    */
-  val serviceDataValue: Int,
+  val serviceDataValue: Int = 0,
 
   /**
    * The charger type, based on the value that this device advertises in the

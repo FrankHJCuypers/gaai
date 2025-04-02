@@ -105,4 +105,13 @@
     <string name="i_level_1">I Level 1</string>
     <string name="i_evse_max">I EVSE Max</string>
     <string name="i_evse_min">I EVSE Min</string>
+    <string name="badge_list">Badge list</string>
+    <string name="oops_no_badges_registered_yet_tap_to_add">Oops! No badges registered yet. Tap + to add</string>
+    <string name="badge_deleted">Badge deleted</string>
+    <string name="badges">Badges</string>
+    <string name="up">Up</string>
+    <string name="present_badge_to_add_in_default_mode">Present badge to add in default mode</string>
+    <string name="present_badge_to_add_in_max_mode">Present badge to add in MAX mode</string>
+    <string name="badge_already_registered">Badge already registered</string>
+    <string name="badge_added">Badge added</string>
 </resources>
