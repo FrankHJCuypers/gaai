@@ -48,7 +48,7 @@ class MissingPermissionsViewModel : ViewModel() {
   //  the MissingPermissions screen.
   //  Can this be streamlined?
   var bleUiState by mutableStateOf(BleUiState())
-    private set
+
 
   /**
    * Updates the [bleUiState] with the value provided in the argument.

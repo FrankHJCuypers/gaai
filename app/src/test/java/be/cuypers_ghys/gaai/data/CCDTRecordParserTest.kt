@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.lang.String
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.stream.Stream
@@ -73,7 +72,6 @@ class CCDTRecordParserTest {
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_CCDTRecordIncorrectCRC16() {
     assertNull(CCDTRecordParser.parse("1234567890ABCDEF1234567890AB6969".hexToByteArray()))

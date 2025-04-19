@@ -106,7 +106,6 @@ object HomeDestination : NavigationDestination {
  *
  * @author Frank HJ Cuypers
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
   navigateToDeviceEntry: () -> Unit,

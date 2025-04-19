@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.lang.String
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.stream.Stream
@@ -35,18 +34,18 @@ class CDRRecordParserTest {
   @ParameterizedTest
   @MethodSource("usedCombinationsProvider")
   fun parse_VerifyResultsFromKnownTestVectors(
-    cdrRecord: ByteArray,
+    cdrRecordByteArray: ByteArray,
     expectedSessionStartTime: Long,
     expectedSessionStartEnergy: Long,
     expectedSessionStopTime: Long,
     expectedSessionStopEnergy: Long,
   ) {
-    val cdrRecord = CDRRecordParser.parse(cdrRecord)
+    val cdrRecord = CDRRecordParser.parse(cdrRecordByteArray)
     assertNotNull(cdrRecord)
     assertEquals(expectedSessionStartTime.toUInt(), cdrRecord!!.sessionStartTime)
-    assertEquals(expectedSessionStartEnergy.toUInt(), cdrRecord!!.sessionStartEnergy)
-    assertEquals(expectedSessionStopTime.toUInt(), cdrRecord!!.sessionStopTime)
-    assertEquals(expectedSessionStopEnergy.toUInt(), cdrRecord!!.sessionStopEnergy)
+    assertEquals(expectedSessionStartEnergy.toUInt(), cdrRecord.sessionStartEnergy)
+    assertEquals(expectedSessionStopTime.toUInt(), cdrRecord.sessionStopTime)
+    assertEquals(expectedSessionStopEnergy.toUInt(), cdrRecord.sessionStopEnergy)
 
     val expectedSessionStartTimeDate = Date(expectedSessionStartTime * 1000)
     val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SS")
@@ -70,24 +69,36 @@ class CDRRecordParserTest {
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_CDRRecordLengthToShort() {
-    assertNull(CDRRecordParser.parse("0000000019c38f67c8f82d000000000000000000689790671c8e2e0060005e".hexToByteArray()))
+    assertNull(
+      CDRRecordParser.parse(
+        "0000000019c38f67c8f82d000000000000000000689790671c8e2e0060005e"
+          .hexToByteArray()
+      )
+    )
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_CDRRecordLengthToLong() {
-    assertNull(CDRRecordParser.parse("0000000019c38f67c8f82d000000000000000000689790671c8e2e0060005ec3EF".hexToByteArray()))
+    assertNull(
+      CDRRecordParser.parse(
+        "0000000019c38f67c8f82d000000000000000000689790671c8e2e0060005ec3EF"
+          .hexToByteArray()
+      )
+    )
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_CDRRecordIncorrectCRC16() {
-    assertNull(CDRRecordParser.parse("0000000019c38f67c8f82d000000000000000000689790671c8e2e0060006969".hexToByteArray()))
+    assertNull(
+      CDRRecordParser.parse(
+        "0000000019c38f67c8f82d000000000000000000689790671c8e2e0060006969"
+          .hexToByteArray()
+      )
+    )
   }
 
   companion object {

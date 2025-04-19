@@ -501,7 +501,7 @@ class DeviceDetailsViewModel(
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
-   * characteristic, changing the [maxGrid].
+   * characteristic, changing the [ConfigData.maxGrid].
    * @param maxGrid New values for [ConfigData.maxGrid].
    */
   fun sendConfigOperationSetMaxGrid(maxGrid: UByte) {
@@ -516,7 +516,7 @@ class DeviceDetailsViewModel(
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
-   * characteristic, changing the [maxDevice].
+   * characteristic, changing the [ConfigData.maxDevice].
    * @param maxDevice New values for [ConfigData.maxDevice].
    */
   fun sendConfigOperationSetMaxDevice(maxDevice: UByte) {
@@ -531,7 +531,7 @@ class DeviceDetailsViewModel(
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
-   * characteristic, changing the [maxDevice].
+   * characteristic, changing the [ConfigData.safe].
    * @param safe New values for [ConfigData.safe].
    */
   fun sendConfigOperationSetSafe(safe: UByte) {
@@ -546,7 +546,7 @@ class DeviceDetailsViewModel(
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
-   * characteristic, changing the [mode].
+   * characteristic, changing the [ConfigData.mode].
    * @param mode New values for [ConfigData.mode].
    */
   fun sendConfigOperationSetMode(mode: Mode) {
@@ -561,7 +561,7 @@ class DeviceDetailsViewModel(
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
-   * characteristic, changing the [iCapacity].
+   * characteristic, changing the [ConfigData.iCapacity].
    * @param iCapacity New values for [ConfigData.iCapacity].
    */
   fun sendConfigOperationSetICapacity(iCapacity: UByte) {

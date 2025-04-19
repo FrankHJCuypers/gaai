@@ -52,7 +52,7 @@ class TestCRC16MODBUS {
      * See [Online CRC-8 CRC-16 CRC-32 Calculator](https://crccalc.com/)
      * @return Stream of arguments to test
      */
-    @Suppress("SpellCheckingInspection", "unused")
+    @Suppress("SpellCheckingInspection")
     @JvmStatic
     fun usedCombinationsProvider(): Stream<Arguments> {
       return Stream.of(

@@ -158,7 +158,7 @@ As long as you use the same mobile phone to connect to the Nexxtender charger, b
 there is no issue.
 But when you need to move to another phone, you need the PIN value.
 If you don't have the PIN code, you can provide the *Gaai* GitHub repository owner with the PN and SN values
-as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-charger-device)
+as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-device)
 and he will calculate it for you.
 
 ## First start
@@ -254,7 +254,7 @@ These contain general BLE information, not specific for a *Nexxtender* charger.
 
 The next cards contain specific *Nexxtender* charger information as reported by the device.
 The *Nexxtender Home* supports all cards.
-The *Nexxtender Mobile* only supportsthe [Basic Data Card](#basic-data-card).
+The *Nexxtender Mobile* only supports the [Basic Data](#basic-data) card.
 
 ### Basic Data
 
@@ -310,14 +310,14 @@ It is not supported by the *Nexxtender Mobile*.
 
 ![Advanced Data Card](docs/images/AdvancedDataCard.png)
 
-| Field                | Description                                                                                                            |
-|----------------------|------------------------------------------------------------------------------------------------------------------------|
-| Timestamp            | Current time                                                                                                           |
-| I Available          | Available current                                                                                                      |
-| Grid Power           | Total power consumption from the grid                                                                                  |
-| Car Power            | Total power consumption by the car                                                                                     |
-| Authorization Status | Possible states: UNAUTHORIZED, AUTHORIZED DEFAULT, UTHORIZED ECO, AUTHORIZED MAX, CHARGE STOPPED IN APP, CHARGE PAUSED |
-| Error Code           | Error code returned by the Nexxtender Home                                                                             |
+| Field                | Description                                                                                                             |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------|
+| Timestamp            | Current time                                                                                                            |
+| I Available          | Available current                                                                                                       |
+| Grid Power           | Total power consumption from the grid                                                                                   |
+| Car Power            | Total power consumption by the car                                                                                      |
+| Authorization Status | Possible states: UNAUTHORIZED, AUTHORIZED DEFAULT, AUTHORIZED ECO, AUTHORIZED MAX, CHARGE STOPPED IN APP, CHARGE PAUSED |
+| Error Code           | Error code returned by the Nexxtender Home                                                                              |
 
 ### Configuration
 
@@ -530,7 +530,7 @@ The developer
   be very careful as there is no guarantee that it will not interfere.
 
 *Gaai* is only tested on a the phone versus Nexxtender Home/Mobile versions as indicated in section
-[Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-home-firmware-versions)
+[Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-homemobile-firmware-versions)
 
 At this point *Gaai* should be considered an alpha app, for trials only.
 It is currently not tested on sufficient combinations,

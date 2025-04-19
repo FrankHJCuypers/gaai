@@ -26,7 +26,8 @@ import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 object BadgeParser {
   /**
    * Parses a byte array with the contents of the [Badge Record] into an [Badge].
-   * @param badgeData Byte array with the value read from the Generic Data Characteristic for badge ADD and LIST operations.
+   * @param badgeData Byte array with the value read from the Generic Data Characteristic for badge ADD and LIST
+   *      operations.
    * @return A [Badge] holding the parsed result.
    *      Null if *ccdtRecord* is not 16 bytes long or the CRC16 is not correct.
    */
@@ -46,10 +47,10 @@ object BadgeParser {
    * @return A [DataByteArray] holding the length of teh UUID and teh UUID..
    */
   fun getLengthUUID(badge: Badge): DataByteArray {
-    val retval = ByteArray(badge.uuid.size + 1)
-    retval[0] = badge.uuid.size.toByte()
-    badge.uuid.copyInto(retval, 1)
-    return DataByteArray(retval)
+    val retVal = ByteArray(badge.uuid.size + 1)
+    retVal[0] = badge.uuid.size.toByte()
+    badge.uuid.copyInto(retVal, 1)
+    return DataByteArray(retVal)
   }
 
 }

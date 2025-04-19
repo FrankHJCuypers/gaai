@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.lang.String
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.stream.Stream
@@ -36,10 +35,10 @@ class EventRecordParserTest {
   @ParameterizedTest
   @MethodSource("usedCombinationsProvider")
   fun parse_VerifyResultsFromKnownTestVectors(
-    eventRecord: ByteArray,
+    eventRecordByteArray: ByteArray,
     expectedTimestamp: Long
   ) {
-    val eventRecord = EventRecordParser.parse(eventRecord)
+    val eventRecord = EventRecordParser.parse(eventRecordByteArray)
     assertNotNull(eventRecord)
     assertEquals(expectedTimestamp.toUInt(), eventRecord!!.timestamp)
 
@@ -59,21 +58,18 @@ class EventRecordParserTest {
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_EventRecordLengthToShort() {
     assertNull(EventRecordParser.parse("c0518667060108010003000000000000000010".hexToByteArray()))
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_EventRecordLengthToLong() {
     assertNull(EventRecordParser.parse("c05186670601080100030000000000000000102569".hexToByteArray()))
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_EventRecordIncorrectCRC16() {
     assertNull(EventRecordParser.parse("c051866706010801000300000000000000006969".hexToByteArray()))

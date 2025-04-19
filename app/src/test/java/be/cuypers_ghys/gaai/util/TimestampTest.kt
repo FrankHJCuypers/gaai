@@ -47,7 +47,6 @@ class TimestampTest {
      * @return Stream of arguments to test
      */
     @JvmStatic
-    @Suppress("unused")
     fun usedCombinationsProvider(): Stream<Arguments> {
       return Stream.of(
         Arguments.of(1, "1970-01-01 01:00:01"),

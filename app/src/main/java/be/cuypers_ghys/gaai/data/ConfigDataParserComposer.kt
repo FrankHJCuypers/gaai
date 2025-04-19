@@ -14,8 +14,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("MemberVisibilityCanBePrivate")
-
 package be.cuypers_ghys.gaai.data
 
 import android.util.Log
@@ -34,7 +32,6 @@ import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
 private const val TAG = "ConfigDataParser"
 
 /** Enumerates all CONFIG_CBOR keys. s*/
-@Suppress("SpellCheckingInspection")
 enum class CborKey(val keyNum: Int) {
   ChargeMode(1),
   ModbusSlaveAddress(2),
@@ -62,7 +59,6 @@ enum class CborKey(val keyNum: Int) {
  *
  * @author Frank HJ Cuypers
  */
-@Suppress("MemberVisibilityCanBePrivate")
 object ConfigDataParserComposer {
   /**
    * Parses a byte array with the contents of the Config Get operation in Config_1_0 format into an
@@ -224,7 +220,7 @@ object ConfigDataParserComposer {
 
     try {
       val cborMap = CborMap.createFromCborByteArray(configGetData, 0, configGetData.size - 2)
-      val subMap0 = cborMap.get(CborInteger.create(0)) ?: return null
+      val subMap0 = cborMap.get(CborInteger.create(0)) ?: return null  // never used
       subMap1 = cborMap.get(CborInteger.create(1)) ?: return null
       if (subMap1 !is CborMap) return null
     } catch (e: CborParseException) {
@@ -305,7 +301,6 @@ object ConfigDataParserComposer {
 
     data[offset++] = configGetData.maxGrid.toByte()
 
-    var maxDevice = 0.toUByte()
     if (configGetData.configVersion == ConfigVersion.CONFIG_1_1) {
       data[offset++] = configGetData.maxDevice.toByte()
     }

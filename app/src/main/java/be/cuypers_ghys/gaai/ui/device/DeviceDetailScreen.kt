@@ -1118,7 +1118,8 @@ internal fun GaaiConfigDataCard(
         }
 
         AmpereRow(
-          name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_max) else stringResource(
+          name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_max)
+          else stringResource(
             R.string.maxGrid
           ),
           value = configData.maxGrid,
@@ -1135,7 +1136,8 @@ internal fun GaaiConfigDataCard(
         )
 
         AmpereRow(
-          name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_level_1) else stringResource(
+          name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_level_1)
+          else stringResource(
             R.string.safe
           ),
           value = configData.safe,
@@ -1181,7 +1183,8 @@ internal fun GaaiConfigDataCard(
 
         if (configData.configVersion != ConfigVersion.CONFIG_1_0) {
           AmpereRow(
-            name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_evse_max) else stringResource(
+            name = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) stringResource(R.string.i_evse_max)
+            else stringResource(
               R.string.maxDevice
             ),
             value = configData.maxDevice,
@@ -1206,7 +1209,8 @@ internal fun GaaiConfigDataCard(
             verticalAlignment = Alignment.CenterVertically,
           ) {
             Text(
-              text = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) "Phase Seq (Network Type)" else stringResource(
+              text = if (configData.configVersion == ConfigVersion.CONFIG_CBOR) "Phase Seq (Network Type)"
+              else stringResource(
                 R.string.networkType
               ),
               style = MaterialTheme.typography.titleMedium,

@@ -72,7 +72,7 @@ class TestCRC8CCITT {
      * @return Stream of arguments to test
      */
     @JvmStatic
-    @Suppress("SpellCheckingInspection", "unused")
+    @Suppress("SpellCheckingInspection")
     fun usedCombinationsProvider(): Stream<Arguments> {
       return Stream.of(
         Arguments.of("010203", 0x48),

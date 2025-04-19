@@ -41,7 +41,6 @@ class TimeDataParserComposerTest {
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_TimeDataLengthToShort() {
     assertNull(TimeDataParserComposer.parse("123456".hexToByteArray()))
@@ -61,7 +60,6 @@ class TimeDataParserComposerTest {
      */
     @OptIn(ExperimentalStdlibApi::class)
     @JvmStatic
-    @Suppress("SpellCheckingInspection")
     fun usedCombinationsProvider(): Stream<Arguments> {
       return Stream.of(
         Arguments.of(

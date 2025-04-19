@@ -87,7 +87,6 @@ class CRC8CCITT {
    * @param data The integer to add.
    * @return The current value of the CRC, unsigned.
    */
-  @Suppress("unused")
   fun update(data: Int): Int {
     // Add in Little Endian
     update(data.toByte())
@@ -107,7 +106,7 @@ class CRC8CCITT {
      * Returns the size in bytes of the CRC value.
      * @return The size in bytes.
      */
-    @Suppress("unused", "SameReturnValue")
+    @Suppress("SameReturnValue")
     fun size(): Int {
       return 1
     }

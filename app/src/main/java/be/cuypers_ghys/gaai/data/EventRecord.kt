@@ -23,6 +23,7 @@ package be.cuypers_ghys.gaai.data
  *
  * @author Frank HJ Cuypers
  */
+@Suppress("ArrayInDataClass")
 data class EventRecord(
   /** Event time in [Unix Time](https://en.wikipedia.org/wiki/Unix_time). */
   val timestamp: UInt = 0u,

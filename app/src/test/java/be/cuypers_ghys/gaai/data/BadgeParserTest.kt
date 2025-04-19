@@ -26,37 +26,33 @@ import org.junit.jupiter.api.Test
  */
 class BadgeParserTest {
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_BadgeDataUUIDLength4() {
     val badge = BadgeParser.parse("0411223344".hexToByteArray())
     assertNotNull(badge)
     assertArrayEquals(badge?.uuid, "11223344".hexToByteArray())
-    assertEquals(badge?.chargetype, ChargeType.UNKNOWN)
+    assertEquals(badge?.chargeType, ChargeType.UNKNOWN)
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_BadgeDataUUIDLength7() {
     val badge = BadgeParser.parse("0711223344556677".hexToByteArray())
     assertNotNull(badge)
     assertArrayEquals(badge?.uuid, "11223344556677".hexToByteArray())
-    assertEquals(badge?.chargetype, ChargeType.UNKNOWN)
+    assertEquals(badge?.chargeType, ChargeType.UNKNOWN)
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_BadgeDataUUIDLength10() {
     val badge = BadgeParser.parse("0A112233445566778899AA".hexToByteArray())
     assertNotNull(badge)
     assertArrayEquals(badge?.uuid, "112233445566778899AA".hexToByteArray())
-    assertEquals(badge?.chargetype, ChargeType.UNKNOWN)
+    assertEquals(badge?.chargeType, ChargeType.UNKNOWN)
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parse_BadgeDataUUIDLengthIncorrect() {
     assertNull(BadgeParser.parse("08112233445566778899AA".hexToByteArray()))

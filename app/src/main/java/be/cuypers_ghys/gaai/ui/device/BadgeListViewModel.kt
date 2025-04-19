@@ -14,6 +14,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("unused")
+
 package be.cuypers_ghys.gaai.ui.device
 
 import android.annotation.SuppressLint
@@ -100,7 +102,7 @@ class BadgeListManager : IBadgeListManager {
   /**
    * The registered listeners.
    */
-  val listeners: MutableList<IBadgeListListener> = mutableListOf()
+  private val listeners: MutableList<IBadgeListListener> = mutableListOf()
 
   /**
    * Register a new [listener].
@@ -121,7 +123,7 @@ class BadgeListManager : IBadgeListManager {
   }
 
   /**
-   * Inoform all registered listeners of the new [badgeList].
+   * Inform all registered listeners of the new [badgeList].
    * @param badgeList
    */
   fun emitNewBadgeList(badgeList: List<Badge>) {
@@ -142,6 +144,7 @@ class BadgeListManager : IBadgeListManager {
  *
  * @author Frank HJ Cuypers
  */
+@Suppress("unused")
 class BadgeListViewModel(
   savedStateHandle: SavedStateHandle,
   private val devicesRepository: DevicesRepository,
@@ -168,15 +171,16 @@ class BadgeListViewModel(
   /**
    * Holds current device ui state.
    */
+  @Suppress("unused", "unused", "unused")
   var badgeDeviceUiState by mutableStateOf(BadgeDeviceUiState())
-    private set
+//    private set
 
   /**
    * Updates the [badgeDeviceUiState] with the value provided in the argument.
    * @param device The initial device details from which to compute the state.
    * @param statusId The initial status Id.
    */
-  fun updateBadgeDeviceUiState(device: Device, statusId: Int) {
+  private fun updateBadgeDeviceUiState(device: Device, statusId: Int) {
     badgeDeviceUiState =
       BadgeDeviceUiState(
         device = device, statusId = statusId
@@ -187,7 +191,7 @@ class BadgeListViewModel(
    * Updates the [badgeDeviceUiState] with the value provided in the argument.
    * @param statusId The initial status Id.
    */
-  fun updateBadgeDeviceUiState(statusId: Int) {
+  private fun updateBadgeDeviceUiState(statusId: Int) {
     badgeDeviceUiState = badgeDeviceUiState.copy(statusId = statusId)
   }
 
@@ -212,7 +216,7 @@ class BadgeListViewModel(
    * @param badgeListManager
    * @return a [Flow] of [List] of [Badge]s.
    */
-  fun badgeListFlow(badgeListManager: IBadgeListManager): Flow<List<Badge>> = callbackFlow {
+  private fun badgeListFlow(badgeListManager: IBadgeListManager): Flow<List<Badge>> = callbackFlow {
     val listener = object : IBadgeListListener {
       override fun badgeListChanged(badgeList: List<Badge>) {
         trySend(badgeList)
@@ -261,7 +265,7 @@ class BadgeListViewModel(
 
     //Discover services on the Bluetooth LE Device.
     val services = client.discoverServices()
-    configureGatt(gaaiDevice, services)
+    configureGatt(services)
   }
 
   /**
@@ -270,7 +274,7 @@ class BadgeListViewModel(
    * @param services Entry point for finding services and characteristics.
    */
   @SuppressLint("MissingPermission")
-  private suspend fun configureGatt(gaaiDevice: Device, services: ClientBleGattServices) {
+  private suspend fun configureGatt(services: ClientBleGattServices) {
     Log.d(TAG, "Found the following services: $services")
 
     val nexxtenderGenericService =
@@ -462,7 +466,7 @@ class BadgeListViewModel(
 
   /**
    * Loads the [Device] corresponding with [deviceId] from the database.
-   * @param deviceId The id of the [device] to load.
+   * @param deviceId The id of the [Device] to load.
    */
   private fun getDevice(deviceId: Int) = runBlocking {
     Log.d(TAG, "Getting Device with id $deviceId")

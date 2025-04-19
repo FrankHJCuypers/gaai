@@ -26,12 +26,10 @@ interface NavigationDestination {
   /**
    * Unique name to define the path for a composable.
    */
-  @Suppress("unused")
   val route: String
 
   /**
    * String resource id to that contains title to be displayed for the screen.
    */
-  @Suppress("unused")
   val titleRes: Int
 }

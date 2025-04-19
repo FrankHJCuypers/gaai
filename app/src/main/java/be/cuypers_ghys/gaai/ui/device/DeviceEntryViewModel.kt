@@ -119,7 +119,6 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * Holds current device ui state.
    */
   var deviceUiState by mutableStateOf(DeviceUiState())
-    private set
 
   /**
    * Updates the [deviceUiState] with the value provided in the argument.
@@ -229,8 +228,6 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    */
   private fun filterServiceData(result: BleScanResult): Boolean {
     val retVal = serviceDataFilter.filter(result)
-//        Log.d(TAG,
-//        "Filter uuid: ${serviceDataFilter.uuid}, found uuid ${result.data?.scanRecord?.serviceData}, result = $retVal");
     return retVal
   }
 

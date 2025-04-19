@@ -1,5 +1,3 @@
-@file:Suppress("LongLine", "LongLine")
-
 import org.jetbrains.dokka.DokkaConfiguration.Visibility
 import java.io.FileInputStream
 import java.util.Properties
@@ -87,7 +85,6 @@ android {
   }
 
   // Needed for JUnit5 to work
-  @Suppress("UnstableApiUsage")
   testOptions {
     unitTests.all { it.useJUnitPlatform() }
   }

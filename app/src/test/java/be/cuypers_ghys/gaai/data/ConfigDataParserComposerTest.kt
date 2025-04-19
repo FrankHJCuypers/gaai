@@ -199,18 +199,25 @@ class ConfigDataParserComposerTest {
   @Suppress("SpellCheckingInspection")
   @Test
   fun parseConfig_CBOR_IncorrectCRC16() {
-    assertNull(ConfigDataParserComposer.parseConfig_CBOR("A200A20101020101AB01000412051834060607186909000C19DEBC0D1912F00E1956340F199A781318696E71".hexToByteArray()))
+    assertNull(
+      ConfigDataParserComposer.parseConfig_CBOR(
+        "A200A20101020101AB01000412051834060607186909000C19DEBC0D1912F00E1956340F199A781318696E71".hexToByteArray()
+      )
+    )
   }
 
   @OptIn(ExperimentalStdlibApi::class)
   @Suppress("SpellCheckingInspection")
   @Test
   fun parseConfig_CBOR_FirstTypeNotMapAndIncorrect() {
-    assertNull(ConfigDataParserComposer.parseConfig_CBOR("8200A20101020101AB01060418F00518F00618F007186909030C1977660D1999880E19BBAA0F19DDCC13189606AB".hexToByteArray()))
+    assertNull(
+      ConfigDataParserComposer.parseConfig_CBOR(
+        "8200A20101020101AB01060418F00518F00618F007186909030C1977660D1999880E19BBAA0F19DDCC13189606AB".hexToByteArray()
+      )
+    )
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parseConfig_CBOR_FirstTypeNotMapAndCorrect() {
     assertNull(ConfigDataParserComposer.parseConfig_CBOR("00BF40".hexToByteArray()))
@@ -220,7 +227,11 @@ class ConfigDataParserComposerTest {
   @Suppress("SpellCheckingInspection")
   @Test
   fun parseConfig_CBOR_FirstTypeMapAndSubmap0Absent() {
-    assertNull(ConfigDataParserComposer.parseConfig_CBOR("A101AB01000412051834060607186909000C19DEBC0D1912F00E1956340F199A781318695599".hexToByteArray()))
+    assertNull(
+      ConfigDataParserComposer.parseConfig_CBOR(
+        "A101AB01000412051834060607186909000C19DEBC0D1912F00E1956340F199A781318695599".hexToByteArray()
+      )
+    )
   }
 
   @OptIn(ExperimentalStdlibApi::class)
@@ -231,7 +242,6 @@ class ConfigDataParserComposerTest {
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parseConfig_CBOR_FirstTypeMapAndSubItem2NotMap() {
     assertNull(ConfigDataParserComposer.parseConfig_CBOR("A200A2010102010101C464".hexToByteArray()))
@@ -432,7 +442,8 @@ class ConfigDataParserComposerTest {
           ConfigVersion.CONFIG_CBOR
         ),
         Arguments.of(
-          "A200A20101020101AB01050418F00518F00618F007186909020C1977660D1999880E19BBAA0F19DDCC13189602F5".hexToByteArray(),
+          "A200A20101020101AB01050418F00518F00618F007186909020C1977660D1999880E19BBAA0F19DDCC13189602F5"
+            .hexToByteArray(),
           0xF0,
           0xF0,
           0xF0,
@@ -447,7 +458,8 @@ class ConfigDataParserComposerTest {
           ConfigVersion.CONFIG_CBOR
         ),
         Arguments.of(
-          "A200A20101020101AB01010418F00518F00618F007186909000C1977660D1999880E19BBAA0F19DDCC1318967A63".hexToByteArray(),
+          "A200A20101020101AB01010418F00518F00618F007186909000C1977660D1999880E19BBAA0F19DDCC1318967A63"
+            .hexToByteArray(),
           0xF0,
           0xF0,
           0xF0,
@@ -462,7 +474,8 @@ class ConfigDataParserComposerTest {
           ConfigVersion.CONFIG_CBOR
         ),
         Arguments.of(
-          "A200A20101020101AB01040418F00518F00618F007186909000C1977660D1999880E19BBAA0F19DDCC1318967AFA".hexToByteArray(),
+          "A200A20101020101AB01040418F00518F00618F007186909000C1977660D1999880E19BBAA0F19DDCC1318967AFA"
+            .hexToByteArray(),
           0xF0,
           0xF0,
           0xF0,
@@ -477,7 +490,8 @@ class ConfigDataParserComposerTest {
           ConfigVersion.CONFIG_CBOR
         ),
         Arguments.of(
-          "A200A20101020101AB01060418F00518F00618F007186909030C1977660D1999880E19BBAA0F19DDCC1318963F53".hexToByteArray(),
+          "A200A20101020101AB01060418F00518F00618F007186909030C1977660D1999880E19BBAA0F19DDCC1318963F53"
+            .hexToByteArray(),
           0xF0,
           0xF0,
           0xF0,

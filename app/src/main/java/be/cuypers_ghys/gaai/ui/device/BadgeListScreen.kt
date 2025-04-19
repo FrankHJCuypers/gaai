@@ -423,7 +423,7 @@ internal fun GaaiBadgeCard(
         )
         Spacer(Modifier.weight(1f))
         Text(
-          text = badge.chargetype.toString(),
+          text = badge.chargeType.toString(),
           style = MaterialTheme.typography.bodyMedium
         )
       }
