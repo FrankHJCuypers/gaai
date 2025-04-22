@@ -146,7 +146,7 @@ Now manually test all functionality that is described in the [README](README.md#
 ### Developer Documentation generation
 
 The kotlin code is documented with [KDoc](https://kotlinlang.org/docs/kotlin-doc.html).
-[Dokka](https://kotlinlang.org/docs/dokka-introduction.html) can generated HTML documentation from it.
+[Dokka](https://kotlinlang.org/docs/dokka-introduction.html) can generate HTML documentation from it.
 In order to do that, run the following command in a shell (e.g. PowerShell in Android Studio terminal, or git bash):
 `./gradlew dokkaHtml`. The resulting html files are generated in the `app\build\documentation\html` subdirectory.
 Open the `index.html` file to start reading the documentation.
