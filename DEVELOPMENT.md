@@ -183,7 +183,7 @@ Once a commit on the master branch is selected to make a new release in GutHub, 
     - Press *Generate release notes* and accept the full changelog that is proposed.
       Use it as the first line of the description of the release.
       Add some more detail for relevant commits;
-      see [release v.0.0.4-alpha](https://github.com/FrankHJCuypers/Gaai/releases/tag/v0.0.4-alpha) as an example.
+      see [release v.0.0.5-alpha](https://github.com/FrankHJCuypers/Gaai/releases/tag/v0.0.5-alpha) as an example.
     - Choose a *Release Title*: "Release \<tagname\>" with \<tagname\> the chosen tag.
     - Select *Set as latest release*
     - Select *Create a discussion for this release*.
