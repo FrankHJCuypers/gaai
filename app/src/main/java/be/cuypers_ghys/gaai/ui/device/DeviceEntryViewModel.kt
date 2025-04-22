@@ -50,7 +50,7 @@ private const val TAG = "DeviceEntryViewModel"
  */
 enum class EntryState {
   /**
-   * The user can input PN ans SN.
+   * The user can input PN and SN.
    * Buttons are still grayed out.
    */
   INPUTTING,

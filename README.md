@@ -470,7 +470,7 @@ In this screen you can
   with the corresponding *Charge Type*.
   A message will be shown to hold the new badge against the charger.
   The charger will register the new badge and Gaai automatically updates its list of registered badges.
-  -Remove a device by swiping the card entry that corresponds with the badge to the right.
+- Remove a device by swiping the card entry that corresponds with the badge to the right.
 
 Make sure that you are close to the *Nexxtender* charger and that no other device is connected with it over BLE.
 
