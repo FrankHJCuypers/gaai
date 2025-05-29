@@ -375,7 +375,8 @@ Most other fields from versions 1.0 and 1.1 have a different name in CBOR format
 | I Max                    | See *Max Grid* in [Configuration 1.1](#configuration-11)                                                                                                                                        |
 | I Level 1                | See *Safe* in [Configuration 1.1](#configuration-11)                                                                                                                                            |
 | Weekdays                 | See [Configuration 1.1](#configuration-11)                                                                                                                                                      |
-| Weekend                  | See [Configuration 1.1](#configuration-11)                                                                                                                                                      |
+| Weekend                  | See [Configuration 1.1](#configuration-11)       
+| I EVSE Max               | See *Max Device* in [Configuration 1.1](#configuration-11)                                                                                                                                            |
 | Phase Seq (Network Type) | See *Network Type* in [Configuration 1.1](#configuration-11)                                                                                                                                    |
 | I EVSE Min               | Not used                                                                                                                                                                                        |
 | I Capacity               | Peak grid current limit. I Level 1 <= I Capacity <= I Max. You can set this to a lower value if you have a peak tariff contract. Configurations 1.0 and 1.1 behave as if I Capacity == Max Grid |
