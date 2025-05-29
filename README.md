@@ -395,6 +395,12 @@ Select the required default charging mode and press OK to confirm.
 OK is grayed out if the choice is still "Unknown".
 Pressing Cancel does not change anything.
 
+Note that setting the default mode to an ECO variant does not seem to have an effect.
+The *Nexxtender* charger does accept it, but if you start charging in ECO mode, it will activate MAX mode anyhow.
+The only way the start ECO mode is to explicitly start it with the *Start Charge ECO* button in the screen from
+section [Loader](#loader).
+This seems to be an issue with the charger; I have the same issue when using the *Nexxtmove* app.
+
 Clicking on ![edit outline](docs/images/mdi--edit-outline.png) next to any of the fields with a value expressed in A
 gives the following dialog screen:
 
