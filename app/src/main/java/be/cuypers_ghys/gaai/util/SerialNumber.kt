@@ -23,7 +23,7 @@ package be.cuypers_ghys.gaai.util
  */
 data class SerialNumber(
   val year: UByte,
-  val month: UByte,
+  val week: UByte,
   val number: UInt,
   val unknown: UByte
 )

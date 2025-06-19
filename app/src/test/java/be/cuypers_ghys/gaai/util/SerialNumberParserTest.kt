@@ -32,7 +32,7 @@ class SerialNumberParserTest {
   fun verifyResultsFromKnownCorrectTestVectors(
     serialNumberString: String,
     expectedYear: Int,
-    expectedMonth: Int,
+    expectedWeek: Int,
     expectedNumber: Int,
     expectedUnknown: Int,
     expectedSerialNumber: Int,
@@ -41,7 +41,7 @@ class SerialNumberParserTest {
     val computedSerialNumber = SerialNumberParser.parse(serialNumberString)
     Assertions.assertNotNull(computedSerialNumber)
     Assertions.assertEquals(expectedYear.toUByte(), computedSerialNumber!!.year)
-    Assertions.assertEquals(expectedMonth.toUByte(), computedSerialNumber.month)
+    Assertions.assertEquals(expectedWeek.toUByte(), computedSerialNumber.week)
     Assertions.assertEquals(expectedNumber.toUInt(), computedSerialNumber.number)
     Assertions.assertEquals(expectedUnknown.toUByte(), computedSerialNumber.unknown)
 
@@ -63,22 +63,22 @@ class SerialNumberParserTest {
   }
 
   @Test
-  fun parse_YYMMToShort() {
+  fun parse_YYWWToShort() {
     Assertions.assertNull(SerialNumberParser.parse("230-00005-E3"))
   }
 
   @Test
-  fun parse_YYMMToLong() {
+  fun parse_YYWWoLong() {
     Assertions.assertNull(SerialNumberParser.parse("23030-00005-E3"))
   }
 
   @Test
-  fun parse_YYMMHex() {
+  fun parse_YYWWHex() {
     Assertions.assertNull(SerialNumberParser.parse("230A-00005-E3"))
   }
 
   @Test
-  fun parse_YYMMNotHex() {
+  fun parse_YYWWNotHex() {
     Assertions.assertNull(SerialNumberParser.parse("230Z-00005-E3"))
   }
 

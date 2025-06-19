@@ -30,12 +30,12 @@ object SerialNumberParser {
    * The serial number is the SN of the Nexxtender charger,
    * as displayed on the sticker at the bottom of the box.
    * Its format is as follows:
-   * - SN: YYMM-NNNNN-UU.
+   * - SN: YYWW-NNNNN-UU.
    *
    * with
    * - YY: Year of production, 2 decimal digits.
-   * - MM: Month of production, 2 decimal digits.
-   * - NNNNN: Serial number? 5 decimal digits (unique within YYMM?).
+   * - WW: Week of production, 2 decimal digits.
+   * - NNNNN: Serial number? 5 decimal digits (unique within WW?).
    * - UU: Unknown? 2 hexadecimal digits.
    *
    * The '-' is allowed to be absent.
@@ -54,12 +54,12 @@ object SerialNumberParser {
     if (matcher.find() && matcher.groupCount() == 4) {
       // We verified that matcher.groupCount() == 4, so groups 1 to 4 will not return null
       val yearString = matcher.group(1)!!
-      val monthString = matcher.group(2)!!
+      val weekString = matcher.group(2)!!
       val numberString = matcher.group(3)!!
       val unknownString = matcher.group(4)!!
       return SerialNumber(
         yearString.toUByte(),
-        monthString.toUByte(),
+        weekString.toUByte(),
         numberString.toUInt(),
         unknownString.toUByte(16)
       )
@@ -70,14 +70,14 @@ object SerialNumberParser {
   /**
    * Returns an integer representing the *serialNumber* input.
    * @param serialNumber
-   * @return A 4-byte unsigned integer 0xYY'MM'NNNN'.
+   * @return A 4-byte unsigned integer 0xYY'WW'NNNN'.
    *  + YY' is the number that corresponds with the ASCII string YY.
-   *  + MM' is the number that corresponds with the ASCII string MM.
+   *  + WW' is the number that corresponds with the ASCII string WW.
    *  + NNNN' is the number that corresponds with the ASCII string NNNNN.
    */
   fun calcHexSerialNumber(serialNumber: SerialNumber): UInt {
     val hexSerialNumber =
-      (serialNumber.year.toInt() shl 24) or (serialNumber.month.toInt() shl 16) or serialNumber.number.toInt()
+      (serialNumber.year.toInt() shl 24) or (serialNumber.week.toInt() shl 16) or serialNumber.number.toInt()
     return hexSerialNumber.toUInt()
   }
 
