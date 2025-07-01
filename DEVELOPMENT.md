@@ -173,7 +173,7 @@ Once a commit on the master branch is selected to make a new release in GutHub, 
 5. Push the master branch to GitHub.
 6. Create a new release in GitHub
     - In the *Code* screen, under *Releases*,
-      select [Create a new release](https://github.com/FrankHJCuypers/Gaai/releases/new).
+      select [Create a new release](https://github.com/FrankHJCuypers/gaai/releases/new).
     - Choose a *Tag*: create a new tag to be applied on the most recent commit, starting with a 'v': vx.y.z.
       For a version 0.0.2 that becomes v0.0.2.
       Add an extension like `-alpha` if needed.
@@ -183,7 +183,7 @@ Once a commit on the master branch is selected to make a new release in GutHub, 
     - Press *Generate release notes* and accept the full changelog that is proposed.
       Use it as the first line of the description of the release.
       Add some more detail for relevant commits;
-      see [release v.0.0.5-alpha](https://github.com/FrankHJCuypers/Gaai/releases/tag/v0.0.5-alpha) as an example.
+      see [release v.0.0.5-alpha](https://github.com/FrankHJCuypers/gaai/releases/tag/v0.0.5-alpha) as an example.
     - Choose a *Release Title*: "Release \<tagname\>" with \<tagname\> the chosen tag.
     - Select *Set as latest release*
     - Select *Create a discussion for this release*.

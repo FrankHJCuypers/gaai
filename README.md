@@ -1,8 +1,8 @@
 <meta name="google-site-verification" content="aIbjsFn9hlzewklZcNkHGOw9gGL_YMnqX1Ui1GuCDr4" />
 
 [![maintainer](https://img.shields.io/badge/maintainer-Frank%20HJ%20Cuypers-green?style=for-the-badge&logo=github)](https://github.com/frankhjcuypers)
-[![GitHub Discussions](https://img.shields.io/github/discussions/FrankHJCuypers/Gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/Gaai/discussions)
-[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/FrankHJCuypers/Gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/Gaai/issues)
+[![GitHub Discussions](https://img.shields.io/github/discussions/FrankHJCuypers/gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/gaai/discussions)
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/FrankHJCuypers/gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/gaai/issues)
 
 [![android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://www.android.com/)
 [![android studio](https://img.shields.io/badge/Android_Studio-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white)](https://developer.android.com/studio)
@@ -11,13 +11,13 @@
 
 [![beta](https://img.shields.io/badge/version-beta-purple)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
 
-[![GitHub Release](https://img.shields.io/github/v/release/FrankHJCuypers/Gaai?include_prereleases&display_name=tag&logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date-pre/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/releases)
-[![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/Gaai?logo=github)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/FrankHJCuypers/gaai?include_prereleases&display_name=tag&logo=github)](https://github.com/FrankHJCuypers/gaai/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date-pre/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/releases)
+[![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/gaai?logo=github)](LICENSE)
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits)
-[![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuypers/Gaai?logo=github)](https://github.com/FrankHJCuypers/Gaai/graphs/contributors)
-[![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/Gaai/master?logo=github)](https://github.com/FrankHJCuypers/Gaai/commits/master)
+[![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/commits)
+[![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuyper/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/graphs/contributors)
+[![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/gaai/master?logo=github)](https://github.com/FrankHJCuypers/gaai/commits/master)
 
 # Nexxtender Charger android app
 
@@ -36,7 +36,7 @@ Other alternatives are
 - [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook)
 - [NexxtenderBlackCable](https://github.com/Noudicus/NexxtenderBlackCable)
 
-*Gaai*'s source code is hosted on [Github](https://github.com/FrankHJCuypers/Gaai).
+*Gaai*'s source code is hosted on [Github](https://github.com/FrankHJCuypers/gaai).
 
 ## Gaai?
 
@@ -83,7 +83,7 @@ An APK file generated from *Gaai* can be installed as described in
 [How to install third-party apps without the Google Play Store](https://www.androidauthority.com/how-to-install-apks-31494/).
 
 *Gaai* APK files are available for the official
-[releases](https://github.com/FrankHJCuypers/Gaai/releases) in the GitHub repo.
+[releases](https://github.com/FrankHJCuypers/gaai/releases) in the GitHub repo.
 Select a release, open its *assets* and select the APK file.
 
 If the selected APK is a `-debug` version, it will install without questions.
@@ -375,8 +375,8 @@ Most other fields from versions 1.0 and 1.1 have a different name in CBOR format
 | I Max                    | See *Max Grid* in [Configuration 1.1](#configuration-11)                                                                                                                                        |
 | I Level 1                | See *Safe* in [Configuration 1.1](#configuration-11)                                                                                                                                            |
 | Weekdays                 | See [Configuration 1.1](#configuration-11)                                                                                                                                                      |
-| Weekend                  | See [Configuration 1.1](#configuration-11)       
-| I EVSE Max               | See *Max Device* in [Configuration 1.1](#configuration-11)                                                                                                                                            |
+| Weekend                  | See [Configuration 1.1](#configuration-11)                                                                                                                                                      
+| I EVSE Max               | See *Max Device* in [Configuration 1.1](#configuration-11)                                                                                                                                      |
 | Phase Seq (Network Type) | See *Network Type* in [Configuration 1.1](#configuration-11)                                                                                                                                    |
 | I EVSE Min               | Not used                                                                                                                                                                                        |
 | I Capacity               | Peak grid current limit. I Level 1 <= I Capacity <= I Max. You can set this to a lower value if you have a peak tariff contract. Configurations 1.0 and 1.1 behave as if I Capacity == Max Grid |
@@ -485,8 +485,8 @@ Make sure that you are close to the *Nexxtender* charger and that no other devic
 
 Useful information can be found at
 
-- [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/Gaai/wiki/Nexxtender-Charger-Information)
-- [Analyzing-Bluetooth-Low-Energy-Traffic](https://github.com/FrankHJCuypers/Gaai/wiki/Analyzing-Bluetooth-Low-Energy-Traffic)
+- [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/gaai/wiki/Nexxtender-Charger-Information)
+- [Analyzing-Bluetooth-Low-Energy-Traffic](https://github.com/FrankHJCuypers/gaai/wiki/Analyzing-Bluetooth-Low-Energy-Traffic)
 - [Wireshark Dissector in Lua for Nexxtender charger BLE](https://github.com/FrankHJCuypers/fuut)
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
 - [Nexxtmove for Home Assistant](https://github.com/geertmeersman/nexxtmove)
