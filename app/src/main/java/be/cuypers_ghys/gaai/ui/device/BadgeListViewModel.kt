@@ -270,7 +270,6 @@ class BadgeListViewModel(
 
   /**
    * Sets up the GATT services and characteristics required for the Nexxtender charger.
-   * @param gaaiDevice [Device] for which to configure GATT.
    * @param services Entry point for finding services and characteristics.
    */
   @SuppressLint("MissingPermission")

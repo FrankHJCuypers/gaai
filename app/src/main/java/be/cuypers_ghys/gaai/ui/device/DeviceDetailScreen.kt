@@ -66,6 +66,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.AuthorizationStatus
+import be.cuypers_ghys.gaai.data.Badge
 import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.ChargingAdvancedData
 import be.cuypers_ghys.gaai.data.ChargingBasicData
@@ -1455,7 +1456,7 @@ internal fun GaaiLoaderCard(
 }
 
 /**
- * Implements a [Card] allowing to go to the list of [Badge]s.
+ * Implements a [Card] allowing to go to the list of [Badges][Badge].
  * @param navigateToBadgeList Function to be called when [DeviceDetailsScreen] wants to show list of badges.
  * @param modifier the [Modifier] to be applied to this [GaaiLoaderCard]
  *
