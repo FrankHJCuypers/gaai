@@ -161,15 +161,19 @@ class DeviceDetailsViewModel(
     Log.d(TAG, "Starting Gatt Client for gaaiDevice: $gaaiDevice")
 
     //Connect a Bluetooth LE device.
+    updateDeviceState(DeviceState(ConnectionState.CONNECTING))
     val client = bleRepository.getClientBleGattConnection(gaaiDevice.mac, viewModelScope).also {
       this@DeviceDetailsViewModel.client = it
     }
 
     if (!client.isConnected) {
       Log.d(TAG, "Gatt Client not connected.")
+      updateDeviceState(DeviceState(ConnectionState.NOT_CONNECTED))
       return@launch
     }
+
     Log.d(TAG, "Gatt Client connected. Discovering services.")
+    updateDeviceState(DeviceState(ConnectionState.DISCOVERING))
 
     /*
      * Bluetooth caches the BLE GATT table.
@@ -256,6 +260,7 @@ class DeviceDetailsViewModel(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC
         )!!
     }
+    updateDeviceState(DeviceState(ConnectionState.CONNECTED))
 
     // Read static information
     val deviceName = deviceNameCharacteristic.read().value.toString(Charsets.UTF_8)
@@ -641,8 +646,15 @@ class DeviceDetailsViewModel(
       }
     }
   }
-}
 
+  /**
+   * Updates the [deviceState] with the value provided in the argument.
+   * @param deviceState The DeviceState.
+   */
+  private fun updateDeviceState(deviceState: DeviceState) {
+    _state.value = _state.value.copy(deviceState = deviceState)
+  }
+}
 
 /**
  * Represents Device Information fields.
@@ -654,11 +666,24 @@ data class DeviceInformation(
   val hardwareRevision: String = ""
 )
 
+enum class ConnectionState {
+  UNKNOWN, CONNECTING, DISCOVERING, CONNECTED, NOT_CONNECTED
+}
+
+/**
+ * Represents Device State.
+ */
+data class DeviceState(
+  val connectionState: ConnectionState = ConnectionState.UNKNOWN
+)
+
+
 /**
  * Represents View State for a Device.
  */
 data class DeviceDetailsViewState(
   val deviceName: String = "",
+  val deviceState: DeviceState = DeviceState(),
   val deviceInformation: DeviceInformation = DeviceInformation(),
   val chargingBasicData: ChargingBasicData = ChargingBasicData(),
   val chargingGridData: ChargingGridData = ChargingGridData(),

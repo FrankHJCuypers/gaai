@@ -184,22 +184,22 @@ as is shown in
 
 When a valid PN and SN are entered, the *Scan Device* button become active.
 
-![Device Entry Empty](docs/images/DeviceEntryCorrectSNPN.png)
+![Device Entry Correct with SN and PN](docs/images/DeviceEntryCorrectSNPN.png)
 
 Make sure that you are close to the *Nexxtender* device and that no other device is connected with it over BLE.
 Tap the *Scan Device* button. Scanning will start and the button will now show *Cancel Scanning* allowing you to
 cancel the scan if it takes to long.
 
-![Device Entry Empty](docs/images/DeviceEntryScanning.png)
+![Device Entry Scanning](docs/images/DeviceEntryScanning.png)
 
 If you entered the correct PN and SN,
 *Gaai* should find the *Nexxtender* in less then a few seconds and show the following screen.
 
-![Device Entry Empty](docs/images/DeviceEntryFound.png)
+![Device Entry Found](docs/images/DeviceEntryFound.png)
 
 Gaai shows a card with the details of the found device.
 
-+ At the top is the type of the Nexxtender Charger: HOME or MOBILE.
++ At the top is the type of the Nexxtender Charger: HOME or MOBILE. The BLE connection status is still *Not connected*.
 + At the middle left is the PN.
 + At the middle right is the SN.
 + At the bottom left is the MAC.
@@ -210,7 +210,7 @@ This will bring you back to the previous screen, now showing one device.
 
 If the device that you scanned was already in *Gaai's* database, you will see
 
-![Device Entry Empty](docs/images/DeviceEntryDuplicate.png)
+![Device Entry Duplicate](docs/images/DeviceEntryDuplicate.png)
 
 *Gaai* will not let you create duplicates.
 
@@ -219,7 +219,7 @@ If the device that you scanned was already in *Gaai's* database, you will see
 As soon as the database contains at least one device, *Gaai* shows a list of all registered devices at startup as
 shown in the next picture.
 
-![Device Entry Empty](docs/images/HomeScreenThreeDevices.png)
+![Home Screen with 3 Devices](docs/images/HomeScreenThreeDevices.png)
 
 In this screen you can
 
@@ -241,7 +241,17 @@ You must scroll up to see the other parts.
 When the screen opens, only the labels are shown without data values.
 The values are populated as soon as *Gaai* has established the connection and read all the data.
 That can take 5 seconds.
-If no data appears after a few seconds,
+The BLE connection status at the top right of the first card can have the following values:
+
+| Value         | Icon                                                                                         | Description                                                              |
+|---------------|----------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| Not connected | ![Not connected](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | Gaai is not connected with the charger                                   |
+| Connecting    | ![Not connected](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | Gaai is trying to connect to the charger                                 |
+| Discovering   | ![Discovering](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | Gaai is connected to the charger and is now discovering its BLE services |
+| Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | Gaai is connected to the charger and has discovered all its BLE services | 
+| Unknown       | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)        | Should not happen                                                        |
+
+If the BLE status stays *Not connected*,
 it might be that another BLE client is still connected to the device.
 It could also be a problem in *Gaai*.
 It is normally solved by going back to the previous screen using the left arrow at the top left of the screen,

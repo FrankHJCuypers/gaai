@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -75,6 +76,7 @@ import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
+import be.cuypers_ghys.gaai.ui.device.ConnectionState
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
@@ -330,7 +332,7 @@ fun GaaiDeviceItem(
     backgroundContent = { DismissBackground(dismissState) }
   ) {
     GaaiDeviceCard(
-      device, modifier = Modifier
+      device, ConnectionState.NOT_CONNECTED, modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
         .clickable { onDeviceClick(device) })
   }
@@ -338,8 +340,44 @@ fun GaaiDeviceItem(
 }
 
 /**
+ * Converts [ConnectionState] to a string value to display.
+ * @param connectionState
+ * @return The corresponding string.
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+private fun connectionStateToText(connectionState: ConnectionState) = when (connectionState) {
+  ConnectionState.CONNECTED -> stringResource(R.string.gatt_client_connected_services)
+  ConnectionState.NOT_CONNECTED -> stringResource(R.string.gatt_client_not_connected)
+  ConnectionState.CONNECTING -> stringResource(R.string.gatt_client_connecting)
+  ConnectionState.DISCOVERING -> stringResource(R.string.gatt_client_discovering_services)
+  else -> {
+    stringResource(R.string.gatt_client_connection_status_unknown)
+  }
+}
+
+/**
+ * Converts [ConnectionState] to a corresponding icon to display.
+ * @param connectionState
+ * @return The corresponding icon.
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+private fun connectionStateToPainter(connectionState: ConnectionState) = when (connectionState) {
+  ConnectionState.CONNECTED -> painterResource(R.drawable.bluetooth_connected_24px)
+  ConnectionState.NOT_CONNECTED -> painterResource(R.drawable.bluetooth_disabled_24px)
+  ConnectionState.CONNECTING, ConnectionState.DISCOVERING -> painterResource(R.drawable.bluetooth_searching_24px)
+  else -> {
+    painterResource(R.drawable.bluetooth_disabled_24px)
+  }
+}
+
+/**
  * Implements a [Card] displaying the details of the [device].
  * @param device The [Device] to display.
+ * @param connectionState The connection state of the device
  * @param modifier The [Modifier] to be applied to this [GaaiDeviceCard]
  *
  * @author Frank HJ Cuypers
@@ -348,7 +386,7 @@ fun GaaiDeviceItem(
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryScreen.kt and DeviceDetailScreen.kt
 internal fun GaaiDeviceCard(
-  device: Device, modifier: Modifier = Modifier
+  device: Device, connectionState: ConnectionState, modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entered GaaiDeviceCard with device = $device")
   Card(
@@ -377,10 +415,21 @@ internal fun GaaiDeviceCard(
           .weight(1f)
       ) {
         Row(
-          modifier = Modifier.fillMaxWidth()
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier.fillMaxWidth(),
         ) {
           Text(
             text = device.type.toString(),
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Icon(
+            painter = connectionStateToPainter(connectionState),
+            contentDescription = stringResource(id = R.string.ev_charger_content_desc),
+            modifier = Modifier.size(MaterialTheme.typography.titleMedium.fontSize.value.dp)
+          )
+          Text(
+            text = connectionStateToText(connectionState),
             style = MaterialTheme.typography.titleMedium,
           )
         }
@@ -494,6 +543,7 @@ fun DevicePreviewHOME() {
   GaaiTheme {
     GaaiDeviceCard(
       Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
+      ConnectionState.NOT_CONNECTED
     )
   }
 }
@@ -504,6 +554,7 @@ fun DevicePreviewMOBILE() {
   GaaiTheme {
     GaaiDeviceCard(
       Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
+      ConnectionState.NOT_CONNECTED
     )
   }
 }
@@ -514,6 +565,7 @@ fun DevicePreviewUNKNOWN() {
   GaaiTheme {
     GaaiDeviceCard(
       Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
+      ConnectionState.NOT_CONNECTED
     )
   }
 }

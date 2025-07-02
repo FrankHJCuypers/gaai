@@ -114,4 +114,9 @@
     <string name="present_badge_to_add_in_max_mode">Present badge to add in MAX mode</string>
     <string name="badge_already_registered">Badge already registered</string>
     <string name="badge_added">Badge added</string>
+    <string name="gatt_client_not_connected">Not connected</string>
+    <string name="gatt_client_connected_services">Connected</string>
+    <string name="gatt_client_discovering_services">Discovering</string>
+    <string name="gatt_client_connection_status_unknown">Unknown</string>
+    <string name="gatt_client_connecting">Connecting</string>
 </resources>

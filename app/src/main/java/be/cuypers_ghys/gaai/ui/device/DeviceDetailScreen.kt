@@ -228,6 +228,7 @@ fun DeviceDetailsBody(
     device?.let {
       GaaiDeviceCard(
         device = it,
+        state.deviceState.connectionState,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
@@ -1987,6 +1988,7 @@ private fun DeviceDetailsHomePreview() {
       ),
       state = DeviceDetailsViewState(
         deviceName = "HOME2_",
+        deviceState = DeviceState(ConnectionState.CONNECTED),
         deviceInformation = DeviceInformation(
           modelNumber = "12345", serialNumber = "12345",
           firmwareRevision = "1.23.4", hardwareRevision = "A2"
@@ -2043,6 +2045,7 @@ private fun DeviceDetailsMobilePreview() {
       ),
       state = DeviceDetailsViewState(
         deviceName = "Mobile2_",
+        deviceState = DeviceState(ConnectionState.CONNECTED),
         deviceInformation = DeviceInformation(
           modelNumber = "12345", serialNumber = "12345",
           firmwareRevision = "1.23.4", hardwareRevision = "A2"
