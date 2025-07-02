@@ -25,7 +25,7 @@
 [![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/gaai?logo=github)](LICENSE)
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/commits)
-[![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuyper/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/graphs/contributors)
+[![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/graphs/contributors)
 [![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/gaai/master?logo=github)](https://github.com/FrankHJCuypers/gaai/commits/master)
 
 # Nexxtender Charger android app
