@@ -1,14 +1,14 @@
 <meta name="google-site-verification" content="aIbjsFn9hlzewklZcNkHGOw9gGL_YMnqX1Ui1GuCDr4" />
-</br>
-</br> 
+<br/>
+<br/> 
 
 ![Attention](https://img.shields.io/badge/Attention-The_Repository_was_renamed_from_Gaai_to_gaai!_Please_adapt_your_links-red?style=flat&logo=github&labelColor=red)
 
-</br>
-</br>
+<br/>
+<br/>
 
 
-  
+
 [![maintainer](https://img.shields.io/badge/maintainer-Frank%20HJ%20Cuypers-green?style=for-the-badge&logo=github)](https://github.com/frankhjcuypers)
 [![GitHub Discussions](https://img.shields.io/github/discussions/FrankHJCuypers/gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/gaai/discussions)
 [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/FrankHJCuypers/gaai?style=for-the-badge&logo=github)](https://github.com/FrankHJCuypers/gaai/issues)
