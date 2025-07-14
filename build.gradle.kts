@@ -6,7 +6,8 @@ plugins {
   alias(libs.plugins.compose.compiler) apply false
   alias(libs.plugins.room) apply false
   alias(libs.plugins.devtools.ksp) apply false
-  id("org.jetbrains.dokka") version "1.9.20"
+  // Generates HTML documentation
+  id("org.jetbrains.dokka") version "2.0.0"
 }
 
 subprojects {

@@ -1,4 +1,4 @@
-import org.jetbrains.dokka.DokkaConfiguration.Visibility
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -150,20 +150,33 @@ dependencies {
   runtimeOnly(libs.android.documentation.plugin)
 }
 
+dokka {
+  moduleName.set("Gaai")
 
-tasks.dokkaHtml {
-  outputDirectory.set(layout.buildDirectory.dir("documentation/html"))
-  dokkaSourceSets {
-    configureEach {
-      documentedVisibilities.set(
-        setOf(
-          Visibility.PUBLIC,
-          Visibility.PROTECTED,
-          Visibility.PACKAGE,
-          Visibility.PRIVATE,
-          Visibility.INTERNAL,
-        )
+  dokkaPublications.html {
+    outputDirectory.set(layout.buildDirectory.dir("documentation/html"))
+    suppressInheritedMembers.set(true)
+    failOnWarning.set(false)
+  }
+
+  dokkaSourceSets.main {
+    documentedVisibilities.set(
+      setOf(
+        VisibilityModifier.Public,
+        VisibilityModifier.Protected,
+        VisibilityModifier.Package,
+        VisibilityModifier.Private,
+        VisibilityModifier.Internal
       )
+    )
+    sourceLink {
+      localDirectory.set(file("src/main/java"))
+      remoteUrl("https://example.com/src")
+      remoteLineSuffix.set("#L")
     }
+  }
+
+  pluginsConfiguration.html {
+    footerMessage.set("(c) Frank HJ Cuypers")
   }
 }

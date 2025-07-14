@@ -148,7 +148,7 @@ Now manually test all functionality that is described in the [README](README.md#
 The kotlin code is documented with [KDoc](https://kotlinlang.org/docs/kotlin-doc.html).
 [Dokka](https://kotlinlang.org/docs/dokka-introduction.html) can generate HTML documentation from it.
 In order to do that, run the following command in a shell (e.g. PowerShell in Android Studio terminal, or git bash):
-`./gradlew dokkaHtml`. The resulting html files are generated in the `app\build\documentation\html` subdirectory.
+`./gradlew dokkaGenerate`. The resulting html files are generated in the `app\build\documentation\html` subdirectory.
 Open the `index.html` file to start reading the documentation.
 
 Note that this documentation targets developers, not the users of *Gaai*.
@@ -227,7 +227,7 @@ who is also responsible for backups.
 
 ## Gradlew commands
 
-- `./gradlew dokkaHtml` creates Html based documentation from the Kdoc documentation used for documenting the source
+- `./gradlew dokkaGenerate` creates Html based documentation from the Kdoc documentation used for documenting the source
   code.
   The documentation is generated in the `app\build\documentation\html` directory
 - `./gradlew testReleaseUnitTest` runs the local (JUnit) tests for the release build.
