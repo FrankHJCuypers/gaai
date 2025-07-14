@@ -21,6 +21,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
 
 /**
  * Handles the Timestamp fields in data coming from the Nexxtender charger.
@@ -54,8 +55,9 @@ object Timestamp {
    * @return String representation of the timestamp, according to [format][be.cuypers_ghys.gaai.util.Timestamp.format].
    */
   // TODO: junit tests
+  @OptIn(ExperimentalTime::class)
   fun toString(timeStamp: UInt): String {
-    val gmtTime = Instant.fromEpochSeconds(timeStamp.toLong())
+    val gmtTime = kotlin.time.Instant.fromEpochSeconds(timeStamp.toLong())
     val localDateTime = gmtTime.toLocalDateTime(TimeZone.currentSystemDefault())
 
 
