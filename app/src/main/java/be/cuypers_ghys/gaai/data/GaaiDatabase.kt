@@ -54,7 +54,7 @@ abstract class GaaiDatabase : RoomDatabase() {
            * permanently deletes all data from the tables in your database when it
            * attempts to perform a migration with no defined migration path.
            */
-          .fallbackToDestructiveMigration()
+          .fallbackToDestructiveMigration(true)
           .build()
           .also { Instance = it }
       }
