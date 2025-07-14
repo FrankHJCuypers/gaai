@@ -38,11 +38,9 @@ android {
   compileSdk = 35
 
   defaultConfig {
-    base {
-      versionCode = androidGitVersion.code()
-      versionName = androidGitVersion.name()
-      archivesName = "Gaai-v$versionCode-$versionName"
-    }
+    versionCode = androidGitVersion.code()
+    versionName = androidGitVersion.name()
+    base.archivesName = "Gaai-v$versionCode-$versionName"
 
     applicationId = "be.cuypers_ghys.gaai"
     minSdk = 26
