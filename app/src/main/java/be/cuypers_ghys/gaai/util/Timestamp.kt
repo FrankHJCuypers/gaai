@@ -16,7 +16,7 @@
 
 package be.cuypers_ghys.gaai.util
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.char
@@ -38,7 +38,7 @@ object Timestamp {
     char('-')
     monthNumber()
     char('-')
-    dayOfMonth()
+    day()
 
     char(' ')
 
@@ -57,9 +57,8 @@ object Timestamp {
   // TODO: junit tests
   @OptIn(ExperimentalTime::class)
   fun toString(timeStamp: UInt): String {
-    val gmtTime = kotlin.time.Instant.fromEpochSeconds(timeStamp.toLong())
+    val gmtTime = Instant.fromEpochSeconds(timeStamp.toLong())
     val localDateTime = gmtTime.toLocalDateTime(TimeZone.currentSystemDefault())
-
 
     return format.format(localDateTime)
   }
