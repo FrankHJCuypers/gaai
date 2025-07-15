@@ -27,7 +27,6 @@ import java.util.stream.Stream
  */
 class TestCRC8CCITT {
 
-  @OptIn(ExperimentalStdlibApi::class)
   @ParameterizedTest
   @MethodSource("usedCombinationsProvider")
   fun verifyResultsFromKnownTestVectors(sData: String, expectedCrc: Int) {
