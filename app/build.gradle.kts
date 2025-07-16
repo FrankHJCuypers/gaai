@@ -1,5 +1,6 @@
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.io.FileInputStream
+import java.nio.file.Paths
 import java.util.Properties
 
 plugins {
@@ -18,19 +19,31 @@ androidGitVersion {
   untrackedIsDirty = true
 }
 
-// Read keystore properties from keystore.properties file, in the rootProject folder
-// For security reasons keystore.properties is NOT in git.
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+// Read keystore properties from gaai-release-keystore.properties file, in the $user.home\.android folder
+// For security reasons gaai-release-keystore.properties and gaai-keystore.properties are NOT in git.
 val keystoreProperties = Properties()
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val keystorePropertiesFile = file(Paths.get(System.getProperty("user.home")).resolve(".android\\gaai-release-keystore.properties"))
+if (keystorePropertiesFile.exists()) {
+  keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
 
 android {
   signingConfigs {
     create("release") {
-      storeFile = file(keystoreProperties["storeFile"] as String)
-      storePassword = keystoreProperties["storePassword"] as String
-      keyAlias = keystoreProperties["keyAlias"] as String
-      keyPassword = keystoreProperties["keyPassword"] as String
+      // If the gaai-release-keystore.properties file exists, we use it (we are running locally)
+      if (keystorePropertiesFile.exists()) {
+        storeFile = file(keystoreProperties["storeFile"] as String)
+        storePassword = keystoreProperties["storePassword"] as String
+        keyAlias = keystoreProperties["keyAlias"] as String
+        keyPassword = keystoreProperties["keyPassword"] as String
+      }
+      else {
+        // If the gaai-release-keystore.properties file does not exist, we use Github secrets.
+        storeFile = rootProject.file(System.getenv("SIGNING_STORE_FILE") as String)
+        storePassword = System.getenv("SIGNING_STORE_PASSWORD") as String
+        keyAlias = System.getenv("SIGNING_KEY_ALIAS") as String
+        keyPassword = System.getenv("SIGNING_KEY_PASSWORD") as String
+      }
     }
   }
 

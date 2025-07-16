@@ -202,13 +202,16 @@ New versions of an already installed app must also be signed with the same key,
 otherwise the new version is refused by Android.
 
 Gradle automatically signs release builds when `./gradlew build` is ran.
-That is defined in the `buildTypes` block of the app module's `build.gradle.kts` file.
+That behavior is defined in the `buildTypes` block of the app module's `build.gradle.kts` file.
 The release block uses a `signingConfig` with the name "release",
 which is itself defined in the `signingConfigs` of the app module's `build.gradle.kts` file.
 The values `storeFile`, `storePassword`, `keyAlias` and `keyPassword` are not defined in the `build.gradle.kts` file.
 `build.gradle.kts` must be pushed to the public git repo which would make the keys and passwords public.
-Therefore, the 4 values are defined in a `keystore.properties` file,
-located in the root of the project, but not included in Git.
+The `gaai-release.keystore` file which contains the keys is for the same reason not included in Git.
+Depending on the build being a local gradle build or a *Github Action* build, the key handling is different.
+
+For a local build, the 4 values must be defined in a `gaai-release-keystore.properties` file,
+located in the ANDROID_USER_HOME directory (`C:\Users\<user>>\.android` on Windows).
 `storeFile` defines the location of the
 [keystore](https://cr.openjdk.org/~alanb/api/java.base/java/security/KeyStore.html) file.
 The keystore file is of type "JKS".
@@ -216,10 +219,26 @@ It contains a 256 bits Elliptic Curve key on the NIST P-256 elliptic curve.
 This key is used with the *SHA-256 with ECDSA* signature algorithm to sign the APK.
 All of that is done automatically by gradle.
 
+For a *Github Action* build, the 4 values are stored in Github's 
+[repository secrets](https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/using-secrets-in-github-actions).
+The following 4 secrets are used:
+- SIGNING_STORE_FILE: the Base64 encoded contents of the `storeFile` (`gaai-release.keystore`)
+- SIGNING_STORE_PASSWORD: the value of `storePassword`
+- SIGNING_KEY_ALIAS: the value of `keyAlias`
+- SIGNING_KEY_PASSWORD: the value of `keyPassword`
+
 The keystore file can be manipulated using the command line tool
 [keytool](https://cr.openjdk.org/~jjg/8261930/docs/specs/man/keytool.html)
 or with the [KeyStore Explorer](https://keystore-explorer.org/).
 The latter has a GUI.
+
+In order to get the Base64 encoded contents of `gaai-release.keystore`, execute the following in Git bash:
+
+```
+  base64 gaai-release.keystore | tr -d '\n' > gaai-release-keystore.txt
+```
+
+The contents of `gaai-release-keystore.txt` is to be put in the SIGNING_STORE_FILE Github secret.
 
 The Keystore, signing key and passwords are not public.
 They are currently managed by the project maintainer,

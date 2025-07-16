@@ -16,6 +16,7 @@
 package be.cuypers_ghys.gaai.util
 
 import kotlinx.datetime.TimeZone
+import org.junit.Assume
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -33,7 +34,9 @@ class TimestampTest {
     timeStamp: UInt,
     expectedTimeString: String,
   ) {
-    Assertions.assertEquals("Europe/Brussels", TimeZone.currentSystemDefault().id)
+
+    println("timezone in test: " + TimeZone.currentSystemDefault().id)
+    Assume.assumeTrue("Europe/Brussels"  == TimeZone.currentSystemDefault().id)
 
     val computedTimeString = Timestamp.toString(timeStamp)
     Assertions.assertNotNull(computedTimeString)
