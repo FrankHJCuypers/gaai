@@ -23,7 +23,8 @@ jobs:
       with:
         java-version: '21'
         distribution: 'adopt'
-
+        # next line commented out because of //https://github.com/gradle/actions/blob/v3.4.2/docs/setup-gradle.md#incompatibility-with-other-caching-mechanisms
+        # cache: gradle 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Print commit id
