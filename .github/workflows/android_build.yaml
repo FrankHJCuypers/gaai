@@ -12,7 +12,11 @@ on:
   workflow_dispatch:
 
 env:
+  # The name of the keystore file
   keystoreFileName: 'keystore/gaai-release.keystore'
+
+  # The name of the main module repository
+  main_project_module: app
 
 jobs:
   build:
@@ -20,28 +24,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Decodes Github secret ${{ secrets.SIGNING_STORE_FILE }} to the file ${{ env.keystoreFileName }}
     - name: Decode Keystore
       id: decode_keystore
       uses: timheuer/base64-to-file@v1
       with:
         fileName: ${{ env.keystoreFileName }}
         encodedString: ${{ secrets.SIGNING_STORE_FILE }}
+
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
     - name: set up JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'adopt'
         # next line commented out because of //https://github.com/gradle/actions/blob/v3.4.2/docs/setup-gradle.md#incompatibility-with-other-caching-mechanisms
-        # cache: gradle 
+        # cache: gradle
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Print Time zone
       run: echo "TZ $TZ"
-    - name: Print commit id
-      run: echo "Git ref ${{ github.head_ref }}.${{ github.sha }}"
+
     - name: Build with Gradle
       run: ./gradlew build
       env:
@@ -49,9 +57,17 @@ jobs:
         SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
         SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+
     - name: Test Summary
       uses: test-summary/action@v2
       with:
         paths: "app/build/test-results/**/TEST-*.xml"
         show: "all"
       if: always()
+
+    # Upload Artifact Build
+    - name: Upload APK Release - ${{ env.repository_name }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: Gaai APK(s) release generated
+        path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
