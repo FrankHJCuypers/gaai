@@ -69,7 +69,7 @@ The versionCode is not meant to be shown to the user.
 It is an internal number that Android uses to protect against downgrading.
 Android does not allow to install an APK with a lower versionCode than the one already installed.
 Using the [gradle-android-git-version](https://github.com/gladed/gradle-android-git-version) plugin, Gradle
-generates a versionCode equal to 100.000 * z + 1.000 * y + z.
+generates a versionCode equal to 100.000 * x + 1.000 * y + z.
 
 ## Git commits
 
