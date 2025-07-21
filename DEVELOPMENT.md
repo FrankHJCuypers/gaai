@@ -47,7 +47,7 @@ As soon as a commit is officially released for the x.y.z release, the following 
 2. The commit chosen for the official release of x.y.z is marked with the tag *v*x.y.z, possibly with an extension.
    Some of the extensions that can be used are `-experimental`, `-alpha`, `-beta`, etc...
    See [Software release life cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).
-   *Gaai* will use `-alpha` until the achieved testing level warrants an `-beta` state.
+   *Gaai* will use `-beta` until the achieved testing level warrants an `stable state.
 3. A release is created in GitHub with the APK files of the commit tagged with *v*x.y.z.
 4. The next commit is marked with the tag x'.y'.z', marking it as the first candidate for release *v*x'.y'.z'.
 5. The Gradle build generates a unique Android
@@ -184,7 +184,7 @@ Once a commit on the master branch is selected to make a new release in GutHub, 
     - Press *Generate release notes* and accept the full changelog that is proposed.
       Use it as the first line of the description of the release.
       Add some more detail for relevant commits;
-      see [release v.0.0.5-alpha](https://github.com/FrankHJCuypers/gaai/releases/tag/v0.0.5-alpha) as an example.
+      see [release v0.1.0-beta](https://github.com/FrankHJCuypers/gaai/releases/tag/v0.1.0-beta) as an example.
     - Choose a *Release Title*: "Release \<tagname\>" with \<tagname\> the chosen tag.
     - Select *Set as latest release*
     - Select *Create a discussion for this release*.

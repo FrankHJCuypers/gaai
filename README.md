@@ -560,9 +560,9 @@ The developer
 *Gaai* is only tested on a the phone versus Nexxtender Home/Mobile versions as indicated in section
 [Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-homemobile-firmware-versions)
 
-At this point *Gaai* should be considered an alpha app, for trials only.
+At this point *Gaai* should be considered an beta app,.
 It is currently not tested on sufficient combinations,
-so please expect to spend the necessary debugging time.
+so please expect to spend some debugging time.
 If despite the preceding warnings, you decide to use *Gaai*, that is on your own responsibility.
 But we will do our best to help you. 
 
