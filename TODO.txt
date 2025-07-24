@@ -1,3 +1,0 @@
-// TODO: Verify shields.io badges in README.md when Github repo is made public; does not work for private repos
-
-
