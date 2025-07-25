@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,6 +16,8 @@
 
 package be.cuypers_ghys.gaai.ui
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -23,6 +25,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -30,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import be.cuypers_ghys.gaai.R.string
@@ -77,22 +81,23 @@ fun GaaiTopAppBar(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiTopAppBarPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiTopAppBarPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiTopAppBarPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun GaaiTopAppBarPreview() {
-  GaaiTheme {
-    GaaiTopAppBar(
-      title = "Gaai",
-      canNavigateUp = true,
-      scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    )
-  }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GaaiAppBarPreview() {
-  GaaiTheme {
-    GaaiApp()
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiTopAppBar(
+        title = "Gaai",
+        canNavigateUp = true,
+        scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+      )
+    }
   }
 }

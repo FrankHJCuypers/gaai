@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,6 +16,8 @@
 
 package be.cuypers_ghys.gaai.ui.device
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -30,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,6 +41,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.ChargerType
@@ -291,85 +295,139 @@ fun DeviceInputForm(
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceEntryScreenPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceEntryScreenPreview() {
-  GaaiTheme {
-    DeviceEntryBody(
-      deviceUiState = DeviceUiState(
-        DeviceDetails(
-          pn = "12345-A2", sn = "6789-12345-E3"
-        ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
-      ), onDeviceValueChange = {}, onButtonClick = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      DeviceEntryBody(
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "12345-A2", sn = "6789-12345-E3"
+          ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenScanningPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenScanningPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceEntryScreenScanningPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceEntryScreenScanningPreview() {
-  GaaiTheme {
-    DeviceEntryBody(
-      deviceUiState = DeviceUiState(
-        DeviceDetails(
-          pn = "12345-A2", sn = "6789-12345-E3"
-        ), entryState = EntryState.SCANNING, isSnValid = true, isPnValid = true
-      ), onDeviceValueChange = {}, onButtonClick = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      DeviceEntryBody(
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "12345-A2", sn = "6789-12345-E3"
+          ), entryState = EntryState.SCANNING, isSnValid = true, isPnValid = true
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenEmptyPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenEmptyPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceEntryScreenEmptyPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceEntryScreenEmptyPreview() {
-  GaaiTheme {
-    DeviceEntryBody(
-      deviceUiState = DeviceUiState(
-        DeviceDetails(
-          pn = "", sn = ""
-        ), entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
-      ), onDeviceValueChange = {}, onButtonClick = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      DeviceEntryBody(
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "", sn = ""
+          ), entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenPnIncorrectPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenPnIncorrectPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceEntryScreenPnIncorrectPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceEntryScreenPnIncorrectPreview() {
-  GaaiTheme {
-    DeviceEntryBody(
-      deviceUiState = DeviceUiState(
-        DeviceDetails(
-          pn = "12-34", sn = "1234-56789-00"
-        ), entryState = EntryState.INPUTTING, isSnValid = true, isPnValid = false
-      ), onDeviceValueChange = {}, onButtonClick = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      DeviceEntryBody(
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "12-34", sn = "1234-56789-00"
+          ), entryState = EntryState.INPUTTING, isSnValid = true, isPnValid = false
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenScanCorrectPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenScanCorrectPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceEntryScreenScanCorrectPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceEntryScreenScanCorrectPreview() {
-  GaaiTheme {
-    DeviceEntryBody(
-      deviceUiState = DeviceUiState(
-        DeviceDetails(
-          pn = "12345-A2",
-          sn = "6789-12345-E3",
-          mac = "FA:CA:DE:12:34:56",
-          serviceDataValue = 0x12345678,
-          type = ChargerType.HOME
-        ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = true
-      ), onDeviceValueChange = {}, onButtonClick = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      DeviceEntryBody(
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "12345-A2",
+            sn = "6789-12345-E3",
+            mac = "FA:CA:DE:12:34:56",
+            serviceDataValue = 0x12345678,
+            type = ChargerType.HOME
+          ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = true
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenScanDuplicatePreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenScanDuplicatePreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceEntryScreenScanDuplicatePreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceEntryScreenScanDuplicatePreview() {
-  GaaiTheme {
-    DeviceEntryBody(
-      deviceUiState = DeviceUiState(
-        DeviceDetails(
-          pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
-          type = ChargerType.HOME
-        ), entryState = EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = true
-      ), onDeviceValueChange = {}, onButtonClick = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      DeviceEntryBody(
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
+            type = ChargerType.HOME
+          ), entryState = EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = true
+        ), onDeviceValueChange = {}, onButtonClick = {})
+    }
   }
 }

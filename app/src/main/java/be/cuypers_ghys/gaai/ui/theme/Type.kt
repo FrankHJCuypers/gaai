@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -22,29 +22,4 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-  bodyLarge = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Normal,
-    fontSize = 16.sp,
-    lineHeight = 24.sp,
-    letterSpacing = 0.5.sp
-  )
-  /* Other default text styles to override
-  titleLarge = TextStyle(
-      fontFamily = FontFamily.Default,
-      fontWeight = FontWeight.Normal,
-      fontSize = 22.sp,
-      lineHeight = 28.sp,
-      letterSpacing = 0.sp
-  ),
-  labelSmall = TextStyle(
-      fontFamily = FontFamily.Default,
-      fontWeight = FontWeight.Medium,
-      fontSize = 11.sp,
-      lineHeight = 16.sp,
-      letterSpacing = 0.5.sp
-  )
-  */
-)
+val AppTypography = Typography()

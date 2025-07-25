@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,6 +16,8 @@
 
 package be.cuypers_ghys.gaai.ui.device
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +27,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,6 +45,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
@@ -60,6 +64,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -1709,7 +1714,7 @@ fun TouPeriodDialog(
   var newTouPeriodEnd by remember { mutableStateOf(touPeriod.endTime) }
 
   Dialog(onDismissRequest = { onDismissRequest() }) {
-    Card(modifier = modifier) {
+    Card(modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
       Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -1856,7 +1861,7 @@ fun AmpereSliderDialog(
 ) {
   var sliderPosition by remember { mutableFloatStateOf(value.toFloat()) }
   Dialog(onDismissRequest = { onDismiss() }) {
-    Card(modifier = modifier) {
+    Card(modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
       Column(modifier = modifier.padding(horizontal = 16.dp)) {
         Text(
           modifier = Modifier
@@ -1937,7 +1942,8 @@ fun DialTimePickerDialog(
     Card(
       modifier = modifier
         .width(IntrinsicSize.Min)
-        .height(IntrinsicSize.Min)
+        .height(IntrinsicSize.Min),
+      elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
       Column {
         Text(
@@ -1977,91 +1983,240 @@ fun DialTimePickerDialog(
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceDetailsHomePreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceDetailsHomePreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceDetailsHomePreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceDetailsHomePreview() {
-  GaaiTheme {
-    DeviceDetailsBody(
-      device = Device(
-        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
-        type = ChargerType.HOME
-      ),
-      state = DeviceDetailsViewState(
-        deviceName = "HOME2_",
-        deviceState = DeviceState(ConnectionState.CONNECTED),
-        deviceInformation = DeviceInformation(
-          modelNumber = "12345", serialNumber = "12345",
-          firmwareRevision = "1.23.4", hardwareRevision = "A2"
+  GaaiTheme(dynamicColor = true) {
+    Surface(
+      modifier = Modifier.fillMaxSize()
+    ) {
+      DeviceDetailsBody(
+        device = Device(
+          pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
+          type = ChargerType.HOME
         ),
-        chargingBasicData = ChargingBasicData(
-          seconds = 123u, discriminator = Discriminator.STOPPED,
-          status = Status.PLUGGED, energy = 1234u, phaseCount = 2u
+        state = DeviceDetailsViewState(
+          deviceName = "HOME2_",
+          deviceState = DeviceState(ConnectionState.CONNECTED),
+          deviceInformation = DeviceInformation(
+            modelNumber = "12345", serialNumber = "12345",
+            firmwareRevision = "1.23.4", hardwareRevision = "A2"
+          ),
+          chargingBasicData = ChargingBasicData(
+            seconds = 123u, discriminator = Discriminator.STOPPED,
+            status = Status.PLUGGED, energy = 1234u, phaseCount = 2u
+          ),
+          chargingGridData = ChargingGridData(
+            timestamp = 0x662D0EFBu,
+            l1 = 1,
+            l2 = 2,
+            l3 = -1,
+            consumed = 12345,
+            interval = 345u
+          ),
+          chargingCarData = ChargingCarData(
+            timestamp = 0x662D0EFBu,
+            l1 = 1,
+            l2 = 2,
+            l3 = -1,
+            p1 = 1111,
+            p2 = 22222,
+            p3 = 3333
+          ),
+          chargingAdvancedData = ChargingAdvancedData(
+            timestamp = 0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower = 32,
+            authorizationStatus = AuthorizationStatus(0), errorCode = 0
+          )
         ),
-        chargingGridData = ChargingGridData(
-          timestamp = 0x662D0EFBu,
-          l1 = 1,
-          l2 = 2,
-          l3 = -1,
-          consumed = 12345,
-          interval = 345u
-        ),
-        chargingCarData = ChargingCarData(
-          timestamp = 0x662D0EFBu,
-          l1 = 1,
-          l2 = 2,
-          l3 = -1,
-          p1 = 1111,
-          p2 = 22222,
-          p3 = 3333
-        ),
-        chargingAdvancedData = ChargingAdvancedData(
-          timestamp = 0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower = 32,
-          authorizationStatus = AuthorizationStatus(0), errorCode = 0
-        )
-      ),
-      onTouWeekChange = {},
-      onTouWeekendChange = {},
-      onMaxGridChange = {},
-      onMaxDeviceChange = {},
-      onICapacityChange = {},
-      onSafeChange = {},
-      onModeChange = {},
-      onTimeGet = {},
-      onTimeSync = {},
-      onLoaderOperation = {},
-      navigateToBadgeList = { }
-    )
+        onTouWeekChange = {},
+        onTouWeekendChange = {},
+        onMaxGridChange = {},
+        onMaxDeviceChange = {},
+        onICapacityChange = {},
+        onSafeChange = {},
+        onModeChange = {},
+        onTimeGet = {},
+        onTimeSync = {},
+        onLoaderOperation = {},
+        navigateToBadgeList = { }
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceDetailsMobilePreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceDetailsMobilePreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceDetailsMobilePreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DeviceDetailsMobilePreview() {
-  GaaiTheme {
-    DeviceDetailsBody(
-      device = Device(
-        pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
-        type = ChargerType.MOBILE
-      ),
-      state = DeviceDetailsViewState(
-        deviceName = "Mobile2_",
-        deviceState = DeviceState(ConnectionState.CONNECTED),
-        deviceInformation = DeviceInformation(
-          modelNumber = "12345", serialNumber = "12345",
-          firmwareRevision = "1.23.4", hardwareRevision = "A2"
+  GaaiTheme(dynamicColor = true) {
+    Surface(
+      modifier = Modifier.fillMaxSize()
+    ) {
+
+      DeviceDetailsBody(
+        device = Device(
+          pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
+          type = ChargerType.MOBILE
         ),
+        state = DeviceDetailsViewState(
+          deviceName = "Mobile2_",
+          deviceState = DeviceState(ConnectionState.CONNECTED),
+          deviceInformation = DeviceInformation(
+            modelNumber = "12345", serialNumber = "12345",
+            firmwareRevision = "1.23.4", hardwareRevision = "A2"
+          ),
+          chargingBasicData = ChargingBasicData(
+            seconds = 123u, discriminator = Discriminator.STOPPED,
+            status = Status.PLUGGED, energy = 1234u, phaseCount = 2u
+          ),
+          chargingGridData = ChargingGridData(
+            timestamp = 0x662D0EFBu,
+            l1 = 1,
+            l2 = 2,
+            l3 = -1,
+            consumed = 12345,
+            interval = 345u
+          ),
+          chargingCarData = ChargingCarData(
+            timestamp = 0x662D0EFBu,
+            l1 = 1,
+            l2 = 2,
+            l3 = -1,
+            p1 = 1111,
+            p2 = 22222,
+            p3 = 3333
+          ),
+          chargingAdvancedData = ChargingAdvancedData(
+            timestamp = 0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower = 32,
+            authorizationStatus = AuthorizationStatus(0), errorCode = 0
+          )
+        ),
+        onTouWeekChange = {},
+        onTouWeekendChange = {},
+        onMaxGridChange = {},
+        onMaxDeviceChange = {},
+        onICapacityChange = {},
+        onSafeChange = {},
+        onModeChange = {},
+        onTimeGet = {},
+        onTimeSync = {},
+        onLoaderOperation = {},
+        navigateToBadgeList = { }
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceInformationPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceInformationPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DeviceInformationPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
+@Composable
+private fun DeviceInformationPreview() {
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiDeviceInformationCard(
+        deviceInformation = DeviceInformation(
+          modelNumber = "12345", serialNumber = "67890",
+          firmwareRevision = "1.23.4", hardwareRevision = "A1"
+        ),
+        modifier = Modifier
+          .padding(
+            dimensionResource(id = R.dimen.padding_small)
+          )
+      )
+    }
+  }
+}
+
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ChargingBasicDataPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ChargingBasicDataPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "ChargingBasicDataPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
+@Composable
+private fun ChargingBasicDataPreview() {
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiChargingBasicDataCard(
         chargingBasicData = ChargingBasicData(
           seconds = 123u, discriminator = Discriminator.STOPPED,
           status = Status.PLUGGED, energy = 1234u, phaseCount = 2u
         ),
+        modifier = Modifier
+          .padding(
+            dimensionResource(id = R.dimen.padding_small)
+          )
+      )
+    }
+  }
+}
+
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ChargingGridDataPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ChargingGridDataPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "ChargingGridDataPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
+@Composable
+private fun ChargingGridDataPreview() {
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiChargingGridDataCard(
         chargingGridData = ChargingGridData(
           timestamp = 0x662D0EFBu,
           l1 = 1,
           l2 = 2,
           l3 = -1,
-          consumed = 12345,
+          consumed = 123,
           interval = 345u
         ),
+        modifier = Modifier
+          .padding(
+            dimensionResource(id = R.dimen.padding_small)
+          )
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ChargingGridDataPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ChargingGridDataPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "ChargingGridDataPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
+@Composable
+private fun GaaiChargingCarDataCardPreview() {
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiChargingCarDataCard(
         chargingCarData = ChargingCarData(
           timestamp = 0x662D0EFBu,
           l1 = 1,
@@ -2071,332 +2226,360 @@ private fun DeviceDetailsMobilePreview() {
           p2 = 22222,
           p3 = 3333
         ),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiChargingAdvancedDataCardPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiChargingAdvancedDataCardPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiChargingAdvancedDataCardPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
+@Composable
+private fun GaaiChargingAdvancedDataCardPreview() {
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiChargingAdvancedDataCard(
         chargingAdvancedData = ChargingAdvancedData(
           timestamp = 0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower = 32,
           authorizationStatus = AuthorizationStatus(0), errorCode = 0
-        )
-      ),
-      onTouWeekChange = {},
-      onTouWeekendChange = {},
-      onMaxGridChange = {},
-      onMaxDeviceChange = {},
-      onICapacityChange = {},
-      onSafeChange = {},
-      onModeChange = {},
-      onTimeGet = {},
-      onTimeSync = {},
-      onLoaderOperation = {},
-      navigateToBadgeList = { }
-    )
+        ),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DeviceInformationPreview() {
-  GaaiTheme {
-    GaaiDeviceInformationCard(
-      deviceInformation = DeviceInformation(
-        modelNumber = "12345", serialNumber = "67890",
-        firmwareRevision = "1.23.4", hardwareRevision = "A1"
-      ),
-      modifier = Modifier
-        .padding(
-          dimensionResource(id = R.dimen.padding_small)
-        )
-    )
-  }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun ChargingBasicDataPreview() {
-  GaaiTheme {
-    GaaiChargingBasicDataCard(
-      chargingBasicData = ChargingBasicData(
-        seconds = 123u, discriminator = Discriminator.STOPPED,
-        status = Status.PLUGGED, energy = 1234u, phaseCount = 2u
-      ),
-      modifier = Modifier
-        .padding(
-          dimensionResource(id = R.dimen.padding_small)
-        )
-    )
-  }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun ChargingGridDataPreview() {
-  GaaiTheme {
-    GaaiChargingGridDataCard(
-      chargingGridData = ChargingGridData(
-        timestamp = 0x662D0EFBu,
-        l1 = 1,
-        l2 = 2,
-        l3 = -1,
-        consumed = 123,
-        interval = 345u
-      ),
-      modifier = Modifier
-        .padding(
-          dimensionResource(id = R.dimen.padding_small)
-        )
-    )
-  }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun GaaiChargingCarDataCardPreview() {
-  GaaiTheme {
-    GaaiChargingCarDataCard(
-      chargingCarData = ChargingCarData(
-        timestamp = 0x662D0EFBu,
-        l1 = 1,
-        l2 = 2,
-        l3 = -1,
-        p1 = 1111,
-        p2 = 22222,
-        p3 = 3333
-      ),
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
-  }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun GaaiChargingAdvancedDataCardPreview() {
-  GaaiTheme {
-    GaaiChargingAdvancedDataCard(
-      chargingAdvancedData = ChargingAdvancedData(
-        timestamp = 0x662D0EFBu, iAvailable = 6, gridPower = 34, carPower = 32,
-        authorizationStatus = AuthorizationStatus(0), errorCode = 0
-      ),
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
-  }
-}
-
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardPreview_1_0Dark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardPreview_1_0Light")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiConfigDataCardPreview_1_0Dynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GaaiConfigDataCardPreview_1_0() {
-  GaaiTheme {
-    GaaiConfigDataCard(
-      configData = ConfigData(
-        maxGrid = 50U,
-        maxDevice = 0U,
-        mode = Mode.MAX_PRIVATE,
-        safe = 6U,
-        networkType = NetWorkType.UNKNOWN,
-        touWeekStart = 123,
-        touWeekEnd = 456,
-        touWeekendStart = 789,
-        touWeekendEnd = 333,
-        minDevice = 11U,
-        iCapacity = 22U,
-        configVersion = ConfigVersion.CONFIG_1_0
-      ),
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small)),
-      onTouWeekChange = {},
-      onTouWeekendChange = {},
-      onMaxGridChange = {},
-      onMaxDeviceChange = {},
-      onICapacityChange = {},
-      onSafeChange = {},
-      onModeChange = {}
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiConfigDataCard(
+        configData = ConfigData(
+          maxGrid = 50U,
+          maxDevice = 0U,
+          mode = Mode.MAX_PRIVATE,
+          safe = 6U,
+          networkType = NetWorkType.UNKNOWN,
+          touWeekStart = 123,
+          touWeekEnd = 456,
+          touWeekendStart = 789,
+          touWeekendEnd = 333,
+          minDevice = 11U,
+          iCapacity = 22U,
+          configVersion = ConfigVersion.CONFIG_1_0
+        ),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+        onTouWeekChange = {},
+        onTouWeekendChange = {},
+        onMaxGridChange = {},
+        onMaxDeviceChange = {},
+        onICapacityChange = {},
+        onSafeChange = {},
+        onModeChange = {}
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardPreview_1_1Dark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardPreview_1_1Light")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiConfigDataCardPreview_1_1Dynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GaaiConfigDataCardPreview_1_1() {
-  GaaiTheme {
-    GaaiConfigDataCard(
-      configData = ConfigData(
-        maxGrid = 50U,
-        maxDevice = 32U,
-        mode = Mode.MAX_PRIVATE,
-        safe = 6U,
-        networkType = NetWorkType.MONO_TRIN,
-        touWeekStart = 123,
-        touWeekEnd = 456,
-        touWeekendStart = 789,
-        touWeekendEnd = 333,
-        minDevice = 11U,
-        iCapacity = 22U,
-        configVersion = ConfigVersion.CONFIG_1_1
-      ),
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small)),
-      onTouWeekChange = {},
-      onTouWeekendChange = {},
-      onMaxGridChange = {},
-      onMaxDeviceChange = {},
-      onICapacityChange = {},
-      onSafeChange = {},
-      onModeChange = {}
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiConfigDataCard(
+        configData = ConfigData(
+          maxGrid = 50U,
+          maxDevice = 32U,
+          mode = Mode.MAX_PRIVATE,
+          safe = 6U,
+          networkType = NetWorkType.MONO_TRIN,
+          touWeekStart = 123,
+          touWeekEnd = 456,
+          touWeekendStart = 789,
+          touWeekendEnd = 333,
+          minDevice = 11U,
+          iCapacity = 22U,
+          configVersion = ConfigVersion.CONFIG_1_1
+        ),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+        onTouWeekChange = {},
+        onTouWeekendChange = {},
+        onMaxGridChange = {},
+        onMaxDeviceChange = {},
+        onICapacityChange = {},
+        onSafeChange = {},
+        onModeChange = {}
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardCborPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardCborPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiConfigDataCardCborPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GaaiConfigDataCardCborPreview() {
-  GaaiTheme {
-    GaaiConfigDataCard(
-      configData = ConfigData(
-        maxGrid = 50U,
-        maxDevice = 32U,
-        mode = Mode.MAX_PRIVATE,
-        safe = 6U,
-        networkType = NetWorkType.MONO_TRIN,
-        touWeekStart = 123,
-        touWeekEnd = 456,
-        touWeekendStart = 789,
-        touWeekendEnd = 333,
-        minDevice = 11U,
-        iCapacity = 22U,
-        configVersion = ConfigVersion.CONFIG_CBOR
-      ),
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small)),
-      onTouWeekChange = {},
-      onTouWeekendChange = {},
-      onMaxGridChange = {},
-      onMaxDeviceChange = {},
-      onICapacityChange = {},
-      onSafeChange = {},
-      onModeChange = {}
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface()
+    {
+      GaaiConfigDataCard(
+        configData = ConfigData(
+          maxGrid = 50U,
+          maxDevice = 32U,
+          mode = Mode.MAX_PRIVATE,
+          safe = 6U,
+          networkType = NetWorkType.MONO_TRIN,
+          touWeekStart = 123,
+          touWeekEnd = 456,
+          touWeekendStart = 789,
+          touWeekendEnd = 333,
+          minDevice = 11U,
+          iCapacity = 22U,
+          configVersion = ConfigVersion.CONFIG_CBOR
+        ),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+        onTouWeekChange = {},
+        onTouWeekendChange = {},
+        onMaxGridChange = {},
+        onMaxDeviceChange = {},
+        onICapacityChange = {},
+        onSafeChange = {},
+        onModeChange = {}
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "TouPeriodDialogPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "TouPeriodDialogPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "TouPeriodDialogPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun TouPeriodDialogPreview() {
-  GaaiTheme {
-    TouPeriodDialog(
-      title = "Weekdays",
-      touPeriod = TouPeriod(720, 1234),
-      onDismissRequest = {},
-      onConfirmation = {},
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      TouPeriodDialog(
+        title = "Weekdays",
+        touPeriod = TouPeriod(720, 1234),
+        onDismissRequest = {},
+        onConfirmation = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DialTimePickerDialogPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DialTimePickerDialogPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DialTimePickerDialogPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun DialTimePickerDialogPreview() {
-  GaaiTheme {
-    DialTimePickerDialog(
-      title = "Sample Time Picker Dialog",
-      touTime = TouTime(13, 45),
-      onDismiss = {},
-      onConfirm = {},
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      DialTimePickerDialog(
+        title = "Sample Time Picker Dialog",
+        touTime = TouTime(13, 45),
+        onDismiss = {},
+        onConfirm = {},
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "AmpereSliderDialogPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "AmpereSliderDialogPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "AmpereSliderDialogPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun AmpereSliderDialogPreview() {
-  GaaiTheme {
-    AmpereSliderDialog(
-      name = "Sample Ampere x",
-      value = 32u,
-      minValue = 6u,
-      maxValue = 50u,
-      onDismiss = {},
-      onConfirm = {},
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      AmpereSliderDialog(
+        name = "Sample Ampere x",
+        value = 32u,
+        minValue = 6u,
+        maxValue = 50u,
+        onDismiss = {},
+        onConfirm = {},
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ModeDialogPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ModeDialogPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "ModeDialogPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun ModeDialogPreview() {
-  GaaiTheme {
-    ModeDialog(
-      mode = Mode.ECO_PRIVATE,
-      onDismiss = {},
-      onConfirm = {},
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      ModeDialog(
+        mode = Mode.ECO_PRIVATE,
+        onDismiss = {},
+        onConfirm = {},
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ModeDialogUnknownPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ModeDialogUnknownPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "ModeDialogUnknownPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun ModeDialogUnknownPreview() {
-  GaaiTheme {
-    ModeDialog(
-      mode = Mode.UNKNOWN,
-      onDismiss = {},
-      onConfirm = {},
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      ModeDialog(
+        mode = Mode.UNKNOWN,
+        onDismiss = {},
+        onConfirm = {},
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiTimeDataCardPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiTimeDataCardPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiTimeDataCardPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GaaiTimeDataCardPreview() {
-  GaaiTheme {
-    GaaiTimeDataCard(
-      timeData = TimeData(0x662D0EFBu),
-      onTimeGet = {},
-      onTimeSync = {},
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small)),
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiTimeDataCard(
+        timeData = TimeData(0x662D0EFBu),
+        onTimeGet = {},
+        onTimeSync = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
 
-      )
+        )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiTimeDataCardTime0PreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiTimeDataCardTime0PreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiTimeDataCardTime0PreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GaaiTimeDataCardTime0Preview() {
-  GaaiTheme {
-    GaaiTimeDataCard(
-      timeData = TimeData(0u),
-      onTimeGet = {},
-      onTimeSync = {},
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small)),
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiTimeDataCard(
+        timeData = TimeData(0u),
+        onTimeGet = {},
+        onTimeSync = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
 
-      )
+        )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiLoaderCardPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiLoaderCardPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiLoaderCardPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GaaiLoaderCardPreview() {
-  GaaiTheme {
-    GaaiLoaderCard(
-      onLoaderOperation = {},
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small)),
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiLoaderCard(
+        onLoaderOperation = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiBadgesCardPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiBadgesCardPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiBadgesCardPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GaaiBadgesCardPreview() {
-  GaaiTheme {
-    GaaiBadgesCard(
-      navigateToBadgeList = {},
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small)),
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiBadgesCard(
+        navigateToBadgeList = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+      )
+    }
   }
 }
 

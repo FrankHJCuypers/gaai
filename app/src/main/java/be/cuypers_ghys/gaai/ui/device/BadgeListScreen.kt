@@ -16,6 +16,8 @@
 
 package be.cuypers_ghys.gaai.ui.device
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -43,6 +45,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
@@ -64,6 +67,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
@@ -433,45 +437,72 @@ internal fun GaaiBadgeCard(
 }
 
 @OptIn(ExperimentalStdlibApi::class)
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "BadgeListBodyPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "BadgeListBodyPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "BadgeListBodyPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun BadgeListBodyPreview() {
-  GaaiTheme {
-    BadgeListBody(
-      listOf(
-        Badge("11223344556677".hexToByteArray(), ChargeType.DEFAULT),
-        Badge("11223344".hexToByteArray(), ChargeType.MAX),
-        Badge("112233445566778899AA".hexToByteArray(), ChargeType.UNKNOWN),
-      ), onBadgeRemove = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      BadgeListBody(
+        listOf(
+          Badge("11223344556677".hexToByteArray(), ChargeType.DEFAULT),
+          Badge("11223344".hexToByteArray(), ChargeType.MAX),
+          Badge("112233445566778899AA".hexToByteArray(), ChargeType.UNKNOWN),
+        ), onBadgeRemove = {})
+    }
   }
 }
 
 
 @OptIn(ExperimentalStdlibApi::class)
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "BadgeListScreenNoViewModelPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "BadgeListScreenNoViewModelPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "BadgeListScreenNoViewModelPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun BadgeListScreenNoViewModelPreview() {
-  GaaiTheme {
-    BadgeListScreenNoViewModel(
-      onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(
-        listOf(
-          Badge("11223344556677".hexToByteArray(), ChargeType.DEFAULT),
-          Badge("11223344".hexToByteArray(), ChargeType.MAX),
-          Badge("112233445566778899AA".hexToByteArray(), ChargeType.UNKNOWN),
-        )
-      ), badgeDeviceUiState = BadgeDeviceUiState()
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      BadgeListScreenNoViewModel(
+        onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(
+          listOf(
+            Badge("11223344556677".hexToByteArray(), ChargeType.DEFAULT),
+            Badge("11223344".hexToByteArray(), ChargeType.MAX),
+            Badge("112233445566778899AA".hexToByteArray(), ChargeType.UNKNOWN),
+          )
+        ), badgeDeviceUiState = BadgeDeviceUiState()
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "BadgeListScreenNoViewModelEmptyListPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "BadgeListScreenNoViewModelEmptyListPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "BadgeListScreenNoViewModelEmptyListPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun BadgeListScreenNoViewModelEmptyListPreview() {
-  GaaiTheme {
-    BadgeListScreenNoViewModel(
-      onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(
-        listOf()
-      ), badgeDeviceUiState = BadgeDeviceUiState()
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      BadgeListScreenNoViewModel(
+        onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(
+          listOf()
+        ), badgeDeviceUiState = BadgeDeviceUiState()
+      )
+    }
   }
 }

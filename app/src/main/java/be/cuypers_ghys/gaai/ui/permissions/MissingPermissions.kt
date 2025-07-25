@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -23,12 +23,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
 import androidx.core.content.ContextCompat.registerReceiver
@@ -263,19 +267,28 @@ fun RequireBluetooth(
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GetTextToShowGivenPermissionsDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GetTextToShowGivenPermissionsLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GetTextToShowGivenPermissionsDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 private fun GetTextToShowGivenPermissions() {
-  GaaiTheme {
-    Text(
-      text = getTextToShowGivenPermissions(
-        listOf(
-          DummyPermissionState(Manifest.permission.ACCESS_FINE_LOCATION, PermissionStatus.Denied(true)),
-          DummyPermissionState(Manifest.permission.BLUETOOTH_SCAN, PermissionStatus.Denied(true)),
-          DummyPermissionState(Manifest.permission.BLUETOOTH_CONNECT, PermissionStatus.Denied(true))
-        ),
-        true
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      Text(
+        text = getTextToShowGivenPermissions(
+          listOf(
+            DummyPermissionState(Manifest.permission.ACCESS_FINE_LOCATION, PermissionStatus.Denied(true)),
+            DummyPermissionState(Manifest.permission.BLUETOOTH_SCAN, PermissionStatus.Denied(true)),
+            DummyPermissionState(Manifest.permission.BLUETOOTH_CONNECT, PermissionStatus.Denied(true))
+          ),
+          true
+        )
       )
-    )
+    }
   }
 }

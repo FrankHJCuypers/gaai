@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,6 +16,8 @@
 
 package be.cuypers_ghys.gaai.ui.home
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -46,6 +48,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -68,6 +71,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.BuildConfig
@@ -80,7 +84,6 @@ import be.cuypers_ghys.gaai.ui.device.ConnectionState
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
-import be.cuypers_ghys.gaai.ui.theme.RedA400
 import kotlinx.coroutines.launch
 
 // Tag for logging
@@ -478,8 +481,8 @@ internal fun GaaiDeviceCard(
 @Composable
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
   val color = when (dismissState.dismissDirection) {
-    SwipeToDismissBoxValue.StartToEnd -> RedA400
-    SwipeToDismissBoxValue.EndToStart -> RedA400
+    SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.error
+    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
     SwipeToDismissBoxValue.Settled -> Color.Transparent
   }
 
@@ -499,73 +502,127 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeBodyPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeBodyPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "HomeBodyPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun HomeBodyPreview() {
-  GaaiTheme {
-    HomeBody(
-      listOf(
-        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
-        Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
-        Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
-      ), onDeviceClick = {}, onDeviceRemove = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      HomeBody(
+        listOf(
+          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
+          Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
+          Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+        ), onDeviceClick = {}, onDeviceRemove = {})
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeScreenNoViewModelPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeScreenNoViewModelPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "HomeScreenNoViewModelPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun HomeScreenNoViewModelPreview() {
-  GaaiTheme {
-    HomeScreenNoViewModel(
-      navigateToDeviceEntry = {}, navigateToDeviceDetails = {}, removeDevice = {}, homeUiState =
-        HomeUiState(
-          listOf(
-            Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
-            Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
-            Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+  GaaiTheme(dynamicColor = true) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+      HomeScreenNoViewModel(
+        navigateToDeviceEntry = {}, navigateToDeviceDetails = {}, removeDevice = {}, homeUiState =
+          HomeUiState(
+            listOf(
+              Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
+              Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
+              Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+            )
           )
-        )
-    )
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeBodyEmptyListPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeBodyEmptyListPreviewLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "HomeBodyEmptyListPreviewDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun HomeBodyEmptyListPreview() {
-  GaaiTheme {
-    HomeBody(listOf(), onDeviceClick = {}, onDeviceRemove = {})
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      HomeBody(listOf(), onDeviceClick = {}, onDeviceRemove = {})
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewHOMEDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewHOMELight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DevicePreviewHOMEDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun DevicePreviewHOME() {
-  GaaiTheme {
-    GaaiDeviceCard(
-      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
-      ConnectionState.NOT_CONNECTED
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiDeviceCard(
+        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
+        ConnectionState.NOT_CONNECTED
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewMOBILEDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewMOBILELight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DevicePreviewMOBILEDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun DevicePreviewMOBILE() {
-  GaaiTheme {
-    GaaiDeviceCard(
-      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
-      ConnectionState.NOT_CONNECTED
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiDeviceCard(
+        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
+        ConnectionState.NOT_CONNECTED
+      )
+    }
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewUNKNOWNDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewUNKNOWNLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "DevicePreviewUNKNOWNDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
 @Composable
 fun DevicePreviewUNKNOWN() {
-  GaaiTheme {
-    GaaiDeviceCard(
-      Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
-      ConnectionState.NOT_CONNECTED
-    )
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      GaaiDeviceCard(
+        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
+        ConnectionState.NOT_CONNECTED
+      )
+    }
   }
 }
