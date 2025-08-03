@@ -101,7 +101,7 @@ fun ByteArray.fromUint32BE(offset: Int): UInt {
 }
 
 /**
- * Reads the 2-byte signed Little Endian value ot position *offset* of the ByteArray.
+ * Reads the 2-byte signed Little Endian value at position *offset* of the ByteArray.
  * @param offset Offset to start reading in the ByteArray.
  * @return Value read from the ByteArray.
  * @author Frank HJ Cuypers
