@@ -296,14 +296,14 @@ It is not supported by the *Nexxtender Mobile*.
 
 ![Grid Data Card](docs/images/GridDataCard.png)
 
-| Field      | Description                                                                                                     |
-|------------|-----------------------------------------------------------------------------------------------------------------|
-| Timestamp  | Current time                                                                                                    |
-| L1 Current | Grid phase L1 current                                                                                           |
-| L2 Current | Grid phase L2 current                                                                                           |
-| L3 Current | Grid phase L3 current                                                                                           |
-| Consumed   | Total grid power consumption in Wh during this quarter. Set to 0 when ''interval'' is set to 0.                 |
-| Interval   | Counts the seconds in the current quarter. Is set to 0 every multiple of a quarter (hh:00, hh:15, hh:30, hh:45) |
+| Field      | Description                                                                                                                                                                                           |
+|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Timestamp  | Current time                                                                                                                                                                                          |
+| L1 Current | Grid phase L1 current                                                                                                                                                                                 |
+| L2 Current | Grid phase L2 current                                                                                                                                                                                 |
+| L3 Current | Grid phase L3 current                                                                                                                                                                                 |
+| Consumed   | Total power injected in the Grid in cWh during this quarter? See [Nexxtender Charger Information](https://github.com/FrankHJCuypers/gaai/wiki/Nexxtender-Charger-Information#charging-grid-data-0xd0) |
+| Interval   | Counts the seconds in the current quarter. Is set to 0 every multiple of a quarter (hh:00, hh:15, hh:30, hh:45)                                                                                       |
 
 ### Car Data
 
