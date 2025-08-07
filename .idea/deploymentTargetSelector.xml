@@ -13,6 +13,18 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+      <SelectionState runConfigName="HomeScreenNoViewModelPreview - HomeScreenNoViewModelPreviewDark">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="DropdownMenuWithDetailsExpandedPreview - DropdownMenuWithDetailsExpandedPreviewDynamic">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="DropdownMenuWithDetailsExpandedPreview - DropdownMenuWithDetailsExpandedPreviewDark">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="DropdownMenuWithDetailsExpandedPreview - DropdownMenuWithDetailsExpandedPreviewLight">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

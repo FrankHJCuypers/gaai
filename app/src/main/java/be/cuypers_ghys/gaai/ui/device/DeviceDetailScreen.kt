@@ -64,7 +64,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -126,7 +125,6 @@ object DeviceDetailsDestination : NavigationDestination {
  *
  * @author Frank HJ Cuypers
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceDetailsScreen(
   // TODO: remove unused navigateBack? What is difference with onNavigateUp? Is correct one used?
@@ -135,6 +133,84 @@ fun DeviceDetailsScreen(
   canNavigateUp: Boolean = true,
   viewModel: DeviceDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+  val deviceId = viewModel.deviceId
+  val state by viewModel.state.collectAsStateWithLifecycle()
+  val device by viewModel.device.collectAsStateWithLifecycle()
+
+  DeviceDetailsScreenNoViewModel(
+    onNavigateUp = onNavigateUp,
+    canNavigateUp = canNavigateUp,
+    navigateUp = { viewModel.navigateUp(onNavigateUp) },
+    device = device,
+    state = state,
+    onTouWeekChange = viewModel::sendConfigOperationSetTouWeek,
+    onTouWeekendChange = viewModel::sendConfigOperationSetTouWeekend,
+    onMaxGridChange = viewModel::sendConfigOperationSetMaxGrid,
+    onMaxDeviceChange = viewModel::sendConfigOperationSetMaxDevice,
+    onSafeChange = viewModel::sendConfigOperationSetSafe,
+    onModeChange = viewModel::sendConfigOperationSetMode,
+    onICapacityChange = viewModel::sendConfigOperationSetICapacity,
+    onTimeGet = viewModel::sendTimeOperationGetTime,
+    onTimeSync = viewModel::sendTimeOperationSyncTime,
+    onLoaderOperation = viewModel::sendLoaderOperation,
+    navigateToBadgeList = { navigateToBadgeList(deviceId) },
+  )
+}
+
+/**
+ * Implements the complete screen for displaying all the information received from the Nexxtender charger,
+ * including app bars.
+ * @param onNavigateUp Function to be called when [DeviceDetailsScreen] wants to navigate up.
+ * @param navigateToBadgeList Function to be called when [DeviceDetailsScreen] wants to show list of badges.
+ * @param canNavigateUp Is the [DeviceDetailsScreen] allowed to navigate back?
+ * @param device The information for the [Device] determined by the [DeviceDetailsViewModel].
+ * @param state The state for the [Device] determined by the [DeviceDetailsViewModel].
+ *  The state includes all information received from the device over BLE.
+ * @param onTouWeekChange Function to be called when [DeviceDetailsBody] wants to change the
+ *  device's [ConfigData.touWeekStart] and [ConfigData.touWeekEnd].
+ * @param onTouWeekendChange Function to be called when [DeviceDetailsBody] wants to change the
+ *  device's [ConfigData.touWeekendStart] and [ConfigData.touWeekendEnd].
+ * @param onMaxGridChange Function to be called when [DeviceDetailsBody] wants to change the
+ *  device's [ConfigData.maxGrid].
+ * @param onMaxDeviceChange Function to be called when [DeviceDetailsBody] wants to change the
+ *  device's [ConfigData.maxDevice].
+ * @param onSafeChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.safe].
+ * @param onModeChange Function to be called when [DeviceDetailsBody] wants to change the
+ *  device's [ConfigData.mode].
+ * @param onICapacityChange Function to be called when [GaaiConfigDataCard] wants to change the
+ *  device's [ConfigData.iCapacity].
+ * @param onTimeGet Function to be called when [DeviceDetailsBody] wants to read the
+ *  device's [TimeData.time].
+ * @param onTimeSync Function to be called when [DeviceDetailsBody] wants to sync the
+ *  device's [TimeData.time] with the current time on the mobile phone.
+ * @param onLoaderOperation Function to be called when [DeviceDetailsBody] wants to perform a loader operation.
+ * @param modifier The [Modifier] to be applied to this [DeviceDetailsBody].
+ *
+ * @author Frank HJ Cuypers
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeviceDetailsScreenNoViewModel(
+  // TODO: remove unused navigateBack? What is difference with onNavigateUp? Is correct one used?
+  onNavigateUp: () -> Unit,
+  navigateToBadgeList: () -> Unit,
+  canNavigateUp: Boolean = true,
+  navigateUp: () -> Unit,
+  device: Device?,
+  state: DeviceDetailsViewState,
+  onTouWeekChange: (TouPeriod) -> Unit,
+  onTouWeekendChange: (TouPeriod) -> Unit,
+  onMaxGridChange: (UByte) -> Unit,
+  onMaxDeviceChange: (UByte) -> Unit,
+  onSafeChange: (UByte) -> Unit,
+  onModeChange: (Mode) -> Unit,
+  onICapacityChange: (UByte) -> Unit,
+  onTimeGet: () -> Unit,
+  onTimeSync: () -> Unit,
+  onLoaderOperation: (Int) -> Unit,
+  modifier: Modifier = Modifier
+) {
   Log.d(TAG, "Entering DeviceDetailsScreen")
   rememberCoroutineScope()
   Scaffold(
@@ -142,30 +218,26 @@ fun DeviceDetailsScreen(
       GaaiTopAppBar(
         title = stringResource(DeviceDetailsDestination.titleRes),
         canNavigateUp = canNavigateUp,
-        navigateUp = { viewModel.navigateUp(onNavigateUp) }
+        navigateUp = navigateUp
       )
     }
   ) { innerPadding ->
     Log.d(TAG, "Before Entering DeviceDetailsBody")
 
-    val deviceId = viewModel.deviceId
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val device by viewModel.device.collectAsStateWithLifecycle()
-
     DeviceDetailsBody(
       device,
       state,
-      onTouWeekChange = viewModel::sendConfigOperationSetTouWeek,
-      onTouWeekendChange = viewModel::sendConfigOperationSetTouWeekend,
-      onMaxGridChange = viewModel::sendConfigOperationSetMaxGrid,
-      onMaxDeviceChange = viewModel::sendConfigOperationSetMaxDevice,
-      onSafeChange = viewModel::sendConfigOperationSetSafe,
-      onModeChange = viewModel::sendConfigOperationSetMode,
-      onICapacityChange = viewModel::sendConfigOperationSetICapacity,
-      onTimeGet = viewModel::sendTimeOperationGetTime,
-      onTimeSync = viewModel::sendTimeOperationSyncTime,
-      onLoaderOperation = viewModel::sendLoaderOperation,
-      navigateToBadgeList = { navigateToBadgeList(deviceId) },
+      onTouWeekChange = onTouWeekChange,
+      onTouWeekendChange = onTouWeekendChange,
+      onMaxGridChange = onMaxGridChange,
+      onMaxDeviceChange = onMaxDeviceChange,
+      onSafeChange = onSafeChange,
+      onModeChange = onModeChange,
+      onICapacityChange = onICapacityChange,
+      onTimeGet = onTimeGet,
+      onTimeSync = onTimeSync,
+      onLoaderOperation = onLoaderOperation,
+      navigateToBadgeList = navigateToBadgeList,
       modifier = Modifier
         .padding(
           start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
@@ -1983,21 +2055,15 @@ fun DialTimePickerDialog(
   }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceDetailsHomePreviewDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceDetailsHomePreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceDetailsHomePreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceDetailsHomeCompletePreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceDetailsHomeCompletePreviewLight")
 @Composable
-private fun DeviceDetailsHomePreview() {
-  GaaiTheme(dynamicColor = true) {
+private fun DeviceDetailsHomeCompletePreview() {
+  GaaiTheme(dynamicColor = false) {
     Surface(
       modifier = Modifier.fillMaxSize()
     ) {
-      DeviceDetailsBody(
+      DeviceDetailsScreenNoViewModel(
         device = Device(
           pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
           type = ChargerType.HOME
@@ -2045,23 +2111,21 @@ private fun DeviceDetailsHomePreview() {
         onTimeGet = {},
         onTimeSync = {},
         onLoaderOperation = {},
-        navigateToBadgeList = { }
+        navigateToBadgeList = { },
+        onNavigateUp = { },
+        canNavigateUp = true,
+        navigateUp = { }
       )
     }
   }
 }
 
+
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceDetailsMobilePreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceDetailsMobilePreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceDetailsMobilePreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceDetailsMobilePreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface(
       modifier = Modifier.fillMaxSize()
     ) {
@@ -2122,15 +2186,9 @@ private fun DeviceDetailsMobilePreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceInformationPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceInformationPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceInformationPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceInformationPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceInformationCard(
         deviceInformation = DeviceInformation(
@@ -2149,15 +2207,9 @@ private fun DeviceInformationPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ChargingBasicDataPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ChargingBasicDataPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "ChargingBasicDataPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun ChargingBasicDataPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiChargingBasicDataCard(
         chargingBasicData = ChargingBasicData(
@@ -2176,15 +2228,9 @@ private fun ChargingBasicDataPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ChargingGridDataPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ChargingGridDataPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "ChargingGridDataPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun ChargingGridDataPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiChargingGridDataCard(
         chargingGridData = ChargingGridData(
@@ -2206,15 +2252,9 @@ private fun ChargingGridDataPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ChargingGridDataPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ChargingGridDataPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "ChargingGridDataPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiChargingCarDataCardPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiChargingCarDataCard(
         chargingCarData = ChargingCarData(
@@ -2235,15 +2275,9 @@ private fun GaaiChargingCarDataCardPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiChargingAdvancedDataCardPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiChargingAdvancedDataCardPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiChargingAdvancedDataCardPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiChargingAdvancedDataCardPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiChargingAdvancedDataCard(
         chargingAdvancedData = ChargingAdvancedData(
@@ -2259,15 +2293,9 @@ private fun GaaiChargingAdvancedDataCardPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardPreview_1_0Dark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardPreview_1_0Light")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiConfigDataCardPreview_1_0Dynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiConfigDataCardPreview_1_0() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiConfigDataCard(
         configData = ConfigData(
@@ -2300,15 +2328,9 @@ private fun GaaiConfigDataCardPreview_1_0() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardPreview_1_1Dark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardPreview_1_1Light")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiConfigDataCardPreview_1_1Dynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiConfigDataCardPreview_1_1() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiConfigDataCard(
         configData = ConfigData(
@@ -2341,15 +2363,9 @@ private fun GaaiConfigDataCardPreview_1_1() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardCborPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardCborPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiConfigDataCardCborPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiConfigDataCardCborPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface()
     {
       GaaiConfigDataCard(
@@ -2383,15 +2399,9 @@ private fun GaaiConfigDataCardCborPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "TouPeriodDialogPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "TouPeriodDialogPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "TouPeriodDialogPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun TouPeriodDialogPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       TouPeriodDialog(
         title = "Weekdays",
@@ -2407,15 +2417,9 @@ private fun TouPeriodDialogPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DialTimePickerDialogPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DialTimePickerDialogPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DialTimePickerDialogPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DialTimePickerDialogPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       DialTimePickerDialog(
         title = "Sample Time Picker Dialog",
@@ -2429,15 +2433,9 @@ private fun DialTimePickerDialogPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "AmpereSliderDialogPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "AmpereSliderDialogPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "AmpereSliderDialogPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun AmpereSliderDialogPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       AmpereSliderDialog(
         name = "Sample Ampere x",
@@ -2453,15 +2451,9 @@ private fun AmpereSliderDialogPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ModeDialogPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ModeDialogPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "ModeDialogPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun ModeDialogPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       ModeDialog(
         mode = Mode.ECO_PRIVATE,
@@ -2474,15 +2466,9 @@ private fun ModeDialogPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "ModeDialogUnknownPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "ModeDialogUnknownPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "ModeDialogUnknownPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun ModeDialogUnknownPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       ModeDialog(
         mode = Mode.UNKNOWN,
@@ -2495,15 +2481,9 @@ private fun ModeDialogUnknownPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiTimeDataCardPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiTimeDataCardPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiTimeDataCardPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiTimeDataCardPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiTimeDataCard(
         timeData = TimeData(0x662D0EFBu),
@@ -2519,15 +2499,9 @@ private fun GaaiTimeDataCardPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiTimeDataCardTime0PreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiTimeDataCardTime0PreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiTimeDataCardTime0PreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiTimeDataCardTime0Preview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiTimeDataCard(
         timeData = TimeData(0u),
@@ -2543,15 +2517,9 @@ private fun GaaiTimeDataCardTime0Preview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiLoaderCardPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiLoaderCardPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiLoaderCardPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiLoaderCardPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiLoaderCard(
         onLoaderOperation = {},
@@ -2564,15 +2532,9 @@ private fun GaaiLoaderCardPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiBadgesCardPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiBadgesCardPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "GaaiBadgesCardPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun GaaiBadgesCardPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiBadgesCard(
         navigateToBadgeList = {},

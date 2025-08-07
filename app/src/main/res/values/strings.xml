@@ -119,4 +119,6 @@
     <string name="gatt_client_discovering_services">Discovering</string>
     <string name="gatt_client_connection_status_unknown">Unknown</string>
     <string name="gatt_client_connecting">Connecting</string>
+    <string name="gaai_icon">Gaai Icon</string>
+    <string name="version">Version</string>
 </resources>

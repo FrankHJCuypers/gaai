@@ -179,6 +179,18 @@ When *Gaai* is started the first time, it has no *Nexxtender* devices in its dat
 
 At the bottom right is a button with a "+" that allows to add a *Nexxtender* device.
 
+At the top right there is a <i class="fa-solid fa-ellipsis-vertical"></i> icon. 
+When you click on it, a drop down menu with 2 items appears.
+
+![Home Drop Down Menu](docs/images/HomeDropDownMenu.png)
+
+1. *About* opens the About screen with some information.
+2. *Help* opens the https://frankhjcuypers.github.io/gaai/ oage with this README in your browser.
+
+## Example About screen
+
+![Home Drop Down Menu](docs/images/About.png)
+
 ## Add a Nexxtender device
 
 When tapping the "+" in the home screen, the following dialog box appears:

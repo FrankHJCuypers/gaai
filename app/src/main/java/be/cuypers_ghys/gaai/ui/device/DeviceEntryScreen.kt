@@ -41,7 +41,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.ChargerType
@@ -62,6 +61,7 @@ object DeviceEntryDestination : NavigationDestination {
   override val titleRes = R.string.device_entry_title
 }
 
+
 /**
  * Implements the complete screen for entering the information for a new Nexxtender charger device,
  * and make a BLE connection to it.
@@ -73,13 +73,54 @@ object DeviceEntryDestination : NavigationDestination {
  *
  * @author Frank HJ Cuypers
  */
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun DeviceEntryScreen(
   navigateBack: () -> Unit,
   onNavigateUp: () -> Unit,
   canNavigateUp: Boolean = true,
   viewModel: DeviceEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+  DeviceEntryScreenNoViewModel(
+    navigateBack, onNavigateUp, canNavigateUp, viewModel.deviceUiState,
+    onDeviceValueChange = viewModel::updateUiState,
+    onEntryStatusChange = viewModel::updateUiState,
+    scanDevice = viewModel::scanDevice,
+    cancelScanDevice = viewModel::cancelScanDevice,
+    saveDevice = viewModel::saveDevice
+  )
+}
+
+/**
+ * Implements the complete screen for entering the information for a new Nexxtender charger device,
+ * and make a BLE connection to it.
+ * The screen includes app bars.
+ *
+ * Version that does not access the ViewModel directly, so that a @Preview works.
+ *
+ * @param navigateBack Function to be called when [DeviceEntryScreen] wants to navigate back.
+ * @param onNavigateUp Function to be called when [DeviceEntryScreen] wants to navigate up.
+ * @param canNavigateUp Is the [DeviceEntryScreen] allowed to navigate back?
+ * @param deviceUiState The device state determined by the [DeviceEntryViewModel].
+ * @param onDeviceValueChange Function to be called when any of the values in the entry screen changes.
+ * @param onEntryStatusChange Function to called when teh entryStatus changed.
+ * @param scanDevice Function called to start a BLE scan for the specified device.
+ * @param cancelScanDevice Function called to stop the BLE scan.
+ * @param saveDevice Inserts the found device in the database.
+ * @author Frank HJ Cuypers
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeviceEntryScreenNoViewModel(
+  navigateBack: () -> Unit,
+  onNavigateUp: () -> Unit,
+  canNavigateUp: Boolean = true,
+  deviceUiState: DeviceUiState,
+  onDeviceValueChange: (DeviceDetails) -> Unit,
+  onEntryStatusChange: (EntryState) -> Unit,
+  scanDevice: () -> Unit,
+  cancelScanDevice: () -> Unit,
+  saveDevice: suspend () -> Unit
 ) {
   val coroutineScope = rememberCoroutineScope()
   Scaffold(
@@ -92,22 +133,22 @@ fun DeviceEntryScreen(
     }
   ) { innerPadding ->
     DeviceEntryBody(
-      deviceUiState = viewModel.deviceUiState,
-      onDeviceValueChange = viewModel::updateUiState,
+      deviceUiState = deviceUiState,
+      onDeviceValueChange = onDeviceValueChange,
       // TODO: move body of onButtonClick to the [DeviceEntryViewModel]
       onButtonClick = {
-        when (viewModel.deviceUiState.entryState) {
+        when (deviceUiState.entryState) {
           EntryState.INPUTTING -> {}
           EntryState.ENTRY_VALID ->
             // Note: similar remark as for onSaveClick?
             coroutineScope.launch {
-              viewModel.updateUiState(EntryState.SCANNING)
-              viewModel.scanDevice()
+              onEntryStatusChange(EntryState.SCANNING)
+              scanDevice()
             }
 
           EntryState.SCANNING, EntryState.DUPLICATE_DEVICE_FOUND -> {
-            viewModel.updateUiState(EntryState.ENTRY_VALID)
-            viewModel.cancelScanDevice()
+            onEntryStatusChange(EntryState.ENTRY_VALID)
+            cancelScanDevice()
           }
 
           EntryState.DEVICE_FOUND ->
@@ -116,7 +157,7 @@ fun DeviceEntryScreen(
             // change occurs, the Activity will be recreated and the rememberCoroutineScope will
             // be cancelled - since the scope is bound to composition.
             coroutineScope.launch {
-              viewModel.saveDevice()
+              saveDevice()
               navigateBack()
             }
         }
@@ -295,17 +336,60 @@ fun DeviceInputForm(
   }
 }
 
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenNoViewModelDeviceDetailsEmptyDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenNoViewModelDeviceDetailsEmptyLight")
+@Composable
+private fun DeviceEntryScreenNoViewModelDeviceDetailsEmptyPreview() {
+  GaaiTheme(dynamicColor = false) {
+    Surface {
+      DeviceEntryScreenNoViewModel(
+        navigateBack = {}, onNavigateUp = {}, true,
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "", sn = ""
+          ),
+          entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
+        ),
+        onDeviceValueChange = {},
+        onEntryStatusChange = {},
+        scanDevice = {},
+        cancelScanDevice = {},
+        saveDevice = {},
+      )
+    }
+  }
+}
+
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenNoViewModelDeviceDetailsValidDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenNoViewModelPreviewLight")
+@Composable
+private fun DeviceEntryScreenNoViewModelDeviceDetailsValidPreview() {
+  GaaiTheme(dynamicColor = false) {
+    Surface {
+      DeviceEntryScreenNoViewModel(
+        navigateBack = {}, onNavigateUp = {}, true,
+        deviceUiState = DeviceUiState(
+          DeviceDetails(
+            pn = "12345-A2", sn = "6789-12345-E3"
+          ),
+          entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+        ),
+        onDeviceValueChange = {},
+        onEntryStatusChange = {},
+        scanDevice = {},
+        cancelScanDevice = {},
+        saveDevice = {},
+      )
+    }
+  }
+}
+
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceEntryScreenPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceEntryScreenPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       DeviceEntryBody(
         deviceUiState = DeviceUiState(
@@ -319,15 +403,9 @@ private fun DeviceEntryScreenPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenScanningPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenScanningPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceEntryScreenScanningPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceEntryScreenScanningPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       DeviceEntryBody(
         deviceUiState = DeviceUiState(
@@ -341,15 +419,9 @@ private fun DeviceEntryScreenScanningPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenEmptyPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenEmptyPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceEntryScreenEmptyPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceEntryScreenEmptyPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       DeviceEntryBody(
         deviceUiState = DeviceUiState(
@@ -363,15 +435,9 @@ private fun DeviceEntryScreenEmptyPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenPnIncorrectPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenPnIncorrectPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceEntryScreenPnIncorrectPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceEntryScreenPnIncorrectPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       DeviceEntryBody(
         deviceUiState = DeviceUiState(
@@ -385,15 +451,9 @@ private fun DeviceEntryScreenPnIncorrectPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenScanCorrectPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenScanCorrectPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceEntryScreenScanCorrectPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceEntryScreenScanCorrectPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       DeviceEntryBody(
         deviceUiState = DeviceUiState(
@@ -411,15 +471,9 @@ private fun DeviceEntryScreenScanCorrectPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenScanDuplicatePreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeviceEntryScreenScanDuplicatePreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DeviceEntryScreenScanDuplicatePreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 private fun DeviceEntryScreenScanDuplicatePreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       DeviceEntryBody(
         deviceUiState = DeviceUiState(

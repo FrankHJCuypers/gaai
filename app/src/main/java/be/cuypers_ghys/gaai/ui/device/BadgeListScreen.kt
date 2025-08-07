@@ -67,7 +67,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
@@ -439,15 +438,9 @@ internal fun GaaiBadgeCard(
 @OptIn(ExperimentalStdlibApi::class)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "BadgeListBodyPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "BadgeListBodyPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "BadgeListBodyPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun BadgeListBodyPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       BadgeListBody(
         listOf(
@@ -463,15 +456,9 @@ fun BadgeListBodyPreview() {
 @OptIn(ExperimentalStdlibApi::class)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "BadgeListScreenNoViewModelPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "BadgeListScreenNoViewModelPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "BadgeListScreenNoViewModelPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun BadgeListScreenNoViewModelPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       BadgeListScreenNoViewModel(
         onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(
@@ -488,15 +475,9 @@ fun BadgeListScreenNoViewModelPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "BadgeListScreenNoViewModelEmptyListPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "BadgeListScreenNoViewModelEmptyListPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "BadgeListScreenNoViewModelEmptyListPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun BadgeListScreenNoViewModelEmptyListPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       BadgeListScreenNoViewModel(
         onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(

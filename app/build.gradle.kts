@@ -116,11 +116,13 @@ dependencies {
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
+  implementation(libs.androidx.material.icons.extended)
   implementation(libs.nordic.kotlin.ble.profile)
   implementation(libs.nordic.kotlin.ble.scanner)
   implementation(libs.nordic.kotlin.ble.client)
   implementation(libs.cbor)
   implementation(libs.accompanist.permissions)
+  implementation(libs.accompanist.drawablepainter)
   implementation(libs.androidx.core.ktx)
 
   implementation(libs.androidx.room.runtime)

@@ -18,7 +18,17 @@ package be.cuypers_ghys.gaai.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.os.Build
 import android.util.Log
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -31,11 +41,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
+import androidx.compose.ui.unit.dp
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.R.string
 import be.cuypers_ghys.gaai.ui.navigation.GaaiNavHost
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
@@ -60,10 +81,24 @@ fun GaaiTopAppBar(
   canNavigateUp: Boolean,
   modifier: Modifier = Modifier,
   scrollBehavior: TopAppBarScrollBehavior? = null,
-  navigateUp: () -> Unit = {}
+  navigateUp: () -> Unit = {},
+  actions: @Composable (RowScope.() -> Unit) = {},
 ) {
   CenterAlignedTopAppBar(
-    title = { Text(title) },
+    title = {
+      Row {
+        Image(
+          painter = adaptiveIconPainterResource(R.mipmap.ic_launcher_round), // Replace with your app icon
+          contentDescription = stringResource(string.gaai_icon),
+          contentScale = ContentScale.Crop,
+          modifier = Modifier
+            .size(30.dp)
+            .clip(CircleShape)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(title)
+      }
+    },
     modifier = modifier,
     scrollBehavior = scrollBehavior,
     navigationIcon = {
@@ -75,10 +110,31 @@ fun GaaiTopAppBar(
           )
         }
       }
-    }
+    },
+    actions = actions
   )
 }
 
+// Found on https://gist.github.com/tkuenneth/ddf598663f041dc79960cda503d14448
+@Composable
+fun adaptiveIconPainterResource(@DrawableRes id: Int): Painter {
+  val res = LocalContext.current.resources
+  val theme = LocalContext.current.theme
+
+  return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    // Android O supports adaptive icons, try loading this first (even though this is least likely to be the format).
+    val adaptiveIcon = ResourcesCompat.getDrawable(res, id, theme) as? AdaptiveIconDrawable
+    if (adaptiveIcon != null) {
+      BitmapPainter(adaptiveIcon.toBitmap().asImageBitmap())
+    } else {
+      // We couldn't load the drawable as an Adaptive Icon, just use painterResource
+      painterResource(id)
+    }
+  } else {
+    // We're not on Android O or later, just use painterResource
+    painterResource(id)
+  }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiTopAppBarPreviewDark")
@@ -91,7 +147,7 @@ fun GaaiTopAppBar(
 )
 @Composable
 fun GaaiTopAppBarPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiTopAppBar(
         title = "Gaai",

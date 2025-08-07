@@ -71,10 +71,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.Wallpapers.RED_DOMINATED_EXAMPLE
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import be.cuypers_ghys.gaai.BuildConfig
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
@@ -160,9 +158,9 @@ fun HomeScreenNoViewModel(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
       GaaiTopAppBar(
-        title = stringResource(HomeDestination.titleRes) + " " + BuildConfig.VERSION_NAME,
+        title = stringResource(HomeDestination.titleRes),
         canNavigateUp = false,
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior, actions = { DropdownMenuWithDetails() }
       )
     },
     floatingActionButton = {
@@ -504,15 +502,9 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeBodyPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeBodyPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "HomeBodyPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun HomeBodyPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       HomeBody(
         listOf(
@@ -526,15 +518,9 @@ fun HomeBodyPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeScreenNoViewModelPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeScreenNoViewModelPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "HomeScreenNoViewModelPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun HomeScreenNoViewModelPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface(modifier = Modifier.fillMaxSize()) {
       HomeScreenNoViewModel(
         navigateToDeviceEntry = {}, navigateToDeviceDetails = {}, removeDevice = {}, homeUiState =
@@ -550,17 +536,27 @@ fun HomeScreenNoViewModelPreview() {
   }
 }
 
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeScreenNoViewModelPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeScreenNoViewModelPreviewLight")
+@Composable
+fun HomeScreenEmptyListNoViewModelPreview() {
+  GaaiTheme(dynamicColor = false) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+      HomeScreenNoViewModel(
+        navigateToDeviceEntry = {}, navigateToDeviceDetails = {}, removeDevice = {}, homeUiState =
+          HomeUiState(
+            listOf()
+          )
+      )
+    }
+  }
+}
+
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeBodyEmptyListPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeBodyEmptyListPreviewLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "HomeBodyEmptyListPreviewDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun HomeBodyEmptyListPreview() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       HomeBody(listOf(), onDeviceClick = {}, onDeviceRemove = {})
     }
@@ -569,15 +565,9 @@ fun HomeBodyEmptyListPreview() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewHOMEDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewHOMELight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DevicePreviewHOMEDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun DevicePreviewHOME() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCard(
         Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
@@ -589,15 +579,9 @@ fun DevicePreviewHOME() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewMOBILEDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewMOBILELight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DevicePreviewMOBILEDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun DevicePreviewMOBILE() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCard(
         Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
@@ -609,15 +593,9 @@ fun DevicePreviewMOBILE() {
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewUNKNOWNDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewUNKNOWNLight")
-@Preview(
-  showBackground = true,
-  uiMode = UI_MODE_NIGHT_NO,
-  name = "DevicePreviewUNKNOWNDynamic",
-  wallpaper = RED_DOMINATED_EXAMPLE
-)
 @Composable
 fun DevicePreviewUNKNOWN() {
-  GaaiTheme(dynamicColor = true) {
+  GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCard(
         Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
