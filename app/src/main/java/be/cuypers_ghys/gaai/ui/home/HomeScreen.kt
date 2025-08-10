@@ -56,10 +56,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -293,6 +297,7 @@ private fun DevicesList(
  *
  * @author Frank HJ Cuypers
  */
+//  Delete confirmation: see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
 @Composable
 fun GaaiDeviceItem(
   device: Device,
@@ -304,28 +309,52 @@ fun GaaiDeviceItem(
 
   val context = LocalContext.current
   val currentDevice by rememberUpdatedState(device)
+  var deleteItem by remember { mutableStateOf(false) }
+  var stateToMaintain by remember { mutableStateOf<SwipeToDismissBoxValue?>(null) }
+  var showConformationDialog by remember { mutableStateOf(false) }
+  val coroutineScope = rememberCoroutineScope()
+
   val dismissState = rememberSwipeToDismissBoxState(
     confirmValueChange = {
       when (it) {
         SwipeToDismissBoxValue.StartToEnd -> {
-          onDeviceRemove(currentDevice)
-          Toast.makeText(
-            context,
-            context.getString(R.string.device_deleted), Toast.LENGTH_SHORT
-          ).show()
+          showConformationDialog = true
+          stateToMaintain = it
         }
 
         SwipeToDismissBoxValue.EndToStart -> {
           // Disabled in call to SwipeToDismissBox()
         }
 
-        SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
+        SwipeToDismissBoxValue.Settled -> false
       }
-      return@rememberSwipeToDismissBoxState true
+      false//Immediately resets the state so we can swipe it again if confirmation is canceled or if deletion fails
     },
     // positional threshold of 25%
     positionalThreshold = { it * .25f }
   )
+
+  //Maintains the row's swiped state while it waits for confirmation and for AnimatedVisibility to hide the item
+  LaunchedEffect(stateToMaintain) {
+    stateToMaintain?.let {
+      dismissState.snapTo(it)
+      stateToMaintain = null
+    }
+  }
+
+  LaunchedEffect(deleteItem) {
+    if (deleteItem) {
+      onDeviceRemove(currentDevice)
+      deleteItem = false
+      Toast.makeText(
+        context,
+        context.getString(R.string.device_deleted), Toast.LENGTH_SHORT
+      ).show()
+    } else {
+      dismissState.reset()
+    }
+  }
+
   SwipeToDismissBox(
     state = dismissState,
     enableDismissFromEndToStart = false,
@@ -337,6 +366,20 @@ fun GaaiDeviceItem(
         .padding(dimensionResource(id = R.dimen.padding_small))
         .clickable { onDeviceClick(device) })
   }
+
+  if (showConformationDialog) {
+    DeleteConfirmDialog(
+      stringResource(R.string.device),
+      onConfirm = {
+        deleteItem = true
+        showConformationDialog = false
+      },
+      onDismiss = {
+        coroutineScope.launch { dismissState.reset() } //reset() seems to only reset the visual state, not the full state object
+        showConformationDialog = false
+      })
+  }
+
   Log.d(TAG, "Exiting GaaiDeviceItem()")
 }
 

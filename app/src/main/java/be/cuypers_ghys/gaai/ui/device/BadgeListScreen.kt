@@ -52,11 +52,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -76,6 +79,7 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADDED
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_EXISTS
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
+import be.cuypers_ghys.gaai.ui.home.DeleteConfirmDialog
 import be.cuypers_ghys.gaai.ui.home.DismissBackground
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
@@ -343,6 +347,9 @@ private fun BadgesList(
  *
  * @author Frank HJ Cuypers
  */
+//  Delete confirmation: see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
+// TODO: factorize between this function and fun GaaiDeviceItem(); see also
+//   https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
 @Composable
 fun GaaiBadgeItem(
   badge: Badge,
@@ -351,10 +358,13 @@ fun GaaiBadgeItem(
 ) {
   Log.d(TAG, "Entering GaaiBadgeItem()")
 
-  val coroutineScope = rememberCoroutineScope()
-
   val context = LocalContext.current
   val currentBadge by rememberUpdatedState(badge)
+  var deleteItem by remember { mutableStateOf(false) }
+  var stateToMaintain by remember { mutableStateOf<SwipeToDismissBoxValue?>(null) }
+  var showConformationDialog by remember { mutableStateOf(false) }
+  val coroutineScope = rememberCoroutineScope()
+
   val dismissState = rememberSwipeToDismissBoxState(
     confirmValueChange = {
       // TODO: for some reason, the log shows that this is called twice after a swipe StartToEnd,
@@ -362,22 +372,43 @@ fun GaaiBadgeItem(
       Log.d(TAG, "GaaiBadgeItem(): SwipeToDismissBoxValue: $it")
       when (it) {
         SwipeToDismissBoxValue.StartToEnd -> {
-          coroutineScope.launch {
-            onBadgeRemove(currentBadge)
-          }
-          Toast.makeText(
-            context,
-            context.getString(R.string.badge_deleted), Toast.LENGTH_SHORT
-          ).show()
-          true
+          showConformationDialog = true
+          stateToMaintain = it
         }
 
-        else -> false
+        SwipeToDismissBoxValue.EndToStart -> {
+          // Disabled in call to SwipeToDismissBox()
+        }
+
+        SwipeToDismissBoxValue.Settled -> false
       }
+      false//Immediately resets the state so we can swipe it again if confirmation is canceled or if deletion fails
     },
     // positional threshold of 25%
     positionalThreshold = { it * .25f }
   )
+
+  //Maintains the row's swiped state while it waits for confirmation and for AnimatedVisibility to hide the item
+  LaunchedEffect(stateToMaintain) {
+    stateToMaintain?.let {
+      dismissState.snapTo(it)
+      stateToMaintain = null
+    }
+  }
+
+  LaunchedEffect(deleteItem) {
+    if (deleteItem) {
+      onBadgeRemove(currentBadge)
+      deleteItem = false
+      Toast.makeText(
+        context,
+        context.getString(R.string.badge_deleted), Toast.LENGTH_SHORT
+      ).show()
+    } else {
+      dismissState.reset()
+    }
+  }
+
   SwipeToDismissBox(
     state = dismissState,
     enableDismissFromEndToStart = false,
@@ -389,6 +420,20 @@ fun GaaiBadgeItem(
         .padding(dimensionResource(id = R.dimen.padding_small))
     )
   }
+
+  if (showConformationDialog) {
+    DeleteConfirmDialog(
+      stringResource(R.string.badge),
+      onConfirm = {
+        deleteItem = true
+        showConformationDialog = false
+      },
+      onDismiss = {
+        coroutineScope.launch { dismissState.reset() } //reset() seems to only reset the visual state, not the full state object
+        showConformationDialog = false
+      })
+  }
+
   Log.d(TAG, "Exiting GaaiBadgeItem()")
 }
 
