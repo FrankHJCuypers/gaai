@@ -247,7 +247,9 @@ In this screen you can
 + Add another device by clicking on the "+" button at the bottom right.
 + Remove a device by swiping its card to the right.
   A Dialog box will pop up asking you to confirm the delete:
-  ![Device Delete Confirmation](docs/images/DeviceDeleteConfirm.png)
+
+![Device Delete Confirmation](docs/images/DeviceDeleteConfirm.png)
+
 + Connect to the device by clicking on its card.
   This will open the [Device details](#device-details) screen.
   Make sure that you are close to the *Nexxtender* charger and that no other device is connected with it over BLE.
@@ -512,7 +514,8 @@ In this screen you can
   The charger will register the new badge and Gaai automatically updates its list of registered badges.
 - Remove a device by swiping the card entry that corresponds with the badge to the right.
   A Dialog box will pop up asking you to confirm the delete:
-  ![Badgee Delete Confirmation](docs/images/BadgeDeleteConfirm.png)
+
+![Badgee Delete Confirmation](docs/images/BadgeDeleteConfirm.png)
 
 Make sure that you are close to the *Nexxtender* charger and that no other device is connected with it over BLE.
 
