@@ -20,9 +20,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -40,7 +38,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,7 +47,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -66,7 +62,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -86,6 +81,7 @@ import be.cuypers_ghys.gaai.ui.device.ConnectionState
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // Tag for logging
@@ -306,6 +302,46 @@ fun GaaiDeviceItem(
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entering GaaiDeviceItem()")
+  val scope = rememberCoroutineScope()
+  SwipeToDismissContainer(
+    device,
+    stringResource(R.string.device),
+    onDismiss = { _, onError ->
+      scope.launch {
+        delay(1000)
+        onError()
+        onDeviceRemove(device)
+      }
+    }
+  ) {
+    GaaiDeviceCard(
+      device, ConnectionState.NOT_CONNECTED, modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small))
+        .clickable { onDeviceClick(device) })
+  }
+  Log.d(TAG, "Exiting GaaiDeviceItem()")
+}
+
+/**
+ * Implements a [Card] displaying the details of the [device],
+ * connect to it or delete it by swiping the card to the right using a [SwipeToDismissBox].
+ * @param device The [Device] to display.
+ * @param onDeviceClick Function to be called when [GaaiDeviceItem] wants to connect to a known device and show
+ *  its details.
+ * @param onDeviceRemove Function to be called when [GaaiDeviceItem] wants to delete a known device from the list.
+ * @param modifier the [Modifier] to be applied to this [GaaiDeviceItem]
+ *
+ * @author Frank HJ Cuypers
+ */
+//  Delete confirmation: see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
+@Composable
+fun GaaiDeviceItemOld(
+  device: Device,
+  onDeviceClick: (Device) -> Unit,
+  onDeviceRemove: (Device) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Log.d(TAG, "Entering GaaiDeviceItem()")
 
   val context = LocalContext.current
   val currentDevice by rememberUpdatedState(device)
@@ -368,13 +404,13 @@ fun GaaiDeviceItem(
   }
 
   if (showConformationDialog) {
-    DeleteConfirmDialog(
+    DeleteConfirmationDialog(
       stringResource(R.string.device),
       onConfirm = {
         deleteItem = true
         showConformationDialog = false
       },
-      onDismiss = {
+      onCancel = {
         coroutineScope.launch { dismissState.reset() } //reset() seems to only reset the visual state, not the full state object
         showConformationDialog = false
       })
@@ -509,37 +545,6 @@ internal fun GaaiDeviceCard(
       }
     }
     Log.d(TAG, "exiting GaaiDeviceCard with device = $device")
-  }
-}
-
-/**
- * A [Row] with the background to show when swiping the [SwipeToDismissBox] displaying the [GaaiDeviceItem]
- * to the right.
- * @param dismissState State if the [SwipeToDismissBox].
- *
- * @author Frank HJ Cuypers
- */
-@Composable
-fun DismissBackground(dismissState: SwipeToDismissBoxState) {
-  val color = when (dismissState.dismissDirection) {
-    SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.error
-    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
-    SwipeToDismissBoxValue.Settled -> Color.Transparent
-  }
-
-  Row(
-    modifier = Modifier
-      .fillMaxSize()
-      .background(color)
-      .padding(12.dp, 8.dp),
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.SpaceBetween
-  ) {
-    Icon(
-      Icons.Default.Delete,
-      contentDescription = stringResource(R.string.delete)
-    )
-    Spacer(modifier = Modifier)
   }
 }
 

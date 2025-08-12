@@ -20,6 +20,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -62,6 +63,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -79,12 +81,14 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADDED
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_EXISTS
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
-import be.cuypers_ghys.gaai.ui.home.DeleteConfirmDialog
+import be.cuypers_ghys.gaai.ui.home.DeleteConfirmationDialog
 import be.cuypers_ghys.gaai.ui.home.DismissBackground
+import be.cuypers_ghys.gaai.ui.home.SwipeToDismissContainer
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.util.toColonHex
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // Tag for logging
@@ -357,6 +361,46 @@ fun GaaiBadgeItem(
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entering GaaiBadgeItem()")
+  val scope = rememberCoroutineScope()
+  SwipeToDismissContainer(
+    badge,
+    stringResource(R.string.badge),
+    onDismiss = { _, onError ->
+      scope.launch {
+        delay(1000)
+        onError()
+        onBadgeRemove(badge)
+      }
+    }
+  ) {
+    GaaiBadgeCard(
+      badge, modifier = Modifier
+        .padding(dimensionResource(id = R.dimen.padding_small))
+    )
+  }
+
+  Log.d(TAG, "Exiting GaaiBadgeItem()")
+}
+
+/**
+ * Implements a [Card] displaying the details of the [badge] and delete it by swiping the card to the right using
+ * a [SwipeToDismissBox].
+ * @param badge The [Badge] to display.
+ * @param onBadgeRemove Function to be called when [GaaiBadgeItem] wants to delete a known device from the list.
+ * @param modifier the [Modifier] to be applied to this [GaaiBadgeItem]
+ *
+ * @author Frank HJ Cuypers
+ */
+//  Delete confirmation: see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
+// TODO: factorize between this function and fun GaaiDeviceItem(); see also
+//   https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
+@Composable
+fun GaaiBadgeItemOLd(
+  badge: Badge,
+  onBadgeRemove: suspend (Badge) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Log.d(TAG, "Entering GaaiBadgeItem()")
 
   val context = LocalContext.current
   val currentBadge by rememberUpdatedState(badge)
@@ -422,13 +466,13 @@ fun GaaiBadgeItem(
   }
 
   if (showConformationDialog) {
-    DeleteConfirmDialog(
+    DeleteConfirmationDialog(
       stringResource(R.string.badge),
       onConfirm = {
         deleteItem = true
         showConformationDialog = false
       },
-      onDismiss = {
+      onCancel = {
         coroutineScope.launch { dismissState.reset() } //reset() seems to only reset the visual state, not the full state object
         showConformationDialog = false
       })

@@ -32,19 +32,19 @@ import androidx.compose.ui.unit.sp
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 
 @Composable
-fun DeleteConfirmDialog(
-  subject: String,
+fun DeleteConfirmationDialog(
+  itemName: String,
+  onCancel: () -> Unit,
   onConfirm: () -> Unit,
-  onDismiss: () -> Unit,
 ) {
 
   AlertDialog(
     onDismissRequest = {
-      onDismiss()
+      onCancel()
     },
     title = {
       Text(
-        text = "Are you sure you want to delete this " + subject + "?",
+        text = "Are you sure you want to delete this $itemName?",
         style = MaterialTheme.typography.titleLarge
       )
     },
@@ -65,7 +65,7 @@ fun DeleteConfirmDialog(
     dismissButton = {
       TextButton(
         onClick = {
-          onDismiss()
+          onCancel()
         },
         modifier = Modifier.padding(8.dp)
       ) {
@@ -81,10 +81,9 @@ fun DeleteConfirmDialog(
 fun DeleteConfirmDialogDevicePreview() {
   GaaiTheme(dynamicColor = false) {
     Surface {
-      DeleteConfirmDialog(
+      DeleteConfirmationDialog(
         "Device",
-        {},
-        onDismiss = { }
+        onCancel = { }, onConfirm = {}
       )
     }
   }
@@ -96,10 +95,9 @@ fun DeleteConfirmDialogDevicePreview() {
 fun DeleteConfirmDialogBadgePreview() {
   GaaiTheme(dynamicColor = false) {
     Surface {
-      DeleteConfirmDialog(
+      DeleteConfirmationDialog(
         "Badge",
-        {},
-        onDismiss = { }
+        onCancel = { }, onConfirm = {}
       )
     }
   }
