@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -33,11 +33,13 @@ import be.cuypers_ghys.gaai.util.SerialNumberParser
 import be.cuypers_ghys.gaai.util.fromUint32BE
 import be.cuypers_ghys.gaai.util.toUint32BE
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 
 // Tag for logging
@@ -169,9 +171,11 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
   /**
    * Inserts the [Device] from [deviceUiState] in the Room database.
    */
-  suspend fun saveDevice() {
+  fun saveDevice() {
     if (validateInput()) {
-      devicesRepository.insertDevice(deviceUiState.deviceDetails.toDevice())
+      viewModelScope.launch(Dispatchers.IO) {
+        devicesRepository.insertDevice(deviceUiState.deviceDetails.toDevice())
+      }
     }
   }
 

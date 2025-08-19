@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -46,6 +46,7 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_FINISH
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_NEXT
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -207,9 +208,9 @@ class BadgeListViewModel(
   /**
    * Generates a flow of List<Badge> using asynchronous events.
    * In order to obtain a list of badges, Gaai must interrogate the Charger over BLE and get all registered badges.
-   * That involves severa BLE messages that are handles asynchronously.
+   * That involves severa BLE messages that are handled asynchronously.
    * Once the complete list is obtained, Gaai will execute a [BadgeListManager.emitNewBadgeList()] to generate a new
-   * entry in thr flow.
+   * entry in the flow.
    *
    * See [callBackFlow](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/callback-flow.html).
    * See [CallbackFlow in kotlin](https://medium.com/@appdevinsights/callbackflow-in-kotlin-b830a1498946).
@@ -324,7 +325,7 @@ class BadgeListViewModel(
         }
 
         BADGE_STATUS_WAIT_ADDED -> {
-          val badge = BadgeParser.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
+          BadgeParser.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
           startGettingNewBadgeList()
 
         }
@@ -419,15 +420,17 @@ class BadgeListViewModel(
   //  The original idea was that this was not necessary;
   //  rereading the badge list from the charger after the delete should have the same effect.
   //  But it did not work correctly, so I added the explicit emit.
-  suspend fun deleteBadge(badge: Badge) {
-    Log.d(TAG, "deleteBadge: $badge")
-    // emit an updated badge list for the UI
-    val newBadgeList = badgeList.toMutableList()
-    newBadgeList.remove(badge)
-    badgeListManager.emitNewBadgeList(newBadgeList)
-    // And now delete the badge from the charger
-    badgeToDelete = badge
-    sendBadgeDelete()
+  fun deleteBadge(badge: Badge) {
+    viewModelScope.launch(Dispatchers.IO) {
+      Log.d(TAG, "deleteBadge: $badge")
+      // emit an updated badge list for the UI
+      val newBadgeList = badgeList.toMutableList()
+      newBadgeList.remove(badge)
+      badgeListManager.emitNewBadgeList(newBadgeList)
+      // And now delete the badge from the charger
+      badgeToDelete = badge
+      sendBadgeDelete()
+    }
   }
 
   /**

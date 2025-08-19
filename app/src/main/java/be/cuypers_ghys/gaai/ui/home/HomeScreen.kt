@@ -145,13 +145,13 @@ fun HomeScreen(
 fun HomeScreenNoViewModel(
   navigateToDeviceEntry: () -> Unit,
   navigateToDeviceDetails: (Int) -> Unit,
-  removeDevice: suspend (Device) -> Unit,
+  removeDevice: (Device) -> Unit,
   homeUiState: HomeUiState,
   modifier: Modifier = Modifier,
 ) {
   Log.d(TAG, "Entered HomeScreenNoViewModel()")
 
-  val coroutineScope = rememberCoroutineScope()
+  rememberCoroutineScope()
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
   Scaffold(
@@ -185,9 +185,7 @@ fun HomeScreenNoViewModel(
       deviceList = homeUiState.deviceList,
       onDeviceClick = navigateToDeviceDetails,
       onDeviceRemove = {
-        coroutineScope.launch {
-          removeDevice(it)
-        }
+        removeDevice(it)
       },
       modifier = modifier.fillMaxSize(),
       contentPadding = innerPadding,

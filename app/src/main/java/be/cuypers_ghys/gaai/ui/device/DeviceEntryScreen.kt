@@ -49,7 +49,6 @@ import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
-import kotlinx.coroutines.launch
 
 /**
  * The [NavigationDestination] information for the [DeviceEntryScreen].
@@ -120,9 +119,9 @@ fun DeviceEntryScreenNoViewModel(
   onEntryStatusChange: (EntryState) -> Unit,
   scanDevice: () -> Unit,
   cancelScanDevice: () -> Unit,
-  saveDevice: suspend () -> Unit
+  saveDevice: () -> Unit
 ) {
-  val coroutineScope = rememberCoroutineScope()
+  rememberCoroutineScope()
   Scaffold(
     topBar = {
       GaaiTopAppBar(
@@ -141,10 +140,10 @@ fun DeviceEntryScreenNoViewModel(
           EntryState.INPUTTING -> {}
           EntryState.ENTRY_VALID ->
             // Note: similar remark as for onSaveClick?
-            coroutineScope.launch {
-              onEntryStatusChange(EntryState.SCANNING)
-              scanDevice()
-            }
+          {
+            onEntryStatusChange(EntryState.SCANNING)
+            scanDevice()
+          }
 
           EntryState.SCANNING, EntryState.DUPLICATE_DEVICE_FOUND -> {
             onEntryStatusChange(EntryState.ENTRY_VALID)
@@ -156,10 +155,10 @@ fun DeviceEntryScreenNoViewModel(
             // and the device may not be saved in the Database. This is because when config
             // change occurs, the Activity will be recreated and the rememberCoroutineScope will
             // be cancelled - since the scope is bound to composition.
-            coroutineScope.launch {
-              saveDevice()
-              navigateBack()
-            }
+          {
+            saveDevice()
+            navigateBack()
+          }
         }
 
       },

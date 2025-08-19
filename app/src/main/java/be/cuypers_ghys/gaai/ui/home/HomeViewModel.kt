@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel to manage all devices from the Room database, to be used by [HomeScreen].
@@ -38,8 +39,10 @@ class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewMode
    * Remove the [device] from the Room database.
    * @param device The [Device] to delete.
    */
-  suspend fun removeDevice(device: Device) {
-    devicesRepository.deleteDevice(device)
+  fun removeDevice(device: Device) {
+    viewModelScope.launch {
+      devicesRepository.deleteDevice(device)
+    }
   }
 
   /**

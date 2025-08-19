@@ -157,7 +157,7 @@ fun BadgeListScreen(
 fun BadgeListScreenNoViewModel(
   onNavigateUp: () -> Unit,
   addBadge: (ChargeType) -> Unit,
-  deleteBadge: suspend (Badge) -> Unit,
+  deleteBadge: (Badge) -> Unit,
   badgeListUiState: BadgeListUiState,
   badgeDeviceUiState: BadgeDeviceUiState,
   modifier: Modifier = Modifier
@@ -279,7 +279,7 @@ fun BadgeListScreenNoViewModel(
 @Composable
 private fun BadgeListBody(
   badgeList: List<Badge>,
-  onBadgeRemove: suspend (Badge) -> Unit,
+  onBadgeRemove: (Badge) -> Unit,
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -322,7 +322,7 @@ private fun BadgeListBody(
 @Composable
 private fun BadgesList(
   badgeList: List<Badge>,
-  onBadgeRemove: suspend (Badge) -> Unit,
+  onBadgeRemove: (Badge) -> Unit,
   contentPadding: PaddingValues,
   modifier: Modifier = Modifier
 ) {
@@ -357,7 +357,7 @@ private fun BadgesList(
 @Composable
 fun GaaiBadgeItem(
   badge: Badge,
-  onBadgeRemove: suspend (Badge) -> Unit,
+  onBadgeRemove: (Badge) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "Entering GaaiBadgeItem()")
