@@ -15,6 +15,8 @@
  */
 package be.cuypers_ghys.gaai.ui.home
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -31,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -50,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.cuypers_ghys.gaai.R
+import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -166,32 +170,36 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
   }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewUNKNOWNDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewUNKNOWNLight")
 @Composable
-private fun SwipeToDismissContainerPreview() {
-  val list = (1..100).toList()
-  val scope = rememberCoroutineScope()
-  Column {
-    list.forEach {
-      SwipeToDismissContainer(
-        it,
-        it.toString(),
-        onDismiss = { _, onError ->
-          scope.launch {
-            delay(1000)
-            onError()
+fun SwipeToDismissContainerPreview() {
+    GaaiTheme(dynamicColor = false) {
+      Surface {
+        val list = (1..100).toList()
+        val scope = rememberCoroutineScope()
+        Column {
+          list.forEach {
+            SwipeToDismissContainer(
+              it,
+              it.toString(),
+              onDismiss = { _, onError ->
+                scope.launch {
+                  delay(1000)
+                  onError()
+                }
+              }
+            ) { item ->
+              Text(
+                text = item.toString(),
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(16.dp)
+              )
+            }
           }
         }
-      ) { item ->
-        Text(
-          text = item.toString(),
-          modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(16.dp)
-        )
       }
     }
-  }
 }
 
