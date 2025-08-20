@@ -19,7 +19,6 @@ package be.cuypers_ghys.gaai.ui.home
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,23 +46,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -291,7 +282,8 @@ private fun DevicesList(
  *
  * @author Frank HJ Cuypers
  */
-//  Delete confirmation: see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
+// Delete confirmation:
+// see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
 @Composable
 fun GaaiDeviceItem(
   device: Device,
@@ -317,103 +309,6 @@ fun GaaiDeviceItem(
         .padding(dimensionResource(id = R.dimen.padding_small))
         .clickable { onDeviceClick(device) })
   }
-  Log.d(TAG, "Exiting GaaiDeviceItem()")
-}
-
-/**
- * Implements a [Card] displaying the details of the [device],
- * connect to it or delete it by swiping the card to the right using a [SwipeToDismissBox].
- * @param device The [Device] to display.
- * @param onDeviceClick Function to be called when [GaaiDeviceItem] wants to connect to a known device and show
- *  its details.
- * @param onDeviceRemove Function to be called when [GaaiDeviceItem] wants to delete a known device from the list.
- * @param modifier the [Modifier] to be applied to this [GaaiDeviceItem]
- *
- * @author Frank HJ Cuypers
- */
-//  Delete confirmation: see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
-@Composable
-fun GaaiDeviceItemOld(
-  device: Device,
-  onDeviceClick: (Device) -> Unit,
-  onDeviceRemove: (Device) -> Unit,
-  modifier: Modifier = Modifier
-) {
-  Log.d(TAG, "Entering GaaiDeviceItem()")
-
-  val context = LocalContext.current
-  val currentDevice by rememberUpdatedState(device)
-  var deleteItem by remember { mutableStateOf(false) }
-  var stateToMaintain by remember { mutableStateOf<SwipeToDismissBoxValue?>(null) }
-  var showConformationDialog by remember { mutableStateOf(false) }
-  val coroutineScope = rememberCoroutineScope()
-
-  val dismissState = rememberSwipeToDismissBoxState(
-    confirmValueChange = {
-      when (it) {
-        SwipeToDismissBoxValue.StartToEnd -> {
-          showConformationDialog = true
-          stateToMaintain = it
-        }
-
-        SwipeToDismissBoxValue.EndToStart -> {
-          // Disabled in call to SwipeToDismissBox()
-        }
-
-        SwipeToDismissBoxValue.Settled -> false
-      }
-      false//Immediately resets the state so we can swipe it again if confirmation is canceled or if deletion fails
-    },
-    // positional threshold of 25%
-    positionalThreshold = { it * .25f }
-  )
-
-  //Maintains the row's swiped state while it waits for confirmation and for AnimatedVisibility to hide the item
-  LaunchedEffect(stateToMaintain) {
-    stateToMaintain?.let {
-      dismissState.snapTo(it)
-      stateToMaintain = null
-    }
-  }
-
-  LaunchedEffect(deleteItem) {
-    if (deleteItem) {
-      onDeviceRemove(currentDevice)
-      deleteItem = false
-      Toast.makeText(
-        context,
-        context.getString(R.string.device_deleted), Toast.LENGTH_SHORT
-      ).show()
-    } else {
-      dismissState.reset()
-    }
-  }
-
-  SwipeToDismissBox(
-    state = dismissState,
-    enableDismissFromEndToStart = false,
-    modifier = modifier,
-    backgroundContent = { DismissBackground(dismissState) }
-  ) {
-    GaaiDeviceCard(
-      device, ConnectionState.NOT_CONNECTED, modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-        .clickable { onDeviceClick(device) })
-  }
-
-  if (showConformationDialog) {
-    DeleteConfirmationDialog(
-      stringResource(R.string.device),
-      onConfirm = {
-        deleteItem = true
-        showConformationDialog = false
-      },
-      onCancel = {
-        coroutineScope.launch { dismissState.reset() } //reset() seems to only reset the visual state, not the full state object
-        showConformationDialog = false
-      })
-  }
-
   Log.d(TAG, "Exiting GaaiDeviceItem()")
 }
 
