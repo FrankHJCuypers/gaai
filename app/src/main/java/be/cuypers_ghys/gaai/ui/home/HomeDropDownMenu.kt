@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import androidx.core.net.toUri
 
 @Composable
 fun DropdownMenuWithDetails(initialExpanded: Boolean = false) {
@@ -75,7 +76,7 @@ fun DropdownMenuWithDetails(initialExpanded: Boolean = false) {
         trailingIcon = { Icon(Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null) },
         onClick = {
           val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(url)
+            data = url.toUri()
           }
           // Start the activity
           context.startActivity(intent)
@@ -109,7 +110,7 @@ fun DropdownMenuExpandedWithDetails(expanded: Boolean, onDismissRequest: () -> U
       trailingIcon = { Icon(Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null) },
       onClick = {
         val intent = Intent(Intent.ACTION_VIEW).apply {
-          data = Uri.parse(url)
+        data = url.toUri()
         }
         // Start the activity
         context.startActivity(intent)
