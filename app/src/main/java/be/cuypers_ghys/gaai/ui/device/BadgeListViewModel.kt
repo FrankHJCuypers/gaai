@@ -14,8 +14,6 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("unused")
-
 package be.cuypers_ghys.gaai.ui.device
 
 import android.annotation.SuppressLint
@@ -145,7 +143,6 @@ class BadgeListManager : IBadgeListManager {
  *
  * @author Frank HJ Cuypers
  */
-@Suppress("unused")
 class BadgeListViewModel(
   savedStateHandle: SavedStateHandle,
   private val devicesRepository: DevicesRepository,

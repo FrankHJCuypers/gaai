@@ -235,7 +235,6 @@ class ConfigDataParserComposerTest {
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  @Suppress("SpellCheckingInspection")
   @Test
   fun parseConfig_CBOR_FirstTypeMapAndSubmap1Absent() {
     assertNull(ConfigDataParserComposer.parseConfig_CBOR("A100A201010201C28F".hexToByteArray()))

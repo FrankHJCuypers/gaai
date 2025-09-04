@@ -31,7 +31,7 @@ enum class ChargeType {
  *
  * @author Frank HJ Cuypers
  */
-@Suppress("ArrayInDataClass", "ArrayInDataClass")
+@Suppress("ArrayInDataClass")
 data class Badge(
   /** The UUID without the leading length byte send by the charger. */
   val uuid: ByteArray,
