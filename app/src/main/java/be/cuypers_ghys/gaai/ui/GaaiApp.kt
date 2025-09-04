@@ -122,7 +122,7 @@ fun adaptiveIconPainterResource(@DrawableRes id: Int): Painter {
   val res = LocalResources.current
   val theme = LocalContext.current.theme
 
-   // Android O supports adaptive icons, try loading this first (even though this is least likely to be the format).
+  // Android O supports adaptive icons, try loading this first (even though this is least likely to be the format).
   val adaptiveIcon = ResourcesCompat.getDrawable(res, id, theme) as? AdaptiveIconDrawable
   return if (adaptiveIcon != null) {
     BitmapPainter(adaptiveIcon.toBitmap().asImageBitmap())
