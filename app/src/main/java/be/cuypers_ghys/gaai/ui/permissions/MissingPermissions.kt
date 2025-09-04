@@ -25,7 +25,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -266,6 +268,7 @@ fun RequireBluetooth(
   Log.d(TAG, "Exiting RequireBluetooth()")
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GetTextToShowGivenPermissionsDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GetTextToShowGivenPermissionsLight")
