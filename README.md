@@ -179,7 +179,7 @@ When *Gaai* is started the first time, it has no *Nexxtender* devices in its dat
 
 At the bottom right is a button with a "+" that allows to add a *Nexxtender* device.
 
-At the top right there is a  "&#8942;" icon. 
+At the top right there is a  "&#8942;" icon.
 When you click on it, a drop down menu with 2 items appears.
 
 ![Home Drop Down Menu](docs/images/HomeDropDownMenu.png)
