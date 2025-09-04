@@ -563,6 +563,13 @@ The other rows are confirmed by other users.
 | OnePlus Nord 2     | 33 (13)               | 3.65.0                           |                                    |
 | Samsung Galaxy J7  | 27 (8.1)              | 3.65.0                           |                                    |
 
+The previous table did not track the *Gaai* version. That is done in the next table, starting from version v0.1.1.
+
+| Phone Model        | Android API (version) | Nexxtender firmware version | Gaai version |
+|--------------------|-----------------------|-----------------------------|--------------|
+| Google Pixel 6 Pro | 36 (16)               | Home 2.53.2                 | v0.1.1       | 
+| Google Pixel 8 Pro | 36 (16)               | Home 2.53.2                 | v0.1.1       |
+
 There are currently no combinations for which it is confirmed that it does not work.
 
 # Disclaimer
