@@ -60,6 +60,7 @@ import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.R.string
 import be.cuypers_ghys.gaai.ui.navigation.GaaiNavHost
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import androidx.compose.ui.platform.LocalResources
 
 // Tag for logging
 private const val TAG = "GaaiApp"
@@ -118,7 +119,7 @@ fun GaaiTopAppBar(
 // Found on https://gist.github.com/tkuenneth/ddf598663f041dc79960cda503d14448
 @Composable
 fun adaptiveIconPainterResource(@DrawableRes id: Int): Painter {
-  val res = LocalContext.current.resources
+  val res = LocalResources.current
   val theme = LocalContext.current.theme
 
   return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
