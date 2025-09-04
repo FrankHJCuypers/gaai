@@ -143,7 +143,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param scanResult The BLE scan result.
    */
   private suspend fun updateUiState(scanResult: BleScanResult) {
-    val chargerType = when (scanResult.device.name) {
+    val chargerType = when (scanResult.data?.scanRecord?.deviceName) {
       "HOME" -> ChargerType.HOME
       "Mobile" -> ChargerType.MOBILE
       else -> ChargerType.UNKNOWN
