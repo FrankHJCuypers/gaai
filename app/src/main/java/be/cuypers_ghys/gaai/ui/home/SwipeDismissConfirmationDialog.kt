@@ -174,32 +174,32 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewUNKNOWNLight")
 @Composable
 fun SwipeToDismissContainerPreview() {
-    GaaiTheme(dynamicColor = false) {
-      Surface {
-        val list = (1..100).toList()
-        val scope = rememberCoroutineScope()
-        Column {
-          list.forEach {
-            SwipeToDismissContainer(
-              it,
-              it.toString(),
-              onDismiss = { _, onError ->
-                scope.launch {
-                  delay(1000)
-                  onError()
-                }
+  GaaiTheme(dynamicColor = false) {
+    Surface {
+      val list = (1..100).toList()
+      val scope = rememberCoroutineScope()
+      Column {
+        list.forEach {
+          SwipeToDismissContainer(
+            it,
+            it.toString(),
+            onDismiss = { _, onError ->
+              scope.launch {
+                delay(1000)
+                onError()
               }
-            ) { item ->
-              Text(
-                text = item.toString(),
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(16.dp)
-              )
             }
+          ) { item ->
+            Text(
+              text = item.toString(),
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+            )
           }
         }
       }
     }
+  }
 }
 

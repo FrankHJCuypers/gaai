@@ -110,7 +110,7 @@ fun DropdownMenuExpandedWithDetails(expanded: Boolean, onDismissRequest: () -> U
       trailingIcon = { Icon(Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null) },
       onClick = {
         val intent = Intent(Intent.ACTION_VIEW).apply {
-        data = url.toUri()
+          data = url.toUri()
         }
         // Start the activity
         context.startActivity(intent)

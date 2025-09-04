@@ -36,7 +36,7 @@ class TimestampTest {
   ) {
 
     println("timezone in test: " + TimeZone.currentSystemDefault().id)
-    Assume.assumeTrue("Europe/Brussels"  == TimeZone.currentSystemDefault().id)
+    Assume.assumeTrue("Europe/Brussels" == TimeZone.currentSystemDefault().id)
 
     val computedTimeString = Timestamp.toString(timeStamp)
     Assertions.assertNotNull(computedTimeString)
