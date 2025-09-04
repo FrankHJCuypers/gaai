@@ -220,9 +220,10 @@ It contains a 256 bits Elliptic Curve key on the NIST P-256 elliptic curve.
 This key is used with the *SHA-256 with ECDSA* signature algorithm to sign the APK.
 All of that is done automatically by gradle.
 
-For a *Github Action* build, the 4 values are stored in Github's 
+For a *Github Action* build, the 4 values are stored in Github's
 [repository secrets](https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/using-secrets-in-github-actions).
 The following 4 secrets are used:
+
 - SIGNING_STORE_FILE: the Base64 encoded contents of the `storeFile` (`gaai-release.keystore`)
 - SIGNING_STORE_PASSWORD: the value of `storePassword`
 - SIGNING_KEY_ALIAS: the value of `keyAlias`
