@@ -162,7 +162,6 @@ fun DeviceDetailsScreen(
  * including app bars.
  * @param onNavigateUp Function to be called when [DeviceDetailsScreen] wants to navigate up.
  * @param navigateToBadgeList Function to be called when [DeviceDetailsScreen] wants to show list of badges.
- * @param canNavigateUp Is the [DeviceDetailsScreen] allowed to navigate back?
  * @param device The information for the [Device] determined by the [DeviceDetailsViewModel].
  * @param state The state for the [Device] determined by the [DeviceDetailsViewModel].
  *  The state includes all information received from the device over BLE.
@@ -186,6 +185,7 @@ fun DeviceDetailsScreen(
  *  device's [TimeData.time] with the current time on the mobile phone.
  * @param onLoaderOperation Function to be called when [DeviceDetailsBody] wants to perform a loader operation.
  * @param modifier The [Modifier] to be applied to this [DeviceDetailsBody].
+ * @param canNavigateUp Is the [DeviceDetailsScreen] allowed to navigate back?
  *
  * @author Frank HJ Cuypers
  */
@@ -195,7 +195,6 @@ fun DeviceDetailsScreenNoViewModel(
   // TODO: remove unused navigateBack? What is difference with onNavigateUp? Is correct one used?
   onNavigateUp: () -> Unit,
   navigateToBadgeList: () -> Unit,
-  canNavigateUp: Boolean = true,
   navigateUp: () -> Unit,
   device: Device?,
   state: DeviceDetailsViewState,
@@ -209,7 +208,8 @@ fun DeviceDetailsScreenNoViewModel(
   onTimeGet: () -> Unit,
   onTimeSync: () -> Unit,
   onLoaderOperation: (Int) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  canNavigateUp: Boolean = true
 ) {
   Log.d(TAG, "Entering DeviceDetailsScreen")
   rememberCoroutineScope()
