@@ -22,7 +22,8 @@ androidGitVersion {
 // Read keystore properties from gaai-release-keystore.properties file, in the $user.home\.android folder
 // For security reasons gaai-release-keystore.properties and gaai-keystore.properties are NOT in git.
 val keystoreProperties = Properties()
-val keystorePropertiesFile = file(Paths.get(System.getProperty("user.home")).resolve(".android\\gaai-release-keystore.properties"))
+val keystorePropertiesFile =
+  file(Paths.get(System.getProperty("user.home")).resolve(".android\\gaai-release-keystore.properties"))
 if (keystorePropertiesFile.exists()) {
   keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
@@ -36,8 +37,7 @@ android {
         storePassword = keystoreProperties["storePassword"] as String
         keyAlias = keystoreProperties["keyAlias"] as String
         keyPassword = keystoreProperties["keyPassword"] as String
-      }
-      else {
+      } else {
         // If the gaai-release-keystore.properties file does not exist, we use Github secrets.
         storeFile = rootProject.file(System.getenv("SIGNING_STORE_FILE") as String)
         storePassword = System.getenv("SIGNING_STORE_PASSWORD") as String
