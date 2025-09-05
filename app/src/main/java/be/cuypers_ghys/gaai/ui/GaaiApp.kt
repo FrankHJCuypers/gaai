@@ -19,7 +19,6 @@ package be.cuypers_ghys.gaai.ui
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.drawable.AdaptiveIconDrawable
-import android.os.Build
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

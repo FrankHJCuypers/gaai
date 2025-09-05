@@ -16,7 +16,6 @@
 package be.cuypers_ghys.gaai.util
 
 import kotlinx.datetime.TimeZone
-import org.junit.Assume
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.params.ParameterizedTest
