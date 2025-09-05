@@ -14,6 +14,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("SameParameterValue")
+
 package be.cuypers_ghys.gaai.util
 
 /**

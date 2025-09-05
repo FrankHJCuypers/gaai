@@ -169,7 +169,6 @@ class BadgeListViewModel(
   /**
    * Holds current device ui state.
    */
-  @Suppress("unused")
   var badgeDeviceUiState by mutableStateOf(BadgeDeviceUiState())
 //    private set
 

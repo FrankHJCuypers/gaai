@@ -53,15 +53,15 @@ data class CCDTRecord(
   /**
    * Car phase L1 current in A.
    */
-  val L1: UByte = 0u,
+  @Suppress("PropertyName") val L1: UByte = 0u,
 
   /**
    * Car phase L2 current in A.
    */
-  val L2: UByte = 0u,
+  @Suppress("PropertyName") val L2: UByte = 0u,
 
   /**
    * Car phase L3 current in A.
    */
-  val L3: UByte = 0u,
+  @Suppress("PropertyName") val L3: UByte = 0u,
 )
