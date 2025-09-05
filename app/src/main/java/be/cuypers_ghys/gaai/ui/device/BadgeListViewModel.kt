@@ -169,19 +169,18 @@ class BadgeListViewModel(
   /**
    * Holds current device ui state.
    */
-  @Suppress("unused", "unused", "unused")
+  @Suppress("unused")
   var badgeDeviceUiState by mutableStateOf(BadgeDeviceUiState())
 //    private set
 
   /**
-   * Updates the [badgeDeviceUiState] with the value provided in the argument.
+   * Initializes the [badgeDeviceUiState] with the value provided in the argument.
    * @param device The initial device details from which to compute the state.
-   * @param statusId The initial status Id.
    */
-  private fun updateBadgeDeviceUiState(device: Device, statusId: Int) {
+  private fun initBadgeDeviceUiState(device: Device) {
     badgeDeviceUiState =
       BadgeDeviceUiState(
-        device = device, statusId = statusId
+        device = device
       )
   }
 
@@ -226,7 +225,7 @@ class BadgeListViewModel(
   }
 
   init {
-    updateBadgeDeviceUiState(gaaiDevice, -1)
+    initBadgeDeviceUiState(gaaiDevice)
     startGattClient(gaaiDevice)
   }
 
