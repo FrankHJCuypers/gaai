@@ -515,7 +515,7 @@ In this screen you can
 - Remove a device by swiping the card entry that corresponds with the badge to the right.
   A Dialog box will pop up asking you to confirm the delete:
 
-![Badgee Delete Confirmation](docs/images/BadgeDeleteConfirm.png)
+![Badge Delete Confirmation](docs/images/BadgeDeleteConfirm.png)
 
 Make sure that you are close to the *Nexxtender* charger and that no other device is connected with it over BLE.
 

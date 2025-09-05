@@ -45,7 +45,7 @@ It also depends on other nordic libs:
   Not clear what the differences are compared with the Cupcakes course.
 - libs.nordic.permissions.ble for instance for requiring bluetooth permission etc...
   Includes the screens needed to ask for permission.
-  Seems to use the composables
+  Seems to use the composable
 - libs.nordic.logger
 
 So it uses nordic themes and navigation?

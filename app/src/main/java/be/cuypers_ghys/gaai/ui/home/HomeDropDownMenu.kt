@@ -99,7 +99,7 @@ fun DropdownMenuWithDetailsPreview() {
   }
 }
 
-// Only one @Preview is successfull
+// Only one @Preview is successful
 //@Preview(widthDp = 320, heightDp = 320,showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DropdownMenuWithDetailsExpandedPreviewDark")
 @Preview(
   widthDp = 180,

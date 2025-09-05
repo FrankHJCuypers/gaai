@@ -89,7 +89,7 @@ fun DeleteConfirmDialogDevicePreview() {
   }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeleteConfirmDialoBadgePreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeleteConfirmDialogBadgePreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeleteConfirmDialogBadgePreviewLight")
 @Composable
 fun DeleteConfirmDialogBadgePreview() {
