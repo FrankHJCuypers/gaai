@@ -88,39 +88,6 @@ fun DropdownMenuWithDetails(initialExpanded: Boolean = false) {
   }
 }
 
-@Composable
-fun DropdownMenuExpandedWithDetails(expanded: Boolean, onDismissRequest: () -> Unit) {
-  var showAboutWindow by remember { mutableStateOf(false) }
-  DropdownMenu(
-    expanded = expanded,
-    onDismissRequest = onDismissRequest
-  ) {
-
-    DropdownMenuItem(
-      text = { Text("About") },
-      leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
-      onClick = { showAboutWindow = true }
-    )
-    val context = LocalContext.current
-    val url = "https://frankhjcuypers.github.io/gaai/" // Replace with your desired
-    DropdownMenuItem(
-      text = { Text("Help") },
-      leadingIcon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = null) },
-      trailingIcon = { Icon(Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null) },
-      onClick = {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-          data = url.toUri()
-        }
-        // Start the activity
-        context.startActivity(intent)
-      }
-    )
-  }
-  if (showAboutWindow) {
-    AboutDialog { showAboutWindow = false }
-  }
-}
-
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DropdownMenuWithDetailsPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DropdownMenuWithDetailsPreviewLight")
 @Composable
