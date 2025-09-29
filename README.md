@@ -22,6 +22,7 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/FrankHJCuypers/gaai?include_prereleases&display_name=tag&logo=github)](https://github.com/FrankHJCuypers/gaai/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date-pre/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/releases)
+[![RB Status](https://shields.rbtlog.dev/simple/be.cuypers_ghys.gaai)](https://shields.rbtlog.dev/be.cuypers_ghys.gaai)
 [![GitHub License](https://img.shields.io/github/license/FrankHJCuypers/gaai?logo=github)](LICENSE)
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/commits)
@@ -78,11 +79,12 @@ The following features are **not** available:
 
 # Installing Gaai
 
-There are 3 ways to install *Gaai* on your Android phone:
+There are 4 ways to install *Gaai* on your Android phone:
 
 1. [Install Gaai using APK file](#install-gaai-using-apk-file)
 2. [Install Gaai using Android Studio on Windows](#install-gaai-using-android-studio-on-windows)
-3. [Install Gaai using Google Play Store](#install-gaai-using-google-play-store)
+3. [Install Gaii from IzzyOnDroid](https://apt.izzysoft.de/packages/be.cuypers_ghys.gaai)
+4. [Install Gaai using Google Play Store](#install-gaai-using-google-play-store)
 
 ## Install Gaai using APK file
 
@@ -105,6 +107,9 @@ If the scanning is complete, select "Install app".
 *Gaai* can be installed on your Android phone using Android Studio.
 See [Environment setup](DEVELOPMENT.md#environment-setup).
 Only used by developers during development.
+
+## Install Gaii from IzzyOnDroid
+You can use your favorite [F-Droid client](https://android.izzysoft.de/applists/category/named/apps_markets#group_1181) for this, which then also takes care for updates.
 
 ## Install Gaai using Google Play Store
 
