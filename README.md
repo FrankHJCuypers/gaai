@@ -83,7 +83,7 @@ There are 4 ways to install *Gaai* on your Android phone:
 
 1. [Install Gaai using APK file](#install-gaai-using-apk-file)
 2. [Install Gaai using Android Studio on Windows](#install-gaai-using-android-studio-on-windows)
-3. [Install Gaii from IzzyOnDroid](https://apt.izzysoft.de/packages/be.cuypers_ghys.gaai)
+3. [Install Gaai from IzzyOnDroid](https://apt.izzysoft.de/packages/be.cuypers_ghys.gaai)
 4. [Install Gaai using Google Play Store](#install-gaai-using-google-play-store)
 
 ## Install Gaai using APK file
@@ -108,7 +108,7 @@ If the scanning is complete, select "Install app".
 See [Environment setup](DEVELOPMENT.md#environment-setup).
 Only used by developers during development.
 
-## Install Gaii from IzzyOnDroid
+## Install Gaai from IzzyOnDroid
 You can use your favorite [F-Droid client](https://android.izzysoft.de/applists/category/named/apps_markets#group_1181) for this, which then also takes care for updates.
 
 ## Install Gaai using Google Play Store
