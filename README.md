@@ -18,6 +18,8 @@
 [![kotlin](https://img.shields.io/badge/Kotlin-B125EA?style=for-the-badge&logo=kotlin&logoColor=white)](https://developer.android.com/kotlin)
 [![compose](https://img.shields.io/badge/Jetpack-Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://developer.android.com/compose)
 
+[![gradle](https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)](https://gradle.org/)
+
 [![stable](https://img.shields.io/badge/version-stable-green)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
 
 [![GitHub Release](https://img.shields.io/github/v/release/FrankHJCuypers/gaai?include_prereleases&display_name=tag&logo=github)](https://github.com/FrankHJCuypers/gaai/releases)
