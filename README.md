@@ -552,7 +552,7 @@ This project is licensed under the GNU AGPLv3 License. See the [LICENSE](LICENSE
 
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
   showing how to address the Nexxtender Home.
-- [NordicSemiconductor Kotlin-BLE-Library uiscanner](https://github.com/NordicSemiconductor/Kotlin-BLE-Library/tree/main/uiscanner)
+- [NordicSemiconductor Kotlin-BLE-Library](https://github.com/NordicSemiconductor/Kotlin-BLE-Library/tree/main)
   for the BLE library.
 
 # Supported Android versions and Nexxtender Home/Mobile firmware versions
