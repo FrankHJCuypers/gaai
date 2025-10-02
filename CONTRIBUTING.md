@@ -3,6 +3,9 @@
 We'd love to accept your patches and contributions to this project.
 There are just a few small guidelines you need to follow.
 
+When contributing to this repository, please first discuss the change you 
+wish to make via issue, email, or any other method with the owners of this repository before making a change.
+
 ## Licensing agreement
 
 All contributors retain the copyright to their contribution.
@@ -22,15 +25,34 @@ The only exceptions applied are:
 The Android Studio project editor is set up to automatically apply this style.
 Each time that a Kotlin file is saved or committed, it is also automatically reformatted.
 
+## Setup
+
+See [Environment setup](DEVELOPMENT.md#environment-setup).
+Fork the Gaai repo before cloning it.
+
+## Development
+
+Perform the development and testing on your clone.
+Don't forget to update the README.md if applicable.
+
 ## Testing
 
-TBD
+Add new tests for your contribution and make sure they pass.
+See [Testing](DEVELOPMENT.md#testing).
 
 ## Code reviews
 
-All submissions, including submissions by project members, require review. We
-use GitHub pull requests for this purpose. Consult
-[GitHub Help](https://help.github.com/articles/about-pull-requests/) for more.
+All submissions, including submissions by project members, require review.
+We use GitHub pull requests for this purpose. 
+Consult [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more.
+
+Push your changes to your fork and submit a pull request.
+Be patient.
+
+Some things that will increase the chance that your pull request is accepted:
++ Write tests
++ Follow our [Coding conventions](#coding-conventions)
++ Write a good [commit message](DEVELOPMENT.md#git-commits)
 
 ## Contributor Covenant Code of Conduct
 
