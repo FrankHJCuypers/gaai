@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -88,6 +88,11 @@ class ProductNumberParserTest {
   @Test
   fun parse_NotGroupCount2() {
     Assertions.assertNull(ProductNumberParser.parse("60211"))
+  }
+
+  @Test
+  fun parse_CorrectButToLong() {
+    Assertions.assertNull(ProductNumberParser.parse("62111-A2-11"))
   }
 
   companion object {

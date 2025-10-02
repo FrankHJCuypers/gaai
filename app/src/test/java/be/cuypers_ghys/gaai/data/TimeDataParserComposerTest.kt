@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -15,6 +15,7 @@
  */
 package be.cuypers_ghys.gaai.data
 
+import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -50,6 +51,18 @@ class TimeDataParserComposerTest {
   @Test
   fun parse_TimeDataLengthToLong() {
     assertNull(TimeDataParserComposer.parse("1234567890".hexToByteArray()))
+  }
+
+  @ParameterizedTest
+  @MethodSource("usedCombinationsProvider")
+  fun compose_VerifyResultsFromKnownTestVectors(
+    timeData: ByteArray,
+    expectedTime: Long,
+  ) {
+    val computedTime = TimeDataParserComposer.compose(TimeData(expectedTime.toUInt()))
+
+    assertNotNull(computedTime)
+    assertArrayEquals(timeData, computedTime)
   }
 
   companion object {

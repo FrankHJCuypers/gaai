@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -49,7 +49,9 @@ object ProductNumberParser {
    */
   fun parse(productNumberString: String): ProductNumber? {
     val matcher = Pattern.compile(REGEX).matcher(productNumberString)
-    if (matcher.find() && matcher.groupCount() == 2) {
+    if (matcher.find()) {
+      // The REGEX pattern matches exactly 2 groups. So if the matcher finds the pattern, there are by definition 2 groups.
+      assert(matcher.groupCount() == 2)
       // We verified that matcher.groupCount() == 2, so groups 1 to 2 will not return null
       val modelNumberString = matcher.group(1)!!
       val hardwareRevisionString = matcher.group(2)!!

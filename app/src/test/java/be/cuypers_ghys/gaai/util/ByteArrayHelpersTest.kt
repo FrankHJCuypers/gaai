@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -127,7 +127,7 @@ class ByteArrayHelpersTest {
   }
 
   @Test
-  fun fromUint32_LE_MSBitSetInBothBytes() {
+  fun fromUint32_LE_MSBitSetInAllBytes() {
     val ba = byteArrayOf(0x00, 0x82.toByte(), 0xF4.toByte(), 0xA6.toByte(), 0x98.toByte(), 0x00)
     Assertions.assertEquals(0x98A6F482u, ba.fromUint32LE(1))
   }
@@ -151,9 +151,33 @@ class ByteArrayHelpersTest {
   }
 
   @Test
-  fun fromUint32_BE_MSBitSetInBothBytes() {
+  fun fromUint32_BE_MSBitSetInAllBytes() {
     val ba = byteArrayOf(0x00, 0x82.toByte(), 0xF4.toByte(), 0xA6.toByte(), 0x98.toByte(), 0x00)
     Assertions.assertEquals(0x82F4A698u, ba.fromUint32BE(1))
+  }
+
+  @Test
+  fun fromInt32_LE_correct() {
+    val ba = byteArrayOf(0x00, 0x12.toByte(), 0x34.toByte(), 0x56.toByte(), 0x78.toByte(), 0x00)
+    Assertions.assertEquals(0x78563412, ba.fromInt32LE(1))
+  }
+
+  @Test
+  fun fromInt32_LE_MSBitSetInAllBytes() {
+    val ba = byteArrayOf(0x00, 0x82.toByte(), 0xF4.toByte(), 0xA6.toByte(), 0x98.toByte(), 0x00)
+    Assertions.assertEquals(0x98A6F482.toShort(), ba.fromInt16LE(1))
+  }
+
+  @Test
+  fun toHex() {
+    val ba = byteArrayOf(0x00, 0x12.toByte(), 0x34.toByte(), 0x56.toByte(), 0x78.toByte(), 0x00)
+    Assertions.assertEquals("001234567800", ba.toHex())
+  }
+
+  @Test
+  fun toColonHex() {
+    val ba = byteArrayOf(0x00, 0x12.toByte(), 0x34.toByte(), 0x56.toByte(), 0x78.toByte(), 0x00)
+    Assertions.assertEquals("00:12:34:56:78:00", ba.toColonHex())
   }
 
 }

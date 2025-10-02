@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -115,6 +115,11 @@ class SerialNumberParserTest {
   @Test
   fun parse_UUNotHex() {
     Assertions.assertNull(SerialNumberParser.parse("2303-00005-Z3"))
+  }
+
+  @Test
+  fun parse_CorrectButToLong() {
+    Assertions.assertNull(SerialNumberParser.parse("2303-00005-12-34"))
   }
 
   companion object {

@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -51,7 +51,10 @@ object SerialNumberParser {
    */
   fun parse(serialNumberString: String): SerialNumber? {
     val matcher = Pattern.compile(REGEX).matcher(serialNumberString)
-    if (matcher.find() && matcher.groupCount() == 4) {
+    if (matcher.find()) {
+      // The REGEX pattern matches exactly 4 groups. So if the matcher finds the pattern, there are by definition 4 groups.
+      assert(matcher.groupCount() == 4)
+
       // We verified that matcher.groupCount() == 4, so groups 1 to 4 will not return null
       val yearString = matcher.group(1)!!
       val weekString = matcher.group(2)!!
