@@ -40,6 +40,11 @@ Don't forget to update the README.md if applicable.
 Add new tests for your contribution and make sure they pass.
 See [Testing](DEVELOPMENT.md#testing).
 
+## Code coverage
+
+Verify with code coverage that the new functionality is covered with Junit tests, were possible.
+See [Code coverage](DEVELOPMENT.md#code-coverage).
+
 ## Code reviews
 
 All submissions, including submissions by project members, require review.

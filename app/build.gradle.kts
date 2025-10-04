@@ -74,6 +74,9 @@ android {
       )
       signingConfig = signingConfigs.getByName("release")
     }
+    debug {
+      enableUnitTestCoverage = true
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -109,7 +112,6 @@ android {
 }
 
 dependencies {
-
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)
   implementation(platform(libs.androidx.compose.bom))

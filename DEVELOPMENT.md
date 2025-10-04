@@ -93,7 +93,7 @@ Run the local tests in Android Studio as follows:
 
 Local tests can also be run using Gradle in a shell (e.g. PowerShell in Android Studio terminal, or git bash),
 see [Test from the command line](https://developer.android.com/studio/test/command-line):
-`./gradlew testReleaseUnitTest`
+`./gradlew testReleaseUnitTest` or `./gradlew testDebugUnitTest`
 
 ### Instrumented tests
 
@@ -143,7 +143,27 @@ Install the app either using Android Studio or by manually installing the APK to
 
 Now manually test all functionality that is described in the [README](README.md#getting-started).
 
-### Developer Documentation generation
+## Code coverage
+
+### Code coverage of Local tests
+
+The [Local (JUnit) tests](#local-tests) can also produce code coverage results.
+Run the local tests in Android Studio as follows:
+
+- In the *Android* view, select the *app -> kotlin+java -> be.cuypers_ghys.gaai (test)* node.
+- In the pop-up menu, select *Run 'Tests in 'be...' with Coverage*.
+  The tests run.
+- The Coverage screen shows a summary of the coverage results. 
+  From there you can drill down to source code level to see which code is covered and which not. 
+  Add Junit tests to increase coverage to 100% is possible.
+
+Code coverage of local tests can also be generated using Gradle in a shell 
+(e.g. PowerShell in Android Studio terminal, or git bash),
+see [Test from the command line](https://developer.android.com/studio/test/command-line):
+`./gradlew testDebugUnitTest` followed by `./gradlew createDebugCoverageReport`.
+Note that `./gradlew testReleaseUnitTest` does not create Code coverage information.
+
+## Developer Documentation generation
 
 The kotlin code is documented with [KDoc](https://kotlinlang.org/docs/kotlin-doc.html).
 [Dokka](https://kotlinlang.org/docs/dokka-introduction.html) can generate HTML documentation from it.
@@ -257,9 +277,14 @@ who is also responsible for backups.
 - `./gradlew testDebugUnitTest` runs the local (JUnit) tests for the debug build.
   The Junit xml files are generated in the `app\build\test-results\testDebugUnitTest` directory.
   Html test result files are generated in the `app\build\reports\tests\testDebugUnitTest` directory.
+  In addition it performs code coverage analysis using jacoco.
+  The jacoco result file is written to `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
 - `./gradlew test` runs both the above.
 - `./gradlew build` assembles and tests the project.
   The release apk files are generated in the `app\build\outputs\apk\release` directory.
+- `./gradlew createDebugCoverageReport` creates an html coverage report in `app\build\reports\coverage\test\debug`
+  based on the jacoco results in `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
+  This task is **not** included in `./gradlew build`.
 
 ## GitHub actions
 
