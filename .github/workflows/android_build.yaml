@@ -52,7 +52,7 @@ jobs:
           git config core.filemode false
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build createDebugCoverageReport
         env:
           SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
@@ -65,10 +65,6 @@ jobs:
           paths: "app/build/test-results/**/TEST-*.xml"
           show: "all"
         if: always()
-
-        # Report should end up in ${{ env.main_project_module }}\build\reports\coverage\test\debug
-      - name: Generate Coverage report with Gradle
-        run: ./gradlew createDebugCoverageReport
 
       # generates coverage-report.md and publishes as checkrun
       - name: JaCoCo Code Coverage Report
