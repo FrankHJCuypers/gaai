@@ -69,7 +69,7 @@ jobs:
           show: "all"
         if: always()
 
-      # generates coverage-report.md and publishes as checkrun
+      # generates coverage-report.md and publishes as checkrun.
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
