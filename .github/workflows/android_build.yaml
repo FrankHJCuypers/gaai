@@ -81,7 +81,7 @@ jobs:
           skip_check_run: false
           minimum_coverage: 80
           fail_below_threshold: false
-          publish_only_summaryj: fals
+          publish_only_summary: false
 
       # Publish Coverage Job Summary  # Optional
       - name: Add Jacoco report to workflow run summary
