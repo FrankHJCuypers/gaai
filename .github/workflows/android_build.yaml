@@ -11,6 +11,9 @@ on:
       - 'feature/**'
   workflow_dispatch:
 
+permissions:
+  checks: write # required by PavanMudigonda/jacoco-reporter@v5.0
+
 env:
   # The name of the keystore file
   keystoreFileName: 'keystore/gaai-release.keystore'
@@ -78,7 +81,7 @@ jobs:
           skip_check_run: false
           minimum_coverage: 80
           fail_below_threshold: false
-          publish_only_summary: false
+          publish_only_summaryj: fals
 
       # Publish Coverage Job Summary  # Optional
       - name: Add Jacoco report to workflow run summary
