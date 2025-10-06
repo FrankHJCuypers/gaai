@@ -22,6 +22,7 @@
 
 
 [![stable](https://img.shields.io/badge/version-stable-green)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
+[![codecov](https://codecov.io/github/FrankHJCuypers/gaai/graph/badge.svg?token=QE75WWEEUQ)](https://codecov.io/github/FrankHJCuypers/gaai)
 
 [![GitHub Release](https://img.shields.io/github/v/release/FrankHJCuypers/gaai?include_prereleases&display_name=tag&logo=github)](https://github.com/FrankHJCuypers/gaai/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date-pre/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/releases)
@@ -31,6 +32,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/commits)
 [![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/graphs/contributors)
 [![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/gaai/master?logo=github)](https://github.com/FrankHJCuypers/gaai/commits/master)
+
 
 # Nexxtender Charger android app
 
