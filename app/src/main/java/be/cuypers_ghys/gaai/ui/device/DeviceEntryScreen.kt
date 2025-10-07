@@ -48,6 +48,7 @@ import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
+import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 
 /**
@@ -80,14 +81,17 @@ fun DeviceEntryScreen(
   canNavigateUp: Boolean = true,
   viewModel: DeviceEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-  DeviceEntryScreenNoViewModel(
-    navigateBack, onNavigateUp, canNavigateUp, viewModel.deviceUiState,
-    onDeviceValueChange = viewModel::updateUiState,
-    onEntryStatusChange = viewModel::updateUiState,
-    scanDevice = viewModel::scanDevice,
-    cancelScanDevice = viewModel::cancelScanDevice,
-    saveDevice = viewModel::saveDevice
-  )
+
+  RequireBluetooth {
+    DeviceEntryScreenNoViewModel(
+      navigateBack, onNavigateUp, canNavigateUp, viewModel.deviceUiState,
+      onDeviceValueChange = viewModel::updateUiState,
+      onEntryStatusChange = viewModel::updateUiState,
+      scanDevice = viewModel::scanDevice,
+      cancelScanDevice = viewModel::cancelScanDevice,
+      saveDevice = viewModel::saveDevice
+    )
+  }
 }
 
 /**

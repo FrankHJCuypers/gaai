@@ -93,6 +93,7 @@ import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
+import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.util.Timestamp
 import be.cuypers_ghys.gaai.util.TouPeriod
@@ -137,24 +138,26 @@ fun DeviceDetailsScreen(
   val state by viewModel.state.collectAsStateWithLifecycle()
   val device by viewModel.device.collectAsStateWithLifecycle()
 
-  DeviceDetailsScreenNoViewModel(
-    onNavigateUp = onNavigateUp,
-    canNavigateUp = canNavigateUp,
-    navigateUp = { viewModel.navigateUp(onNavigateUp) },
-    device = device,
-    state = state,
-    onTouWeekChange = viewModel::sendConfigOperationSetTouWeek,
-    onTouWeekendChange = viewModel::sendConfigOperationSetTouWeekend,
-    onMaxGridChange = viewModel::sendConfigOperationSetMaxGrid,
-    onMaxDeviceChange = viewModel::sendConfigOperationSetMaxDevice,
-    onSafeChange = viewModel::sendConfigOperationSetSafe,
-    onModeChange = viewModel::sendConfigOperationSetMode,
-    onICapacityChange = viewModel::sendConfigOperationSetICapacity,
-    onTimeGet = viewModel::sendTimeOperationGetTime,
-    onTimeSync = viewModel::sendTimeOperationSyncTime,
-    onLoaderOperation = viewModel::sendLoaderOperation,
-    navigateToBadgeList = { navigateToBadgeList(deviceId) },
-  )
+  RequireBluetooth {
+    DeviceDetailsScreenNoViewModel(
+      onNavigateUp = onNavigateUp,
+      canNavigateUp = canNavigateUp,
+      navigateUp = { viewModel.navigateUp(onNavigateUp) },
+      device = device,
+      state = state,
+      onTouWeekChange = viewModel::sendConfigOperationSetTouWeek,
+      onTouWeekendChange = viewModel::sendConfigOperationSetTouWeekend,
+      onMaxGridChange = viewModel::sendConfigOperationSetMaxGrid,
+      onMaxDeviceChange = viewModel::sendConfigOperationSetMaxDevice,
+      onSafeChange = viewModel::sendConfigOperationSetSafe,
+      onModeChange = viewModel::sendConfigOperationSetMode,
+      onICapacityChange = viewModel::sendConfigOperationSetICapacity,
+      onTimeGet = viewModel::sendTimeOperationGetTime,
+      onTimeSync = viewModel::sendTimeOperationSyncTime,
+      onLoaderOperation = viewModel::sendLoaderOperation,
+      navigateToBadgeList = { navigateToBadgeList(deviceId) },
+    )
+  }
 }
 
 /**
