@@ -18,6 +18,7 @@ package be.cuypers_ghys.gaai.ui.device
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -51,6 +52,9 @@ import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 
+// Tag for logging
+private const val TAG = "DeviceEntryScreen"
+
 /**
  * The [NavigationDestination] information for the [DeviceEntryScreen].
  *
@@ -81,6 +85,7 @@ fun DeviceEntryScreen(
   canNavigateUp: Boolean = true,
   viewModel: DeviceEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+  Log.v(TAG, "ENTRY DeviceEntryScreen()")
 
   RequireBluetooth {
     DeviceEntryScreenNoViewModel(
@@ -92,6 +97,7 @@ fun DeviceEntryScreen(
       saveDevice = viewModel::saveDevice
     )
   }
+  Log.v(TAG, "RETURN DeviceEntryScreen()")
 }
 
 /**
@@ -125,6 +131,8 @@ fun DeviceEntryScreenNoViewModel(
   cancelScanDevice: () -> Unit,
   saveDevice: () -> Unit
 ) {
+  Log.v(TAG, "ENTRY DeviceEntryScreenNoViewModel()")
+
   rememberCoroutineScope()
   Scaffold(
     topBar = {
@@ -176,6 +184,7 @@ fun DeviceEntryScreenNoViewModel(
         .fillMaxWidth()
     )
   }
+  Log.v(TAG, "RETURN DeviceEntryScreenNoViewModel()")
 }
 
 /**
@@ -196,6 +205,8 @@ fun DeviceEntryBody(
   onButtonClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY DeviceEntryBody(deviceUiState=$deviceUiState)")
+
   Column(
     modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
@@ -229,6 +240,7 @@ fun DeviceEntryBody(
       )
     }
   }
+  Log.v(TAG, "RETURN DeviceEntryBody()")
 }
 
 /**
@@ -243,6 +255,8 @@ fun DeviceDataForm(
   deviceUiState: DeviceUiState,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY DeviceDataForm(deviceUiState=$deviceUiState)")
+
   if ((deviceUiState.entryState == EntryState.DEVICE_FOUND)
     or (deviceUiState.entryState == EntryState.DUPLICATE_DEVICE_FOUND)
   ) {
@@ -260,6 +274,7 @@ fun DeviceDataForm(
       )
     }
   }
+  Log.v(TAG, "RETURN DeviceDataForm()")
 }
 
 /**
@@ -280,6 +295,8 @@ fun DeviceInputForm(
   onValueChange: (DeviceDetails) -> Unit = {},
   enabled: Boolean = true
 ) {
+  Log.d(TAG, "ENTRY DeviceInputForm(deviceUiState=$deviceUiState)")
+
   val deviceDetails = deviceUiState.deviceDetails
   Column(
     modifier = modifier,
@@ -337,6 +354,7 @@ fun DeviceInputForm(
       )
     }
   }
+  Log.v(TAG, "RETURN DeviceInputForm()")
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceEntryScreenNoViewModelDeviceDetailsEmptyDark")

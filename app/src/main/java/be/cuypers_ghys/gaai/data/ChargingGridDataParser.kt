@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,11 +16,15 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.util.modBus
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
+
+// Tag for logging
+private const val TAG = "ChargingGridDataParser"
 
 /**
  * Parses [Charging Grid Data]
@@ -39,13 +43,17 @@ object ChargingGridDataParser {
    *      Null if *chargingGridData* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(chargingGridData: ByteArray): ChargingGridData? {
+    Log.d(TAG, "ENTRY parse(chargingGridData = $chargingGridData)")
+
     if (chargingGridData.size != 16) {
+      Log.d(TAG, "chargingGridData.size is not 16 but ${chargingGridData.size} ")
       return null
     }
 
     val crc = chargingGridData.fromUint16LE(14)
     val computedCrc = CRC16.modBus(chargingGridData, 0, 14).toUShort()
     if (computedCrc != crc) {
+      Log.d(TAG, "chargingGridData crc is ${computedCrc.toHexString()} in stead of ${crc.toHexString()}")
       return null
     }
 
@@ -56,7 +64,7 @@ object ChargingGridDataParser {
     val consumed = chargingGridData.fromInt16LE(10)
     val interval = chargingGridData.fromUint16LE(12)
 
-    return ChargingGridData(
+    val retval = ChargingGridData(
       timestamp,
       l1,
       l2,
@@ -64,5 +72,7 @@ object ChargingGridDataParser {
       consumed,
       interval
     )
+    Log.d(TAG, "RETURN parse()=$retval")
+    return retval
   }
 }

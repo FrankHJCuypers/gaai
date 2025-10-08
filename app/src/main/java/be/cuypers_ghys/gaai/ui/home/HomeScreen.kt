@@ -107,7 +107,7 @@ fun HomeScreen(
   modifier: Modifier = Modifier,
   viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-  Log.d(TAG, "Entered HomeScreen()")
+  Log.v(TAG, "ENTRY HomeScreen()")
 
   val homeUiState by viewModel.homeUiState.collectAsState()
 
@@ -116,6 +116,7 @@ fun HomeScreen(
       navigateToDeviceEntry, navigateToDeviceDetails, viewModel::removeDevice, homeUiState, modifier
     )
   }
+  Log.v(TAG, "RETURN HomeScreen()")
 }
 
 /**
@@ -140,7 +141,7 @@ fun HomeScreenNoViewModel(
   homeUiState: HomeUiState,
   modifier: Modifier = Modifier,
 ) {
-  Log.d(TAG, "Entered HomeScreenNoViewModel()")
+  Log.v(TAG, "ENTRY HomeScreenNoViewModel()")
 
   rememberCoroutineScope()
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -171,7 +172,6 @@ fun HomeScreenNoViewModel(
       }
     },
   ) { innerPadding ->
-    Log.d(TAG, "Entering HomeBody)")
     HomeBody(
       deviceList = homeUiState.deviceList,
       onDeviceClick = navigateToDeviceDetails,
@@ -182,7 +182,7 @@ fun HomeScreenNoViewModel(
       contentPadding = innerPadding,
     )
   }
-  Log.d(TAG, "Exiting HomeScreenNoViewModel()")
+  Log.v(TAG, "RETURN HomeScreenNoViewModel()")
 }
 
 /**
@@ -207,13 +207,13 @@ private fun HomeBody(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-  Log.d(TAG, "Entered HomeBody()")
+  Log.v(TAG, "ENTRY HomeBody()")
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier,
   ) {
     if (deviceList.isEmpty()) {
-      Log.d(TAG, "HomeBody() deviceList is empty")
+      Log.v(TAG, "HomeBody() deviceList is empty")
 
       Text(
         text = stringResource(R.string.no_item_description),
@@ -231,7 +231,7 @@ private fun HomeBody(
       )
     }
   }
-  Log.d(TAG, "Exiting HomeBody()")
+  Log.v(TAG, "RETURN HomeBody()")
 }
 
 /**
@@ -254,7 +254,7 @@ private fun DevicesList(
   contentPadding: PaddingValues,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entering DevicesList()")
+  Log.v(TAG, "Entering DevicesList()")
   LazyColumn(
     modifier = modifier,
     contentPadding = contentPadding
@@ -268,7 +268,7 @@ private fun DevicesList(
           .clickable { onDeviceClick(device) })
     }
   }
-  Log.d(TAG, "Exiting DevicesList()")
+  Log.v(TAG, "RETURN DevicesList()")
 }
 
 /**
@@ -291,7 +291,7 @@ fun GaaiDeviceItem(
   onDeviceRemove: (Device) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entering GaaiDeviceItem()")
+  Log.v(TAG, "Entering GaaiDeviceItem()")
   val scope = rememberCoroutineScope()
   SwipeToDismissContainer(
     device,
@@ -309,7 +309,7 @@ fun GaaiDeviceItem(
         .padding(dimensionResource(id = R.dimen.padding_small))
         .clickable { onDeviceClick(device) })
   }
-  Log.d(TAG, "Exiting GaaiDeviceItem()")
+  Log.v(TAG, "RETURN GaaiDeviceItem()")
 }
 
 /**
@@ -361,7 +361,7 @@ private fun connectionStateToPainter(connectionState: ConnectionState) = when (c
 internal fun GaaiDeviceCard(
   device: Device, connectionState: ConnectionState, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiDeviceCard with device = $device")
+  Log.d(TAG, "ENTRY GaaiDeviceCard(device = $device)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -409,7 +409,7 @@ internal fun GaaiDeviceCard(
         Row(
           modifier = Modifier.fillMaxWidth()
         ) {
-          Log.d(TAG, "GaaiDeviceCard printing first line")
+          Log.v(TAG, "GaaiDeviceCard printing first line")
 
           Text(
             text = device.pn,
@@ -437,7 +437,7 @@ internal fun GaaiDeviceCard(
         }
       }
     }
-    Log.d(TAG, "exiting GaaiDeviceCard with device = $device")
+    Log.v(TAG, "RETURN GaaiDeviceCard())")
   }
 }
 

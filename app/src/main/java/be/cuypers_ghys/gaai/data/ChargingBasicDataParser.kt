@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,8 +16,12 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
+
+// Tag for logging
+private const val TAG = "ChargingBasicDataParser"
 
 /**
  * Parses [Charging Basic Data]
@@ -36,7 +40,10 @@ object ChargingBasicDataParser {
    *      Null if *chargingBasicData* is not 14 bytes long or RFU bytes are not 0.
    */
   fun parse(chargingBasicData: ByteArray): ChargingBasicData? {
+    Log.d(TAG, "ENTRY parse(chargingBasicData = $chargingBasicData)")
+
     if (chargingBasicData.size != 14) {
+      Log.d(TAG, "chargingBasicData.size is not 14 but ${chargingBasicData.size} ")
       return null
     }
     val seconds = chargingBasicData.fromUint16LE(0)
@@ -60,6 +67,7 @@ object ChargingBasicDataParser {
 
     val rfu1 = chargingBasicData.fromUint32LE(4)
     if (rfu1 != 0u) {
+      Log.v(TAG, "rfu1 is not 0")
       return null
     }
 
@@ -67,12 +75,13 @@ object ChargingBasicDataParser {
 
     val rfu2 = chargingBasicData[12]
     if (rfu2 != 0.toByte()) {
+      Log.v(TAG, "rfu2 is not 0")
       return null
     }
 
     val phaseCount = chargingBasicData[13].toUByte()
 
-    return ChargingBasicData(
+    val retval = ChargingBasicData(
       seconds,
       discriminator,
       status,
@@ -80,5 +89,7 @@ object ChargingBasicDataParser {
       energy,
       phaseCount
     )
+    Log.d(TAG, "RETURN parse()=$retval")
+    return retval
   }
 }

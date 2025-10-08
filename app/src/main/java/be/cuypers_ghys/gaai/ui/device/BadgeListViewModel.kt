@@ -177,10 +177,12 @@ class BadgeListViewModel(
    * @param device The initial device details from which to compute the state.
    */
   private fun initBadgeDeviceUiState(device: Device) {
+    Log.d(TAG, "ENTRY initBadgeDeviceUiState(device = $device)")
     badgeDeviceUiState =
       BadgeDeviceUiState(
         device = device
       )
+    Log.v(TAG, "RETURN initBadgeDeviceUiState()")
   }
 
   /**
@@ -188,7 +190,9 @@ class BadgeListViewModel(
    * @param statusId The initial status Id.
    */
   private fun updateBadgeDeviceUiState(statusId: Int) {
+    Log.d(TAG, "ENTRY updateBadgeDeviceUiState() with statusId = $statusId")
     badgeDeviceUiState = badgeDeviceUiState.copy(statusId = statusId)
+    Log.v(TAG, "RETURN updateBadgeDeviceUiState()")
   }
 
   private var client: ClientBleGatt? = null
@@ -213,6 +217,7 @@ class BadgeListViewModel(
    * @return a [Flow] of [List] of [Badge]s.
    */
   private fun badgeListFlow(badgeListManager: IBadgeListManager): Flow<List<Badge>> = callbackFlow {
+    Log.v(TAG, "ENTRY badgeListFlow()")
     val listener = object : IBadgeListListener {
       override fun badgeListChanged(badgeList: List<Badge>) {
         trySend(badgeList)
@@ -221,11 +226,14 @@ class BadgeListViewModel(
 
     badgeListManager.register(listener)
     awaitClose { badgeListManager.unregister(listener) }
+    Log.v(TAG, "RETURN badgeListFlow()")
   }
 
   init {
+    Log.v(TAG, "ENTRY init()")
     initBadgeDeviceUiState(gaaiDevice)
     startGattClient(gaaiDevice)
+    Log.v(TAG, "RETURN init()")
   }
 
   private lateinit var nexxtenderHomeGenericCommandCharacteristic: ClientBleGattCharacteristic
@@ -238,7 +246,7 @@ class BadgeListViewModel(
    */
   @SuppressLint("MissingPermission")
   private fun startGattClient(gaaiDevice: Device) = viewModelScope.launch {
-    Log.d(TAG, "Starting Gatt Client for gaaiDevice: $gaaiDevice")
+    Log.d(TAG, "ENTRY startGattClient(): $gaaiDevice")
 
     //Connect a Bluetooth LE device.
     val client = bleRepository.getClientBleGattConnection(gaaiDevice.mac, viewModelScope).also {
@@ -246,10 +254,10 @@ class BadgeListViewModel(
     }
 
     if (!client.isConnected) {
-      Log.d(TAG, "Gatt Client not connected.")
+      Log.v(TAG, "Gatt Client not connected.")
       return@launch
     }
-    Log.d(TAG, "Gatt Client connected. Discovering services.")
+    Log.v(TAG, "Gatt Client connected. Discovering services.")
 
     /*
      * Bluetooth caches the BLE GATT table.
@@ -262,6 +270,7 @@ class BadgeListViewModel(
     //Discover services on the Bluetooth LE Device.
     val services = client.discoverServices()
     configureGatt(services)
+    Log.v(TAG, "RETURN startGattClient()")
   }
 
   /**
@@ -270,6 +279,7 @@ class BadgeListViewModel(
    */
   @SuppressLint("MissingPermission")
   private suspend fun configureGatt(services: ClientBleGattServices) {
+    Log.v(TAG, "ENTRY configureGatt()")
     Log.d(TAG, "Found the following services: $services")
 
     val nexxtenderGenericService =
@@ -330,17 +340,19 @@ class BadgeListViewModel(
         }
 
         else -> {
-          Log.d(TAG, "Unknown GENERIC_STATUS value: $status")
+          Log.i(TAG, "Unknown GENERIC_STATUS value: $status")
         }
       }
     }.launchIn(viewModelScope)
     startGettingNewBadgeList()
+    Log.v(TAG, "RETURN configureGatt()")
   }
 
   private suspend fun startGettingNewBadgeList() {
-    Log.d(TAG, "startGettingNewBadgeList")
+    Log.v(TAG, "ENTRY startGettingNewBadgeList()")
     badgeList.clear()
     sendBadgeListStart()
+    Log.v(TAG, "RETURN startGettingNewBadgeList()")
   }
 
   /**
@@ -349,8 +361,10 @@ class BadgeListViewModel(
    * characteristic.
    */
   private suspend fun sendBadgeListStart() {
+    Log.v(TAG, "ENTRY sendBadgeListStart()")
     val command = BADGE_OPERATION_LIST_START
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeListStart()")
   }
 
   /**
@@ -359,8 +373,10 @@ class BadgeListViewModel(
    * characteristic.
    */
   private suspend fun sendBadgeListNext() {
+    Log.v(TAG, "ENTRY sendBadgeListNext()")
     val command = BADGE_OPERATION_LIST_NEXT
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeListNext()")
   }
 
   /**
@@ -369,8 +385,10 @@ class BadgeListViewModel(
    * characteristic.
    */
   private suspend fun sendBadgeAddMax() {
+    Log.v(TAG, "ENTRY sendBadgeAddMax()")
     val command = BADGE_OPERATION_ADD_MAX
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeAddMax()")
   }
 
   /**
@@ -379,8 +397,10 @@ class BadgeListViewModel(
    * characteristic.
    */
   private suspend fun sendBadgeAddDefault() {
+    Log.v(TAG, "ENTRY sendBadgeAddDefault()")
     val command = BADGE_OPERATION_ADD_DEFAULT
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeAddDefault()")
   }
 
   /**
@@ -389,8 +409,10 @@ class BadgeListViewModel(
    * characteristic.
    */
   private suspend fun sendBadgeDelete() {
+    Log.v(TAG, "ENTRY sendBadgeDelete()")
     val command = BADGE_OPERATION_DELETE
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeDelete()")
   }
 
 
@@ -403,8 +425,10 @@ class BadgeListViewModel(
   @OptIn(ExperimentalStdlibApi::class)
   @SuppressLint("MissingPermission")
   private suspend fun writeGenericCommand(command: Int) {
+    Log.v(TAG, "ENTRY writeGenericCommand()")
     Log.d(TAG, "Writing Generic Command: $command (0x${command.toHexString()})")
     nexxtenderHomeGenericCommandCharacteristic.write(DataByteArray.fromUShort(command))
+    Log.v(TAG, "RETURN writeGenericCommand()")
   }
 
   /**
@@ -416,8 +440,9 @@ class BadgeListViewModel(
   //  rereading the badge list from the charger after the delete should have the same effect.
   //  But it did not work correctly, so I added the explicit emit.
   fun deleteBadge(badge: Badge) {
+    Log.d(TAG, "ENTRY deleteBadge($badge)")
     viewModelScope.launch(Dispatchers.IO) {
-      Log.d(TAG, "deleteBadge: $badge")
+      Log.d(TAG, "ENTRY deleteBadge($badge) body")
       // emit an updated badge list for the UI
       val newBadgeList = badgeList.toMutableList()
       newBadgeList.remove(badge)
@@ -425,7 +450,9 @@ class BadgeListViewModel(
       // And now delete the badge from the charger
       badgeToDelete = badge
       sendBadgeDelete()
+      Log.v(TAG, "RETURN deleteBadge() body")
     }
+    Log.v(TAG, "RETURN deleteBadge()")
   }
 
   /**
@@ -433,13 +460,17 @@ class BadgeListViewModel(
    * @param chargeType The [be.cuypers_ghys.gaai.data.ChargeType] for the badge to add.
    */
   fun addBadge(chargeType: ChargeType) {
+    Log.d(TAG, "ENTRY addBadge($chargeType)")
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY addBadge($chargeType) body")
       when (chargeType) {
         ChargeType.DEFAULT -> sendBadgeAddDefault()
         ChargeType.MAX -> sendBadgeAddMax()
         ChargeType.UNKNOWN -> Unit // do nothing
       }
+      Log.v(TAG, "RETURN deleteBadge() body")
     }
+    Log.v(TAG, "RETURN deleteBadge()")
   }
 
   /**
@@ -466,8 +497,9 @@ class BadgeListViewModel(
    * @param deviceId The id of the [Device] to load.
    */
   private fun getDevice(deviceId: Int) = runBlocking {
-    Log.d(TAG, "Getting Device with id $deviceId")
+    Log.d(TAG, "ENTRY getDevice($deviceId)")
     return@runBlocking devicesRepository.getDeviceStream(deviceId).first()
+    // Log.v(TAG, "RETURN getDevice()")
   }
 }
 

@@ -17,6 +17,7 @@ package be.cuypers_ghys.gaai.ui.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,9 @@ import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+// Tag for logging
+private const val TAG = "SwipeDismissConfirmationDialog"
+
 /**
  * This function is mostly copied from
  * https://stackoverflow.com/a/79055503/1366319.
@@ -66,6 +70,8 @@ fun <T> SwipeToDismissContainer(
   onDismiss: (T, onError: () -> Unit) -> Unit,
   content: @Composable (T) -> Unit
 ) {
+  Log.v(TAG, "ENTRY SwipeToDismissContainer()")
+
   var potentialDelete by remember { mutableStateOf(false) }
   var deleteItem by remember { mutableStateOf(false) }
   var stateToMaintain by remember { mutableStateOf<SwipeToDismissBoxValue?>(null) }
@@ -133,6 +139,7 @@ fun <T> SwipeToDismissContainer(
       }
     )
   }
+  Log.v(TAG, "RETURN SwipeToDismissContainer()")
 }
 
 /**
@@ -144,6 +151,8 @@ fun <T> SwipeToDismissContainer(
  */
 @Composable
 fun DismissBackground(dismissState: SwipeToDismissBoxState) {
+  Log.v(TAG, "ENTRY DismissBackground()")
+
   val color = when (dismissState.dismissDirection) {
     SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.error
     SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
@@ -164,6 +173,7 @@ fun DismissBackground(dismissState: SwipeToDismissBoxState) {
     )
     Spacer(modifier = Modifier)
   }
+  Log.v(TAG, "RETURN DismissBackground()")
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewUNKNOWNDark")

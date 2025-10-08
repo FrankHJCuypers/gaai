@@ -18,6 +18,7 @@ package be.cuypers_ghys.gaai.ui.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -50,9 +51,13 @@ import be.cuypers_ghys.gaai.R.string
 import be.cuypers_ghys.gaai.ui.adaptiveIconPainterResource
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 
+// Tag for logging
+private const val TAG = "About"
 
 @Composable
 fun AboutDialog(onDismissRequest: () -> Unit) {
+  Log.v(TAG, "ENTRY AboutDialog()")
+
   Dialog(onDismissRequest = { onDismissRequest() }) {
     Card(
       modifier = Modifier
@@ -96,6 +101,7 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
       }
     }
   }
+  Log.v(TAG, "RETURN AboutDialog()")
 }
 
 

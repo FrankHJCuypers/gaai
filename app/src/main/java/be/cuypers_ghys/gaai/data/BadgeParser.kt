@@ -16,7 +16,11 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
+
+// Tag for logging
+private const val TAG = "BadgeParser"
 
 /**
  * Parses [Badge Record].
@@ -32,13 +36,17 @@ object BadgeParser {
    *      Null if *ccdtRecord* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(badgeData: ByteArray): Badge? {
+    Log.d(TAG, "ENTRY parse(badgeData = $badgeData)")
+
     val uuidLength = badgeData[0]
     if (badgeData.size != (uuidLength + 1)) {
       return null
     }
     val uuid = badgeData.copyOfRange(1, badgeData.size)
 
-    return Badge(uuid)
+    val badge = Badge(uuid)
+    Log.d(TAG, "RETURN parse()=$badge")
+    return badge
   }
 
   /**
@@ -47,10 +55,13 @@ object BadgeParser {
    * @return A [DataByteArray] holding the length of teh UUID and teh UUID..
    */
   fun getLengthUUID(badge: Badge): DataByteArray {
+    Log.d(TAG, "ENTRY getLengthUUID(badge = $badge)")
     val retVal = ByteArray(badge.uuid.size + 1)
     retVal[0] = badge.uuid.size.toByte()
     badge.uuid.copyInto(retVal, 1)
-    return DataByteArray(retVal)
+    val retValDba = DataByteArray(retVal)
+    Log.d(TAG, "ENTRY getLengthUUID()=$retValDba")
+    return retValDba
   }
 
 }

@@ -16,12 +16,16 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromInt32LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.util.modBus
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
+
+// Tag for logging
+private const val TAG = "CDRRecordParser"
 
 /**
  * Parses [CDR Record]
@@ -39,13 +43,16 @@ object CDRRecordParser {
    *      Null if *cdrRecord* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(cdrRecord: ByteArray): CDRRecord? {
+    Log.d(TAG, "ENTRY parse(cdrRecord = $cdrRecord)")
     if (cdrRecord.size != 32) {
+      Log.d(TAG, "cdrRecord.size is not 32 but ${cdrRecord.size} ")
       return null
     }
 
     val crc = cdrRecord.fromUint16LE(30)
     val computedCrc = CRC16.modBus(cdrRecord, 0, 30).toUShort()
     if (computedCrc != crc) {
+      Log.d(TAG, "cdrRecord crc is ${computedCrc.toHexString()} in stead of ${crc.toHexString()}")
       return null
     }
 
@@ -58,8 +65,10 @@ object CDRRecordParser {
     val sessionStopEnergy = cdrRecord.fromUint32LE(24)
     val unknown4 = cdrRecord.fromInt16LE(28)
 
-    return CDRRecord(
+    val retval = CDRRecord(
       unknown1, sessionStartTime, sessionStartEnergy, unknown2, unknown3, sessionStopTime, sessionStopEnergy, unknown4
     )
+    Log.d(TAG, "RETURN parse()=$retval")
+    return retval
   }
 }

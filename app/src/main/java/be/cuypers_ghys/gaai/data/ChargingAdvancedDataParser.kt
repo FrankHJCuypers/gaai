@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,12 +16,16 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromInt32LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.util.modBus
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
+
+// Tag for logging
+private const val TAG = "ChargingAdvancedDataParser"
 
 /**
  * Parses [Charging Advanced Data BLE Characteristic]
@@ -40,13 +44,17 @@ object ChargingAdvancedDataParser {
    *      Null if *chargingAdvancedData* is not 18 bytes long or the CRC16 is not correct.
    */
   fun parse(chargingAdvancedData: ByteArray): ChargingAdvancedData? {
+    Log.d(TAG, "ENTRY parse(chargingAdvancedData = $chargingAdvancedData)")
+
     if (chargingAdvancedData.size != 18) {
+      Log.d(TAG, "chargingAdvancedData.size is not 18 but ${chargingAdvancedData.size} ")
       return null
     }
 
     val crc = chargingAdvancedData.fromUint16LE(16)
     val computedCrc = CRC16.modBus(chargingAdvancedData, 0, 16).toUShort()
     if (computedCrc != crc) {
+      Log.d(TAG, "chargingAdvancedData crc is ${computedCrc.toHexString()} in stead of ${crc.toHexString()}")
       return null
     }
 
@@ -57,7 +65,7 @@ object ChargingAdvancedDataParser {
     val authorizationStatus = AuthorizationStatus(chargingAdvancedData[14])
     val errorCode = chargingAdvancedData[15]
 
-    return ChargingAdvancedData(
+    val retval = ChargingAdvancedData(
       timestamp,
       iAvailable,
       gridPower,
@@ -65,5 +73,7 @@ object ChargingAdvancedDataParser {
       authorizationStatus,
       errorCode
     )
+    Log.d(TAG, "RETURN parse()=$retval")
+    return retval
   }
 }

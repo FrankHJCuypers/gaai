@@ -106,7 +106,7 @@ private fun getTextToShowGivenPermissions(
   val revokedPermissionsSize = permissions.size
   if (revokedPermissionsSize == 0) return ""
 
-  Log.d(TAG, "Entered getTextToShowGivenPermissions()")
+  Log.v(TAG, "ENTRY getTextToShowGivenPermissions()")
 
   val textToShow = StringBuilder().apply {
     append(stringResource(R.string.the_space))
@@ -140,7 +140,7 @@ private fun getTextToShowGivenPermissions(
       stringResource(R.string.permissions_denied)
     }
   )
-  Log.d(TAG, "Exiting getTextToShowGivenPermissions()")
+  Log.v(TAG, "RETURN getTextToShowGivenPermissions()")
   Log.d(TAG, "Returned text: $textToShow")
   return textToShow.toString()
 }
@@ -168,7 +168,7 @@ fun RequireBluetooth(
   viewModel: MissingPermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory),
   content: @Composable () -> Unit
 ) {
-  Log.d(TAG, "Entered RequireBluetooth()")
+  Log.v(TAG, "ENTRY RequireBluetooth()")
   Log.d(TAG, "Required permissions: ${viewModel.permissions.joinToString()}")
 
   // rememberMultiplePermissionsState() is a composable, so can not be called from a ViewModel.
@@ -265,7 +265,7 @@ fun RequireBluetooth(
       Spacer(Modifier.weight(1f))
     }
   }
-  Log.d(TAG, "Exiting RequireBluetooth()")
+  Log.v(TAG, "RETURN RequireBluetooth()")
 }
 
 @RequiresApi(Build.VERSION_CODES.S)

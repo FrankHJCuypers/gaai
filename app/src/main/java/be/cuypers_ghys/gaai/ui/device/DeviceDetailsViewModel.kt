@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -128,8 +128,10 @@ class DeviceDetailsViewModel(
   private var client: ClientBleGatt? = null
 
   init {
+    Log.v(TAG, "ENTRY init()")
     _device.value = gaaiDevice
     startGattClient(gaaiDevice)
+    Log.v(TAG, "RETURN init()")
   }
 
   private lateinit var deviceNameCharacteristic: ClientBleGattCharacteristic
@@ -158,7 +160,7 @@ class DeviceDetailsViewModel(
    */
   @SuppressLint("MissingPermission")
   private fun startGattClient(gaaiDevice: Device) = viewModelScope.launch {
-    Log.d(TAG, "Starting Gatt Client for gaaiDevice: $gaaiDevice")
+    Log.d(TAG, "ENTRY startGattClient(gaaiDevice: $gaaiDevice)")
 
     //Connect a Bluetooth LE device.
     updateDeviceState(DeviceState(ConnectionState.CONNECTING))
@@ -172,7 +174,7 @@ class DeviceDetailsViewModel(
       return@launch
     }
 
-    Log.d(TAG, "Gatt Client connected. Discovering services.")
+    Log.v(TAG, "Gatt Client connected. Discovering services.")
     updateDeviceState(DeviceState(ConnectionState.DISCOVERING))
 
     /*
@@ -186,6 +188,7 @@ class DeviceDetailsViewModel(
     //Discover services on the Bluetooth LE Device.
     val services = client.discoverServices()
     configureGatt(gaaiDevice, services)
+    Log.v(TAG, "RETURN startGattClient()")
   }
 
   /**
@@ -195,7 +198,7 @@ class DeviceDetailsViewModel(
    */
   @SuppressLint("MissingPermission")
   private suspend fun configureGatt(gaaiDevice: Device, services: ClientBleGattServices) {
-    Log.d(TAG, "Found the following services: $services")
+    Log.d(TAG, "ENTRY configureGatt($services)")
 
     // Remember needed service and characteristics which are used to communicate with the DK.
     val genericAccessService = services.findService(NexxtenderHomeSpecification.UUID_BLE_GENERIC_ACCESS_SERVICE)!!
@@ -357,6 +360,7 @@ class DeviceDetailsViewModel(
     sendConfigOperationGet()
     // Do not call sendTimeOperationGet() here! The sendConfigOperationGet() message sequence is still running
     // and would interfere with sendTimeOperationGet()
+    Log.v(TAG, "RETURN configureGatt()")
   }
 
   /**
@@ -365,7 +369,9 @@ class DeviceDetailsViewModel(
    * characteristic.
    */
   private suspend fun writeNewConfigData() {
+    Log.v(TAG, "ENTRY writeNewConfigData()")
     writeNewConfigDataToGenericData(newConfigData)
+    Log.v(TAG, "RETURN writeNewConfigData()")
   }
 
   /**
@@ -374,11 +380,13 @@ class DeviceDetailsViewModel(
    * characteristic.
    */
   private suspend fun writeNewTimeData() {
+    Log.v(TAG, "ENTRY writeNewTimeData()")
     val time = (System.currentTimeMillis() / 1000).toUInt()
     newTimeData = _state.value.timeData.copy(
       time = time
     )
     writeNewTimeDataToGenericData(newTimeData)
+    Log.v(TAG, "RETURN writeNewTimeData()")
   }
 
   /**
@@ -389,8 +397,9 @@ class DeviceDetailsViewModel(
    */
   @SuppressLint("MissingPermission")
   private suspend fun writeNewConfigDataToGenericData(newConfigData: ConfigData) {
-    Log.d(TAG, "Writing new Config data  '$newConfigData' to Generic Data")
+    Log.d(TAG, "ENTRY writeNewConfigDataToGenericData(newConfigData=$newConfigData)")
     writeNewDataToGenericData(DataByteArray(ConfigDataParserComposer.compose(newConfigData)))
+    Log.v(TAG, "RETURN writeNewConfigDataToGenericData()")
   }
 
   /**
@@ -401,8 +410,9 @@ class DeviceDetailsViewModel(
    */
   @SuppressLint("MissingPermission")
   private suspend fun writeNewTimeDataToGenericData(newTimeData: TimeData) {
-    Log.d(TAG, "Writing new Time data  '$newTimeData' to Generic Data")
+    Log.d(TAG, "ENTRY writeNewTimeDataToGenericData(newTimeData=$newTimeData)")
     writeNewDataToGenericData(DataByteArray(TimeDataParserComposer.compose(newTimeData)))
+    Log.v(TAG, "RETURN writeNewTimeDataToGenericData()")
   }
 
   /**
@@ -413,8 +423,9 @@ class DeviceDetailsViewModel(
    */
   @SuppressLint("MissingPermission")
   private suspend fun writeNewDataToGenericData(newData: DataByteArray) {
-    Log.d(TAG, "Writing new data  '$newData' to Generic Data")
+    Log.d(TAG, "ENTRY writeNewDataToGenericData(newData=$newData)")
     nexxtenderHomeGenericDataCharacteristic.write(newData)
+    Log.v(TAG, "RETURN writeNewDataToGenericData()")
   }
 
   /**
@@ -423,9 +434,11 @@ class DeviceDetailsViewModel(
    * characteristic.
    */
   private suspend fun sendConfigOperationGet() {
+    Log.v(TAG, "ENTRY sendConfigOperationGet()")
     val command =
       if (configVersion == ConfigVersion.CONFIG_CBOR) CONFIG_OPERATION_CBOR_GET else CONFIG_OPERATION_GET
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendConfigOperationGet()")
   }
 
   /**
@@ -434,8 +447,10 @@ class DeviceDetailsViewModel(
    * characteristic.
    */
   private suspend fun sendTimeOperationGet() {
+    Log.v(TAG, "ENTRY sendTimeOperationGet()")
     val command = TIME_OPERATION_GET
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendTimeOperationGet()")
   }
 
   /**
@@ -444,8 +459,10 @@ class DeviceDetailsViewModel(
    * characteristic.
    */
   private suspend fun sendTimeOperationSet() {
+    Log.v(TAG, "ENTRY sendTimeOperationSet()")
     val command = TIME_OPERATION_SET
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendTimeOperationSet()")
   }
 
   /**
@@ -456,8 +473,9 @@ class DeviceDetailsViewModel(
    */
   @SuppressLint("MissingPermission")
   private suspend fun writeGenericCommand(command: Int) {
-    Log.d(TAG, "Writing Generic Command: $command")
+    Log.d(TAG, "ENTRY writeGenericCommand(command=$command)")
     nexxtenderHomeGenericCommandCharacteristic.write(DataByteArray.fromUShort(command))
+    Log.v(TAG, "RETURN writeGenericCommand()")
   }
 
   /**
@@ -466,8 +484,10 @@ class DeviceDetailsViewModel(
    */
   fun navigateUp(navigateUp: () -> Unit) {
     viewModelScope.launch {
+      Log.v(TAG, "ENTRY navigateUp()")
       client?.disconnect()
       navigateUp()
+      Log.v(TAG, "RETURN navigateUp()")
     }
   }
 
@@ -479,11 +499,13 @@ class DeviceDetailsViewModel(
    */
   fun sendConfigOperationSetTouWeek(touPeriodWeek: TouPeriod) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendConfigOperationSetTouWeek(touPeriodWeek=$touPeriodWeek)")
       newConfigData = _state.value.configData.copy(
         touWeekStart = touPeriodWeek.startTime.time,
         touWeekEnd = touPeriodWeek.endTime.time
       )
       sendConfigOperationSet()
+      Log.v(TAG, "RETURN sendConfigOperationSetTouWeek()")
     }
   }
 
@@ -495,11 +517,13 @@ class DeviceDetailsViewModel(
    */
   fun sendConfigOperationSetTouWeekend(touPeriodWeekend: TouPeriod) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendConfigOperationSetTouWeekend(touPeriodWeekend=$touPeriodWeekend)")
       newConfigData = _state.value.configData.copy(
         touWeekendStart = touPeriodWeekend.startTime.time,
         touWeekendEnd = touPeriodWeekend.endTime.time
       )
       sendConfigOperationSet()
+      Log.v(TAG, "RETURN sendConfigOperationSetTouWeekend()")
     }
   }
 
@@ -511,10 +535,12 @@ class DeviceDetailsViewModel(
    */
   fun sendConfigOperationSetMaxGrid(maxGrid: UByte) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendConfigOperationSetMaxGrid(maxGrid=$maxGrid)")
       newConfigData = _state.value.configData.copy(
         maxGrid = maxGrid
       )
       sendConfigOperationSet()
+      Log.v(TAG, "RETURN sendConfigOperationSetMaxGrid()")
     }
   }
 
@@ -526,10 +552,12 @@ class DeviceDetailsViewModel(
    */
   fun sendConfigOperationSetMaxDevice(maxDevice: UByte) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendConfigOperationSetMaxDevice(maxDevice=$maxDevice)")
       newConfigData = _state.value.configData.copy(
         maxDevice = maxDevice
       )
       sendConfigOperationSet()
+      Log.v(TAG, "RETURN sendConfigOperationSetMaxDevice()")
     }
   }
 
@@ -541,10 +569,12 @@ class DeviceDetailsViewModel(
    */
   fun sendConfigOperationSetSafe(safe: UByte) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendConfigOperationSetSafe(safe=$safe)")
       newConfigData = _state.value.configData.copy(
         safe = safe
       )
       sendConfigOperationSet()
+      Log.v(TAG, "RETURN sendConfigOperationSetSafe()")
     }
   }
 
@@ -556,10 +586,12 @@ class DeviceDetailsViewModel(
    */
   fun sendConfigOperationSetMode(mode: Mode) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendConfigOperationSetMode(mode=$mode)")
       newConfigData = _state.value.configData.copy(
         mode = mode
       )
       sendConfigOperationSet()
+      Log.v(TAG, "RETURN sendConfigOperationSetMode()")
     }
   }
 
@@ -571,10 +603,12 @@ class DeviceDetailsViewModel(
    */
   fun sendConfigOperationSetICapacity(iCapacity: UByte) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendConfigOperationSetICapacity(iCapacity=$iCapacity)")
       newConfigData = _state.value.configData.copy(
         iCapacity = iCapacity
       )
       sendConfigOperationSet()
+      Log.v(TAG, "RETURN sendConfigOperationSetICapacity()")
     }
   }
 
@@ -585,7 +619,9 @@ class DeviceDetailsViewModel(
    */
   fun sendTimeOperationSyncTime() {
     viewModelScope.launch {
+      Log.v(TAG, "ENTRY sendTimeOperationSyncTime()")
       sendTimeOperationSet()
+      Log.v(TAG, "RETURN sendTimeOperationSyncTime()")
     }
   }
 
@@ -596,7 +632,9 @@ class DeviceDetailsViewModel(
    */
   fun sendTimeOperationGetTime() {
     viewModelScope.launch {
+      Log.v(TAG, "ENTRY sendTimeOperationGetTime()")
       sendTimeOperationGet()
+      Log.v(TAG, "RETURN sendTimeOperationGetTime()")
     }
   }
 
@@ -606,6 +644,7 @@ class DeviceDetailsViewModel(
    * characteristic.
    */
   private suspend fun sendConfigOperationSet() {
+    Log.v(TAG, "ENTRY sendConfigOperationSet()")
     if (newConfigData.default) {
       Log.d(TAG, "New Config Data is still default: $newConfigData")
       return
@@ -614,6 +653,7 @@ class DeviceDetailsViewModel(
     val command =
       if (configVersion == ConfigVersion.CONFIG_CBOR) CONFIG_OPERATION_CBOR_SET else CONFIG_OPERATION_SET
     writeGenericCommand(command)
+    Log.v(TAG, "RETURN sendConfigOperationSet()")
   }
 
   /**
@@ -621,7 +661,7 @@ class DeviceDetailsViewModel(
    * @param deviceId The id of the [device] to load.
    */
   private fun getDevice(deviceId: Int) = runBlocking {
-    Log.d(TAG, "Getting Device with id $deviceId")
+    Log.d(TAG, "ENTRY getDevice(deviceId=$deviceId)")
     return@runBlocking devicesRepository.getDeviceStream(deviceId).first()
   }
 
@@ -635,15 +675,18 @@ class DeviceDetailsViewModel(
    */
   fun sendLoaderOperation(loaderOperation: Int) {
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY sendLoaderOperation(loaderOperation=$loaderOperation)")
+
       when (loaderOperation) {
         LOADER_OPERATION_START_CHARGING_DEFAULT, LOADER_OPERATION_START_CHARGING_MAX,
         LOADER_OPERATION_START_CHARGING_AUTO, LOADER_OPERATION_START_CHARGING_ECO, LOADER_OPERATION_STOP_CHARGING ->
           writeGenericCommand(loaderOperation)
 
         else -> {
-          Log.d(TAG, "sendChargeOperationStartDefault trying to send incorrect loaderOperation: $loaderOperation")
+          Log.d(TAG, "sendLoaderOperation() trying to send incorrect loaderOperation: $loaderOperation")
         }
       }
+      Log.v(TAG, "RETURN sendLoaderOperation()")
     }
   }
 
@@ -652,7 +695,9 @@ class DeviceDetailsViewModel(
    * @param deviceState The DeviceState.
    */
   private fun updateDeviceState(deviceState: DeviceState) {
+    Log.d(TAG, "ENTRY updateDeviceState(deviceState=$deviceState)")
     _state.value = _state.value.copy(deviceState = deviceState)
+    Log.v(TAG, "RETURN updateDeviceState()")
   }
 }
 

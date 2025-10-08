@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,8 +16,12 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.util.toUint32LE
+
+// Tag for logging
+private const val TAG = "TimeDataParserComposer"
 
 /**
  *  Parses and composes Time data.
@@ -32,12 +36,17 @@ object TimeDataParserComposer {
    *      Null if *timeGetData* is not 4 bytes long.
    */
   fun parse(timeGetData: ByteArray): TimeData? {
+    Log.d(TAG, "ENTRY parse(timeGetData = $timeGetData)")
+
     if (timeGetData.size != 4) {
+      Log.d(TAG, "timeGetData.size is not 4 but ${timeGetData.size} ")
       return null
     }
     val time = timeGetData.fromUint32LE(0)
 
-    return TimeData(time)
+    val retval = TimeData(time)
+    Log.d(TAG, "RETURN parse()=$retval")
+    return retval
   }
 
   /**

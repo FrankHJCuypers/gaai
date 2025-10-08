@@ -134,6 +134,8 @@ fun DeviceDetailsScreen(
   canNavigateUp: Boolean = true,
   viewModel: DeviceDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+  Log.v(TAG, "ENTRY DeviceDetailsScreen()")
+
   val deviceId = viewModel.deviceId
   val state by viewModel.state.collectAsStateWithLifecycle()
   val device by viewModel.device.collectAsStateWithLifecycle()
@@ -158,6 +160,7 @@ fun DeviceDetailsScreen(
       navigateToBadgeList = { navigateToBadgeList(deviceId) },
     )
   }
+  Log.v(TAG, "RETURN DeviceDetailsScreen()")
 }
 
 /**
@@ -214,7 +217,7 @@ fun DeviceDetailsScreenNoViewModel(
   modifier: Modifier = Modifier,
   canNavigateUp: Boolean = true
 ) {
-  Log.d(TAG, "Entering DeviceDetailsScreen")
+  Log.v(TAG, "ENTRY DeviceDetailsScreenNoViewModel()")
   rememberCoroutineScope()
   Scaffold(
     topBar = {
@@ -225,8 +228,6 @@ fun DeviceDetailsScreenNoViewModel(
       )
     }
   ) { innerPadding ->
-    Log.d(TAG, "Before Entering DeviceDetailsBody")
-
     DeviceDetailsBody(
       device,
       state,
@@ -251,6 +252,7 @@ fun DeviceDetailsScreenNoViewModel(
         .fillMaxWidth()
     )
   }
+  Log.v(TAG, "RETURN DeviceDetailsScreenNoViewModel()")
 }
 
 /**
@@ -299,7 +301,7 @@ fun DeviceDetailsBody(
   navigateToBadgeList: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entering DeviceDetailsBody, device = $device")
+  Log.d(TAG, "ENTRY DeviceDetailsBody(device = $device)")
 
   Column(
     modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
@@ -385,6 +387,7 @@ fun DeviceDetailsBody(
       )
     }
   }
+  Log.v(TAG, "RETURN DeviceDetailsBody()")
 }
 
 /**
@@ -399,7 +402,7 @@ fun DeviceDetailsBody(
 internal fun GaaiDeviceNameCard(
   deviceName: String, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiNameCard with deviceName = $deviceName")
+  Log.d(TAG, "ENTRY GaaiDeviceNameCard(deviceName = $deviceName)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -428,7 +431,7 @@ internal fun GaaiDeviceNameCard(
         )
       }
     }
-    Log.d(TAG, "exiting GaaiNameCard with deviceName = $deviceName")
+    Log.v(TAG, "RETURN GaaiNameCard()")
   }
 }
 
@@ -444,7 +447,7 @@ internal fun GaaiDeviceNameCard(
 internal fun GaaiDeviceInformationCard(
   deviceInformation: DeviceInformation, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiDeviceInformationCard with deviceInformation = $deviceInformation")
+  Log.d(TAG, "ENTRY GaaiDeviceInformationCard(deviceInformation = $deviceInformation)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -524,7 +527,7 @@ internal fun GaaiDeviceInformationCard(
         }
       }
     }
-    Log.d(TAG, "exiting GaaiDeviceInformationCard with deviceInformation = $deviceInformation")
+    Log.v(TAG, "RETURN GaaiDeviceInformationCard()")
   }
 }
 
@@ -540,7 +543,7 @@ internal fun GaaiDeviceInformationCard(
 internal fun GaaiChargingBasicDataCard(
   chargingBasicData: ChargingBasicData, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiChargingBasicDataCard with chargingBasicData = $chargingBasicData")
+  Log.d(TAG, "ENTRY GaaiChargingBasicDataCard(chargingBasicData = $chargingBasicData)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -634,7 +637,7 @@ internal fun GaaiChargingBasicDataCard(
         }
       }
     }
-    Log.d(TAG, "exiting GaaiChargingBasicDataCard with chargingBasicData = $chargingBasicData")
+    Log.v(TAG, "RETURN GaaiChargingBasicDataCard()")
   }
 }
 
@@ -650,7 +653,7 @@ internal fun GaaiChargingBasicDataCard(
 internal fun GaaiChargingGridDataCard(
   chargingGridData: ChargingGridData, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiChargingGridDataCard with chargingGridData = $chargingGridData")
+  Log.d(TAG, "ENTRY GaaiChargingGridDataCard(chargingGridData = $chargingGridData)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -758,7 +761,7 @@ internal fun GaaiChargingGridDataCard(
         }
       }
     }
-    Log.d(TAG, "exiting GaaiChargingGridDataCard with chargingGridData = $chargingGridData")
+    Log.v(TAG, "RETURN GaaiChargingGridDataCard()")
   }
 }
 
@@ -774,7 +777,7 @@ internal fun GaaiChargingGridDataCard(
 internal fun GaaiChargingCarDataCard(
   chargingCarData: ChargingCarData, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiChargingCarDataCard with chargingCarData = $chargingCarData")
+  Log.d(TAG, "ENTRY GaaiChargingCarDataCard(chargingCarData = $chargingCarData)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -896,7 +899,7 @@ internal fun GaaiChargingCarDataCard(
         }
       }
     }
-    Log.d(TAG, "exiting GaaiChargingCarDataCard with chargingCarData = $chargingCarData")
+    Log.v(TAG, "RETURN GaaiChargingCarDataCard()")
   }
 }
 
@@ -912,7 +915,7 @@ internal fun GaaiChargingCarDataCard(
 internal fun GaaiChargingAdvancedDataCard(
   chargingAdvancedData: ChargingAdvancedData, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiChargingAdvancedDataCard with chargingAdvancedData = $chargingAdvancedData")
+  Log.d(TAG, "ENTRY GaaiChargingAdvancedDataCard(chargingAdvancedData = $chargingAdvancedData)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -1028,7 +1031,7 @@ internal fun GaaiChargingAdvancedDataCard(
         }
       }
     }
-    Log.d(TAG, "exiting GaaiChargingAdvancedDataCard with chargingAdvancedData = $chargingAdvancedData")
+    Log.v(TAG, "RETURN GaaiChargingAdvancedDataCard()")
   }
 }
 
@@ -1053,6 +1056,7 @@ internal fun TouPeriodRow(
   onConfirmation: (TouPeriod) -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY TouPeriodRow(touPeriod = $touPeriod)")
   var showPeriodDialog by remember { mutableStateOf(false) }
   Row(
     modifier = modifier
@@ -1080,7 +1084,7 @@ internal fun TouPeriodRow(
         title = title,
         touPeriod = touPeriod,
         onDismissRequest = {
-          Log.d(TAG, "ShowPeriodDialog dismissed")
+          Log.v(TAG, "ShowPeriodDialog dismissed")
           showPeriodDialog = false
           onDismissRequest()
         },
@@ -1094,6 +1098,7 @@ internal fun TouPeriodRow(
       )
     }
   }
+  Log.v(TAG, "RETURN TouPeriodRow()")
 }
 
 /**
@@ -1131,7 +1136,7 @@ internal fun GaaiConfigDataCard(
   onICapacityChange: (UByte) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiConfigDataCard with configData = $configData")
+  Log.d(TAG, "ENTRY GaaiConfigDataCard(configData = $configData)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -1190,7 +1195,7 @@ internal fun GaaiConfigDataCard(
                 showModeDialog = false
               },
               onDismiss = {
-                Log.d(TAG, "ModeDialog dismissed")
+                Log.v(TAG, "ModeDialog dismissed")
                 showModeDialog = false
               },
               modifier = Modifier
@@ -1212,7 +1217,7 @@ internal fun GaaiConfigDataCard(
             onMaxGridChange(newMaxGrid)
           },
           onDismiss = {
-            Log.d(TAG, "GaaiConfigDataCard Max Grid dismissed")
+            Log.v(TAG, "GaaiConfigDataCard Max Grid dismissed")
           },
           modifier = modifier.fillMaxWidth()
         )
@@ -1230,7 +1235,7 @@ internal fun GaaiConfigDataCard(
             onSafeChange(newSafe)
           },
           onDismiss = {
-            Log.d(TAG, "GaaiConfigDataCard Safe dismissed")
+            Log.v(TAG, "GaaiConfigDataCard Safe dismissed")
           },
           modifier = modifier.fillMaxWidth()
         )
@@ -1254,7 +1259,7 @@ internal fun GaaiConfigDataCard(
           title = stringResource(R.string.touWeekend),
           touPeriod = weekendDays,
           onDismissRequest = {
-            Log.d(TAG, "GaaiConfigDataCard Weekend days TouPeriodRow dismissed")
+            Log.v(TAG, "GaaiConfigDataCard Weekend days TouPeriodRow dismissed")
           },
           onConfirmation = { touPeriod ->
             Log.d(TAG, "GaaiConfigDataCard Weekend days TouPeriodRow confirmed: $touPeriod")
@@ -1277,7 +1282,7 @@ internal fun GaaiConfigDataCard(
               onMaxDeviceChange(newMaxDevice)
             },
             onDismiss = {
-              Log.d(TAG, "GaaiConfigDataCard Max Grid dismissed")
+              Log.v(TAG, "GaaiConfigDataCard Max Grid dismissed")
             },
             modifier = modifier.fillMaxWidth()
           )
@@ -1334,14 +1339,14 @@ internal fun GaaiConfigDataCard(
               onICapacityChange(newICapacity)
             },
             onDismiss = {
-              Log.d(TAG, "GaaiConfigDataCard I Capacity dismissed")
+              Log.v(TAG, "GaaiConfigDataCard I Capacity dismissed")
             },
             modifier = modifier.fillMaxWidth()
           )
         }
       }
     }
-    Log.d(TAG, "exiting GaaiConfigDataCard with configData = $configData")
+    Log.v(TAG, "RETURN GaaiConfigDataCard()")
   }
 }
 
@@ -1365,7 +1370,7 @@ internal fun GaaiTimeDataCard(
   onTimeSync: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered TimeConfigDataCard with timeData = $timeData")
+  Log.d(TAG, "ENTRY GaaiTimeDataCard(timeData = $timeData)")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -1408,7 +1413,7 @@ internal fun GaaiTimeDataCard(
         {
           Spacer(Modifier.weight(1f))
           Button(onClick = {
-            Log.d(TAG, "GaaiTimeDataCard Get Time pressed")
+            Log.v(TAG, "GaaiTimeDataCard Get Time pressed")
             onTimeGet()
           }
           ) {
@@ -1416,7 +1421,7 @@ internal fun GaaiTimeDataCard(
           }
           Spacer(Modifier.weight(1f))
           Button(onClick = {
-            Log.d(TAG, "GaaiTimeDataCard Sync Time pressed")
+            Log.v(TAG, "GaaiTimeDataCard Sync Time pressed")
             onTimeSync()
           }
           ) {
@@ -1426,7 +1431,7 @@ internal fun GaaiTimeDataCard(
         }
       }
     }
-    Log.d(TAG, "Exiting TimeConfigDataCard with timeData = $timeData")
+    Log.v(TAG, "RETURN GaaiTimeDataCard()")
   }
 }
 
@@ -1442,7 +1447,7 @@ internal fun GaaiLoaderCard(
   onLoaderOperation: (Int) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiLoaderCard ")
+  Log.v(TAG, "ENTRY GaaiLoaderCard()")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -1470,7 +1475,7 @@ internal fun GaaiLoaderCard(
         )
         {
           Button(onClick = {
-            Log.d(TAG, "GaaiLoaderCard Start Charge Default")
+            Log.v(TAG, "GaaiLoaderCard Start Charge Default")
             onLoaderOperation(LOADER_OPERATION_START_CHARGING_DEFAULT)
           }
           ) {
@@ -1483,7 +1488,7 @@ internal fun GaaiLoaderCard(
         )
         {
           Button(onClick = {
-            Log.d(TAG, "GaaiLoaderCard Start Charge Max")
+            Log.v(TAG, "GaaiLoaderCard Start Charge Max")
             onLoaderOperation(LOADER_OPERATION_START_CHARGING_MAX)
           }
           ) {
@@ -1496,7 +1501,7 @@ internal fun GaaiLoaderCard(
         )
         {
           Button(onClick = {
-            Log.d(TAG, "GaaiLoaderCard Start Charge Auto")
+            Log.v(TAG, "GaaiLoaderCard Start Charge Auto")
             onLoaderOperation(LOADER_OPERATION_START_CHARGING_AUTO)
           }
           ) {
@@ -1509,7 +1514,7 @@ internal fun GaaiLoaderCard(
         )
         {
           Button(onClick = {
-            Log.d(TAG, "GaaiLoaderCard Start Charge Eco")
+            Log.v(TAG, "GaaiLoaderCard Start Charge Eco")
             onLoaderOperation(LOADER_OPERATION_START_CHARGING_ECO)
           }
           ) {
@@ -1522,7 +1527,7 @@ internal fun GaaiLoaderCard(
         )
         {
           Button(onClick = {
-            Log.d(TAG, "GaaiLoaderCard Stop Charge")
+            Log.v(TAG, "GaaiLoaderCard Stop Charge")
             onLoaderOperation(LOADER_OPERATION_STOP_CHARGING)
           }
           ) {
@@ -1532,7 +1537,7 @@ internal fun GaaiLoaderCard(
 
       }
     }
-    Log.d(TAG, "Exiting GaaiLoaderCard")
+    Log.v(TAG, "RETURN GaaiLoaderCard()")
   }
 }
 
@@ -1548,7 +1553,7 @@ internal fun GaaiBadgesCard(
   navigateToBadgeList: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiBadgesCard ")
+  Log.v(TAG, "ENTRY GaaiBadgesCard()")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -1576,7 +1581,7 @@ internal fun GaaiBadgesCard(
         )
         {
           Button(onClick = {
-            Log.d(TAG, "GaaiBadgesCard Badges")
+            Log.v(TAG, "GaaiBadgesCard Badges")
             navigateToBadgeList()
           }
           ) {
@@ -1585,7 +1590,7 @@ internal fun GaaiBadgesCard(
         }
       }
     }
-    Log.d(TAG, "Exiting GaaiLoaderCard")
+    Log.v(TAG, "RETURN GaaiLoaderCard()")
   }
 }
 
@@ -1624,6 +1629,8 @@ fun ModeDialog(
   onDismiss: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY ModeDialog(mode=$mode)")
+
   val radioOptionsText = listOf(
     modeToText(mode = Mode.ECO_PRIVATE), modeToText(mode = Mode.MAX_PRIVATE),
     modeToText(mode = Mode.ECO_OPEN), modeToText(mode = Mode.MAX_OPEN), modeToText(mode = Mode.UNKNOWN)
@@ -1677,7 +1684,7 @@ fun ModeDialog(
         {
           Spacer(Modifier.weight(1f))
           Button(onClick = {
-            Log.d(TAG, "ModeDialog dismissed")
+            Log.v(TAG, "ModeDialog dismissed")
             onDismiss()
           }
           ) {
@@ -1699,7 +1706,7 @@ fun ModeDialog(
       }
     }
   }
-
+  Log.v(TAG, "RETURN ModeDialog()")
 }
 
 /**
@@ -1721,6 +1728,8 @@ fun TouTimeRow(
   onConfirmation: (TouTime) -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY TouTimeRow(name=$name)")
+
   var showTimeDialog by remember { mutableStateOf(false) }
   var newTime by remember { mutableStateOf(time) }
   Row(
@@ -1754,13 +1763,14 @@ fun TouTimeRow(
           showTimeDialog = false
         },
         onDismiss = {
-          Log.d(TAG, "showTimeDialog dismissed")
+          Log.v(TAG, "showTimeDialog dismissed")
           onDismissRequest()
           showTimeDialog = false
         }
       )
     }
   }
+  Log.v(TAG, "RETURN TouTimeRow()")
 }
 
 /**
@@ -1784,6 +1794,8 @@ fun TouPeriodDialog(
   onConfirmation: (TouPeriod) -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY TouPeriodDialog(title=$title)")
+
 //    var newTouPeriod by remember { mutableStateOf(touPeriod) }
   var newTouPeriodStart by remember { mutableStateOf(touPeriod.startTime) }
   var newTouPeriodEnd by remember { mutableStateOf(touPeriod.endTime) }
@@ -1803,7 +1815,7 @@ fun TouPeriodDialog(
         name = stringResource(R.string.start),
         time = touPeriod.startTime,
         onDismissRequest = {
-          Log.d(TAG, "touTimeRow start dismissed")
+          Log.v(TAG, "touTimeRow start dismissed")
         },
         onConfirmation = { touTime ->
           newTouPeriodStart = touTime
@@ -1816,7 +1828,7 @@ fun TouPeriodDialog(
         name = stringResource(R.string.end),
         time = touPeriod.endTime,
         onDismissRequest = {
-          Log.d(TAG, "touTimeRow end dismissed")
+          Log.v(TAG, "touTimeRow end dismissed")
         },
         onConfirmation = { touTime ->
 //                        newTouPeriod = newTouPeriod.copy(endTime = touTime)
@@ -1843,6 +1855,7 @@ fun TouPeriodDialog(
       }
     }
   }
+  Log.v(TAG, "RETURN TouPeriodDialog()")
 }
 
 /**
@@ -1868,6 +1881,8 @@ fun AmpereRow(
   onDismiss: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY AmpereRow(name=$name)")
+
   var showSliderDialog by remember { mutableStateOf(false) }
   Row(
     modifier = modifier
@@ -1895,7 +1910,7 @@ fun AmpereRow(
         minValue = minValue,
         maxValue = maxValue,
         onDismiss = {
-          Log.d(TAG, "ampereSliderDialog dismissed")
+          Log.v(TAG, "ampereSliderDialog dismissed")
           showSliderDialog = false
           onDismiss()
         },
@@ -1909,6 +1924,7 @@ fun AmpereRow(
       )
     }
   }
+  Log.v(TAG, "RETURN AmpereRow()")
 }
 
 /**
@@ -1934,6 +1950,8 @@ fun AmpereSliderDialog(
   onDismiss: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY AmpereSliderDialog(name=$name)")
+
   var sliderPosition by remember { mutableFloatStateOf(value.toFloat()) }
   Dialog(onDismissRequest = { onDismiss() }) {
     Card(modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
@@ -1968,7 +1986,7 @@ fun AmpereSliderDialog(
         {
           Spacer(Modifier.weight(1f))
           Button(onClick = {
-            Log.d(TAG, "ampereSliderDialog dismissed")
+            Log.v(TAG, "ampereSliderDialog dismissed")
             onDismiss()
           }) {
             Text(stringResource(R.string.cancel))
@@ -1986,6 +2004,7 @@ fun AmpereSliderDialog(
       }
     }
   }
+  Log.v(TAG, "RETURN AmpereSliderDialog()")
 }
 
 /**
@@ -2008,6 +2027,8 @@ fun DialTimePickerDialog(
   onDismiss: () -> Unit,
   modifier: Modifier = Modifier
 ) {
+  Log.d(TAG, "ENTRY DialTimePickerDialog(title=$title)")
+
   val timePickerState = rememberTimePickerState(
     initialHour = touTime.getHours(),
     initialMinute = touTime.getMinutes(),
@@ -2038,7 +2059,7 @@ fun DialTimePickerDialog(
         {
           Spacer(Modifier.weight(1f))
           Button(onClick = {
-            Log.d(TAG, "dialTimePickerDialog dismissed")
+            Log.v(TAG, "DialTimePickerDialog() dismissed")
             onDismiss()
           }) {
             Text(stringResource(R.string.cancel))
@@ -2046,7 +2067,7 @@ fun DialTimePickerDialog(
           Spacer(Modifier.weight(1f))
           Button(onClick = {
             val newTouTime = TouTime(timePickerState)
-            Log.d(TAG, "dialTimePickerDialog confirmed $newTouTime")
+            Log.d(TAG, "DialTimePickerDialog() confirmed $newTouTime")
             onConfirm(newTouTime)
           }) {
             Text(stringResource(R.string.ok))
@@ -2056,6 +2077,7 @@ fun DialTimePickerDialog(
       }
     }
   }
+  Log.v(TAG, "RETURN DialTimePickerDialog()")
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeviceDetailsHomeCompletePreviewDark")

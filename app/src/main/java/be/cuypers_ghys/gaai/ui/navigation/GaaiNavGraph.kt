@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -48,7 +48,7 @@ fun GaaiNavHost(
   navController: NavHostController,
   modifier: Modifier = Modifier,
 ) {
-  Log.d(TAG, "Entered GaaiNavHost with navController = $navController")
+  Log.d(TAG, "ENTRY GaaiNavHost(navController = $navController)")
 
   NavHost(
     navController = navController,
@@ -56,23 +56,19 @@ fun GaaiNavHost(
     modifier = modifier
   ) {
     composable(route = HomeDestination.route) {
-      Log.d(TAG, "Composable ${HomeDestination.route} is calling HomeScreen()")
       HomeScreen(
         navigateToDeviceEntry = { navController.navigate(DeviceEntryDestination.route) },
         navigateToDeviceDetails = {
           navController.navigate("${DeviceDetailsDestination.route}/${it}")
         }
       )
-      Log.d(TAG, "Composable ${HomeDestination.route} has exited HomeScreen()")
     }
 
     composable(route = DeviceEntryDestination.route) {
-      Log.d(TAG, "Composable ${DeviceEntryDestination.route} is calling DeviceEntryScreen()")
       DeviceEntryScreen(
         navigateBack = { navController.popBackStack() },
         onNavigateUp = { navController.navigateUp() }
       )
-      Log.d(TAG, "Composable ${DeviceEntryDestination.route} has exited DeviceEntryScreen()")
     }
 
     composable(
@@ -81,7 +77,6 @@ fun GaaiNavHost(
         type = NavType.IntType
       })
     ) {
-      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} is calling DeviceDetailsScreen()")
       DeviceDetailsScreen(
         onNavigateUp = { navController.navigateUp() },
         navigateToBadgeList = {
@@ -89,7 +84,6 @@ fun GaaiNavHost(
         }
 
       )
-      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} has exited DeviceDetailScreen()")
     }
 
     composable(
@@ -98,14 +92,12 @@ fun GaaiNavHost(
         type = NavType.IntType
       })
     ) {
-      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} is calling DeviceDetailsScreen()")
       BadgeListScreen(
         onNavigateUp = { navController.navigateUp() },
       )
-      Log.d(TAG, "Composable ${DeviceDetailsDestination.routeWithArgs} has exited DeviceDetailScreen()")
     }
 
   }
 
-  Log.d(TAG, "Exited GaaiNavHost with navController = $navController")
+  Log.v(TAG, "RETURN GaaiNavHost()")
 }

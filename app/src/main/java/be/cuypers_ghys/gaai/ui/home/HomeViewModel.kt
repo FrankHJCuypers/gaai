@@ -16,6 +16,7 @@
 
 package be.cuypers_ghys.gaai.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.cuypers_ghys.gaai.data.Device
@@ -25,6 +26,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+
+// Tag for logging
+private const val TAG = "HomeViewModel"
 
 /**
  * ViewModel to manage all devices from the Room database, to be used by [HomeScreen].
@@ -40,9 +44,14 @@ class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewMode
    * @param device The [Device] to delete.
    */
   fun removeDevice(device: Device) {
+    Log.d(TAG, "ENTRY removeDevice($device)")
+
     viewModelScope.launch {
+      Log.d(TAG, "ENTRY removeDevice($device) body")
       devicesRepository.deleteDevice(device)
+      Log.v(TAG, "ENTRY removeDevice() body")
     }
+    Log.v(TAG, "ENTRY removeDevice()")
   }
 
   /**

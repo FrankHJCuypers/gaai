@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -55,8 +55,9 @@ class MissingPermissionsViewModel : ViewModel() {
    * @param isBluetoothEnabledState Is ble enabled?.
    */
   fun updateUiState(isBluetoothEnabledState: Boolean) {
-    Log.d(TAG, "Updating isBluetoothEnabledState to $isBluetoothEnabledState")
+    Log.d(TAG, "ENTRY updateUiState(isBluetoothEnabledState = $isBluetoothEnabledState)")
     bleUiState = bleUiState.copy(isBluetoothEnabledState = isBluetoothEnabledState)
+    Log.d(TAG, "RETURN updateUiState()")
   }
 
   /**
@@ -66,7 +67,7 @@ class MissingPermissionsViewModel : ViewModel() {
   var permissions = emptyList<String>()
 
   init {
-    Log.d(TAG, "Initializing MissingPermissionsViewModel")
+    Log.d(TAG, "ENTRY init()")
     Log.d(TAG, "SDK_INT: ${Build.VERSION.SDK_INT}")
     if (Build.VERSION.SDK_INT <= 30) {
       Log.d(TAG, "SDK <= 30")
@@ -84,7 +85,7 @@ class MissingPermissionsViewModel : ViewModel() {
         )
       )
     }
-    Log.d(TAG, "Initialized MissingPermissionsViewModel")
+    Log.v(TAG, "RETURN updateUiState()")
   }
 }
 

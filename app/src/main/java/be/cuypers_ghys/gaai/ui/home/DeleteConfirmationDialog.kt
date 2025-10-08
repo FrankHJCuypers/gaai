@@ -18,6 +18,7 @@ package be.cuypers_ghys.gaai.ui.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -31,12 +32,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 
+// Tag for logging
+private const val TAG = "DeleteConfirmationDialog"
+
 @Composable
 fun DeleteConfirmationDialog(
   itemName: String,
   onCancel: () -> Unit,
   onConfirm: () -> Unit,
 ) {
+  Log.v(TAG, "ENTRY DeleteConfirmationDialog()")
 
   AlertDialog(
     onDismissRequest = {
@@ -73,6 +78,7 @@ fun DeleteConfirmationDialog(
       }
     },
   )
+  Log.v(TAG, "RETURN DeleteConfirmationDialog()")
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeleteConfirmDialogDevicePreviewDark")

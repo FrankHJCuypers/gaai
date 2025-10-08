@@ -112,7 +112,7 @@ fun BadgeListScreen(
   modifier: Modifier = Modifier,
   viewModel: BadgeListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-  Log.d(TAG, "Entered BadgeListScreen()")
+  Log.v(TAG, "ENTRY BadgeListScreen()")
 
   val badgeListUiState by viewModel.badgeListUiState.collectAsState()
 
@@ -126,7 +126,7 @@ fun BadgeListScreen(
       modifier
     )
   }
-  Log.d(TAG, "Exiting BadgeListScreen()")
+  Log.v(TAG, "RETURN BadgeListScreen()")
 }
 
 /**
@@ -152,7 +152,7 @@ fun BadgeListScreenNoViewModel(
   badgeDeviceUiState: BadgeDeviceUiState,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered BadgeListScreenNoViewModel()")
+  Log.v(TAG, "ENTRY BadgeListScreenNoViewModel()")
 
   val context = LocalContext.current
   val coroutineScope = rememberCoroutineScope()
@@ -232,7 +232,6 @@ fun BadgeListScreenNoViewModel(
       }
     },
   ) { innerPadding ->
-    Log.d(TAG, "Entering BadgeListBody")
     when (badgeDeviceUiState.statusId) {
       BADGE_STATUS_WAIT_EXISTS -> Toast.makeText(
         context,
@@ -252,7 +251,7 @@ fun BadgeListScreenNoViewModel(
       contentPadding = innerPadding,
     )
   }
-  Log.d(TAG, "Exiting BadgeListScreenNoViewModel()")
+  Log.v(TAG, "RETURN BadgeListScreenNoViewModel()")
 }
 
 /**
@@ -273,7 +272,7 @@ private fun BadgeListBody(
   modifier: Modifier = Modifier,
   contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-  Log.d(TAG, "Entered BadgeListBody()")
+  Log.v(TAG, "ENTRY BadgeListBody()")
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier,
@@ -296,7 +295,7 @@ private fun BadgeListBody(
       )
     }
   }
-  Log.d(TAG, "Exiting BadgeListBody()")
+  Log.v(TAG, "RETURN BadgeListBody()")
 }
 
 /**
@@ -316,7 +315,7 @@ private fun BadgesList(
   contentPadding: PaddingValues,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entering BadgesList()")
+  Log.v(TAG, "ENTRY BadgesList()")
   LazyColumn(
     modifier = modifier,
     contentPadding = contentPadding
@@ -329,7 +328,7 @@ private fun BadgesList(
       )
     }
   }
-  Log.d(TAG, "Exiting BadgesList()")
+  Log.v(TAG, "RETURN BadgesList()")
 }
 
 /**
@@ -351,7 +350,7 @@ fun GaaiBadgeItem(
   onBadgeRemove: (Badge) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entering GaaiBadgeItem()")
+  Log.v(TAG, "ENTRY GaaiBadgeItem()")
   val scope = rememberCoroutineScope()
   SwipeToDismissContainer(
     badge,
@@ -370,7 +369,7 @@ fun GaaiBadgeItem(
     )
   }
 
-  Log.d(TAG, "Exiting GaaiBadgeItem()")
+  Log.v(TAG, "RETURN GaaiBadgeItem()")
 }
 
 /**
@@ -384,7 +383,7 @@ fun GaaiBadgeItem(
 internal fun GaaiBadgeCard(
   badge: Badge, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "Entered GaaiBadgeCard with device = $badge")
+  Log.d(TAG, "ENTRY GaaiBadgeCard() with device = $badge")
   Card(
     modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
   ) {
@@ -395,7 +394,7 @@ internal fun GaaiBadgeCard(
       Row(
         modifier = Modifier.fillMaxWidth()
       ) {
-        Log.d(TAG, "GaaiBadgeCard printing first line")
+        Log.v(TAG, "GaaiBadgeCard() printing first line")
         Icon(
           painter = painterResource(R.drawable.contactless_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
           contentDescription = stringResource(id = R.string.ev_charger_content_desc)
@@ -413,7 +412,7 @@ internal fun GaaiBadgeCard(
       }
     }
   }
-  Log.d(TAG, "exiting GaaiBadgeCard with badge = $badge")
+  Log.d(TAG, "RETURN GaaiBadgeCard() with badge = $badge")
 }
 
 @OptIn(ExperimentalStdlibApi::class)

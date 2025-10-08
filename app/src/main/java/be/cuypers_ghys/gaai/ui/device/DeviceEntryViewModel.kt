@@ -128,6 +128,8 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param deviceDetails The initial device details from which to compute the state.
    */
   fun updateUiState(deviceDetails: DeviceDetails) {
+    Log.d(TAG, "ENTRY updateUiState(deviceDetails=$deviceDetails)")
+
     cancelScanDevice()
     val isSnValid = validateSn(deviceDetails)
     val isPnValid = validatePn(deviceDetails)
@@ -136,6 +138,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
         deviceDetails = deviceDetails, isSnValid = isSnValid, isPnValid = isPnValid,
         entryState = if (isSnValid && isPnValid) EntryState.ENTRY_VALID else EntryState.INPUTTING
       )
+    Log.v(TAG, "RETURN updateUiState()")
   }
 
   /**
@@ -143,6 +146,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param scanResult The BLE scan result.
    */
   private suspend fun updateUiState(scanResult: BleScanResult) {
+    Log.v(TAG, "ENTRY updateUiState(scanResult)")
     val chargerType = when (scanResult.data?.scanRecord?.deviceName) {
       "HOME" -> ChargerType.HOME
       "Mobile" -> ChargerType.MOBILE
@@ -158,6 +162,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
       deviceDetails = deviceDetails,
       entryState = if (canInsert) EntryState.DEVICE_FOUND else EntryState.DUPLICATE_DEVICE_FOUND
     )
+    Log.v(TAG, "RETURN updateUiState()")
   }
 
   /**
@@ -165,18 +170,22 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param entryState New state.
    */
   fun updateUiState(entryState: EntryState) {
+    Log.d(TAG, "ENTRY updateUiState(entryState=$entryState)")
     deviceUiState = deviceUiState.copy(entryState = entryState)
+    Log.v(TAG, "RETURN updateUiState()")
   }
 
   /**
    * Inserts the [Device] from [deviceUiState] in the Room database.
    */
   fun saveDevice() {
+    Log.v(TAG, "ENTRY saveDevice()")
     if (validateInput()) {
       viewModelScope.launch(Dispatchers.IO) {
         devicesRepository.insertDevice(deviceUiState.deviceDetails.toDevice())
       }
     }
+    Log.v(TAG, "RETURN saveDevice()")
   }
 
   /**
@@ -195,6 +204,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    */
   @SuppressLint("MissingPermission")
   fun scanDevice() {
+    Log.v(TAG, "ENTRY scanDevice()")
     if (validateInput()) {
       currentJob?.cancel()
       serviceDataFilter = getWithServiceUuidFilter()
@@ -217,13 +227,16 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
         .cancellable()
         .launchIn(viewModelScope) //Scanning will stop after we leave the screen
     }
+    Log.v(TAG, "RETURN scanDevice()")
   }
 
   /**
    * Cancel the [Job] performing the BLE scan.
    */
   fun cancelScanDevice() {
+    Log.v(TAG, "ENTRY cancelScanDevice()")
     currentJob?.cancel()
+    Log.v(TAG, "RETURN cancelScanDevice()")
   }
 
   /**
@@ -231,7 +244,9 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @return true if the [result] matches the [serviceDataFilter].
    */
   private fun filterServiceData(result: BleScanResult): Boolean {
+    Log.v(TAG, "ENTRY filterServiceData()")
     val retVal = serviceDataFilter.filter(result)
+    Log.v(TAG, "RETURN filterServiceData()")
     return retVal
   }
 
@@ -241,6 +256,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    */
   private fun getWithServiceUuidFilter(uiState: DeviceDetails = deviceUiState.deviceDetails): WithServiceData =
     with(uiState) {
+      Log.v(TAG, "ENTRY getWithServiceUuidFilter()")
       val serialNumber = SerialNumberParser.parse(sn)
       val hexSerialNumber = SerialNumberParser.calcHexSerialNumber(serialNumber!!)
       val serviceData = ByteArray(4)
@@ -253,6 +269,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param uiState [DeviceUiState] from which the [DeviceDetails.sn] is used.
    */
   private fun validateSn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
+    Log.v(TAG, "ENTRY validateSn()")
     return with(uiState) {
       SerialNumberParser.parse(sn) != null
     }
@@ -263,6 +280,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param uiState [DeviceUiState] from which the [DeviceDetails.pn] is used.
    */
   private fun validatePn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
+    Log.v(TAG, "ENTRY validatePn()")
     return with(uiState) {
       ProductNumberParser.parse(pn) != null
     }
@@ -273,6 +291,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * @param uiState [DeviceUiState] from which the [DeviceDetails.sn] and [DeviceDetails.pn] aer used.
    */
   private fun validateInput(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
+    Log.v(TAG, "ENTRY validateInput()")
     return validateSn(uiState) && validatePn(uiState)
   }
 }

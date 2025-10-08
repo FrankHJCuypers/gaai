@@ -69,9 +69,9 @@ private const val TAG = "GaaiApp"
  */
 @Composable
 fun GaaiApp(navController: NavHostController = rememberNavController()) {
-  Log.d(TAG, "Entered GaaiApp with navController = $navController")
+  Log.d(TAG, "ENTRY GaaiApp(navController = $navController)")
   GaaiNavHost(navController = navController)
-  Log.d(TAG, "Exiting GaaiApp ")
+  Log.v(TAG, "RETURN GaaiApp() ")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,6 +84,7 @@ fun GaaiTopAppBar(
   navigateUp: () -> Unit = {},
   actions: @Composable (RowScope.() -> Unit) = {},
 ) {
+  Log.d(TAG, "ENTRY GaaiTopAppBar(title = $title)")
   CenterAlignedTopAppBar(
     title = {
       Row {
@@ -113,11 +114,14 @@ fun GaaiTopAppBar(
     },
     actions = actions
   )
+  Log.v(TAG, "ENTRY GaaiTopAppBar()")
 }
 
 // Found on https://gist.github.com/tkuenneth/ddf598663f041dc79960cda503d14448
 @Composable
 fun adaptiveIconPainterResource(@DrawableRes id: Int): Painter {
+  Log.d(TAG, "ENTRY adaptiveIconPainterResource(id = $id)")
+
   val res = LocalResources.current
   val theme = LocalContext.current.theme
 
@@ -129,6 +133,7 @@ fun adaptiveIconPainterResource(@DrawableRes id: Int): Painter {
     // We couldn't load the drawable as an Adaptive Icon, just use painterResource
     painterResource(id)
   }
+  Log.d(TAG, "RETURN adaptiveIconPainterResource()")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -28,8 +28,9 @@ class GaaiApplication : Application() {
   /** AppContainer instance used by the rest of classes to obtain dependencies */
   lateinit var container: AppContainer
   override fun onCreate() {
+    Log.v(TAG, "ENTRY onCreate()")
     super.onCreate()
-    Log.d(TAG, "onCreate Called")
     container = DefaultAppContainer(this)
+    Log.v(TAG, "RETURN onCreate()")
   }
 }

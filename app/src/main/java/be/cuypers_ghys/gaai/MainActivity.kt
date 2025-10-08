@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -33,7 +33,7 @@ private const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Log.d(TAG, "onCreate Called")
+    Log.v(TAG, "ENTRY onCreate()")
     enableEdgeToEdge()
     setContent {
       GaaiTheme {
@@ -42,5 +42,6 @@ class MainActivity : ComponentActivity() {
         }
       }
     }
+    Log.v(TAG, "RETURN onCreate()")
   }
 }

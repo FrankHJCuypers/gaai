@@ -16,10 +16,14 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.util.modBus
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
+
+// Tag for logging
+private const val TAG = "EventRecordParser"
 
 /**
  * Parses [Event Record]
@@ -37,13 +41,17 @@ object EventRecordParser {
    *      Null if *eventRecord* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(eventRecord: ByteArray): EventRecord? {
+    Log.d(TAG, "ENTRY parse(eventRecord = $eventRecord)")
+
     if (eventRecord.size != 20) {
+      Log.d(TAG, "eventRecord.size is not 20 but ${eventRecord.size} ")
       return null
     }
 
     val crc = eventRecord.fromUint16LE(18)
     val computedCrc = CRC16.modBus(eventRecord, 0, 18).toUShort()
     if (computedCrc != crc) {
+      Log.d(TAG, "eventRecord crc is ${computedCrc.toHexString()} in stead of ${crc.toHexString()}")
       return null
     }
 
@@ -53,8 +61,11 @@ object EventRecordParser {
     val unknown3 = eventRecord[6]
     val unknown4 = eventRecord.copyOfRange(7, 18)
 
-    return EventRecord(
+    val retval = EventRecord(
       timestamp, unknown1, unknown2, unknown3, unknown4
     )
+    Log.d(TAG, "RETURN parse()=$retval")
+    return retval
+
   }
 }

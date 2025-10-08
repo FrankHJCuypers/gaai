@@ -163,6 +163,19 @@ see [Test from the command line](https://developer.android.com/studio/test/comma
 `./gradlew testDebugUnitTest` followed by `./gradlew createDebugCoverageReport`.
 Note that `./gradlew testReleaseUnitTest` does not create Code coverage information.
 
+## Debugging
+
+### Logging
+
+Gaai uses android.util.Log for logging.
+The logging results are available in real time in [Logcat](https://developer.android.com/studio/debug/logcat).
+The use of the logging levels is loosely based on 
+[When to use the different log levels](https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels.)
+
+None if the code in the be.cuypers_ghys.gaai.util package has logging statements.
+This code is fairly small and simple and fully tested with JUnit.
+Adding logging statements seems overkill.
+
 ## Developer Documentation generation
 
 The kotlin code is documented with [KDoc](https://kotlinlang.org/docs/kotlin-doc.html).

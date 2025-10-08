@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,11 +16,15 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.util.Log
 import be.cuypers_ghys.gaai.util.fromInt16LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.util.modBus
 import no.nordicsemi.android.kotlin.ble.profile.common.CRC16
+
+// Tag for logging
+private const val TAG = "ChargingCarDataParser"
 
 /**
  * Parses [Charging Car Data].
@@ -38,13 +42,17 @@ object ChargingCarDataParser {
    *      Null if *ChargingCarData* is not 18 bytes long or the CRC16 is not correct.
    */
   fun parse(chargingCarData: ByteArray): ChargingCarData? {
+    Log.d(TAG, "ENTRY parse(chargingCarData = $chargingCarData)")
+
     if (chargingCarData.size != 18) {
+      Log.d(TAG, "chargingCarData.size is not 18 but ${chargingCarData.size} ")
       return null
     }
 
     val crc = chargingCarData.fromUint16LE(16)
     val computedCrc = CRC16.modBus(chargingCarData, 0, 16).toUShort()
     if (computedCrc != crc) {
+      Log.d(TAG, "chargingCarData crc is ${computedCrc.toHexString()} in stead of ${crc.toHexString()}")
       return null
     }
 
@@ -56,7 +64,7 @@ object ChargingCarDataParser {
     val p2 = chargingCarData.fromInt16LE(12)
     val p3 = chargingCarData.fromInt16LE(14)
 
-    return ChargingCarData(
+    val retval = ChargingCarData(
       timestamp,
       l1,
       l2,
@@ -65,5 +73,7 @@ object ChargingCarDataParser {
       p2,
       p3
     )
+    Log.d(TAG, "RETURN parse()=$retval")
+    return retval
   }
 }
