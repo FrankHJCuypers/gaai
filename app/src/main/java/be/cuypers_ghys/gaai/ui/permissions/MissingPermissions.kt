@@ -51,6 +51,7 @@ import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -66,7 +67,9 @@ private const val TAG = "MissingPermissions"
  */
 @SuppressLint("MissingPermission")
 private fun enableBluetooth(context: Context) {
+  Log.v(TAG, "ENTRY enableBluetooth()")
   context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+  Log.v(TAG, "RETURN enableBluetooth()")
 }
 
 /**
@@ -145,13 +148,6 @@ private fun getTextToShowGivenPermissions(
   return textToShow.toString()
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
-class DummyPermissionState(
-  override val permission: String, override val status: PermissionStatus
-) : PermissionState {
-  override fun launchPermissionRequest() {
-  }
-}
 
 /**
  * Implements the complete screen for handling the required Bluetooth permissions.
@@ -218,54 +214,159 @@ fun RequireBluetooth(
     if (viewModel.bleUiState.isBluetoothEnabledState) {
       Log.d(TAG, "Bluetooth enabled")
       context.unregisterReceiver(bluetoothReceiver)
-      Log.d(TAG, "Calling content()")
       content()
-      Log.d(TAG, "Called navigateToHome()")
     } else {
-      // TODO: Factorize to its own Composable?
-      Column(
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Text(
-          text = stringResource(R.string.bluetooth_disabled)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = {
-          Log.d(TAG, "enabling Bluetooth")
-          enableBluetooth(context)
-          Log.d(TAG, "Updating Ui Bluetooth state")
-
-          viewModel.updateUiState(isBluetoothEnabledState(context))
-        }) {
-          Text(stringResource(R.string.enable_bluetooth))
-        }
-      }
-
+      Log.d(TAG, "Bluetooth not enabled")
+      AskToEnableBluetooth(viewModel::updateUiState, modifier)
     }
   } else {
-    // TODO: Factorize to its own Composable?
     Log.d(TAG, "Not all permissions granted")
-    Column(
-      modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      Spacer(Modifier.weight(1f))
-      Text(
-        text = getTextToShowGivenPermissions(
-          multiplePermissionsState.revokedPermissions,
-          multiplePermissionsState.shouldShowRationale
-        )
-      )
-      Spacer(modifier = Modifier.height(8.dp))
-      Button(onClick = { multiplePermissionsState.launchMultiplePermissionRequest() }) {
-        Text(stringResource(R.string.request_permissions))
-      }
-      Spacer(Modifier.weight(1f))
-    }
+    AskToEnablePermissions(multiplePermissionsState, modifier)
   }
   Log.v(TAG, "RETURN RequireBluetooth()")
+}
+
+/**
+ * Shows a screen informing the user that bluetooth is disabled but required,
+ * with a button that allows the user to turn on Bluetooth.
+ * @param updateUiState Function to be called to set the new bluetooth state in the viewmodel.
+ * @param modifier The [Modifier] to be applied to this screen.
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+fun AskToEnableBluetooth(
+  updateUiState: (Boolean) -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Log.v(TAG, "ENTRY AskToEnableBluetooth()")
+  val context = LocalContext.current
+
+  Column(
+    modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Spacer(Modifier.weight(1f))
+    Text(
+      text = stringResource(R.string.bluetooth_disabled)
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+    Button(onClick = {
+      Log.d(TAG, "enabling Bluetooth")
+      enableBluetooth(context)
+      Log.d(TAG, "Updating Ui Bluetooth state")
+      updateUiState(isBluetoothEnabledState(context))
+    }) {
+      Text(stringResource(R.string.enable_bluetooth))
+    }
+    Spacer(Modifier.weight(1f))
+  }
+  Log.v(TAG, "RETURN AskToEnableBluetooth()")
+}
+
+/**
+ * Shows a screen informing the user that some permissions are disabled but required,
+ * with a button that allows the user to enable these permissions.
+ * @param multiplePermissionsState State of the required permissions.
+ * @param modifier The [Modifier] to be applied to this screen.
+ *
+ * @author Frank HJ Cuypers
+ */
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun AskToEnablePermissions(
+  multiplePermissionsState: MultiplePermissionsState,
+  modifier: Modifier = Modifier,
+) {
+  Log.d(TAG, "ENTRY AskToEnablePermissions(multiplePermissionsState=$multiplePermissionsState)")
+  Column(
+    modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Spacer(Modifier.weight(1f))
+    Text(
+      text = getTextToShowGivenPermissions(
+        multiplePermissionsState.revokedPermissions,
+        multiplePermissionsState.shouldShowRationale
+      )
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    Button(onClick = { multiplePermissionsState.launchMultiplePermissionRequest() }) {
+      Text(stringResource(R.string.request_permissions))
+    }
+    Spacer(Modifier.weight(1f))
+  }
+  Log.v(TAG, "RETURN AskToEnablePermissions()")
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+/**
+ * Permissionstate for use in GetTextToShowGivenPermissionsPreview().
+ */
+class DummyPermissionState(
+  override val permission: String, override val status: PermissionStatus
+) : PermissionState {
+  override fun launchPermissionRequest() {
+  }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+class DummyMultiplePermissionsState @OptIn(ExperimentalPermissionsApi::class) constructor(
+  override val allPermissionsGranted: Boolean,
+  override val permissions: List<PermissionState>,
+  override val revokedPermissions: List<PermissionState>,
+  override val shouldShowRationale: Boolean,
+):MultiplePermissionsState{
+  override fun launchMultiplePermissionRequest() {
+}}
+
+@RequiresApi(Build.VERSION_CODES.S)
+@OptIn(ExperimentalPermissionsApi::class)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "AskToEnableBluetoothDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "AskToEnableBluetoothLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "AskToEnableBluetoothDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
+@Composable
+private fun AskToEnableBluetoothPreview() {
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      AskToEnableBluetooth(updateUiState = {})
+    }
+  }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "AskToEnablePermissionsDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "AskToEnablePermissionsLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "AskToEnablePermissionsDynamic",
+  wallpaper = RED_DOMINATED_EXAMPLE
+)
+@Composable
+private fun AskToEnablePermissionsPreview() {
+  GaaiTheme(dynamicColor = true) {
+    Surface {
+      AskToEnablePermissions(
+        DummyMultiplePermissionsState(
+          allPermissionsGranted = false,
+          permissions = listOf(),
+          revokedPermissions = listOf(
+            DummyPermissionState(Manifest.permission.ACCESS_FINE_LOCATION, PermissionStatus.Denied(true)),
+            DummyPermissionState(Manifest.permission.BLUETOOTH_SCAN, PermissionStatus.Denied(true)),
+            DummyPermissionState(Manifest.permission.BLUETOOTH_CONNECT, PermissionStatus.Denied(true))
+          ),
+          shouldShowRationale = true
+        )
+      )
+    }
+  }
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -279,7 +380,7 @@ fun RequireBluetooth(
   wallpaper = RED_DOMINATED_EXAMPLE
 )
 @Composable
-private fun GetTextToShowGivenPermissions() {
+private fun GetTextToShowGivenPermissionsPreview() {
   GaaiTheme(dynamicColor = true) {
     Surface {
       Text(
