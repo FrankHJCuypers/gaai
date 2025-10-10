@@ -60,6 +60,32 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 private const val TAG = "MissingPermissions"
 
 /**
+ * BroadcastReceiver that tracks the action that bluetooth is enabled.
+ */
+class BluetoothBroadcastReceiver(val updateUiState: (Boolean) -> Unit) : BroadcastReceiver() {
+  override fun onReceive(context: Context, intent: Intent?) {
+    val action = intent?.action
+    if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+      val state = intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+      when (state) {
+        BluetoothAdapter.STATE_OFF -> {
+        }
+
+        BluetoothAdapter.STATE_TURNING_OFF -> {
+        }
+
+        BluetoothAdapter.STATE_ON -> {
+          updateUiState(isBluetoothEnabledState(context))
+        }
+
+        BluetoothAdapter.STATE_TURNING_ON -> {
+        }
+      }
+    }
+  }
+}
+
+/**
  * Shows a system activity that allows the user to turn on Bluetooth.
  * @param context [Context] in which to start the activity.
  *
@@ -181,29 +207,8 @@ fun RequireBluetooth(
   Log.d(TAG, "isBluetoothEnabledState: $isBluetoothEnabledState.")
 
   // broadcast receiver to receive the Bluetooth enabled event.
-  // TODO: Move to the ViewModel?
-  val bluetoothReceiver = object : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent?) {
-      val action = intent?.action
-      if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-        val state = intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
-        when (state) {
-          BluetoothAdapter.STATE_OFF -> {
-          }
 
-          BluetoothAdapter.STATE_TURNING_OFF -> {
-          }
-
-          BluetoothAdapter.STATE_ON -> {
-            viewModel.updateUiState(isBluetoothEnabledState(context))
-          }
-
-          BluetoothAdapter.STATE_TURNING_ON -> {
-          }
-        }
-      }
-    }
-  }
+  val bluetoothReceiver = BluetoothBroadcastReceiver(viewModel::updateUiState)
 
   // register the receiver
   val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
@@ -317,9 +322,10 @@ class DummyMultiplePermissionsState @OptIn(ExperimentalPermissionsApi::class) co
   override val permissions: List<PermissionState>,
   override val revokedPermissions: List<PermissionState>,
   override val shouldShowRationale: Boolean,
-):MultiplePermissionsState{
+) : MultiplePermissionsState {
   override fun launchMultiplePermissionRequest() {
-}}
+  }
+}
 
 @RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalPermissionsApi::class)
