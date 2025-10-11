@@ -357,7 +357,7 @@ private fun connectionStateToPainter(connectionState: ConnectionState) = when (c
  */
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
-// TODO: factorize to its own file, since it is also used in DeviceEntryScreen.kt and DeviceDetailScreen.kt
+// TODO: factorize to its own file, since it is also used in DeviceEntryScreen.kt and DeviceDetailsScreen.kt
 internal fun GaaiDeviceCard(
   device: Device, connectionState: ConnectionState, modifier: Modifier = Modifier
 ) {
