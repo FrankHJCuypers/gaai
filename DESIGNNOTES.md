@@ -12,7 +12,7 @@ The dependency injection implementation is based on the course
 [Add repository and Manual Dependency Injection](https://developer.android.com/codelabs/basic-android-kotlin-compose-add-repository?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-compose-unit-5-pathway-2%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-compose-add-repository#0).
 This resulted in the use of repositories en containers.
 
-- [GaaiApplication]
+- [GaaiApplication](app/src/main/java/be/cuypers_ghys/gaai/GaaiApplication)
   - Keeps track of the `container` with the repositories to use.
   - Sets an instance of [DefaultAppContainer] as the `container` to use.
 - [DefaultAppContainer]
