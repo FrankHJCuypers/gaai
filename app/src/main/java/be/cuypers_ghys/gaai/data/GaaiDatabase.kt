@@ -60,6 +60,4 @@ abstract class GaaiDatabase : RoomDatabase() {
       }
     }
   }
-
-
 }

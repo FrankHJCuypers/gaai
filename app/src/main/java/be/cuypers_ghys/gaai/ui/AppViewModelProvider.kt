@@ -17,6 +17,7 @@
 package be.cuypers_ghys.gaai.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -38,6 +39,7 @@ private const val TAG = "AppViewModelProvider"
  */
 object AppViewModelProvider {
   val Factory = viewModelFactory {
+    Log.d(TAG, "ENTRY viewModelFactory()")
 
     // Initializer for DeviceEntryViewModel
     initializer {
@@ -71,6 +73,8 @@ object AppViewModelProvider {
         gaaiApplication().container.bleRepository
       )
     }
+    Log.d(TAG, "RETURN viewModelFactory()")
+
   }
 }
 

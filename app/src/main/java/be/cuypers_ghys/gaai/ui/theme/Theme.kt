@@ -17,6 +17,7 @@
 package be.cuypers_ghys.gaai.ui.theme
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -27,6 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+
+// Tag for logging
+private const val TAG = "Theme"
 
 // Colors generated with https://material-foundation.github.io/material-theme-builder/ based on colors of the
 // ic_launcher_round resource
@@ -278,6 +282,8 @@ fun GaaiTheme(
   dynamicColor: Boolean = false,
   content: @Composable() () -> Unit
 ) {
+  Log.d(TAG, "ENTRY GaaiTheme(darkTheme = $darkTheme)")
+
   val colorScheme = when {
     dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
       val context = LocalContext.current
@@ -293,5 +299,7 @@ fun GaaiTheme(
     typography = AppTypography,
     content = content
   )
+
+  Log.v(TAG, "RETURN GaaiTheme()")
 }
 
