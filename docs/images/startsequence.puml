@@ -1,0 +1,78 @@
+@startuml
+android -> GaaiApplication: onCreate()
+activate GaaiApplication
+GaaiApplication --> DefaultAppContainer:  <<create>>
+activate DefaultAppContainer
+DefaultAppContainer --> OfflineDevicesRepository:  <<create>>
+activate OfflineDevicesRepository
+return devicesRepository
+DefaultAppContainer --> NordicBleRepository:  <<create>>
+activate NordicBleRepository
+return bleRepositury
+return container 
+return
+... later ...
+android -> MainActivity: onCreate()
+activate MainActivity
+MainActivity -> MainActivity: setContent(GaaiTheme, Surface, GaaiApp)
+return
+... later ...
+android -> GaaiTheme: GaaiTheme()
+activate GaaiTheme
+GaaiTheme -> Surface : Surface()
+activate Surface 
+Surface -> GaaiApp: GaaiApp()
+activate GaaiApp
+GaaiApp -> GaaiNavGraph: GaaiNavHost()
+activate GaaiNavGraph
+GaaiNavGraph-> NavHost: NavHost()
+activate NavHost
+
+alt HomeScreen case
+NavHost -> HomeScreen: HomeScreen()
+activate HomeScreen
+HomeScreen -> AppViewModelProvider: Factory
+activate AppViewModelProvider
+return viewModel
+HomeScreen -> HomeViewModel: <<events>>
+activate HomeViewModel
+return
+return
+else DeviceEntry case
+NavHost -> DeviceEntryScreen: DeviceEntryScreen()
+activate DeviceEntryScreen
+DeviceEntryScreen-> AppViewModelProvider: Factory
+activate AppViewModelProvider
+return viewModel
+DeviceEntryScreen-> DeviceEntryViewModel: <<events>>
+activate DeviceEntryViewModel
+return
+return
+else DeviceDetails case
+NavHost -> DeviceDetailsScreen : DeviceDetailsScreen ()
+activate DeviceDetailsScreen 
+DeviceDetailsScreen -> AppViewModelProvider: Factory
+activate AppViewModelProvider
+return viewModel
+DeviceDetailsScreen -> DeviceDetailsViewModel : <<events>>
+activate DeviceDetailsViewModel 
+return
+return
+else BadgeList case
+NavHost -> BadgeListScreen : BadgeListScreen ()
+activate BadgeListScreen 
+BadgeListScreen -> AppViewModelProvider: Factory
+activate AppViewModelProvider
+return viewModel
+
+BadgeListScreen -> BadgeListViewModel: <<events>>
+activate BadgeListViewModel
+return
+return
+end
+return
+return
+return
+return
+return
+@enduml

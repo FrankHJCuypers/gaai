@@ -1,0 +1,447 @@
+@startuml
+class GaaiApplication {
+}
+
+class DefaultAppContainer {
+}
+
+
+interface AppContainer {
+  devicesRepository: DevicesRepository
+  bleRepository: BleRepository
+}
+
+interface DevicesRepository {
+  getAllDevicesStream(): Flow<List<Device>>
+  getDeviceStream(id: Int): Flow<Device?>
+  suspend canInsert(device: Device): Boolean
+  suspend insertDevice(device: Device)
+  suspend deleteDevice(device: Device)
+}
+
+class OfflineDevicesRepository {
+}
+
+interface DeviceDao {
+  getAllDevices(): Flow<List<Device>>
+  getDevice(id: Int): Flow<Device>
+  suspend count(mac: String): Int
+  suspend count(pn: String, sn: String): Int
+  suspend canInsert(device: Device)
+  suspend insert(device: Device)
+  suspend update(device: Device)
+  suspend delete(device: Device)
+}
+
+interface BleRepository {
+  context: Context
+  getScannerState(): Flow<BleScanResult>
+  suspend getClientBleGattConnection()
+}
+
+class NordicBleRepository {
+}
+
+class BleScanner
+
+class RoomDatabase
+class GaaiDatabase {
+}
+GaaiDatabase o-- DeviceDao: +deviceDao
+
+enum ChargerType {
+  HOME
+  MOBILE
+  UNKNOWN
+}
+
+dataclass DeviceDetails {
+  +id: Int
+  +pn: String 
+  +sn: String
+  +mac: String 
+  +serviceDataValue: Int
+}
+DeviceDetails o-- ChargerType : +type
+
+enum EntryState {
+  INPUTTING
+  ENTRY_VALID
+  SCANNING
+  DEVICE_FOUND
+  DUPLICATE_DEVICE_FOUND
+}
+
+dataclass DeviceUiState {
+  +deviceDetails: DeviceDetails 
+  +isSnValid: Boolean
+  +isPnValid: Boolean
+  +entryState: EntryState 
+}
+DeviceUiState o-- DeviceDetails : deviceDetails
+DeviceUiState o-- EntryState : entryState 
+
+class ViewModel
+
+dataclass Device {
+  +id: Int
+  +pn: String 
+  +sn: String
+  +mac: String 
+  +serviceDataValue: Int,
+}
+dataclass HomeUIState {
+  +deviceList: List<Device>
+}
+HomeUIState o-- Device:deviceList
+
+class HomeViewModel {
+  +removeDevice()
+}
+HomeViewModel  o-- HomeUIState : +homeUiState
+
+class Filter {
+  +filter: (result: BleScanResult) -> Boolean
+}
+
+dataclass WithServiceData {
+  +uuid: ParcelUuid
+  +data: ByteArray
+}
+WithServiceData <|-- Filter 
+
+class DeviceEntryViewModel{
+  +deviceUiState:DeviceUiState
+  -lateinit serviceDataFilter: WithServiceData
+  -currentJob: Job? 
+
+  +updateUiState(deviceDetails: DeviceDetails)
+  -suspend updateUiState(scanResult: BleScanResult)
+  +updateUiState(entryState: EntryState)
+  +saveDevice() 
+  +scanDevice()
+  +cancelScanDevice()
+  -filterServiceData(result: BleScanResult): Boolean
+  -getWithServiceUuidFilter(uiState: DeviceDetails = deviceUiState.deviceDetails): WithServiceData
+  +validateSn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean
+  +validatePn(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean
+  +validateInput(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean
+}
+
+DeviceEntryViewModel o-- DeviceUiState : +deviceUiState by mutableStateOf
+DeviceEntryViewModel o-- WithServiceData: -serviceDataFilter
+
+enum ConfigVersion{
+  CONFIG_1_0
+  CONFIG_1_1
+  CONFIG_CBOR
+}
+
+enum NetWorkType {
+  MONO_TRIN
+  TRI
+  UNKNOWN
+}
+
+enum Mode {
+  ECO_PRIVATE
+  MAX_PRIVATE
+  ECO_OPEN
+  MAX_OPEN
+  UNKNOWN
+}
+
+dataclass ConfigData {
+  +maxGrid: UByte
+  +maxDevice: UByte
+  +safe: UByte
+  +touWeekStart: Short
+  +touWeekEnd: Short
+  +touWeekendStart: Short
+  +touWeekendEnd: Short
+  +minDevice: UByte
+  +iCapacity: UByte
+  +val default: Boolean
+}
+ConfigData o-- ConfigVersion: +configVersion
+ConfigData o-- NetWorkType : +netWorkType 
+ConfigData o-- Mode: +mode
+
+dataClass TimeData {
+  +time: UInt
+}
+
+class ClientBleGatt
+
+class ClientBleGattCharacteristic
+
+dataclass DeviceInformation {
+  +modelNumber: String 
+  +serialNumber: String 
+  +firmwareRevision: String 
+  +hardwareRevision: String 
+}
+
+enum ConnectionState {
+  UNKNOWN
+  CONNECTING
+  DISCOVERING
+  CONNECTED
+  NOT_CONNECTED
+}
+
+
+enum Discriminator {
+  STARTED
+  CHARGING
+  STOPPED
+  UNKNOWN
+}
+
+enum Status {
+  PLUGGED
+  CHARGING
+  FAULT
+  UNKNOWN
+}
+
+dataclass DeviceState 
+DeviceState o-- ConnectionState: +connectionState 
+
+dataclass ChargingBasicData {
+  +seconds: UShort
+  +rawStatus: Byte
+  +energy: UInt
+  +phaseCount: UByte
+}
+ChargingBasicData o-- Discriminator: +discriminator
+ChargingBasicData o-- Status: +status
+
+
+dataclass ChargingGridData {
+  +timestamp: UInt
+  +l1: Short
+  +l2: Short 
+  +l3: Short
+  +consumed: Short
+  +interval: UShort 
+}
+
+dataclass ChargingCarData {
+  +timestamp: UInt 
+  +l1: Short 
+  +l2: Short 
+  +l3: Short 
+  +p1: Short
+  +p2: Short
+  +p3: Short
+}
+
+enum AuthorizationStatus {
+  UNAUTHORIZED
+  AUTHORIZED_DEFAULT
+  AUTHORIZED_MAX
+  AUTHORIZED_ECO
+  CHARGE_STOPPED_IN_APP
+  CHARGE_PAUSED
+}
+
+dataclass ChargingAdvancedData {
+  +timestamp: UInt
+  +iAvailable: Short
+  +gridPower: Int
+  +carPower: Int
+  +errorCode: Byte 
+}
+ChargingAdvancedData o-- AuthorizationStatus : +authorizationStatus
+
+dataclass DeviceDetailsViewState {
+  +deviceName: String
+}
+DeviceDetailsViewState o-- DeviceState: +deviceState
+DeviceDetailsViewState o-- DeviceInformation: +deviceInformation
+DeviceDetailsViewState o-- ChargingBasicData: +chargingBasicData
+DeviceDetailsViewState o-- ChargingGridData: +chargingGridData
+DeviceDetailsViewState o-- ChargingCarData: +chargingCarData
+DeviceDetailsViewState o-- ChargingAdvancedData: +chargingAdvancedData
+DeviceDetailsViewState o-- ConfigData: +configData
+DeviceDetailsViewState o-- TimeData: +timeData
+
+class DeviceDetailsViewModel {
+  +savedStateHandle: SavedStateHandle
+  +deviceId: Int 
+
+  init()
+  -startGattClient(gaaiDevice: Device) 
+  -suspend configureGatt(gaaiDevice: Device, services: ClientBleGattServices)
+  -suspend writeNewConfigData() 
+  -suspend writeNewTimeData() 
+  -suspend writeNewConfigDataToGenericData(newConfigData: ConfigData)
+  -suspend writeNewTimeDataToGenericData(newTimeData: TimeData)
+  -suspend writeNewDataToGenericData(newData: DataByteArray)
+  -suspend sendConfigOperationGet()
+  -suspend sendTimeOperationGet()
+  -suspend sendTimeOperationSet()
+  -suspend writeGenericCommand(command: Int)
+  +navigateUp(navigateUp: () -> Unit)
+  +sendConfigOperationSetTouWeek(touPeriodWeek: TouPeriod)
+  +sendConfigOperationSetTouWeekend(touPeriodWeekend: TouPeriod)
+  +sendConfigOperationSetMaxGrid(maxGrid: UByte) 
+  +sendConfigOperationSetMaxDevice(maxDevice: UByte)
+  +sendConfigOperationSetSafe(safe: UByte)
+  +sendConfigOperationSetMode(mode: Mode)
+  +sendConfigOperationSetICapacity(iCapacity: UByte)
+  +sendTimeOperationSyncTime() 
+  +sendTimeOperationGetTime()
+  -suspend sendConfigOperationSet()
+  -getDevice(deviceId: Int) 
+  +sendLoaderOperation(loaderOperation: Int) 
+  -updateDeviceState(deviceState: DeviceState)
+}
+DeviceDetailsViewModel o-- Device: -gaaiDevice
+DeviceDetailsViewModel o-- Device: -_device
+DeviceDetailsViewModel o-- Device: +device
+DeviceDetailsViewModel o-- ClientBleGatt: -client
+DeviceDetailsViewModel o-- "*"ClientBleGattCharacteristic: -deviceNameCharacteristic\n\
+  modelNumberStringCharacteristic\n\
+  serialNumberStringCharacteristic\n\
+  firmwareRevisionStringCharacteristic\n\
+  hardwareRevisionStringCharacteristic\n\
+  nexxtenderHomeChargingBasicDataCharacteristic\n\
+  nexxtenderHomeChargingGridDataCharacteristic\n\
+  nexxtenderHomeChargingCarDataCharacteristic\n\
+  nexxtenderHomeChargingAdvancedDataCharacteristic\n\
+  nexxtenderHomeGenericCommandCharacteristic\n\
+  nexxtenderHomeGenericStatusCharacteristic\n\
+  nexxtenderHomeGenericDataCharacteristic
+  
+DeviceDetailsViewModel o-- ConfigVersion: -configVersion
+DeviceDetailsViewModel o-- ConfigData: -newConfigData
+DeviceDetailsViewModel o-- TimeData: -newTimeData
+DeviceDetailsViewModel o-- DeviceDetailsViewState: -_state
+DeviceDetailsViewModel o-- DeviceDetailsViewState: +state
+
+enum ChargeType {
+  DEFAULT
+  MAX
+  UNKNOWN
+}
+
+dataclass Badge {
+  +uuid: ByteArray
+}
+Badge o-- ChargeType : +chargeType 
+
+Device o-- ChargerType : +type
+
+dataclass BadgeDeviceUiState {
+  +statusId: Int
+}
+BadgeDeviceUiState  o-- Device: +device
+
+interface IBadgeListListener {
+  badgeListChanged(badgeList: List<Badge>)
+}
+
+interface IBadgeListManager {
+  register(listener: IBadgeListListener)
+  unregister(listener: IBadgeListListener)
+}
+IBadgeListManager  --> IBadgeListListener 
+
+class BadgeListManager {
+  +emitNewBadgeList(badgeList: List<Badge>)
+}
+
+BadgeListManager <|.. IBadgeListManager
+BadgeListManager o-- "*" IBadgeListListener: -listeners
+ 
+dataclass BadgeListUiState {
+
+}
+BadgeListUiState  o-- "*" Badge: badgeList
+
+class BadgeListViewModel {
+  +savedStateHandle: SavedStateHandle
+  -deviceId: Int 
+  badgeListUiState: StateFlow<BadgeListUiState>
+
+  -initBadgeDeviceUiState(device:Device)
+  -updateBadgeDeviceUiState(statusId: Int)
+  -badgeListFlow(badgeListManager: IBadgeListManager): Flow<List<Badge>>
+  +init()
+  -startGattClient(gaaiDevice: Device)
+  -suspend configureGatt(services: ClientBleGattServices)
+  -suspend startGettingNewBadgeList()
+  -suspend sendBadgeListStart()
+  -suspend sendBadgeListNext()
+  -suspend sendBadgeAddMax()
+  -suspend sendBadgeAddDefault() 
+  -suspend sendBadgeDelete()
+  -suspend writeGenericCommand(command: Int)
+  +deleteBadge(badge: Badge)
+  +addBadge(chargeType: ChargeType)
+  -getDevice(deviceId: Int): Device
+}
+
+BadgeListViewModel  o-- "1" Badge: -lateinit badgeToDelete
+BadgeListViewModel  o-- Device: -gaaiDevice
+BadgeListViewModel  o-- BadgeDeviceUiState: +badgeDeviceUiState
+BadgeListViewModel  o-- BadgeListUiState: +badgeListUiState
+BadgeListViewModel  o-- "*" Badge: -badgeList 
+BadgeListViewModel  o-- BadgeListManager : -badgeListManager 
+BadgeListViewModel o-- ClientBleGatt: -client
+BadgeListViewModel o-- "*"ClientBleGattCharacteristic: -nexxtenderHomeGenericCommandCharacteristic\n\
+  nexxtenderHomeGenericStatusCharacteristic\n\
+  nexxtenderHomeGenericDataCharacteristic
+
+dataClass BadgeDeviceUiState {
+}
+
+class Mainactivity {
+ onCreate(savedInstanceState: Bundle?)
+}
+
+class HomeScreen <<Local Function>>
+class DeviceEntryScreen <<Local Function>>
+class DeviceDetailsScreen <<Local Function>>
+class BadgeListScreen <<Local Function>>
+class ComponentActvity
+class GaaiApp <<Local function>>
+class GaaiNavHost  <<Local function>>
+class GaaiTheme<<Local function>>
+
+Mainactivity<|-- ComponentActvity
+OfflineDevicesRepository <|.. DevicesRepository 
+
+HomeScreen  *-- HomeViewModel 
+HomeViewModel <|-- ViewModel 
+HomeViewModel o--  DevicesRepository
+
+DeviceEntryScreen *-- DeviceEntryViewModel
+DeviceEntryViewModel <|-- ViewModel 
+DeviceEntryViewModel o--  DevicesRepository: -devicesRepository
+DeviceEntryViewModel o--  BleRepository: -bleRepository
+
+BadgeListScreen *-- BadgeListViewModel
+DeviceDetailsViewModel <|-- ViewModel 
+DeviceDetailsViewModel o--  DevicesRepository: -devicesRepository
+DeviceDetailsViewModel o--  BleRepository: -bleRepository
+
+DeviceDetailsScreen *-- DeviceDetailsViewModel
+BadgeListViewModel <|-- ViewModel 
+BadgeListViewModel o--  DevicesRepository: -devicesRepository
+BadgeListViewModel o--  BleRepository: -bleRepository
+
+DefaultAppContainer <|.. AppContainer 
+GaaiApplication o-- DefaultAppContainer : +container
+OfflineDevicesRepository o-- DeviceDao : *devicedao
+DefaultAppContainer o-- OfflineDevicesRepository : +offlineDevicesRepository(deviceDao)
+
+NordicBleRepository <|.. BleRepository 
+DefaultAppContainer o-- NordicBleRepository : +NordicBleRepository (BleScanner)
+BleRepository o-- BleScanner : +scanner
+
+GaaiDatabase <|-- RoomDatabase: scanner
+
+@enduml
