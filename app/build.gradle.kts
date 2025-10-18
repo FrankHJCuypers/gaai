@@ -1,7 +1,9 @@
+import org.gradle.kotlin.dsl.testImplementation
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.io.FileInputStream
 import java.nio.file.Paths
 import java.util.Properties
+
 
 plugins {
   alias(libs.plugins.android.application)
@@ -155,6 +157,9 @@ dependencies {
 
   testImplementation(libs.junit)
   testImplementation(libs.junit.jupiter)
+  testImplementation(libs.mockk)
+  testImplementation(libs.kotlinx.coroutines.test)
+
   testRuntimeOnly(libs.junit.platform.launcher)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
@@ -163,9 +168,10 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
   implementation(kotlin("script-runtime"))
-  testImplementation(libs.mockk)
+
 
   runtimeOnly(libs.android.documentation.plugin)
+  testImplementation(kotlin("test"))
 }
 
 dokka {
