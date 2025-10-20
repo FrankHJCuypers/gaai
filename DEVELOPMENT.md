@@ -310,6 +310,7 @@ The following GitHub actions are defined:
 
 On every push to the GitHub repository, this action execute's `./gradlew build` and uploads the generated
 signed APK to the build artifacts.
+It also publishes the code coverage on [Codecov](https://app.codecov.io/github/FrankHJCuypers/gaai).
 
 ### pages-build-deployment
 
