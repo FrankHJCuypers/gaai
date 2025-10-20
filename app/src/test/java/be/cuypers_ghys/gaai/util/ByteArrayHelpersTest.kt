@@ -18,6 +18,10 @@ package be.cuypers_ghys.gaai.util
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
+/**
+ * JUnit tests for [ByteArray] helpers in [ByteArrayHelpers.kt].
+ * @author Frank HJ Cuypers
+ */
 class ByteArrayHelpersTest {
 
   @Test

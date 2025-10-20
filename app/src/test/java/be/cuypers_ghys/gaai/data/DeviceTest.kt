@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 /**
+ * JUnit tests for [Device].
  * @author Frank HJ Cuypers
  */
 class DeviceTest {

@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 /**
+ * JUnit tests for [BadgeParser].
  * @author Frank HJ Cuypers
  */
 class BadgeParserTest {

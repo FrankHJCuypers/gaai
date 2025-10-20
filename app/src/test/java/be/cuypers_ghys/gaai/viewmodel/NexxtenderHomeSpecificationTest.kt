@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024-2025, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -23,6 +23,10 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.UUID
 import java.util.stream.Stream
 
+/**
+ * JUnit tests for the [NexxtenderHomeSpecification] class.
+ * @author Frank HJ Cuypers
+ */
 class NexxtenderHomeSpecificationTest {
 
   @ParameterizedTest
