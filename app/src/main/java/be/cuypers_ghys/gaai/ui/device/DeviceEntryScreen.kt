@@ -112,7 +112,7 @@ fun DeviceEntryScreen(
  * @param canNavigateUp Is the [DeviceEntryScreen] allowed to navigate back?
  * @param deviceUiState The device state determined by the [DeviceEntryViewModel].
  * @param onDeviceValueChange Function to be called when any of the values in the entry screen changes.
- * @param onEntryStatusChange Function to called when teh entryStatus changed.
+ * @param onEntryStatusChange Function to be called when the entryStatus changed.
  * @param scanDevice Function called to start a BLE scan for the specified device.
  * @param cancelScanDevice Function called to stop the BLE scan.
  * @param saveDevice Inserts the found device in the database.

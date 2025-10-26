@@ -1,0 +1,68 @@
+@startuml
+DeviceEntryScreen --> RequireBluetooth : RequireBluetooth()
+activate RequireBluetooth
+RequireBluetooth --> DeviceEntryScreenNoViewModel : DeviceEntryScreenNoViewModel()
+activate DeviceEntryScreenNoViewModel
+DeviceEntryScreenNoViewModel --> DeviceEntryBody: DeviceEntryBody()
+activate DeviceEntryBody
+DeviceEntryBody --> DeviceEntryBody: onValueChange
+activate DeviceEntryBody
+DeviceEntryBody --> DeviceEntryViewModel: updateUiState() 
+activate DeviceEntryViewModel
+alt sn & pn valid case
+DeviceEntryViewModel --> DeviceEntryViewModel: deviceUiState.entryState = ENTRY_VALID
+else sn or pn invalid case
+DeviceEntryViewModel --> DeviceEntryViewModel: deviceUiState.entryState = INPUTTING
+end
+return deviceUiState
+return
+DeviceEntryBody --> DeviceEntryBody: onButtonClick()
+activate DeviceEntryBody
+alt deviceUiState.entryState == ENTRY_VALID
+DeviceEntryBody --> DeviceEntryViewModel : scanDevice()
+activate DeviceEntryViewModel
+DeviceEntryViewModel --> DeviceEntryViewModel: deviceUiState.entryState = SCANNING
+DeviceEntryViewModel --> NordicBleRepository: currentJob = getScannerState()
+activate NordicBleRepository
+NordicBleRepository --> BleScanner : scan()
+activate BleScanner
+return Flow<BleScanResult>
+return
+DeviceEntryViewModel --> DeviceEntryViewModel: filter on ServiceData and hexSerialNumber
+
+alt if device found
+DeviceEntryViewModel --> DeviceEntryViewModel : updateUiState
+activate DeviceEntryViewModel
+DeviceEntryViewModel --> DeviceRepository: canInsert()
+activate DeviceRepository
+return canInsert?
+alt canInsert
+DeviceEntryViewModel --> DeviceEntryViewModel: deviceUiState.entryState = DEVICE_FOUND
+else !canInsert
+DeviceEntryViewModel --> DeviceEntryViewModel: deviceUiState.entryState = DUPLICATE_DEVICE_FOUND
+end
+activate DeviceEntryViewModel
+
+return
+return deviceUiState
+end
+else deviceUiState.entryState == INPUTTING
+else deviceUiState.entryState == SCANNING or DUPLICATE_DEVICE_FOUND case
+DeviceEntryBody --> DeviceEntryViewModel : cancelScanDevice()
+activate DeviceEntryViewModel
+DeviceEntryViewModel --> DeviceEntryViewModel: deviceUiState.entryState = ENTRY_VALID
+DeviceEntryViewModel --> DeviceEntryViewModel: currentJob.cancel()
+return
+else deviceUiState.entryState == DEVICE_FOUND
+DeviceEntryBody --> DeviceEntryViewModel: saveDevice()
+activate DeviceEntryViewModel
+DeviceEntryViewModel -> DeviceRepository: insertDevice()
+activate DeviceRepository
+return
+return
+end
+return
+return
+return
+return
+@enduml

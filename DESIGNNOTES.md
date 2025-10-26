@@ -50,5 +50,90 @@ This sequence diagram represents the actions on Gaai startup, including the depe
     - **DeviceDetailsViewModel**
     - **BadgeListViewmodel**
 
+## Device Entry
+
+The DeviceEntryScreen shows a PN and an SN Text field in which the user must enter the corresponding data of the 
+Nexxtender charger.
+The DeviceEntryViewModel computes a new DeviceUiState for each change of PN or SN.
+DeviceUiState tracks amongst others
+- DeviceDetails, including PN, SN, MAC, ...
+- validity of PN and SN
+- the EntryState
+
+DeviceEntryScreen also shows an action button.
+Label and action of the button depends on the Entry State.
+
+### Device Entry state diagram
+
+The state diagram for the EntryState is given in the next diagram.
+
+![device entry state](docs/images/deviceuientrystate.svg)
+
+The possible state are:
+
+- `INPUTTING`: the user has not entered a valid SN and PN.
+  This is the initial state.
+  The button stays grayed out.
+- `ENTRY_VALID`: the user has entered a valid SN and PN.
+  The *Scan device* button becomes active.
+- `SCANNING`: the device is scanning the BLE advertisements for a device that matches the specified SN.
+  No such device is found yet.
+  The *Cancel scanning* button becomes active.
+- `DEVICE_FOUND`: a device with the specified SN was found while scanning and it does not exist yet
+   in the apps database.
+  The *Save* button becomes active.
+- `DUPLICATE_DEVICE_FOUND`: a device with the specified SN was found while scanning but it already exists
+  in the apps database.
+  The *Cancel scanning* button becomes active.
+
+The following transitions are defined
+
+- In any state, changing PN or SN transitions the EntryState to `INPUTTING` or `ENTRY_VALID` depending on the PN and SN
+  being valid or not.
+- Pressing the *Scan device* button in the `ENTRY_VALID` EntryState transitions the state to `SCANNING`.
+- Pressing the *Cancel scanning* button in the EntryState `SCANNING` or `DUPLICATE_DEVICE_FOUND` transitions 
+  the state to `ENTRY_VALID`.
+- Pressing the *Save* button in the `DEVICE_FOUND` EntryState saves the entry to persistent storage and 
+  transitions to the final state.
+
+### Device Entry sequence diagram
+
+This sequence diagram represents the actions while creating a new device entry.
+
+![device entry sequence](docs/images/blescansequence.svg)
+
+- The user types the "+" button in the **HomeScreen**. Gaai navigates to the  **DeviceEntryScreen**.
+- **DeviceEntryScreen** calls  **DeviceEntryBody**
+- **DeviceEntryBody** allows to enter the SN and PN of the device to connect to.
+- **DeviceEntryBody** forwards SN and PN to the **DeviceEntryViewModel** in order to verify the SN and PN.
+- If the user clicks the *Scan device* button,
+  - **DeviceEntryBody** performs a *scanDevice()* on **DeviceEntryViewModel**
+  - **DeviceEntryViewModel** sets the EntryState to `SCANNING`.
+  - **DeviceEntryViewModel** will scan for all devices using **NordicBleRepository** and **BleScanner**.
+    They will return a Flow of devices based on their advertisement messages.
+  - **DeviceEntryViewModel** filters out the required device from the Flow, 
+    based on a specific service data in the advertisement message and the device hexDecimalNumber 
+    (which is based on the SN)
+  - If a matching device is found,
+    **DeviceEntryViewModel** determines if the found device already exists in the **DeviceRepository**.
+    If the device already exists, the EntryState is set to `DUPLICATE_DEVICE_FOUND`
+    Otherwise the EntryState is set to `DEVICE_FOUND` and the *Save* button becomes active.
+- if the user clicks the *Cancel Scanning*, 
+  the job executing the scanning is cancelled and the EntryState is set to `ENTRY_VALID` 
+- If the user clicks the *Save* button, 
+  - **DeviceEntryBody** performs a *saveDevice()* on **DeviceEntryViewModel**.
+  - **DeviceEntryViewModel** performs a *insertDevice()* on **DeviceRepository.**.
+  - **DeviceEntryBody** navigates back.
+
+## BleRepository design
+
+BleRepository.getScannerState() returns a flow of BleScanResult items.
+BleScanResult is part of the Nordic Semiconductor Kotlin-BLE-Library.
+The BleRepsoitory should hide the library for the rest of the Gaai app;
+currently that is not the case.
+
+It would be better that
+- getScannerState() returns a flow of DeviceDetails().
+- getScannerState() includes the filtering on the Flow<BleScanResult> that is currently done in DeviceEntryViewModel.scanDevice
 
 
