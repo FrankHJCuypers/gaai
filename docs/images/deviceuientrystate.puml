@@ -1,0 +1,17 @@
+@startuml
+
+state EntryState {
+  state "*" as ANYSTATE
+  [*] --> INPUTTING
+  INPUTTING --> ENTRY_VALID
+  ENTRY_VALID --> SCANNING: Scan Device button
+  SCANNING --> DEVICE_FOUND: matching device found
+  DEVICE_FOUND --> [*]: Save Device button
+  SCANNING --> DUPLICATE_DEVICE_FOUND: duplicate matching device found
+  SCANNING --> ENTRY_VALID: Cancel Scanning button
+  DUPLICATE_DEVICE_FOUND --> ENTRY_VALID: Cancel Scanning button
+  ANYSTATE --> INPUTTING: SN or PN not valid
+  ANYSTATE --> ENTRY_VALID: SN and PN valid
+}
+
+@enduml

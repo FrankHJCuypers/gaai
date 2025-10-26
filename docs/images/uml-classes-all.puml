@@ -33,18 +33,145 @@ interface DeviceDao {
   suspend delete(device: Device)
 }
 
+package no.nordicsemi.android.kotlin.ble {
+  package scanner {
+    class BleScanner {
+      +context: Context
+      -bluetoothManager: BluetoothManager
+      -bluetoothAdapter: BluetoothAdapter 
+      -bluetoothLeScanner: BluetoothLeScanner?
+      +scan(filters: List<BleScanFilter> , settings: BleScannerSettings): Flow<BleScanResult>
+    }
+  }
+  
+  package client.main {
+    package callback {
+      class ClientBleGatt {
+        -gatt: GattClientAPI
+        -scope: CoroutineScope
+        -mutex: MutexWrapper
+        -bufferSize: Int
+        ...
+        +isConnected: Boolean
+        ...
+        +discoverServices(): ClientBleGattServices
+        +{static} suspend connect(context: Context,macAddress: String, scope: CoroutineScope, options: BleGattConnectOptions):ClientBleGatt
+      }
+    }
+    package service {
+      class ClientBleGattCharacteristic {
+        -gatt: GattClientAPI
+        -characteristic: IBluetoothGattCharacteristic
+        -mutex: MutexWrapper
+        -connectionProvider: ConnectionProvider
+        +uuid = characteristic.uuid
+        +instanceId : Int
+        +descriptors: 
+        +permissions: List<BleGattPermission> 
+        +properties: List<BleGattProperty>
+        +suspend getNotifications(bufferSize: Int = 0,bufferOverflow: BufferOverflow):Flow<DataByteArray>
+        +suspend read(): DataByteArray
+        
+      }
+      dataclass ClientBleGattService {
+        -gatt: GattClientAPI
+        -service: IBluetoothGattService
+        -mutex: MutexWrapper
+        -connectionProvider: ConnectionProvider
+        +findCharacteristic(uuid: UUID, instanceId: Int? ): ClientBleGattCharacteristic
+      }
+
+      dataclass ClientBleGattServices {
+        -gatt: GattClientAPI
+        -androidGattServices: List<IBluetoothGattService>
+        -mutex: MutexWrapper
+        -connectionProvider: ConnectionProvider
+        +findService(uuid: UUID): ClientBleGattService?
+      }
+    }
+  }
+  
+  package core {
+    package data {
+      enum BondState{
+        NONE
+        BONDING
+        BONDED
+      }
+    }
+    interface BleDevice {
+      +name: String?
+      +address: String
+      +bondState: BondState
+      +isBonded(): Boolean
+      +isBonding: Boolean
+      +hasName(): Boolean
+    }
+    BleDevice o-- BondState: bondState
+    
+    interface ServerDevice {
+    }
+    ServerDevice <|-- BleDevice
+    
+    package scanner {
+      dataclass BleScanResult {
+        +device: ServerDevice
+        +data: BleScanResultData?
+      }
+      BleScanResult o-- ServerDevice: device
+
+      enum BleScanDataStatus {
+        DATA_COMPLETE
+        DATA_TRUNCATED
+      }
+
+      dataclass BleScanRecord {
+        +advertiseFlag: Int
+        +serviceUuids: List<ParcelUuid>?
+        +serviceData: Map<ParcelUuid, DataByteArray>
+        +serviceSolicitationUuids: List<ParcelUuid>
+        +deviceName: String?
+        +txPowerLevel: Int?
+        +bytes: DataByteArray?
+        + manufacturerSpecificData: SparseArray<DataByteArray>
+      }
+    
+      dataclass BleScanResultData {
+        +rssi: Int
+        +timestampNanos: Long
+        +scanRecord: BleScanRecord?
+        +advertisingSid: Int?
+        +primaryPhy: BleGattPrimaryPhy?
+        +secondaryPhy: BleGattPhy?
+        +txPower: Int?
+        +periodicAdvertisingInterval: Int?
+        +isLegacy: Boolean?
+        +isConnectable: Boolean?
+        +dataStatus: BleScanDataStatus?
+      }
+      BleScanResultData o-- BleScanDataStatus: dataStatus
+      BleScanResult o-- BleScanResultData: data
+      BleScanResultData o-- BleScanRecord: scanRecord
+    }
+  }
+}
+
 interface BleRepository {
   context: Context
+  scanner: BleScanner
   getScannerState(): Flow<BleScanResult>
-  suspend getClientBleGattConnection()
+  suspend getClientBleGattConnection(macAddress: String,scope: CoroutineScope, options: BleGattConnectOptions) : ClientBleGatt
 }
 
 class NordicBleRepository {
 }
 
-class BleScanner
 
-class RoomDatabase
+
+package Room <<Database>> {
+	class RoomDatabase
+}
+
 class GaaiDatabase {
 }
 GaaiDatabase o-- DeviceDao: +deviceDao
@@ -171,9 +298,6 @@ dataClass TimeData {
   +time: UInt
 }
 
-class ClientBleGatt
-
-class ClientBleGattCharacteristic
 
 dataclass DeviceInformation {
   +modelNumber: String 
@@ -265,10 +389,12 @@ DeviceDetailsViewState o-- ChargingGridData: +chargingGridData
 DeviceDetailsViewState o-- ChargingCarData: +chargingCarData
 DeviceDetailsViewState o-- ChargingAdvancedData: +chargingAdvancedData
 DeviceDetailsViewState o-- ConfigData: +configData
-DeviceDetailsViewState o-- TimeData: +timeData
+DeviceDetailsViewState o-- TimeData: +file:/C:/Users/frank/StudioProjects/gaai/app/src/main/java/be/cuypers_ghys/gaai/data/Device.kttimeData
 
 class DeviceDetailsViewModel {
   +savedStateHandle: SavedStateHandle
+  -devicesRepository: DevicesRepository
+  -bleRepository: BleRepository
   +deviceId: Int 
 
   init()
@@ -391,6 +517,7 @@ BadgeListViewModel  o-- BadgeListUiState: +badgeListUiState
 BadgeListViewModel  o-- "*" Badge: -badgeList 
 BadgeListViewModel  o-- BadgeListManager : -badgeListManager 
 BadgeListViewModel o-- ClientBleGatt: -client
+BadgeListViewModel --> ClientBleGatt: -discoverServices()
 BadgeListViewModel o-- "*"ClientBleGattCharacteristic: -nexxtenderHomeGenericCommandCharacteristic\n\
   nexxtenderHomeGenericStatusCharacteristic\n\
   nexxtenderHomeGenericDataCharacteristic
@@ -427,6 +554,11 @@ BadgeListScreen *-- BadgeListViewModel
 DeviceDetailsViewModel <|-- ViewModel 
 DeviceDetailsViewModel o--  DevicesRepository: -devicesRepository
 DeviceDetailsViewModel o--  BleRepository: -bleRepository
+DeviceDetailsViewModel --> ClientBleGattServices: -findService()
+DeviceDetailsViewModel --> ClientBleGattService: -findCharacteristic()
+DeviceDetailsViewModel --> ClientBleGattCharacteristic: +read()
+DeviceDetailsViewModel --> ClientBleGattCharacteristic: +write()
+DeviceDetailsViewModel --> ClientBleGattCharacteristic: +getNotifications()
 
 DeviceDetailsScreen *-- DeviceDetailsViewModel
 BadgeListViewModel <|-- ViewModel 
@@ -439,9 +571,11 @@ OfflineDevicesRepository o-- DeviceDao : *devicedao
 DefaultAppContainer o-- OfflineDevicesRepository : +offlineDevicesRepository(deviceDao)
 
 NordicBleRepository <|.. BleRepository 
+NordicBleRepository --> ClientBleGatt
+
 DefaultAppContainer o-- NordicBleRepository : +NordicBleRepository (BleScanner)
 BleRepository o-- BleScanner : +scanner
-
-GaaiDatabase <|-- RoomDatabase: scanner
+BleRepository --> BleScanResult 
+GaaiDatabase <|-- RoomDatabase
 
 @enduml
