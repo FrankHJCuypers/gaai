@@ -345,8 +345,8 @@ class DeviceDetailsViewModel(
 
           // NOTE: Nexxtender Home seems to never send a TIME_STATUS_SUCCESS
           TIME_STATUS_SUCCESS -> {
-            // Read configuration to sync with changes
-            sendConfigOperationGet()
+            // Read time to sync with changes
+            sendTimeOperationGet()
           }
 
 
