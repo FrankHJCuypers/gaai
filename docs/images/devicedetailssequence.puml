@@ -1,0 +1,175 @@
+@startuml
+== Initialization ==
+DeviceHomeScreen -> GaaiNavHost: navigate to DeviceDetailsDestination with id of device
+activate GaaiNavHost
+GaaiNavHost -> DeviceDetailsScreen
+activate DeviceDetailsScreen
+DeviceDetailsScreen -> DeviceDetailsViewModel : create()
+activate DeviceDetailsViewModel
+DeviceDetailsViewModel -> DeviceDetailsViewModel: get deviceId set by GaaiNavHost
+DeviceDetailsViewModel -> DeviceDetailsViewModel: getDevice()
+activate DeviceDetailsViewModel
+DeviceDetailsViewModel -> DeviceRepository: getDeviceStream(id).first
+activate DeviceRepository
+return device
+return device
+DeviceDetailsViewModel -> DeviceDetailsViewModel : init()
+activate DeviceDetailsViewModel
+DeviceDetailsViewModel -> DeviceDetailsViewModel : startGattClient()
+activate DeviceDetailsViewModel
+DeviceDetailsViewModel -> BleRepository: getClientBleGattConnection(): ClientBleGatt
+activate BleRepository
+return client
+loop all required services and characteristics
+DeviceDetailsViewModel -> ClientBleGatt: discoverServices(): ClientBleGattServices
+activate ClientBleGatt
+return services: ClientBleGattServices
+DeviceDetailsViewModel -> DeviceDetailsViewModel: configureGatt()
+activate DeviceDetailsViewModel
+DeviceDetailsViewModel -> ClientBleGattServices: findService()
+activate ClientBleGattServices
+return service:  ClientBleGattService
+DeviceDetailsViewModel -> ClientBleGattService: findCharacteristic()
+activate ClientBleGattService
+return characteristic: ClientBleGattCharacteristic
+return
+end
+
+participant ClientBleGattCharacteristic [
+    ClientBleGattCharacteristic
+    ----
+    All others
+]
+
+loop deviceName, modelNumber, serialNumber, firmwareRevision, hardwareRevision, deviceInformation  
+DeviceDetailsViewModel ->  ClientBleGattCharacteristic: read()
+activate ClientBleGattCharacteristic
+return data
+DeviceDetailsViewModel -> DeviceDetailsViewModel: update DeviceDetailsViewState with new data
+end
+
+loop chargingBasicData, chargingGridData, chargingCarData, chargingAdvancedData
+DeviceDetailsViewModel ->  ClientBleGattCharacteristic: getNotifications()
+end
+participant ClientBleGattCharacteristic3 [
+    ClientBleGattCharacteristic
+    ----
+    Generic Status
+]
+
+DeviceDetailsViewModel ->  ClientBleGattCharacteristic3: getNotifications()
+participant ClientBleGattCharacteristic2 [
+    ClientBleGattCharacteristic
+    ----
+    Generic Command
+]
+
+participant ClientBleGattCharacteristic4 [
+    ClientBleGattCharacteristic
+    ----
+    Generic Data
+]
+
+DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write CONFIG_OPERATION_(CBOR_)GET
+activate ClientBleGattCharacteristic2
+return
+return
+return
+return
+DeviceDetailsScreen -> DeviceDetailsViewModel : get deviceId:Int
+activate DeviceDetailsViewModel
+return deviceId
+DeviceDetailsScreen -> DeviceDetailsViewModel : get state:StateFlow<DeviceDetailsViewState>
+activate DeviceDetailsViewModel
+return state:collectAsStateWithLifecycle 
+DeviceDetailsScreen -> DeviceDetailsViewModel : get device:StateFlow<Device>
+activate DeviceDetailsViewModel
+return device:collectAsStateWithLifecycle 
+DeviceDetailsScreen -> RequireBluetooth : RequireBluetooth()
+activate RequireBluetooth
+RequireBluetooth -> DeviceDetailsScreenNoViewModel : DeviceDetailsScreenNoViewModel()
+activate DeviceDetailsScreenNoViewModel
+DeviceDetailsScreenNoViewModel -> DeviceDetailsBody : DeviceDetailsBody()
+activate DeviceDetailsBody
+DeviceDetailsBody -> DeviceDetailsBody : update screen with info from DeviceDetailsViewState
+return
+return
+return
+== Data notifications ==
+ClientBleGattCharacteristic ->> DeviceDetailsViewModel: notify new data
+activate DeviceDetailsViewModel
+DeviceDetailsViewModel -> DeviceDetailsViewModel: update state:DeviceDetailsViewState
+DeviceDetailsViewModel -> DeviceDetailsBody 
+activate DeviceDetailsBody
+DeviceDetailsBody -> DeviceDetailsBody : update screen with info from DeviceDetailsViewState
+return
+deactivate DeviceDetailsViewModel
+== Time Get command ==
+DeviceDetailsBody -> DeviceDetailsViewModel: 
+note left: user selects Get Time
+DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write TIME_OPERATION_GET
+activate ClientBleGattCharacteristic2
+return
+== Time Sync command ==
+DeviceDetailsBody -> DeviceDetailsViewModel: 
+note left: user selects Sync Time
+DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write TIME_OPERATION_SET
+activate ClientBleGattCharacteristic2
+return
+== Config Set command ==
+DeviceDetailsBody -> DeviceDetailsViewModel: 
+note left: user changes some value in the configData in Config Data Card
+DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write CONFIG_OPERATION_(CBOR_)SET
+activate ClientBleGattCharacteristic2
+return
+== Loader command ==
+DeviceDetailsBody -> DeviceDetailsViewModel: 
+note left: user selects an operation in the Loader Data Card
+DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write loader operation
+activate ClientBleGattCharacteristic2
+return
+
+== Generic notifications ==
+ClientBleGattCharacteristic3 ->> DeviceDetailsViewModel: notify new status
+activate DeviceDetailsViewModel
+alt CONFIG_STATUS_POPPED, CONFIG_STATUS_POPPED_CBOR
+DeviceDetailsViewModel -> ClientBleGattCharacteristic4: read()
+activate ClientBleGattCharacteristic4
+return configData
+DeviceDetailsViewModel -> DeviceDetailsViewModel: update state:DeviceDetailsViewState with configData
+DeviceDetailsViewModel -> DeviceDetailsBody 
+activate DeviceDetailsBody
+DeviceDetailsBody -> DeviceDetailsBody : update screen with info from DeviceDetailsViewState
+return
+else CONFIG_STATUS_READY, CONFIG_STATUS_READY_CBOR
+DeviceDetailsViewModel -> ClientBleGattCharacteristic4: write new configData
+activate ClientBleGattCharacteristic4
+return
+else CONFIG_STATUS_SUCCESS, CONFIG_STATUS_SUCCESS_CBOR
+DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write CONFIG_OPERATION_(CBOR_)GET
+note left: Read configuration to sync with changes
+activate ClientBleGattCharacteristic2
+return
+else TIME_STATUS_POPPED 
+DeviceDetailsViewModel -> ClientBleGattCharacteristic4: read()
+activate ClientBleGattCharacteristic4
+return time
+DeviceDetailsViewModel -> DeviceDetailsViewModel: update state:DeviceDetailsViewState with time
+DeviceDetailsViewModel -> DeviceDetailsBody 
+activate DeviceDetailsBody
+DeviceDetailsBody -> DeviceDetailsBody : update screen with info from DeviceDetailsViewState
+return
+else TIME_STATUS_READY
+DeviceDetailsViewModel -> ClientBleGattCharacteristic4: write new time
+activate ClientBleGattCharacteristic4
+return
+else LOADER_STATUS_UNLOCKED, LOADER_STATUS_UNLOCKED_FORCE_MAX, LOADER_STATUS_UNLOCKED_FORCE_ECO
+DeviceDetailsViewModel -> DeviceDetailsViewModel : nop
+else TIME_STATUS_SUCCESS
+DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write TIME_OPERATION_GET
+activate ClientBleGattCharacteristic2
+return
+end 
+return
+return
+@enduml
