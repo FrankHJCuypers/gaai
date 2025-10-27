@@ -134,6 +134,30 @@ currently that is not the case.
 
 It would be better that
 - getScannerState() returns a flow of DeviceDetails().
-- getScannerState() includes the filtering on the Flow<BleScanResult> that is currently done in DeviceEntryViewModel.scanDevice
+- getScannerState() includes the filtering on the Flow<BleScanResult> that is currently done in  
+  DeviceEntryViewModel.scanDevice. 
+- getScannerState() would get an argument : serialNumber or hexSerialNumber or DeviceDetails
+- getScannerState() would be renamed to scanDevice(hexSerialNumber:UInt) : Flow<DeviceDetails>
+  or scanDevice(deviceDetails:DeviceDetails) : Flow<DeviceDetails>
 
+## Device Details
 
+The DeviceDetailsScreen shows all the details for a chosen Nexxtender device.
+Some of the data comes from the DevicesRepository that stores permanent data, 
+others come from the BleRepository that obtains data from the Nexxtender device using a BLE connection.
+
+### Device Details sequence diagram
+
+This sequence diagram represents the actions while viewing the details of a device entry.
+
+![device details sequence](docs/images/devicedetailssequence.svg)
+
+- The user selects a device in the **HomeScreen**. 
+  Gaai navigates via the **GaaiNavHost** to the  **DeviceDetailsScreen**
+  with the id of the selected device set in the **DeviceDetailsViewModel**
+
+# DeviceDetails versus Device
+be.cuypers_ghys.gaai.data.Device is a data class designed with database @ tags to define database.
+be.cuypers_ghys.gaai.ui.device is a data class of rhandling the device elsewhere.
+I made them seperate as I was not sure if I could use Device also outside teh Room domain without problems.
+But both classes are identical, except for the database tags, so I should be able to use them.
