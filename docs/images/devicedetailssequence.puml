@@ -1,4 +1,40 @@
 @startuml
+participant DeviceHomeScreen
+participant GaaiNavHost
+participant DeviceDetailsScreen
+participant DeviceDetailsViewModel
+participant RequireBluetooth
+participant DeviceDetailsScreenNoViewModel
+participant DeviceDetailsBody
+participant DeviceRepository
+participant BleRepository
+box "Nordic BLE lib" #LightBlue
+participant ClientBleGatt
+participant ClientBleGattServices
+participant ClientBleGattService
+participant ClientBleGattCharacteristic [
+    ClientBleGattCharacteristic
+    ----
+    All others
+]
+participant ClientBleGattCharacteristic3 [
+    ClientBleGattCharacteristic
+    ----
+    Generic Status
+]
+
+participant ClientBleGattCharacteristic2 [
+    ClientBleGattCharacteristic
+    ----
+    Generic Command
+]
+
+participant ClientBleGattCharacteristic4 [
+    ClientBleGattCharacteristic
+    ----
+    Generic Data
+]
+end box
 == Initialization ==
 DeviceHomeScreen -> GaaiNavHost: navigate to DeviceDetailsDestination with id of device
 activate GaaiNavHost
@@ -35,11 +71,6 @@ return characteristic: ClientBleGattCharacteristic
 return
 end
 
-participant ClientBleGattCharacteristic [
-    ClientBleGattCharacteristic
-    ----
-    All others
-]
 
 loop deviceName, modelNumber, serialNumber, firmwareRevision, hardwareRevision, deviceInformation  
 DeviceDetailsViewModel ->  ClientBleGattCharacteristic: read()
@@ -51,24 +82,8 @@ end
 loop chargingBasicData, chargingGridData, chargingCarData, chargingAdvancedData
 DeviceDetailsViewModel ->  ClientBleGattCharacteristic: getNotifications()
 end
-participant ClientBleGattCharacteristic3 [
-    ClientBleGattCharacteristic
-    ----
-    Generic Status
-]
 
 DeviceDetailsViewModel ->  ClientBleGattCharacteristic3: getNotifications()
-participant ClientBleGattCharacteristic2 [
-    ClientBleGattCharacteristic
-    ----
-    Generic Command
-]
-
-participant ClientBleGattCharacteristic4 [
-    ClientBleGattCharacteristic
-    ----
-    Generic Data
-]
 
 DeviceDetailsViewModel -> ClientBleGattCharacteristic2: write CONFIG_OPERATION_(CBOR_)GET
 activate ClientBleGattCharacteristic2
