@@ -103,7 +103,7 @@ This sequence diagram represents the actions while creating a new device entry.
 ![device entry sequence](docs/images/blescansequence.svg)
 
 - The user types the "+" button in the **HomeScreen**. Gaai navigates to the  **DeviceEntryScreen**.
-- **DeviceEntryScreen** calls  **DeviceEntryBody**
+- **DeviceEntryScreen** calls **DeviceEntryBody**
 - **DeviceEntryBody** allows to enter the SN and PN of the device to connect to.
 - **DeviceEntryBody** forwards SN and PN to the **DeviceEntryViewModel** in order to verify the SN and PN.
 - If the user clicks the *Scan device* button,
@@ -125,11 +125,11 @@ This sequence diagram represents the actions while creating a new device entry.
   - **DeviceEntryViewModel** performs a *insertDevice()* on **DeviceRepository.**.
   - **DeviceEntryBody** navigates back.
 
-## BleRepository design
+### BleRepository design
 
 BleRepository.getScannerState() returns a flow of BleScanResult items.
 BleScanResult is part of the Nordic Semiconductor Kotlin-BLE-Library.
-The BleRepsoitory should hide the library for the rest of the Gaai app;
+The BleRepository should hide the library for the rest of the Gaai app;
 currently that is not the case.
 
 It would be better that
@@ -154,10 +154,86 @@ This sequence diagram represents the actions while viewing the details of a devi
 
 - The user selects a device in the **HomeScreen**. 
   Gaai navigates via the **GaaiNavHost** to the  **DeviceDetailsScreen**
-  with the id of the selected device set in the **DeviceDetailsViewModel**
+  which creates **DeviceDetailsViewModel** with the id of the selected device set in the **DeviceDetailsViewModel**.
+- **DeviceDetailsViewModel** 
+  - Obtains the device that corresponds with the id from **Devicerepository**.
+  - Obtains a **ClientBleGatt** instance from the **BleRepository** that connects to that device.
+  - Obtains all **ClientBleGattServices** of the connected device.
+  - For each **ClientBleGattService** in **ClientBleGattServices** it obtains all **ClientBleGattCharacteristic**
+    that it needs.
+  - For each **ClientBleGattCharacteristics** that only returns static data
+    (deviceName, modelNumber, serialNumber, firmwareRevision, hardwareRevision, deviceInformation), 
+    that data is read from the **ClientBleGattCharacteristics* and written to the *DeviceDetailsViewState*. 
+  - For each **ClientBleGattCharacteristic** that returns dynamic charging data
+    (chargingBasicData, chargingGridData, chargingCarData, chargingAdvancedData),
+    a notification is set up for that **ClientBleGattCharacteristic**.
+  - The Configuration data of the Nexxtender device cannot be simply read from a **ClientBleGattCharacteristic**.
+    A CONFIG_OPERATION_(CBOR_)GET is written to the *GENERIC COMMAND* **ClientBleGattCharacteristic**
+    to start the procedure to read the configuration data.
+- **DeviceDetailsScreen** collects the *DeviceDetailsViewState* flow updates in a state.
+- **DeviceDetailsScreen** calls **DeviceDetailsBody** which updates the view with the *DeviceDetailsViewState*
+  from the **DeviceDetailsViewModel**.
+- Each time a notification is received from one of the **ClientBleGattCharacteristic**s with dynamic charging data
+  (chargingBasicData, chargingGridData, chargingCarData, chargingAdvancedData)
+  **DeviceDetailsViewModel** updates the *DeviceDetailsViewState* which triggers a view update by **DeviceDetailsBody**.
+- When the user selects the *Get Time* button,
+  a TIME_OPERATION_GET is written to the *GENERIC COMMAND* **ClientBleGattCharacteristic**
+  to start the procedure to read the time.
+- When the user selects the *Sync Time* button,
+  a TIME_OPERATION_SET is written to the *GENERIC COMMAND* **ClientBleGattCharacteristic**
+  to start the procedure to sync the time.
+- When the user changes one of the configuration values,
+  a CONFIG_OPERATION_(CBOR_)SET is written to the *GENERIC COMMAND* **ClientBleGattCharacteristic**
+  to start the procedure to change the configuration.
+- When the user select an operation in the Loader Data Card,
+  the corresponding laoder command is is written to the *GENERIC COMMAND* **ClientBleGattCharacteristic**
+  to start the procedure to perform the selected operation.
+- When a notification from the *GENERIC STATUS* **ClientBleGattCharacteristic** is received, **DeviceDetailsViewModel**
+  performs the following.
+  - If the notification is a CONFIG_STATUS_POPPED or CONFIG_STATUS_POPPED_CBOR indicating the the Configuration data
+    can be read from the *GENERIC DATA* **ClientBleGattCharacteristic**,
+    **DeviceDetailsViewModel** reads that data and updates the  *DeviceDetailsViewState* which triggers a view 
+    update by **DeviceDetailsBody**.
+  - If the notification is a CONFIG_STATUS_READY or CONFIG_STATUS_READY_CBOR indicating the the Configuration data
+    can be written to the *GENERIC DATA* **ClientBleGattCharacteristic**,
+    **DeviceDetailsViewModel** writes that data.
+  - If the notification is a TIME_STATUS_POPPED indicating the the time
+    can be read from the *GENERIC DATA* **ClientBleGattCharacteristic**,
+    **DeviceDetailsViewModel** reads that data and updates the  *DeviceDetailsViewState* which triggers a view
+    update by **DeviceDetailsBody**.
+  - If the notification is a TIME_STATUS_READY indicating the the time 
+    can be written to the *GENERIC DATA* **ClientBleGattCharacteristic**,
+    **DeviceDetailsViewModel** writes that data.
+  - If the notification is one of the *LOADER_* operations, it is ignored.
+  - If the notification is a TIME_STATUS_SUCCESS indicating the the time
+    was written to the *GENERIC DATA* **ClientBleGattCharacteristic** successfully,
+    a *TIME_OPERATION_GET* is written to the the *GENERIC COMMAND* **ClientBleGattCharacteristic**
+    to start the procedure to read the time in order to display it.
+- When the user presses the "Badges" button, Gaai navigates to the **BadgesListScreen**.
+### BleRepository design
+
+BleRepository.getClientBleGattConnection(macAddress: String, scope: CoroutineScope,
+options: BleGattConnectOptions = BleGattConnectOptions()): ClientBleGatt() 
+returns a ClientBleGatt.
+ClientBleGatt is part of the Nordic Semiconductor Kotlin-BLE-Library.
+The use of ClientBleGatt requires the use of several other classes from the Nordic Semiconductor Kotlin-BLE-Library.
+The BleRepsoitory should hide the library for the rest of the Gaai app;
+currently that is not the case.
+
+It would be better that:
+- The BleRepository for the DeviceDetailsViewModel is separate from the on e of DeviceEntryViewModel.
+  For the DeviceDetailsViewModel we want to specify the device ID in the constructor.
+- The BleRepository handles all the BLE stuff. It provides an API
+    - providing a Flow or StateFlow for each of the **ClientBleGattCharacteristic** we obtain data from.
+      So the DeviceDetailsViewModel gets individual flows with the data from BleRepositor.
+    - Possibly a conglomerate *DeviceDetailsViewState* flow can be offered.
+    - provides separate suspend functions to set the configuration, time, loader commands.
+
+See Android-nRF-Blinky/blinky/ui/src/main/java/no/nordicsemi/android/blinky/ui/control/repository
+/BlinkyRepository.kt 
 
 # DeviceDetails versus Device
 be.cuypers_ghys.gaai.data.Device is a data class designed with database @ tags to define database.
 be.cuypers_ghys.gaai.ui.device is a data class of rhandling the device elsewhere.
-I made them seperate as I was not sure if I could use Device also outside teh Room domain without problems.
+I made them seperate as I was not sure if I could use Device also outside the Room domain without problems.
 But both classes are identical, except for the database tags, so I should be able to use them.
