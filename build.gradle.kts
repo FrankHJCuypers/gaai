@@ -7,7 +7,7 @@ plugins {
   alias(libs.plugins.room) apply false
   alias(libs.plugins.devtools.ksp) apply false
   // Generates HTML documentation
-  id("org.jetbrains.dokka") version "2.0.0"
+  id("org.jetbrains.dokka") version "2.1.0"
 }
 
 subprojects {
