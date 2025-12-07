@@ -285,6 +285,8 @@ class DeviceDetailsViewModel(
       Log.d(TAG, "Found the following notification of changed chargingBasicData: $newChargingBasicData")
     }.launchIn(viewModelScope)
 
+    configVersion = getConfigVersion(firmwareRevision)
+
     if (gaaiDevice.type != ChargerType.MOBILE) {
       nexxtenderHomeChargingGridDataCharacteristic.getNotifications().onEach {
         val newChargingGridData = ChargingGridDataParser.parse(it.value)!!
@@ -355,11 +357,10 @@ class DeviceDetailsViewModel(
           }
         }
       }.launchIn(viewModelScope)
+      sendConfigOperationGet()
+      // Do not call sendTimeOperationGet() here! The sendConfigOperationGet() message sequence is still running
+      // and would interfere with sendTimeOperationGet()
     }
-    configVersion = getConfigVersion(firmwareRevision)
-    sendConfigOperationGet()
-    // Do not call sendTimeOperationGet() here! The sendConfigOperationGet() message sequence is still running
-    // and would interfere with sendTimeOperationGet()
     Log.v(TAG, "RETURN configureGatt()")
   }
 
