@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "319864779698",
+    "project_id": "gaai-3e164",
+    "storage_bucket": "gaai-3e164.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319864779698:android:c63d2db1516ab12bd8eaab",
+        "android_client_info": {
+          "package_name": "be.cuypers_ghys.gaai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl5Hcsh3pWCk4zf6cPzhxLEdIYzFvYJsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

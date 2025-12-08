@@ -320,4 +320,28 @@ It was setup as follows:
 - In the project's repository in GitHub, select *Settings*, then under *Code and automation* select *Pages*.
 - Under *Source*, select *Deploy from a branch* and choose the master branch.
 
+## Firebase
+
+Gaai uses [Firebase](https://firebase.google.com/) integration.
+Its configuration is in app\google-services.json.
+According to the video at the top of 
+[Add Firebase to your Android project](https://firebase.google.com/docs/android/setup) at around 7:50, 
+none of this info is secret.
+But for open source projects it is best that everyone that works on the project, 
+uses its own Firebase project and configuration settings.
+Therefore it is best to not include the json file in git.
+The video describes how everyone can setup their own Firebase project.
+But not including it in git, will generate failures during Github Actionns build.
+Solutions are provided in 
+[Configure Firebase project for Continuous Integration builds](https://proandroiddev.com/configure-firebase-project-for-continuous-integration-builds-833f08561a73),
+but are a bit overkill for a prokect like Gaai.
+Therefore the current choice was to keep the google-services.json file in git.
+This might need to be changed in the future.
+
+The video also shows how to trigger a Firebase.analytics.logEvent().
+Events are only send to Firebase once every hour or so.
+With the following command, your device does this more often.
+
+`adb shell setprop debug.firebase.analytics.app be.cuypers_ghys.gaai`
+
 

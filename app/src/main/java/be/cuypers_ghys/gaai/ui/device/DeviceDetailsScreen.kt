@@ -98,6 +98,8 @@ import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.util.Timestamp
 import be.cuypers_ghys.gaai.util.TouPeriod
 import be.cuypers_ghys.gaai.util.TouTime
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import kotlin.math.roundToInt
 
 // TODO: Split this file im multiple files?
@@ -1414,6 +1416,8 @@ internal fun GaaiTimeDataCard(
           Spacer(Modifier.weight(1f))
           Button(onClick = {
             Log.v(TAG, "GaaiTimeDataCard Get Time pressed")
+            // Add a Firebase analytics logEvent just in order to test the feature
+            Firebase.analytics.logEvent("Get_time_button_click" ,null)
             onTimeGet()
           }
           ) {

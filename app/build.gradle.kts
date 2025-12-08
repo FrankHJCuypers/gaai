@@ -13,6 +13,7 @@ plugins {
   alias(libs.plugins.devtools.ksp)
   id("com.gladed.androidgitversion") version "0.4.14"
   base
+  id("com.google.gms.google-services")
 }
 
 androidGitVersion {
@@ -173,6 +174,16 @@ dependencies {
 
   runtimeOnly(libs.android.documentation.plugin)
   testImplementation(kotlin("test"))
+
+  // Import the Firebase BoM
+  implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+
+  // TODO: Add the dependencies for Firebase products you want to use
+  // When using the BoM, don't specify versions in Firebase dependencies
+  implementation("com.google.firebase:firebase-analytics")
+
+  // Add the dependencies for any other desired Firebase products
+  // https://firebase.google.com/docs/android/setup#available-libraries
 }
 
 dokka {

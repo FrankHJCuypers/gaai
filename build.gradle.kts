@@ -8,6 +8,8 @@ plugins {
   alias(libs.plugins.devtools.ksp) apply false
   // Generates HTML documentation
   id("org.jetbrains.dokka") version "2.1.0"
+  id("com.google.gms.google-services") version "4.4.4" apply false
+
 }
 
 subprojects {
