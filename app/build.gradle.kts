@@ -14,6 +14,7 @@ plugins {
   id("com.gladed.androidgitversion") version "0.4.14"
   base
   id("com.google.gms.google-services")
+  id("com.google.firebase.crashlytics")
 }
 
 androidGitVersion {
@@ -180,6 +181,7 @@ dependencies {
 
   // TODO: Add the dependencies for Firebase products you want to use
   // When using the BoM, don't specify versions in Firebase dependencies
+  implementation("com.google.firebase:firebase-crashlytics")
   implementation("com.google.firebase:firebase-analytics")
 
   // Add the dependencies for any other desired Firebase products

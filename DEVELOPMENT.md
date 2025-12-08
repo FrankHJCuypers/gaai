@@ -1,3 +1,6 @@
+[![Firebase](https://readmebadge.vercel.app/badges/firebase.svg)](https://console.firebase.google.com/project/gaai-3e164/overview)
+
+
 # Development
 
 This app is developed in [Kotlin](https://developer.android.com/kotlin) with
@@ -322,7 +325,9 @@ It was setup as follows:
 
 ## Firebase
 
-Gaai uses [Firebase](https://firebase.google.com/) integration.
+Gaai uses [Firebase](https://firebase.google.com/) integration, see
+[Gaai on Firebase](https://console.firebase.google.com/project/gaai-3e164/overview).
+
 Its configuration is in app\google-services.json.
 According to the video at the top of 
 [Add Firebase to your Android project](https://firebase.google.com/docs/android/setup) at around 7:50, 
@@ -334,14 +339,27 @@ The video describes how everyone can setup their own Firebase project.
 But not including it in git, will generate failures during Github Actionns build.
 Solutions are provided in 
 [Configure Firebase project for Continuous Integration builds](https://proandroiddev.com/configure-firebase-project-for-continuous-integration-builds-833f08561a73),
-but are a bit overkill for a prokect like Gaai.
+but are a bit overkill for a project like Gaai.
 Therefore the current choice was to keep the google-services.json file in git.
 This might need to be changed in the future.
 
-The video also shows how to trigger a Firebase.analytics.logEvent().
+### Firebase analytics
+
+The aforementioned video also shows how to trigger a Firebase.analytics.logEvent().
 Events are only send to Firebase once every hour or so.
 With the following command, your device does this more often.
 
 `adb shell setprop debug.firebase.analytics.app be.cuypers_ghys.gaai`
 
+Firebase analytics is enabled.
+Currently there is only 1 call to Firebase.analytics.logEvent() present in the code.
+A press to the Get Time button writes an event.
+It is used for testing the Firebase analytics integration.
 
+### Firebase Crashlytics
+
+Crashlytics is enabled.
+Gaai instances that crash report this to the Crashlytics server.
+On the Crashlytics server, the crashes are visible with stack dumps.
+That way, the developers are made aware of crashes in the filed and are provided with information that aids in 
+debugging the crash.
