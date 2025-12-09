@@ -282,6 +282,22 @@ The Keystore, signing key and passwords are not public.
 They are currently managed by the project maintainer,
 who is also responsible for backups.
 
+### Verify if an apk file is signed
+
+With the following command one can verify if apk files in the current directory are signed.
+
+```
+apksigner verify --print-certs *.apk
+```
+
+This command does not verify the signature, but just prints the certificate information.
+`apksigner` is part of the Android SDK build tools, which should be automatically installed when 
+Android Studio is installed.
+Note that the location of `apksigner` is not automatically included in the PATH.
+I manually had to add `C:\Users\frank\AppData\Local\Android\Sdk\build-tools\36.0.0` to the PATH.
+`apksigner` is a `bat` file, so will only work from a DOS shell.
+See [apksigner](https://docs.digicert.com/zf/software-trust-manager/client-tools/signing-tools/third-party-signing-tool-integrations/apksigner.html).
+
 ## Gradlew commands
 
 - `./gradlew dokkaGenerate` creates Html based documentation from the Kdoc documentation used for documenting the source
@@ -301,6 +317,8 @@ who is also responsible for backups.
 - `./gradlew createDebugCoverageReport` creates an html coverage report in `app\build\reports\coverage\test\debug`
   based on the jacoco results in `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
   This task is **not** included in `./gradlew build`.
+- `./gradlew bundle` creates an aab bundle. This bundle can be used to upload to Google Play.
+  Bundles are not signed.
 
 ## GitHub actions
 

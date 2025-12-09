@@ -62,6 +62,9 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
 
+      - name: Bundle
+        run: ./gradlew bundle
+
       - name: Test Summary
         uses: test-summary/action@v2
         with:
@@ -79,9 +82,16 @@ jobs:
           verbose: true # optional (default = false)
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      # Upload Artifact Build
+      # Upload apk
       - name: Upload APK Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v4
         with:
           name: Gaai APK(s) release generated
           path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
+
+      # Upload aab
+      - name: Upload AAB Release - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gaai AAB(s) release generated
+          path: ${{ env.main_project_module }}/build/outputs/bundle/release/*.aab
