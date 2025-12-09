@@ -83,14 +83,14 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       # Upload apk
-      - name: Upload APK Release - ${{ env.repository_name }}
+      - name: Upload APK Release
         uses: actions/upload-artifact@v4
         with:
           name: Gaai APK(s) release generated
           path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
 
       # Upload aab
-      - name: Upload AAB Release - ${{ env.repository_name }}
+      - name: Upload AAB Release
         uses: actions/upload-artifact@v4
         with:
           name: Gaai AAB(s) release generated
