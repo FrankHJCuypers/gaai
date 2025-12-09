@@ -381,3 +381,20 @@ Gaai instances that crash report this to the Crashlytics server.
 On the Crashlytics server, the crashes are visible with stack dumps.
 That way, the developers are made aware of crashes in the filed and are provided with information that aids in 
 debugging the crash.
+ 
+## Distributing via Google Play
+
+It is not yet possible to distribute Gaai via Google Play.
+Efforts to make this happen have been analyzed and seem to be a lot of work and problems to solve.
+Not sure if it is worthwhile for such a small project with a limited number of users.
+
+Current status: try to build a signed aab file, which is what Google Play requires.
+Building the aab works with `./gradlew bundle`. 
+This should also sign the aab, but verification shows it is not:
+`apksigner verify --print-certs *.aab` returns an:
+
+```
+Exception in thread "main" com.android.apksig.apk.ApkFormatException: Missing AndroidManifest.xml
+```
+
+Still investigating what is wrong.
