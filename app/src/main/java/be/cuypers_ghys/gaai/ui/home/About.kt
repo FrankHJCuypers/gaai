@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,8 +41,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration.Companion.Underline
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -62,7 +71,7 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
     Card(
       modifier = Modifier
         .fillMaxWidth()
-        .height(375.dp)
+        .height(400.dp)
         .padding(16.dp),
       shape = RoundedCornerShape(16.dp),
     ) {
@@ -91,6 +100,19 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = "© 2024-2025 Frank HJ Cuypers", style = MaterialTheme.typography.bodySmall)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "AGPL-3.0 license", style = MaterialTheme.typography.bodySmall)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = buildAnnotatedString {
+          withLink(
+            LinkAnnotation.Url(
+              "https://github.com/FrankHJCuypers/gaai",
+              TextLinkStyles(style = SpanStyle( color = MaterialTheme.colorScheme.primary ))
+            )
+          ) {
+            append("https://github.com/FrankHJCuypers/gaai")
+          }
+        } , style = MaterialTheme.typography.bodySmall)
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(
           onClick = { onDismissRequest() },
