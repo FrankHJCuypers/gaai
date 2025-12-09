@@ -54,16 +54,13 @@ jobs:
           chmod +x gradlew
           git config core.filemode false
 
-      - name: Build with Gradle
-        run: ./gradlew build createDebugCoverageReport
+      - name: Build & bundle with Gradle
+        run: ./gradlew build bundle createDebugCoverageReport
         env:
           SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.filePath }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-
-      - name: Bundle
-        run: ./gradlew bundle
 
       - name: Test Summary
         uses: test-summary/action@v2
