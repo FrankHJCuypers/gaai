@@ -579,12 +579,12 @@ The other rows are confirmed by other users.
 
 The previous table did not track the *Gaai* version. That is done in the next table, starting from version v0.1.1.
 
-| Phone Model         | Android API (version) | Nexxtender firmware version | Gaai version |
-|---------------------|-----------------------|-----------------------------|--------------|
-| Google Pixel 6 Pro  | 36 (16)               | Home 2.53.2                 | v0.1.1       | 
-| Google Pixel 8 Pro  | 36 (16)               | Home 2.53.2                 | v0.1.1       |
-| Samsung Galaxy S24+ | 36 (16)               | Home 3.65.0                 | v1.0.0       |
-| Samsung Galaxy S8   | 28 (9)                | Home 3.65.0                 | v1.0.0       |
+| Phone Model         | Android API (version) | Nexxtender firmware version | Gaai version     |
+|---------------------|-----------------------|-----------------------------|------------------|
+| Google Pixel 6 Pro  | 36 (16)               | Home 2.53.2                 | v0.1.1 - current | 
+| Google Pixel 8 Pro  | 36 (16)               | Home 2.53.2                 | v0.1.1 - current |
+| Samsung Galaxy S24+ | 36 (16)               | Home 3.65.0                 | v1.0.0           |
+| Samsung Galaxy S8   | 28 (9)                | Home 3.65.0                 | v1.0.0           |
 
 There are currently no combinations for which it is confirmed that it does not work.
 
@@ -602,9 +602,10 @@ The developer
 *Gaai* is only tested on a the phone versus Nexxtender Home/Mobile versions as indicated in section
 [Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-homemobile-firmware-versions)
 
-At this point *Gaai* should be considered an beta app,.
-It is currently not tested on sufficient combinations,
-so please expect to spend some debugging time.
+At this point *Gaai* can be considered a stable release.
+It is currently tested on a small set of combinations, but not all.
+This gives some level of confidence that it will work on most combinations,
+but there is no guarantee that it will work on all of them.
 If despite the preceding warnings, you decide to use *Gaai*, that is on your own responsibility.
 But we will do our best to help you. 
 

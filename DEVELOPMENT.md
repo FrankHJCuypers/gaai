@@ -298,6 +298,18 @@ I manually had to add `C:\Users\frank\AppData\Local\Android\Sdk\build-tools\36.0
 `apksigner` is a `bat` file, so will only work from a DOS shell.
 See [apksigner](https://docs.digicert.com/zf/software-trust-manager/client-tools/signing-tools/third-party-signing-tool-integrations/apksigner.html).
 
+### Verify if an aab file is signed
+
+With the following command one can verify if aab files in the current directory are signed.
+
+```
+ keytool -printcert -jarfile *.aab
+```
+
+This command does not verify the signature, but just prints the certificate information.
+`keytool` is part of the Java SDK distribution, which should be automatically installed when
+Android Studio is installed.
+
 ## Gradlew commands
 
 - `./gradlew dokkaGenerate` creates Html based documentation from the Kdoc documentation used for documenting the source
@@ -389,12 +401,5 @@ Efforts to make this happen have been analyzed and seem to be a lot of work and 
 Not sure if it is worthwhile for such a small project with a limited number of users.
 
 Current status: try to build a signed aab file, which is what Google Play requires.
-Building the aab works with `./gradlew bundle`. 
-This should also sign the aab, but verification shows it is not:
-`apksigner verify --print-certs *.aab` returns an:
-
-```
-Exception in thread "main" com.android.apksig.apk.ApkFormatException: Missing AndroidManifest.xml
-```
-
-Still investigating what is wrong.
+Building the aab works with `./gradlew bundle`.
+Verification with `keytool` shows it is signed.
