@@ -400,6 +400,15 @@ It is not yet possible to distribute Gaai via Google Play.
 Efforts to make this happen have been analyzed and seem to be a lot of work and problems to solve.
 Not sure if it is worthwhile for such a small project with a limited number of users.
 
-Current status: try to build a signed aab file, which is what Google Play requires.
+Blocking problems
+
+- For new personal Google Play accounts, applications can only go into production after successful testing
+  by at least 12 testers. See 
+  [Everything about the 12 testers requirement](https://support.google.com/googleplay/android-developer/community-guide/255621488/everything-about-the-12-testers-requirement?hl=en).
+  This does not seem very realistic for Gaai, seen the limited number of users.
+
+### Current status
+
+Try to build a signed aab file, which is what Google Play requires.
 Building the aab works with `./gradlew bundle`.
 Verification with `keytool` shows it is signed.

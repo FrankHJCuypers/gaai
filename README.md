@@ -118,12 +118,17 @@ Only used by developers during development.
 You can install Gaai from [IzzyOnDroid](https://apt.izzysoft.de/packages/be.cuypers_ghys.gaai)
 or your favorite 
 [F-Droid client](https://android.izzysoft.de/applists/category/named/apps_markets#group_1181), 
-which then also takes care for updates.
+which then also takes care of updates.
 
 ## Install Gaai using Google Play Store
 
 Once *Gaai* is sufficiently stable, distributing it via Google Play Store is an option to consider.
-For the moment it is not available.
+For the moment *Gaai* is not available on Google Play.
+Distributing *Gaai* via Google Play Store gives a huge administrative overhead and adds a lot of additional
+requirements, like mandatory daily testing by minimum 12 testers during 14 days.
+That does not seem very realistic for a small project like *Gaai*, 
+supported by only 1 developer and with a very limited user base.
+For the moment all plans to publish *Gaai* on Google Play Store are abandoned.
 
 # Getting Started
 
