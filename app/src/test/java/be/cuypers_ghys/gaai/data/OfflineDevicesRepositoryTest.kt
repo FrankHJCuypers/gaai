@@ -16,6 +16,7 @@
 
 package be.cuypers_ghys.gaai.data
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -90,6 +91,7 @@ class OfflineDevicesRepositoryTest {
       assertEquals(getDeviceListSortedBySn(), firstItem)
     }
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Test
   fun verifyInsertDeviceEmit() =
     runTest {
@@ -116,6 +118,7 @@ class OfflineDevicesRepositoryTest {
       assertEquals(expectedDeviceList.sortedWith(compareBy { it.sn }), secondItem)
     }
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Test
   fun verifyDeleteDeviceEmit() =
     runTest {
