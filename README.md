@@ -188,6 +188,7 @@ But when you need to move to another phone, you need the PIN value.
 If you don't have the PIN code, you can provide the *Gaai* GitHub repository owner with the PN and SN values
 as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-device)
 and he will calculate it for you.
+See [CONTACT](CONTACT.md).
 
 ## First start
 
@@ -555,6 +556,10 @@ Useful information can be found at
 # License
 
 This project is licensed under the GNU AGPLv3 License. See the [LICENSE](LICENSE) file for details.
+
+# Privacy statement
+
+See the [PRIVACY](PRIVACY.md) file for details.
 
 # Acknowledgements
 
