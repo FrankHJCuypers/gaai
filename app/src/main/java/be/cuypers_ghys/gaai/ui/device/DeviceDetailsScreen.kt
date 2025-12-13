@@ -318,75 +318,78 @@ fun DeviceDetailsBody(
       )
     }
 
-    GaaiDeviceNameCard(
-      deviceName = state.deviceName,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
-
-    GaaiDeviceInformationCard(
-      deviceInformation = state.deviceInformation,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
-
-    GaaiChargingBasicDataCard(
-      chargingBasicData = state.chargingBasicData,
-      modifier = Modifier
-        .padding(dimensionResource(id = R.dimen.padding_small))
-    )
-
-    if (device?.type != ChargerType.MOBILE) {
-      GaaiChargingGridDataCard(
-        chargingGridData = state.chargingGridData,
+    if ( state.deviceState.connectionState == ConnectionState.CONNECTED )
+    {
+      GaaiDeviceNameCard(
+        deviceName = state.deviceName,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
 
-      GaaiChargingCarDataCard(
-        chargingCarData = state.chargingCarData,
+      GaaiDeviceInformationCard(
+        deviceInformation = state.deviceInformation,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
 
-      GaaiChargingAdvancedDataCard(
-        chargingAdvancedData = state.chargingAdvancedData,
+      GaaiChargingBasicDataCard(
+        chargingBasicData = state.chargingBasicData,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
 
-      GaaiConfigDataCard(
-        configData = state.configData,
-        onTouWeekChange = onTouWeekChange,
-        onTouWeekendChange = onTouWeekendChange,
-        onMaxGridChange = onMaxGridChange,
-        onSafeChange = onSafeChange,
-        onMaxDeviceChange = onMaxDeviceChange,
-        onModeChange = onModeChange,
-        onICapacityChange = onICapacityChange,
-        modifier = Modifier
-          .padding(dimensionResource(id = R.dimen.padding_small))
-      )
+      if (device?.type != ChargerType.MOBILE) {
+        GaaiChargingGridDataCard(
+          chargingGridData = state.chargingGridData,
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+        )
 
-      GaaiTimeDataCard(
-        timeData = state.timeData,
-        onTimeGet = onTimeGet,
-        onTimeSync = onTimeSync,
-        modifier = Modifier
-          .padding(dimensionResource(id = R.dimen.padding_small))
-      )
+        GaaiChargingCarDataCard(
+          chargingCarData = state.chargingCarData,
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+        )
 
-      GaaiLoaderCard(
-        onLoaderOperation = onLoaderOperation,
-        modifier = Modifier
-          .padding(dimensionResource(id = R.dimen.padding_small))
-      )
+        GaaiChargingAdvancedDataCard(
+          chargingAdvancedData = state.chargingAdvancedData,
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+        )
 
-      GaaiBadgesCard(
-        navigateToBadgeList = navigateToBadgeList,
-        modifier = Modifier
-          .padding(dimensionResource(id = R.dimen.padding_small))
-      )
+        GaaiConfigDataCard(
+          configData = state.configData,
+          onTouWeekChange = onTouWeekChange,
+          onTouWeekendChange = onTouWeekendChange,
+          onMaxGridChange = onMaxGridChange,
+          onSafeChange = onSafeChange,
+          onMaxDeviceChange = onMaxDeviceChange,
+          onModeChange = onModeChange,
+          onICapacityChange = onICapacityChange,
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
+        GaaiTimeDataCard(
+          timeData = state.timeData,
+          onTimeGet = onTimeGet,
+          onTimeSync = onTimeSync,
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
+        GaaiLoaderCard(
+          onLoaderOperation = onLoaderOperation,
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
+        GaaiBadgesCard(
+          navigateToBadgeList = navigateToBadgeList,
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+        )
+      }
     }
   }
   Log.v(TAG, "RETURN DeviceDetailsBody()")
