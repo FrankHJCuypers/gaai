@@ -190,6 +190,16 @@ as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-device)
 and he will calculate it for you.
 See [CONTACT](CONTACT.md).
 
+### Incorrect PIN value
+
+If your phone is not paired with the Nexxtender charger using a correct PIN,
+**Gaai** still shows most data from the Nexxtender charger,
+but not everything works.
+It might not be immediately clear that the root cause is the incorrect PIN.
+See [Configuration screen not reactive #40](https://github.com/FrankHJCuypers/gaai/discussions/40)
+for more explanation.
+
+
 ## First start
 
 When *Gaai* is started the first time, it has no *Nexxtender* devices in its database yet.
