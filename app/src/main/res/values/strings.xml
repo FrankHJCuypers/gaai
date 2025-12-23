@@ -123,5 +123,4 @@
     <string name="version">Version</string>
     <string name="device">Device</string>
     <string name="badge">Badge</string>
-    <string name="generate_crash">Generate crash</string>
 </resources>
