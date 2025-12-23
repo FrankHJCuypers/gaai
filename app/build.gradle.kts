@@ -32,6 +32,8 @@ if (keystorePropertiesFile.exists()) {
   keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val firebaseImplementation by configurations.creating
+
 android {
   signingConfigs {
     create("release") {
@@ -87,6 +89,10 @@ android {
     debug {
       enableUnitTestCoverage = true
     }
+
+    create("firebase") {
+      initWith(getByName("release"))
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -120,6 +126,7 @@ android {
     schemaDirectory("$projectDir/schemas")
   }
 }
+
 
 dependencies {
   implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -183,12 +190,20 @@ dependencies {
   testImplementation(kotlin("test"))
 
   // Import the Firebase BoM
-  implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+  debugImplementation(platform(libs.firebase.bom))
 
   // TODO: Add the dependencies for Firebase products you want to use
   // When using the BoM, don't specify versions in Firebase dependencies
-  implementation("com.google.firebase:firebase-crashlytics")
-  implementation("com.google.firebase:firebase-analytics")
+  debugImplementation(libs.firebase.crashlytics)
+  debugImplementation(libs.firebase.analytics)
+
+
+  firebaseImplementation(platform(libs.firebase.bom))
+
+  // TODO: Add the dependencies for Firebase products you want to use
+  // When using the BoM, don't specify versions in Firebase dependencies
+  firebaseImplementation(libs.firebase.crashlytics)
+  firebaseImplementation(libs.firebase.analytics)
 
   // Add the dependencies for any other desired Firebase products
   // https://firebase.google.com/docs/android/setup#available-libraries

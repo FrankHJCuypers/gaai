@@ -79,12 +79,36 @@ jobs:
           verbose: true # optional (default = false)
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      # Upload apk
-      - name: Upload APK Release
+      # Based on how [Round-Sync](https://github.com/newhinton/Round-Sync) did it
+      - name: Check release build variant for non-FOSS libraries
+        run: |
+          wget https://github.com/iBotPeaches/Apktool/releases/download/v$apktoolVersion/apktool_$apktoolVersion.jar
+          wget https://raw.githubusercontent.com/iBotPeaches/Apktool/refs/heads/main/scripts/linux/apktool
+          # clone the repo
+          git clone https://gitlab.com/IzzyOnDroid/repo.git
+          # create a directory for Apktool and move the apktool* files there
+          mkdir -p repo/lib/radar/tool
+          mv apktool* repo/lib/radar/tool
+          # create an alias for ease of use
+          chmod u+x repo/lib/radar/tool/apktool
+          mv repo/lib/radar/tool/apktool_$apktoolVersion.jar repo/lib/radar/tool/apktool.jar
+          repo/bin/scanapk.php app/build/outputs/apk/release/*.apk
+        env:
+          apktoolVersion: "2.12.1"
+
+      # Upload release build variant apk
+      - name: Upload APK release variant
         uses: actions/upload-artifact@v4
         with:
           name: Gaai APK(s) release generated
           path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
+
+      # Upload firebase build variant apk
+      - name: Upload APK firebase release variant
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gaai APK(s) firebase generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/firebase/*.apk
 
       # Upload aab
       - name: Upload AAB Release

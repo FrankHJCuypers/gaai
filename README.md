@@ -91,6 +91,34 @@ There are 4 ways to install *Gaai* on your Android phone:
 3. [Install Gaai from IzzyOnDroid](#install-gaai-from-izzyondroid)
 4. [Install Gaai using Google Play Store](#install-gaai-using-google-play-store)
 
+## Build types
+
+The *Gaai* project builds 3 build types.
+All three have exactly the same functionality, but serve a different purpose.
+
+1. **release**: Used for distributing installation files to users.
+   Does not include [Firebase](DEVELOPMENT.md#firebase)
+   and is targeted to be [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) compliant.
+   Choose this build type if you don't want [Firebase](DEVELOPMENT.md#firebase) to collect any of your data.
+2. **firebase**: Like **release**, but does include [Firebase](DEVELOPMENT.md#firebase) and is therefore
+   not [FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software) compliant.
+   Choose this build type if you want to help improve the quality of *Gaai* and agree that
+   [Firebase](DEVELOPMENT.md#firebase) collects some of your relevant data.
+   The *Gaai* developers encourage you to use this build type.
+3. **debug**: Mostly used used during development and debugging with Android studio.
+   Includes [Firebase](DEVELOPMENT.md#firebase).
+   Not relevant for normal users.
+
+The **release** and **firebase** variants are included in
+[GitHub releases](https://github.com/FrankHJCuypers/gaai/releases).
+
+See [Firebase](DEVELOPMENT.md#firebase) and
+[PRIVACY.md](PRIVACY.md#google-analytics-and-crashlytics)
+for a better understanding of the impact on the user's privacy.
+
+Generated files, like `*.apk` and `*.aab` files include the build type in their file name,
+like in `Gaai-v101000-1.1.0-4-g0d0f0f8-release.apk`.
+
 ## Install Gaai using APK file
 
 For most people, this is the preferred way of installing.
@@ -98,12 +126,11 @@ For most people, this is the preferred way of installing.
 An APK file generated from *Gaai* can be installed as described in
 [How to install third-party apps without the Google Play Store](https://www.androidauthority.com/how-to-install-apks-31494/).
 
-*Gaai* APK files are available for the official
+*Gaai* APK files for the **release** and **firebase** build types are available for the official
 [releases](https://github.com/FrankHJCuypers/gaai/releases) in the GitHub repo.
-Select a release, open its *assets* and select the APK file.
+Select a release in GitHub, open its *assets* and select the APK file you want to use.
 
-If the selected APK is a `-debug` version, it will install without questions.
-If it is a `-release` version, it is signed with the Gaai signature key and Android will perform some tests.
+**release** and **firebase** build types are signed with the *Gaai* signature key and Android will perform some tests.
 If *Google Play Protect* recommends to scan the app, select "scan app" and wait for the scanning to complete.
 If the scanning is complete, select "Install app".
 
@@ -113,12 +140,15 @@ If the scanning is complete, select "Install app".
 See [Environment setup](DEVELOPMENT.md#environment-setup).
 Only used by developers during development.
 
+If the selected APK is a **debug** build type, it will install without questions.
+
 ## Install Gaai from IzzyOnDroid
 
-You can install Gaai from [IzzyOnDroid](https://apt.izzysoft.de/packages/be.cuypers_ghys.gaai)
+You can install *Gaai* from [IzzyOnDroid](https://apt.izzysoft.de/packages/be.cuypers_ghys.gaai)
 or your favorite 
 [F-Droid client](https://android.izzysoft.de/applists/category/named/apps_markets#group_1181), 
 which then also takes care of updates.
+IzzyOnDroid only distributes **release** build types.
 
 ## Install Gaai using Google Play Store
 
@@ -298,13 +328,13 @@ The values are populated as soon as *Gaai* has established the connection and re
 That can take 5 seconds.
 The BLE connection status at the top right of the first card can have the following values:
 
-| Value         | Icon                                                                                         | Description                                                              |
-|---------------|----------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
-| Not connected | ![Not connected](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | Gaai is not connected with the charger                                   |
-| Connecting    | ![Not connected](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | Gaai is trying to connect to the charger                                 |
-| Discovering   | ![Discovering](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | Gaai is connected to the charger and is now discovering its BLE services |
-| Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | Gaai is connected to the charger and has discovered all its BLE services | 
-| Unknown       | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)        | Should not happen                                                        |
+| Value         | Icon                                                                                         | Description                                                               |
+|---------------|----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| Not connected | ![Not connected](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | *Gaai* is not connected with the charger                                  |
+| Connecting    | ![Not connected](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | *Gaai* is trying to connect to the charger                                |
+| Discovering   | ![Discovering](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | *Gaai* is connected to the charger and is now discovering its BLE services |
+| Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | *Gaai* is connected to the charger and has discovered all its BLE services | 
+| Unknown       | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)        | Should not happen                                                         |
 
 If the BLE status stays *Not connected*,
 it might be that another BLE client is still connected to the device.
@@ -534,14 +564,14 @@ Each badge has an [ISO/IEC 14443-3](https://en.wikipedia.org/wiki/ISO/IEC_14443)
 7 or 10 bytes in length.
 Each badge also has a *Charge Type* that indicates if this badge will start charging in MAX mode or DEFAULT mode.
 The BLE protocol with the charger does unfortunately not report this *Charge Type*,
-so Gaai will report them as UNKNOWN.
+so *Gaai* will report them as UNKNOWN.
 
 In this screen you can
 
 - Register another badge by clicking either the "+ DEFAULT" or "+ MAX" button at the bottom right to register the badge
   with the corresponding *Charge Type*.
   A message will be shown to hold the new badge against the charger.
-  The charger will register the new badge and Gaai automatically updates its list of registered badges.
+  The charger will register the new badge and *Gaai* automatically updates its list of registered badges.
 - Remove a device by swiping the card entry that corresponds with the badge to the right.
   A Dialog box will pop up asking you to confirm the delete:
 
@@ -599,7 +629,7 @@ The other rows are confirmed by other users.
 
 The previous table did not track the *Gaai* version. That is done in the next table, starting from version v0.1.1.
 
-| Phone Model          | Android API (version) | Nexxtender firmware version | Gaai version     |
+| Phone Model          | Android API (version) | Nexxtender firmware version | *Gaai* version   |
 |----------------------|-----------------------|-----------------------------|------------------|
 | Google Pixel 6 Pro   | 36 (16)               | Home 2.53.2                 | v0.1.1 - current | 
 | Google Pixel 8 Pro   | 36 (16)               | Home 2.53.2                 | v0.1.1 - current |

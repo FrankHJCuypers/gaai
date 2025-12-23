@@ -44,9 +44,16 @@ What Google does with this data is restricted by the *Google Analytics Terms of 
 
 Consult Google for information on how to turn this data collection off.
 
+Since version 1.1.1, only the **firebase** and **debug** [build types](DEVELOPMENT.md#build-types) 
+include the Google Analytics and Crashlytics tools.
+The **release** build type no longer includes the Google Analytics and Crashlytics tools.
+If you don't want your data to be collected by Google Analytics or Crashlytics, you must use the **release** build type.
+The drawback is that the *Gaai* developer will not receive any information about crashes you encounter,
+making it less likely that such problems will be detected and solved.
+
 ## Changes to this Privacy Policy
 
-Project Gaai may update this policy occasionally to reflect changes in our data collection practices.
+Project *Gaai* may update this policy occasionally to reflect changes in our data collection practices.
 Users should frequently verify this page in order to be aware of any changes.
 This file is maintained on GitHub, which allows users to easily track changes.
 
