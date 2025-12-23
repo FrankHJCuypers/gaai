@@ -235,12 +235,12 @@ fun BadgeListScreenNoViewModel(
     when (badgeDeviceUiState.statusId) {
       BADGE_STATUS_WAIT_EXISTS -> Toast.makeText(
         context,
-        context.getString(R.string.badge_already_registered), Toast.LENGTH_SHORT
+        stringResource(R.string.badge_already_registered), Toast.LENGTH_SHORT
       ).show()
 
       BADGE_STATUS_WAIT_ADDED -> Toast.makeText(
         context,
-        context.getString(R.string.badge_added), Toast.LENGTH_SHORT
+        stringResource(R.string.badge_added), Toast.LENGTH_SHORT
       ).show()
     }
 
