@@ -278,7 +278,7 @@ class ConfigDataParserComposerTest {
           ConfigVersion.CONFIG_1_1
         ),
         Arguments.of(
-          "112200440266778899AABBCCDD5AD6".hexToByteArray(),
+          "112200440366778899AABBCCDD5746".hexToByteArray(),
           0x11,
           0x22,
           0x00,
@@ -498,6 +498,22 @@ class ConfigDataParserComposerTest {
           0xF0,
           Mode.UNKNOWN,
           0x69,
+          NetWorkType.TRI,
+          0x7766,
+          0x9988,
+          0xBBAA,
+          0xDDCC,
+          0x96,
+          ConfigVersion.CONFIG_CBOR
+        ),
+        Arguments.of(
+          "A200A20101020101AB01060418F00518F00618F007186909040C1977660D1999880E19BBAA0F19DDCC1318968AE4"
+            .hexToByteArray(),
+          0xF0,
+          0xF0,
+          0xF0,
+          Mode.UNKNOWN,
+          0x69,
           NetWorkType.UNKNOWN,
           0x7766,
           0x9988,
@@ -513,7 +529,7 @@ class ConfigDataParserComposerTest {
           0xF0,
           Mode.UNKNOWN,
           0x69,
-          NetWorkType.UNKNOWN,
+          NetWorkType.TRI,
           0x7766,
           0x9988,
           0xBBAA,

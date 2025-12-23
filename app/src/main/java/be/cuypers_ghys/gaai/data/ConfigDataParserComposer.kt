@@ -168,14 +168,14 @@ object ConfigDataParserComposer {
   }
 
   private fun getNetWorkType(rawNetworkType: Int) = when (rawNetworkType) {
-    0 -> NetWorkType.MONO_TRIN
-    2 -> NetWorkType.TRI
+    0, 1 -> NetWorkType.MONO_TRIN
+    2, 3 -> NetWorkType.TRI
     else -> NetWorkType.UNKNOWN
   }
 
   private fun getRawNetWorkType(networkType: NetWorkType) = when (networkType) {
     NetWorkType.MONO_TRIN -> 0
-    NetWorkType.TRI -> 2
+    NetWorkType.TRI -> 3
     NetWorkType.UNKNOWN -> 0x69
   }
 

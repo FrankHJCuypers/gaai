@@ -2358,10 +2358,10 @@ private fun GaaiConfigDataCardPreview_1_0() {
   }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardPreview_1_1Dark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardPreview_1_1Light")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardPreview_1_1_Mono_TRINDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardPreview_1_1_Mono_TRINLight")
 @Composable
-private fun GaaiConfigDataCardPreview_1_1() {
+private fun GaaiConfigDataCardPreview_1_1_Mono_TRIN() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiConfigDataCard(
@@ -2393,10 +2393,45 @@ private fun GaaiConfigDataCardPreview_1_1() {
   }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardCborPreviewDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardCborPreviewLight")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardPreview_1_1_TRIDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardPreview_1_1_TRILight")
 @Composable
-private fun GaaiConfigDataCardCborPreview() {
+private fun GaaiConfigDataCardPreview_1_1_TRI() {
+  GaaiTheme(dynamicColor = false) {
+    Surface {
+      GaaiConfigDataCard(
+        configData = ConfigData(
+          maxGrid = 50U,
+          maxDevice = 32U,
+          mode = Mode.MAX_PRIVATE,
+          safe = 6U,
+          networkType = NetWorkType.TRI,
+          touWeekStart = 123,
+          touWeekEnd = 456,
+          touWeekendStart = 789,
+          touWeekendEnd = 333,
+          minDevice = 11U,
+          iCapacity = 22U,
+          configVersion = ConfigVersion.CONFIG_1_1
+        ),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+        onTouWeekChange = {},
+        onTouWeekendChange = {},
+        onMaxGridChange = {},
+        onMaxDeviceChange = {},
+        onICapacityChange = {},
+        onSafeChange = {},
+        onModeChange = {}
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardCborPreview_MONO_TRINDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardCborPreview_MONO_TRINLight")
+@Composable
+private fun GaaiConfigDataCardCborPreview_MONO_TRIN() {
   GaaiTheme(dynamicColor = false) {
     Surface()
     {
@@ -2407,6 +2442,42 @@ private fun GaaiConfigDataCardCborPreview() {
           mode = Mode.MAX_PRIVATE,
           safe = 6U,
           networkType = NetWorkType.MONO_TRIN,
+          touWeekStart = 123,
+          touWeekEnd = 456,
+          touWeekendStart = 789,
+          touWeekendEnd = 333,
+          minDevice = 11U,
+          iCapacity = 22U,
+          configVersion = ConfigVersion.CONFIG_CBOR
+        ),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+        onTouWeekChange = {},
+        onTouWeekendChange = {},
+        onMaxGridChange = {},
+        onMaxDeviceChange = {},
+        onICapacityChange = {},
+        onSafeChange = {},
+        onModeChange = {}
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiConfigDataCardCborPreview_TRIDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiConfigDataCardCborPreview_TRILight")
+@Composable
+private fun GaaiConfigDataCardCborPreview_TRI() {
+  GaaiTheme(dynamicColor = false) {
+    Surface()
+    {
+      GaaiConfigDataCard(
+        configData = ConfigData(
+          maxGrid = 50U,
+          maxDevice = 32U,
+          mode = Mode.MAX_PRIVATE,
+          safe = 6U,
+          networkType = NetWorkType.TRI,
           touWeekStart = 123,
           touWeekEnd = 456,
           touWeekendStart = 789,
