@@ -190,6 +190,8 @@ Open the `index.html` file to start reading the documentation.
 Note that this documentation targets developers, not the users of *Gaai*.
 
 ## Make a release
+This procedure only works if you have the APK signing keys setup, so that `./gradlew build` can run.
+See [Gradlew commands](#gradlew-commands)
 
 Once a commit on the master branch is selected to make a new release in GutHub, proceed as follows:
 
@@ -324,14 +326,18 @@ Android Studio is installed.
   In addition it performs code coverage analysis using jacoco.
   The jacoco result file is written to `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
 - `./gradlew test` runs both the above.
-- `./gradlew build` assembles and tests the project.
+- `./gradlew build` assembles and tests all the build types in the project.
   The release apk files are generated in the `app\build\outputs\apk\release` directory.
+  Note that the *release* build type requires that the signingConfig *release* is correctly setup.
+  See [APK Signing](#apk-signing).
 - `./gradlew createDebugCoverageReport` creates an html coverage report in `app\build\reports\coverage\test\debug`
   based on the jacoco results in `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
   This task is **not** included in `./gradlew build`.
 - `./gradlew bundle` creates an aab bundle. This bundle can be used to upload to Google Play.
   Bundles are not signed.
-
+- `./gradlew assembleDebug` only assembles the debug build variant
+- `./gradlew assembleRelease` only assembles the release build variant
+- 
 ## GitHub actions
 
 The following GitHub actions are defined:

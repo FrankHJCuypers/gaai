@@ -43,10 +43,15 @@ android {
         keyPassword = keystoreProperties["keyPassword"] as String
       } else {
         // If the gaai-release-keystore.properties file does not exist, we use Github secrets.
-        storeFile = rootProject.file(System.getenv("SIGNING_STORE_FILE") as String)
-        storePassword = System.getenv("SIGNING_STORE_PASSWORD") as String
-        keyAlias = System.getenv("SIGNING_KEY_ALIAS") as String
-        keyPassword = System.getenv("SIGNING_KEY_PASSWORD") as String
+        val signingStoreFileString = System.getenv("SIGNING_STORE_FILE")
+        if (signingStoreFileString != null ) {
+          storeFile = rootProject.file( signingStoreFileString )
+          storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+          keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+          keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        } else {
+          logger.warn("Warning: 'release' signing config not correctly set up - release build type signing is not possible")
+        }
       }
     }
   }
