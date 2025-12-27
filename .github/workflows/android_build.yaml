@@ -93,7 +93,7 @@ jobs:
           mv repo/lib/radar/tool/apktool_$apktoolVersion.jar repo/lib/radar/tool/apktool.jar
           repo/bin/scanapk.php app/build/outputs/apk/release/*.apk
         env:
-          apktoolVersion: "2.12.1"
+          apktoolVersion: "2.9.3"
 
       # Upload release build variant apk
       - name: Upload APK release variant
