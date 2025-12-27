@@ -82,7 +82,7 @@ jobs:
       - name: Check release build variant for non-FOSS libraries
         run: |
           wget https://github.com/iBotPeaches/Apktool/releases/download/v$apktoolVersion/apktool_$apktoolVersion.jar
-          wget https://github.com/iBotPeaches/Apktool/raw/master/scripts/linux/apktool
+          wget https://https://github.com/iBotPeaches/Apktool/blob/main/scripts/linux/apktool
           # clone the repo
           git clone https://gitlab.com/IzzyOnDroid/repo.git
           # create a directory for Apktool and move the apktool* files there
