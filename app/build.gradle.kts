@@ -190,20 +190,20 @@ dependencies {
   testImplementation(kotlin("test"))
 
   // Import the Firebase BoM
-  debugImplementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+  debugImplementation(platform(libs.firebase.bom))
 
   // TODO: Add the dependencies for Firebase products you want to use
   // When using the BoM, don't specify versions in Firebase dependencies
-  debugImplementation("com.google.firebase:firebase-crashlytics")
-  debugImplementation("com.google.firebase:firebase-analytics")
+  debugImplementation(libs.firebase.crashlytics)
+  debugImplementation(libs.firebase.analytics)
 
 
-  firebaseImplementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+  firebaseImplementation(platform(libs.firebase.bom))
 
   // TODO: Add the dependencies for Firebase products you want to use
   // When using the BoM, don't specify versions in Firebase dependencies
-  firebaseImplementation("com.google.firebase:firebase-crashlytics")
-  firebaseImplementation("com.google.firebase:firebase-analytics")
+  firebaseImplementation(libs.firebase.crashlytics)
+  firebaseImplementation(libs.firebase.analytics)
 
   // Add the dependencies for any other desired Firebase products
   // https://firebase.google.com/docs/android/setup#available-libraries
