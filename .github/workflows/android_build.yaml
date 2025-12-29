@@ -104,15 +104,22 @@ jobs:
           path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
 
       # Upload firebase build variant apk
-      - name: Upload APK firebase release variant
+      - name: Upload APK firebase variant
         uses: actions/upload-artifact@v4
         with:
           name: Gaai APK(s) firebase generated
           path: ${{ env.main_project_module }}/build/outputs/apk/firebase/*.apk
 
-      # Upload aab
-      - name: Upload AAB Release
+      # Upload release build variant aab
+      - name: Upload AAB release variant
         uses: actions/upload-artifact@v4
         with:
           name: Gaai AAB(s) release generated
           path: ${{ env.main_project_module }}/build/outputs/bundle/release/*.aab
+
+      # Upload firebase build variant aab
+      - name: Upload AAB firebase variant
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gaai AAB(s) firebase generated
+          path: ${{ env.main_project_module }}/build/outputs/bundle/firebase/*.aab
