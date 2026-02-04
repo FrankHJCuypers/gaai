@@ -328,13 +328,13 @@ The values are populated as soon as *Gaai* has established the connection and re
 That can take 5 seconds.
 The BLE connection status at the top right of the first card can have the following values:
 
-| Value         | Icon                                                                                         | Description                                                               |
-|---------------|----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
-| Not connected | ![Not connected](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | *Gaai* is not connected with the charger                                  |
-| Connecting    | ![Not connected](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | *Gaai* is trying to connect to the charger                                |
+| Value         | Icon                                                                                         | Description                                                                |
+|---------------|----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| Not connected | ![Not connected](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | *Gaai* is not connected with the charger                                   |
+| Connecting    | ![Not connected](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | *Gaai* is trying to connect to the charger                                 |
 | Discovering   | ![Discovering](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | *Gaai* is connected to the charger and is now discovering its BLE services |
 | Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | *Gaai* is connected to the charger and has discovered all its BLE services | 
-| Unknown       | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)        | Should not happen                                                         |
+| Unknown       | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)        | Should not happen                                                          |
 
 If the BLE status stays *Not connected*,
 it might be that another BLE client is still connected to the device.
