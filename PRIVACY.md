@@ -44,7 +44,7 @@ What Google does with this data is restricted by the *Google Analytics Terms of 
 
 Consult Google for information on how to turn this data collection off.
 
-Since version 1.1.1, only the **firebase** and **debug** [build types](DEVELOPMENT.md#build-types) 
+Since version 1.1.1, only the **firebase** and **debug** [build types](README.md#build-types) 
 include the Google Analytics and Crashlytics tools.
 The **release** build type no longer includes the Google Analytics and Crashlytics tools.
 If you don't want your data to be collected by Google Analytics or Crashlytics, you must use the **release** build type.
