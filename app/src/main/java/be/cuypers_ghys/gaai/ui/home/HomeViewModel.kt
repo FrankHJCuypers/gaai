@@ -49,9 +49,9 @@ class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewMode
     viewModelScope.launch {
       Log.d(TAG, "ENTRY removeDevice($device) body")
       devicesRepository.deleteDevice(device)
-      Log.v(TAG, "ENTRY removeDevice() body")
+      Log.v(TAG, "EXIT removeDevice() body")
     }
-    Log.v(TAG, "ENTRY removeDevice()")
+    Log.v(TAG, "EXIT removeDevice()")
   }
 
   /**

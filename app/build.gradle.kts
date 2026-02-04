@@ -120,6 +120,7 @@ android {
   // Needed for JUnit5 to work
   testOptions {
     unitTests.all { it.useJUnitPlatform() }
+    unitTests.isReturnDefaultValues = true
   }
 
   room {

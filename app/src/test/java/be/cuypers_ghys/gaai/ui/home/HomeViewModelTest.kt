@@ -15,6 +15,7 @@
  */
 package be.cuypers_ghys.gaai.ui.home
 
+import android.util.Log
 import app.cash.turbine.test
 import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
@@ -22,6 +23,10 @@ import be.cuypers_ghys.gaai.data.FakeDevicesSource
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.milliseconds
+
+// Tag for logging
+private const val TAG = "HomeViewModelTest"
 
 /**
  * JUnit tests for [HomeViewModel].
@@ -51,16 +56,24 @@ class HomeViewModelTest {
   @Test
   fun verifyHomeUiState() =
     runTest {
-      homeUiStateFlow.test {
+      homeUiStateFlow.test{
+        Log.d(TAG, "ENTRY verifyHomeUiState() homeUiStateFlow.test body")
+
         // First item is always empty (see initialValue in stateIn() call of HomeViewModel.kt)
         val firstItem = awaitItem()
+        Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test firstItem=$firstItem")
         assertEquals(0, firstItem.deviceList.size)
 
         // Now emit a new value in the fakeRepository and wait for it to be collected
+        Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test emit fakeRepository")
         fakeRepository.emit(FakeDevicesSource.devicesList)
+        Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test await second item")
         val secondItem = awaitItem()
+        Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test secondItem=$secondItem")
         assertEquals(FakeDevicesSource.devicesList.size, secondItem.deviceList.size)
         assertEquals(FakeDevicesSource.devicesList, secondItem.deviceList)
+        cancelAndIgnoreRemainingEvents()
+        Log.d(TAG, "verifyHomeUiState() EXIT homeUiStateFlow.test body")
       }
     }
 
@@ -68,17 +81,23 @@ class HomeViewModelTest {
   fun verifyRemoveDevice() =
     runTest {
       homeUiStateFlow.test {
+        Log.d(TAG, "ENTRY verifyRemoveDevice() homeUiStateFlow.test body")
         // First item is always empty (see initialValue in stateIn() call of HomeViewModel.kt
         val firstItem = awaitItem()
+        Log.d(TAG, "verifyRemoveDevice() homeUiStateFlow.test firstItem=$firstItem")
+
         assertEquals(0, firstItem.deviceList.size)
 
         // Now delete
         val dummyDevice = Device(11, "60211-A2", "2303-00008-E3", "FF:B8:37:72:4F:00", 2, ChargerType.HOME)
         homeViewModel.removeDevice(dummyDevice)
-
+        Log.d(TAG, "verifyRemoveDevice() homeUiStateFlow.test await second item")
         val secondItem = awaitItem()
+        Log.d(TAG, "verifyRemoveDevice() homeUiStateFlow.test secondItem=$secondItem")
         assertEquals(1, secondItem.deviceList.size)
         assertEquals(listOf(dummyDevice), secondItem.deviceList)
+        cancelAndIgnoreRemainingEvents()
+        Log.d(TAG, "verifyRemoveDevice() EXIT homeUiStateFlow.test body")
       }
     }
 }
