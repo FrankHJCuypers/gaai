@@ -712,8 +712,34 @@ data class DeviceInformation(
   val hardwareRevision: String = ""
 )
 
+/**
+ * Internal connection state.
+ */
 enum class ConnectionState {
-  UNKNOWN, CONNECTING, DISCOVERING, CONNECTED, NOT_CONNECTED
+  /**
+   * Unknown state. Should not happen
+   */
+  UNKNOWN,
+
+  /**
+   * Gaai is trying to connect to the charger.
+   */
+  CONNECTING,
+
+  /**
+   * Gaai is connected to the charger and is now discovering its BLE services.
+   */
+  DISCOVERING,
+
+  /**
+   * Gaai is connected to the charger and has discovered all its BLE services.
+   */
+  CONNECTED,
+
+  /**
+   * Gaai is not connected with the charger.
+   */
+  NOT_CONNECTED
 }
 
 /**
