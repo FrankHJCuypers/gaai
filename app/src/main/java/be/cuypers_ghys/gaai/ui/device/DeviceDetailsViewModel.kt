@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024-2025, Frank HJ Cuypers
+ * Copyright © 2024-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -720,6 +720,11 @@ enum class ConnectionState {
    * Unknown state. Should not happen
    */
   UNKNOWN,
+
+  /**
+   * The charger is advertising itself on BLE, so it is available for connection.
+   */
+  AVAILABLE,
 
   /**
    * Gaai is trying to connect to the charger.

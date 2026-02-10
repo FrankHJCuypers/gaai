@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024-2025, Frank HJ Cuypers
+ * Copyright © 2024-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -57,7 +57,7 @@ object AppViewModelProvider {
 
     // Initializer for HomeViewModel
     initializer {
-      HomeViewModel(gaaiApplication().container.devicesRepository)
+      HomeViewModel(gaaiApplication().container.devicesRepository, gaaiApplication().container.bleRepository)
     }
 
     // Initializer for MissingPermissionsViewModel

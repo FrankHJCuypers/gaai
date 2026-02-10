@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024-2025, Frank HJ Cuypers
+ * Copyright © 2024-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -74,6 +74,7 @@ import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import no.nordicsemi.android.kotlin.ble.core.MockServerDevice
 
 // Tag for logging
 private const val TAG = "HomeScreen"
@@ -109,9 +110,9 @@ fun HomeScreen(
 ) {
   Log.v(TAG, "ENTRY HomeScreen()")
 
-  val homeUiState by viewModel.homeUiState.collectAsState()
-
   RequireBluetooth {
+    viewModel.scanDevice()
+    val homeUiState by viewModel.homeUiState.collectAsState()
     HomeScreenNoViewModel(
       navigateToDeviceEntry, navigateToDeviceDetails, viewModel::removeDevice, homeUiState, modifier
     )
@@ -127,7 +128,7 @@ fun HomeScreen(
  * @param navigateToDeviceDetails Function to be called when [HomeScreen] wants to connect to a known device and show
  *  its details.
  * @param removeDevice Function to be called when [HomeScreen] wants to remove a known device.
- * @param homeUiState
+ * @param homeUiState The[HomeUiState].
  * @param modifier The [Modifier] to be applied to this HomeScreen.
  *
  * @author Frank HJ Cuypers
@@ -173,7 +174,7 @@ fun HomeScreenNoViewModel(
     },
   ) { innerPadding ->
     HomeBody(
-      deviceList = homeUiState.deviceList,
+      homeUiState = homeUiState,
       onDeviceClick = navigateToDeviceDetails,
       onDeviceRemove = {
         removeDevice(it)
@@ -189,7 +190,7 @@ fun HomeScreenNoViewModel(
  * Implements the screens for displaying all known Nexxtender charger devices,
  * including the case there are none yet, connect to them, delete them,
  * and allows to add new ones based on their SN and PN.
- * @param deviceList The list of known [Devices][Device].
+ * @param homeUiState The[HomeUiState].
  * @param onDeviceClick Function to be called when [HomeBody] wants to connect to a known device and show
  *  its details.
  * @param onDeviceRemove Function to be called when [HomeBody] wants to delete a known device from the list.
@@ -201,7 +202,7 @@ fun HomeScreenNoViewModel(
 
 @Composable
 private fun HomeBody(
-  deviceList: List<Device>,
+  homeUiState: HomeUiState,
   onDeviceClick: (Int) -> Unit,
   onDeviceRemove: (Device) -> Unit,
   modifier: Modifier = Modifier,
@@ -212,7 +213,7 @@ private fun HomeBody(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier,
   ) {
-    if (deviceList.isEmpty()) {
+    if (homeUiState.deviceList.isEmpty()) {
       Log.v(TAG, "HomeBody() deviceList is empty")
 
       Text(
@@ -223,7 +224,7 @@ private fun HomeBody(
       )
     } else {
       DevicesList(
-        deviceList = deviceList,
+        homeUiState = homeUiState,
         onDeviceClick = { onDeviceClick(it.id) },
         onDeviceRemove = { onDeviceRemove(it) },
         contentPadding = contentPadding,
@@ -237,7 +238,7 @@ private fun HomeBody(
 /**
  * Implements a [LazyColumn] for displaying all known Nexxtender charger devices and
  * connect to them.
- * @param deviceList The list of known [Devices][Device].
+ * @param homeUiState The[HomeUiState].
  * @param onDeviceClick Function to be called when [HomeBody] wants to connect to a known device and show
  *  its details.
  * @param onDeviceRemove Function to be called when [HomeBody] wants to delete a known device from the list.
@@ -248,7 +249,7 @@ private fun HomeBody(
  */
 @Composable
 private fun DevicesList(
-  deviceList: List<Device>,
+  homeUiState: HomeUiState,
   onDeviceClick: (Device) -> Unit,
   onDeviceRemove: (Device) -> Unit,
   contentPadding: PaddingValues,
@@ -259,9 +260,11 @@ private fun DevicesList(
     modifier = modifier,
     contentPadding = contentPadding
   ) {
-    items(items = deviceList, key = { it.id }) { device ->
+    items(items = homeUiState.deviceList, key = { it.id }) { device ->
+      val isAdvertising = HomeViewModel.isAdvertising(device, homeUiState.advertisingDeviceList)
       GaaiDeviceItem(
         device = device,
+        isAdvertising = isAdvertising,
         onDeviceClick = onDeviceClick,
         onDeviceRemove = onDeviceRemove,
         modifier = Modifier
@@ -275,6 +278,7 @@ private fun DevicesList(
  * Implements a [Card] displaying the details of the [device],
  * connect to it or delete it by swiping the card to the right using a [SwipeToDismissBox].
  * @param device The [Device] to display.
+ * @param Is the [device] advertising itself?
  * @param onDeviceClick Function to be called when [GaaiDeviceItem] wants to connect to a known device and show
  *  its details.
  * @param onDeviceRemove Function to be called when [GaaiDeviceItem] wants to delete a known device from the list.
@@ -287,6 +291,7 @@ private fun DevicesList(
 @Composable
 fun GaaiDeviceItem(
   device: Device,
+  isAdvertising: Boolean,
   onDeviceClick: (Device) -> Unit,
   onDeviceRemove: (Device) -> Unit,
   modifier: Modifier = Modifier
@@ -305,7 +310,7 @@ fun GaaiDeviceItem(
     }
   ) {
     GaaiDeviceCard(
-      device, ConnectionState.NOT_CONNECTED, modifier = Modifier
+      device, if (isAdvertising) ConnectionState.AVAILABLE else ConnectionState.NOT_CONNECTED, modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
         .clickable { onDeviceClick(device) })
   }
@@ -321,6 +326,7 @@ fun GaaiDeviceItem(
  */
 @Composable
 private fun connectionStateToText(connectionState: ConnectionState) = when (connectionState) {
+  ConnectionState.AVAILABLE -> stringResource(R.string.available)
   ConnectionState.CONNECTED -> stringResource(R.string.gatt_client_connected_services)
   ConnectionState.NOT_CONNECTED -> stringResource(R.string.gatt_client_not_connected)
   ConnectionState.CONNECTING -> stringResource(R.string.gatt_client_connecting)
@@ -341,7 +347,7 @@ private fun connectionStateToText(connectionState: ConnectionState) = when (conn
 private fun connectionStateToPainter(connectionState: ConnectionState) = when (connectionState) {
   ConnectionState.CONNECTED -> painterResource(R.drawable.bluetooth_connected_24px)
   ConnectionState.NOT_CONNECTED -> painterResource(R.drawable.bluetooth_disabled_24px)
-  ConnectionState.CONNECTING, ConnectionState.DISCOVERING -> painterResource(R.drawable.bluetooth_searching_24px)
+  ConnectionState.CONNECTING, ConnectionState.DISCOVERING, ConnectionState.AVAILABLE -> painterResource(R.drawable.bluetooth_searching_24px)
   else -> {
     painterResource(R.drawable.bluetooth_disabled_24px)
   }
@@ -448,10 +454,16 @@ fun HomeBodyPreview() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       HomeBody(
-        listOf(
-          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
-          Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
-          Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+        HomeUiState(
+          listOf(
+            Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
+            Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
+            Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+          ),
+          advertisingDeviceList = listOf(
+            MockServerDevice("A1", "FA:CA:DE:22:22:22"),
+            MockServerDevice("B2", "22:22:22:22:22:22"),
+          )
         ), onDeviceClick = {}, onDeviceRemove = {})
     }
   }
@@ -470,6 +482,10 @@ fun HomeScreenNoViewModelPreview() {
               Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
               Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
               Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+            ),
+            advertisingDeviceList = listOf(
+              MockServerDevice("A1", "FA:CA:DE:22:22:22"),
+              MockServerDevice("B2", "22:22:22:22:22:22"),
             )
           )
       )
@@ -499,7 +515,7 @@ fun HomeScreenEmptyListNoViewModelPreview() {
 fun HomeBodyEmptyListPreview() {
   GaaiTheme(dynamicColor = false) {
     Surface {
-      HomeBody(listOf(), onDeviceClick = {}, onDeviceRemove = {})
+      HomeBody(HomeUiState(listOf()), onDeviceClick = {}, onDeviceRemove = {})
     }
   }
 }

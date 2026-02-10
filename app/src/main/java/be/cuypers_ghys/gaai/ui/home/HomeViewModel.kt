@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024-2025, Frank HJ Cuypers
+ * Copyright © 2024-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -16,16 +16,32 @@
 
 package be.cuypers_ghys.gaai.ui.home
 
+import android.annotation.SuppressLint
+import android.os.ParcelUuid
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import be.cuypers_ghys.gaai.ble.BleRepository
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.DevicesRepository
+import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import no.nordicsemi.android.kotlin.ble.core.ServerDevice
+import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
+import no.nordicsemi.android.kotlin.ble.scanner.aggregator.BleScanResultAggregator
 
 // Tag for logging
 private const val TAG = "HomeViewModel"
@@ -33,11 +49,19 @@ private const val TAG = "HomeViewModel"
 /**
  * ViewModel to manage all devices from the Room database, to be used by [HomeScreen].
  * @param devicesRepository The [DevicesRepository] to use.
+ * @param bleRepository The [BleRepository] to use.
  * @constructor Called by [AppViewModelProvider][be.cuypers_ghys.gaai.ui.AppViewModelProvider].
  *
  * @author Frank HJ Cuypers
  */
-class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewModel() {
+class HomeViewModel(private val devicesRepository: DevicesRepository, private val bleRepository: BleRepository) :
+  ViewModel() {
+
+  init {
+    Log.v(TAG, "ENTRY init()")
+//    scanDevice()
+    Log.v(TAG, "RETURN init()")
+  }
 
   /**
    * Remove the [device] from the Room database.
@@ -55,16 +79,138 @@ class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewMode
   }
 
   /**
-   * Holds home ui state. The list of devices are retrieved from [DevicesRepository] and mapped to
-   * [HomeUiState]
+   * Base scanner filter class.
+   * @property filter The predicate applied to scanned devices.
    */
+  sealed class Filter(
+    open val filter: (result: BleScanResult) -> Boolean,
+  )
+
+  /**
+   * Filter by Service UUID.
+   * BleScanResultData's [no.nordicsemi.android.kotlin.ble.core.scanner.BleScanRecord.serviceUuids] returns a list of
+   * service UUID.
+   * The filter passes only devices that have the given Service UUID uuid .
+   * @property uuid The Service UUID to filter by.
+   */
+  @Suppress("ArrayInDataClass")
+  data class WithServiceUuid(
+    val uuid: ParcelUuid
+  ) : Filter(
+    filter = { result ->
+      result.data?.scanRecord?.serviceData?.containsKey(uuid) == true
+    }
+  )
+
+  /**
+   * The list of devices retrieved from [DevicesRepository].
+   */
+  private val deviceList: Flow<List<Device>> =
+    devicesRepository.getAllDevicesStream()
+
+  private var _advertisingDeviceList = MutableStateFlow<List<ServerDevice>>(emptyList())
+  val advertisingDeviceList = _advertisingDeviceList.asStateFlow()
+
+  /**
+   * The [WithServiceUuid] used to filter BLE scan results.
+   */
+  private lateinit var serviceUuidFilter: WithServiceUuid
+
+  /**
+   * The [Job] that is currently performing the BLE Scan.
+   */
+  private var currentJob: Job? = null
+
+//  /**
+//   * Holds home ui state. The list of devices are retrieved from [DevicesRepository] and mapped to
+//   * [HomeUiState]
+//   */
+//  val homeUiState: StateFlow<HomeUiState> =
+//    devicesRepository.getAllDevicesStream().map { HomeUiState(it) }
+//      .stateIn(
+//        scope = viewModelScope,
+//        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+//        initialValue = HomeUiState()
+//      )
+
+  /**
+   * Holds home ui state. Combines
+   * The list of devices are retrieved from [DevicesRepository] and mapped to [HomeUiState].
+   */
+
   val homeUiState: StateFlow<HomeUiState> =
-    devicesRepository.getAllDevicesStream().map { HomeUiState(it) }
+    deviceList.combine(advertisingDeviceList) { deviceList, advertisingDeviceList ->
+      HomeUiState(deviceList, advertisingDeviceList)
+    }
       .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
         initialValue = HomeUiState()
       )
+
+  /**
+   * Perform a BLE scan for the [Device]s that matches the [filterServiceUuid] filter and update the [_advertisingDeviceList]
+   * when found.
+   */
+  @SuppressLint("MissingPermission")
+  fun scanDevice() {
+    Log.v(TAG, "ENTRY scanDevice()")
+    currentJob?.cancel()
+    serviceUuidFilter = getWithServiceUuidFilter()
+    Log.d(TAG, "starting scan using filter $serviceUuidFilter")
+
+    // Create aggregator which will concat scan records with a device
+    val aggregator = BleScanResultAggregator()
+
+    /* Note from https://github.com/iDevicesInc/SweetBlue/wiki/Android-BLE-Issues:
+     * "Built-in scan filtering, at least pre-lollipop, does not work.
+     * You have to scan for all devices and do filtering yourself."
+     * So don't pass filters to BleScanner.scan() !
+     * scan() returns a Flow of BleScanResult, which consists of ServerDevice and BleScanResultData.
+     */
+    currentJob = bleRepository.getScannerState()
+      .filter {
+        filterServiceUuid(it)
+      }
+      .map { aggregator.aggregateDevices(it) } //Add new device and return an aggregated list
+      .onEach {
+        Log.d(TAG, "ble scanner found $it")
+        _advertisingDeviceList.emit(it)
+      }
+      .cancellable()
+      .launchIn(viewModelScope) //Scanning will stop after we leave the screen
+    Log.v(TAG, "RETURN scanDevice()")
+  }
+
+  /**
+   * Cancel the [Job] performing the BLE scan.
+   */
+  fun cancelScanDevice() {
+    Log.v(TAG, "ENTRY cancelScanDevice()")
+    currentJob?.cancel()
+    Log.v(TAG, "RETURN cancelScanDevice()")
+  }
+
+  /**
+   * Verifies if the BLE scan result [result] matches the [serviceUuidFilter].
+   * @param result the scan result to filter
+   * @return true if the [result] matches the [serviceUuidFilter].
+   */
+  private fun filterServiceUuid(result: BleScanResult): Boolean {
+    Log.v(TAG, "ENTRY filterServiceUuid(), result = $result")
+    val retVal = serviceUuidFilter.filter(result)
+    Log.v(TAG, "RETURN filterServiceUuid(), filter $retVal")
+    return retVal
+  }
+
+  /**
+   * Returns the [WithServiceUuid] filter.
+   */
+  private fun getWithServiceUuidFilter(): WithServiceUuid {
+    Log.v(TAG, "ENTRY getWithServiceUuidFilter()")
+    return WithServiceUuid(uuid = ParcelUuid(UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE))
+  }
+
 
   companion object {
     /**
@@ -72,10 +218,29 @@ class HomeViewModel(private val devicesRepository: DevicesRepository) : ViewMode
      * subscriber and the stopping of the sharing coroutine.
      */
     private const val TIMEOUT_MILLIS = 5_000L
+
+    /**
+     * Determines if the [device] is advertising.
+     * @param device
+     * @param advertisingDeviceList
+     * @return true if the [device] is also present in [advertisingDeviceList]
+     */
+    fun isAdvertising(device: Device, advertisingDeviceList: List<ServerDevice>): Boolean {
+      advertisingDeviceList.forEach {
+        if (it.address == device.mac) {
+          return true
+        }
+      }
+
+      return false
+    }
   }
 }
 
 /**
  * Ui State for HomeScreen
  */
-data class HomeUiState(val deviceList: List<Device> = listOf())
+data class HomeUiState(
+  val deviceList: List<Device> = listOf(),
+  val advertisingDeviceList: List<ServerDevice> = listOf()
+)

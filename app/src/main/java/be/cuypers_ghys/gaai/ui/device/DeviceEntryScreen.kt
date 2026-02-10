@@ -262,7 +262,7 @@ fun DeviceDataForm(
   ) {
     GaaiDeviceCard(
       device = deviceUiState.deviceDetails.toDevice(),
-      ConnectionState.NOT_CONNECTED,
+      ConnectionState.AVAILABLE,
       modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
     )
