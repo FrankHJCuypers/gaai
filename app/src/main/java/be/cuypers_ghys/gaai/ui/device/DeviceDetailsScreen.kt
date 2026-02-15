@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024-2025, Frank HJ Cuypers
+ * Copyright © 2024-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -91,13 +91,15 @@ import be.cuypers_ghys.gaai.data.Status
 import be.cuypers_ghys.gaai.data.TimeData
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
-import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.util.Timestamp
 import be.cuypers_ghys.gaai.util.TouPeriod
 import be.cuypers_ghys.gaai.util.TouTime
+import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectionStatus
+import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
+import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionStateWithStatus
 import kotlin.math.roundToInt
 
 // TODO: Split this file im multiple files?
@@ -308,15 +310,15 @@ fun DeviceDetailsBody(
     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
   ) {
     device?.let {
-      GaaiDeviceCard(
+      GaaiDeviceCardDeviceDetails(
         device = it,
-        state.deviceState.connectionState,
+        gattConnectionStateWithStatus = state.gattConnectionStateWithStatus,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
     }
 
-    if ( state.deviceState.connectionState == ConnectionState.CONNECTED )
+    if ( state.gattConnectionStateWithStatus.status == BleGattConnectionStatus.SUCCESS)
     {
       GaaiDeviceNameCard(
         deviceName = state.deviceName,
@@ -2098,7 +2100,7 @@ private fun DeviceDetailsHomeCompletePreview() {
         ),
         state = DeviceDetailsViewState(
           deviceName = "HOME2_",
-          deviceState = DeviceState(ConnectionState.CONNECTED),
+          gattConnectionStateWithStatus = GattConnectionStateWithStatus(GattConnectionState.STATE_CONNECTED, BleGattConnectionStatus.SUCCESS),
           deviceInformation = DeviceInformation(
             modelNumber = "12345", serialNumber = "12345",
             firmwareRevision = "1.23.4", hardwareRevision = "A2"
@@ -2165,8 +2167,7 @@ private fun DeviceDetailsMobilePreview() {
         ),
         state = DeviceDetailsViewState(
           deviceName = "Mobile2_",
-          deviceState = DeviceState(ConnectionState.CONNECTED),
-          deviceInformation = DeviceInformation(
+          gattConnectionStateWithStatus = GattConnectionStateWithStatus(GattConnectionState.STATE_CONNECTED, BleGattConnectionStatus.SUCCESS),          deviceInformation = DeviceInformation(
             modelNumber = "12345", serialNumber = "12345",
             firmwareRevision = "1.23.4", hardwareRevision = "A2"
           ),

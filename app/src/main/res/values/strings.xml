@@ -124,4 +124,18 @@
     <string name="device">Device</string>
     <string name="badge">Badge</string>
     <string name="available">Available</string>
+    <string name="notAvailable">Not Available</string>
+    <string name="success">SUCCESS</string>
+    <string name="ble_gatt_connection_status_success">Success</string>
+    <string name="ble_gatt_connection_status_terminal_local_host">Terminal_Local_Host</string>
+    <string name="ble_gatt_connection_status_terminal_peer_user">Terminal_Peer_User</string>
+    <string name="ble_gatt_connection_status_link_loss">Link_Loass</string>
+    <string name="ble_gatt_connection_status_not_supported">Not_Supported</string>
+    <string name="ble_gatt_connection_status_cancelled">Cancelled</string>
+    <string name="ble_gatt_connection_status_timeout">Timeout</string>
+    <string name="ble_gatt_connection_status_unknown">Unknown</string>
+    <string name="gatt_connection_state_connected">Connected</string>
+    <string name="gatt_connection_state_disconnected">Disconnected</string>
+    <string name="gatt_connection_state_connecting">Connecting</string>
+    <string name="gatt_connection_state_disconnecting">Disconnecting</string>
 </resources>

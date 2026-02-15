@@ -68,6 +68,7 @@ import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -76,6 +77,9 @@ import kotlinx.coroutines.runBlocking
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattServices
+import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectionStatus
+import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
+import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionStateWithStatus
 import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 
 // Tag for logging
@@ -163,19 +167,21 @@ class DeviceDetailsViewModel(
     Log.d(TAG, "ENTRY startGattClient(gaaiDevice: $gaaiDevice)")
 
     //Connect a Bluetooth LE device.
-    updateDeviceState(DeviceState(ConnectionState.CONNECTING))
     val client = bleRepository.getClientBleGattConnection(gaaiDevice.mac, viewModelScope).also {
       this@DeviceDetailsViewModel.client = it
     }
 
+    client.connectionStateWithStatus
+      .filterNotNull()
+      .onEach { updateGattConnectionStateWithStatus(it) }
+      .launchIn(viewModelScope)
+
     if (!client.isConnected) {
       Log.d(TAG, "Gatt Client not connected.")
-      updateDeviceState(DeviceState(ConnectionState.NOT_CONNECTED))
       return@launch
     }
 
     Log.v(TAG, "Gatt Client connected. Discovering services.")
-    updateDeviceState(DeviceState(ConnectionState.DISCOVERING))
 
     /*
      * Bluetooth caches the BLE GATT table.
@@ -263,7 +269,6 @@ class DeviceDetailsViewModel(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC
         )!!
     }
-    updateDeviceState(DeviceState(ConnectionState.CONNECTED))
 
     // Read static information
     val deviceName = deviceNameCharacteristic.read().value.toString(Charsets.UTF_8)
@@ -692,13 +697,13 @@ class DeviceDetailsViewModel(
   }
 
   /**
-   * Updates the [deviceState] with the value provided in the argument.
-   * @param deviceState The DeviceState.
+   * Updates the [gattConnectionStateWithStatus] with the value provided in the argument.
+   * @param gattConnectionStateWithStatus The GattConnectionStateWithStatus.
    */
-  private fun updateDeviceState(deviceState: DeviceState) {
-    Log.d(TAG, "ENTRY updateDeviceState(deviceState=$deviceState)")
-    _state.value = _state.value.copy(deviceState = deviceState)
-    Log.v(TAG, "RETURN updateDeviceState()")
+  private fun updateGattConnectionStateWithStatus(gattConnectionStateWithStatus: GattConnectionStateWithStatus) {
+    Log.d(TAG, "ENTRY updateGattConnectionStateWithStatus(gattConnectionStateWithStatus=$gattConnectionStateWithStatus)")
+    _state.value = _state.value.copy(gattConnectionStateWithStatus = gattConnectionStateWithStatus)
+    Log.v(TAG, "RETURN updateGattConnectionStateWithStatus()")
   }
 }
 
@@ -713,54 +718,13 @@ data class DeviceInformation(
 )
 
 /**
- * Internal connection state.
- */
-enum class ConnectionState {
-  /**
-   * Unknown state. Should not happen
-   */
-  UNKNOWN,
-
-  /**
-   * The charger is advertising itself on BLE, so it is available for connection.
-   */
-  AVAILABLE,
-
-  /**
-   * Gaai is trying to connect to the charger.
-   */
-  CONNECTING,
-
-  /**
-   * Gaai is connected to the charger and is now discovering its BLE services.
-   */
-  DISCOVERING,
-
-  /**
-   * Gaai is connected to the charger and has discovered all its BLE services.
-   */
-  CONNECTED,
-
-  /**
-   * Gaai is not connected with the charger.
-   */
-  NOT_CONNECTED
-}
-
-/**
- * Represents Device State.
- */
-data class DeviceState(
-  val connectionState: ConnectionState = ConnectionState.UNKNOWN
-)
-
-
-/**
  * Represents View State for a Device.
  */
 data class DeviceDetailsViewState(
   val deviceName: String = "",
-  val deviceState: DeviceState = DeviceState(),
+  val gattConnectionStateWithStatus: GattConnectionStateWithStatus = GattConnectionStateWithStatus(
+  GattConnectionState.STATE_DISCONNECTED,
+  BleGattConnectionStatus.UNKNOWN),
   val deviceInformation: DeviceInformation = DeviceInformation(),
   val chargingBasicData: ChargingBasicData = ChargingBasicData(),
   val chargingGridData: ChargingGridData = ChargingGridData(),

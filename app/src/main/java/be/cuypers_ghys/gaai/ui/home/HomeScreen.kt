@@ -68,10 +68,10 @@ import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
-import be.cuypers_ghys.gaai.ui.device.ConnectionState
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import be.cuypers_ghys.gaai.ui.device.GaaiDeviceCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.kotlin.ble.core.MockServerDevice
@@ -310,142 +310,14 @@ fun GaaiDeviceItem(
     }
   ) {
     GaaiDeviceCard(
-      device, if (isAdvertising) ConnectionState.AVAILABLE else ConnectionState.NOT_CONNECTED, modifier = Modifier
+      device, isAdvertising, modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
         .clickable { onDeviceClick(device) })
   }
   Log.v(TAG, "RETURN GaaiDeviceItem()")
 }
 
-/**
- * Converts [ConnectionState] to a string value to display.
- * @param connectionState
- * @return The corresponding string.
- *
- * @author Frank HJ Cuypers
- */
-@Composable
-private fun connectionStateToText(connectionState: ConnectionState) = when (connectionState) {
-  ConnectionState.AVAILABLE -> stringResource(R.string.available)
-  ConnectionState.CONNECTED -> stringResource(R.string.gatt_client_connected_services)
-  ConnectionState.NOT_CONNECTED -> stringResource(R.string.gatt_client_not_connected)
-  ConnectionState.CONNECTING -> stringResource(R.string.gatt_client_connecting)
-  ConnectionState.DISCOVERING -> stringResource(R.string.gatt_client_discovering_services)
-  else -> {
-    stringResource(R.string.gatt_client_connection_status_unknown)
-  }
-}
 
-/**
- * Converts [ConnectionState] to a corresponding icon to display.
- * @param connectionState
- * @return The corresponding icon.
- *
- * @author Frank HJ Cuypers
- */
-@Composable
-private fun connectionStateToPainter(connectionState: ConnectionState) = when (connectionState) {
-  ConnectionState.CONNECTED -> painterResource(R.drawable.bluetooth_connected_24px)
-  ConnectionState.NOT_CONNECTED -> painterResource(R.drawable.bluetooth_disabled_24px)
-  ConnectionState.CONNECTING, ConnectionState.DISCOVERING, ConnectionState.AVAILABLE -> painterResource(R.drawable.bluetooth_searching_24px)
-  else -> {
-    painterResource(R.drawable.bluetooth_disabled_24px)
-  }
-}
-
-/**
- * Implements a [Card] displaying the details of the [device].
- * @param device The [Device] to display.
- * @param connectionState The connection state of the device
- * @param modifier The [Modifier] to be applied to this [GaaiDeviceCard]
- *
- * @author Frank HJ Cuypers
- */
-@OptIn(ExperimentalStdlibApi::class)
-@Composable
-// TODO: factorize to its own file, since it is also used in DeviceEntryScreen.kt and DeviceDetailsScreen.kt
-internal fun GaaiDeviceCard(
-  device: Device, connectionState: ConnectionState, modifier: Modifier = Modifier
-) {
-  Log.d(TAG, "ENTRY GaaiDeviceCard(device = $device)")
-  Card(
-    modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-  ) {
-    Row(
-      modifier = modifier,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      val newPainter = when (device.type) {
-        ChargerType.MOBILE -> painterResource(R.drawable.ic_cable_mobile)
-        ChargerType.HOME -> painterResource(R.drawable.ic_cable_home)
-        else -> painterResource(R.drawable.rounded_ev_charger_24)
-      }
-
-      Icon(
-        painter = newPainter,
-        contentDescription = stringResource(id = R.string.ev_charger_content_desc)
-      )
-
-      Spacer(modifier = Modifier.width(16.dp))
-
-      Column(
-        modifier = Modifier
-          .fillMaxWidth()
-          .weight(1f)
-      ) {
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier.fillMaxWidth(),
-        ) {
-          Text(
-            text = device.type.toString(),
-            style = MaterialTheme.typography.titleMedium,
-          )
-          Spacer(Modifier.weight(1f))
-          Icon(
-            painter = connectionStateToPainter(connectionState),
-            contentDescription = stringResource(id = R.string.ev_charger_content_desc),
-            modifier = Modifier.size(MaterialTheme.typography.titleMedium.fontSize.value.dp)
-          )
-          Text(
-            text = connectionStateToText(connectionState),
-            style = MaterialTheme.typography.titleMedium,
-          )
-        }
-        Row(
-          modifier = Modifier.fillMaxWidth()
-        ) {
-          Log.v(TAG, "GaaiDeviceCard printing first line")
-
-          Text(
-            text = device.pn,
-            style = MaterialTheme.typography.titleMedium,
-          )
-          Spacer(Modifier.weight(1f))
-          Text(
-            text = device.sn,
-            style = MaterialTheme.typography.titleMedium
-          )
-
-        }
-        Row(
-          modifier = Modifier.fillMaxWidth()
-        ) {
-          Text(
-            text = device.mac,
-            style = MaterialTheme.typography.bodyMedium,
-          )
-          Spacer(Modifier.weight(1f))
-          Text(
-            text = "0x" + device.serviceDataValue.toHexString(),
-            style = MaterialTheme.typography.bodyMedium
-          )
-        }
-      }
-    }
-    Log.v(TAG, "RETURN GaaiDeviceCard())")
-  }
-}
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeBodyPreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "HomeBodyPreviewLight")
@@ -520,44 +392,3 @@ fun HomeBodyEmptyListPreview() {
   }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewHOMEDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewHOMELight")
-@Composable
-fun DevicePreviewHOME() {
-  GaaiTheme(dynamicColor = false) {
-    Surface {
-      GaaiDeviceCard(
-        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
-        ConnectionState.NOT_CONNECTED
-      )
-    }
-  }
-}
-
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewMOBILEDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewMOBILELight")
-@Composable
-fun DevicePreviewMOBILE() {
-  GaaiTheme(dynamicColor = false) {
-    Surface {
-      GaaiDeviceCard(
-        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
-        ConnectionState.NOT_CONNECTED
-      )
-    }
-  }
-}
-
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewUNKNOWNDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewUNKNOWNLight")
-@Composable
-fun DevicePreviewUNKNOWN() {
-  GaaiTheme(dynamicColor = false) {
-    Surface {
-      GaaiDeviceCard(
-        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
-        ConnectionState.NOT_CONNECTED
-      )
-    }
-  }
-}

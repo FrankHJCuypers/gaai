@@ -121,18 +121,6 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
    */
   private var currentJob: Job? = null
 
-//  /**
-//   * Holds home ui state. The list of devices are retrieved from [DevicesRepository] and mapped to
-//   * [HomeUiState]
-//   */
-//  val homeUiState: StateFlow<HomeUiState> =
-//    devicesRepository.getAllDevicesStream().map { HomeUiState(it) }
-//      .stateIn(
-//        scope = viewModelScope,
-//        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-//        initialValue = HomeUiState()
-//      )
-
   /**
    * Holds home ui state. Combines
    * The list of devices are retrieved from [DevicesRepository] and mapped to [HomeUiState].

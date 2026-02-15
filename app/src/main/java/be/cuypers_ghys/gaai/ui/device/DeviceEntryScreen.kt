@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024-2025, Frank HJ Cuypers
+ * Copyright © 2024-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -47,7 +47,6 @@ import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
-import be.cuypers_ghys.gaai.ui.home.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
@@ -262,7 +261,7 @@ fun DeviceDataForm(
   ) {
     GaaiDeviceCard(
       device = deviceUiState.deviceDetails.toDevice(),
-      ConnectionState.AVAILABLE,
+      true,
       modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
     )
