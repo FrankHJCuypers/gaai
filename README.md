@@ -307,7 +307,7 @@ The availability of each device is shown at the top right of the corresponding c
 | Value         | Icon                                                                                         | Description                                                                                                                        |
 |---------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
 | Available     | ![Available](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | The charger is advertising itself on BLE, so it is available for connection                                                        |
-| Not Available | ![Not Available](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | The charger is not advertising itself on BLE, so it is either already connected over BLE with some other device of is out of range |
+| Not Available | ![Not Available](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | The charger is not advertising itself on BLE, so it is either already connected over BLE with some other device or is out of range |
 
 If the BLE status stays *Not Available*,
 it might be that another BLE client is still connected to the device.
@@ -331,8 +331,8 @@ When clicking on a device card in [List of Devices](#list-of-devices),
 
 ![Device Detail](docs/images/DeviceDetailScreen.png)
 
-The complete screen is larger then the phone's screen.
-You must scroll up to see the other parts.
+The complete screen is larger than the phone's screen.
+You must scroll down to see the other parts.
 When the screen opens, only the labels are shown without data values.
 The values are populated as soon as *Gaai* has established the connection and read all the data.
 That can take 5 seconds.
@@ -352,13 +352,13 @@ It is the result code of the latest connection event and can have the following 
 | Value               | Icon                                                                                               | Description                                 |
 |---------------------|----------------------------------------------------------------------------------------------------|---------------------------------------------|
 | Success             | ![Success](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)             | The disconnection was initiated by the user | 
-| Terminal_Local_Host | ![Terminal_Local_Host](bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The local device initiated disconnection    | 
-| Terminal_Peer_User  | ![Terminal_Peer_User](bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The peer user initiated disconnection       | 
-| Link_Loss           | ![Link_Loss](bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Disconnection was not from the peer user performing a graceful disconnect
-| Not_Supported       | ![Not_Supported](bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The device does not have the requierd services
-| Cancelled           | ![Cancelled](bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Connection attempt was cancelled
-| Timeout             | ![Timeout](bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The connection timed out. The device might have reboot, is out of range, turned off or doesn't respond for another reason
-| Unknown             | ![Unknown](bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Unknown error
+| Terminal_Local_Host | ![Terminal_Local_Host](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The local device initiated disconnection    | 
+| Terminal_Peer_User  | ![Terminal_Peer_User](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The peer user initiated disconnection       | 
+| Link_Loss           | ![Link_Loss](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Disconnection was not from the peer user performing a graceful disconnect
+| Not_Supported       | ![Not_Supported](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The device does not have the requierd services
+| Cancelled           | ![Cancelled](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Connection attempt was cancelled
+| Timeout             | ![Timeout](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The connection timed out. The device might have reboot, is out of range, turned off or doesn't respond for another reason
+| Unknown             | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Unknown error
 
 If the Gatt connection state stays *Disconnected*,
 it might be that another BLE client is still connected to the device.
