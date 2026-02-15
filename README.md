@@ -610,6 +610,7 @@ Make sure that you are close to the *Nexxtender* charger and that no other devic
 
 Useful information can be found at
 
+- [Gaai Q&A](https://github.com/FrankHJCuypers/gaai/discussions/categories/q-a)
 - [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/gaai/wiki/Nexxtender-Charger-Information)
 - [Analyzing-Bluetooth-Low-Energy-Traffic](https://github.com/FrankHJCuypers/gaai/wiki/Analyzing-Bluetooth-Low-Energy-Traffic)
 - [fuut: Wireshark Dissector in Lua for Nexxtender charger BLE](https://github.com/FrankHJCuypers/fuut)
