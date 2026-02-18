@@ -51,7 +51,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -111,7 +115,16 @@ fun HomeScreen(
   Log.v(TAG, "ENTRY HomeScreen()")
 
   RequireBluetooth {
-    viewModel.scanDevice()
+    /**
+     * viewModel.scanDevice() must be called inside a [RequireBluetooth].
+     * But we only want to execute it once,
+     * so make sure not to reexecute viewModel.scanDevice() on each state update.
+     */
+    var scanDeviceCalled by remember { mutableStateOf(false) }
+    if ( !scanDeviceCalled) {
+      viewModel.scanDevice()
+      scanDeviceCalled = true
+    }
     val homeUiState by viewModel.homeUiState.collectAsState()
     HomeScreenNoViewModel(
       navigateToDeviceEntry, navigateToDeviceDetails, viewModel::removeDevice, homeUiState, modifier

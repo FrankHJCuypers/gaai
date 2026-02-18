@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.kotlin.ble.core.ServerDevice
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
-import no.nordicsemi.android.kotlin.ble.scanner.aggregator.BleScanResultAggregator
+import kotlin.time.Duration.Companion.seconds
 
 // Tag for logging
 private const val TAG = "HomeViewModel"
@@ -122,6 +122,11 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
   private var currentJob: Job? = null
 
   /**
+   * The [Job] that performs the [aggregator] cleaning
+   */
+  private var cleaningJob: Job? = null
+
+  /**
    * Holds home ui state. Combines
    * The list of devices are retrieved from [DevicesRepository] and mapped to [HomeUiState].
    */
@@ -136,6 +141,9 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
         initialValue = HomeUiState()
       )
 
+  // Create aggregator which will concat scan records with a device
+  private var aggregator: BleScanResultAggregatorCleaner? = null
+
   /**
    * Perform a BLE scan for the [Device]s that matches the [filterServiceUuid] filter and update the [_advertisingDeviceList]
    * when found.
@@ -144,11 +152,13 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
   fun scanDevice() {
     Log.v(TAG, "ENTRY scanDevice()")
     currentJob?.cancel()
+    cleaningJob?.cancel()
     serviceUuidFilter = getWithServiceUuidFilter()
     Log.d(TAG, "starting scan using filter $serviceUuidFilter")
 
-    // Create aggregator which will concat scan records with a device
-    val aggregator = BleScanResultAggregator()
+//    aggregator?.stopCleaning()
+    aggregator = BleScanResultAggregatorCleaner()!!
+//    aggregator!!.startCleaning { _advertisingDeviceList.emit(it) }
 
     /* Note from https://github.com/iDevicesInc/SweetBlue/wiki/Android-BLE-Issues:
      * "Built-in scan filtering, at least pre-lollipop, does not work.
@@ -160,14 +170,27 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
       .filter {
         filterServiceUuid(it)
       }
-      .map { aggregator.aggregateDevices(it) } //Add new device and return an aggregated list
+      .map { aggregator!!.aggregateDevices(it) } //Add new device and return an aggregated list
       .onEach {
         Log.d(TAG, "ble scanner found $it")
         _advertisingDeviceList.emit(it)
       }
       .cancellable()
       .launchIn(viewModelScope) //Scanning will stop after we leave the screen
-    Log.v(TAG, "RETURN scanDevice()")
+
+    cleaningJob = tickerFlow(1.seconds, 2.seconds)
+      .onEach {
+        Log.v(TAG, "cleaning job $it")
+        val cleaned = aggregator?.clean()
+        val results = aggregator?.results
+        Log.v(TAG, "cleaned = $cleaned, results = $results")
+        if ( (cleaned == true) && (results != null)) {
+          val listOfServerDevices = results.map{ it.device }
+          Log.v(TAG, "listOfServerDevices = $listOfServerDevices")
+          _advertisingDeviceList.emit(listOfServerDevices)
+        }
+      }.launchIn(viewModelScope)
+    Log.d(TAG, "RETURN scanDevice()")
   }
 
   /**
@@ -198,7 +221,6 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
     Log.v(TAG, "ENTRY getWithServiceUuidFilter()")
     return WithServiceUuid(uuid = ParcelUuid(UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE))
   }
-
 
   companion object {
     /**
