@@ -22,23 +22,17 @@ import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -54,14 +48,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,13 +64,14 @@ import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
+import be.cuypers_ghys.gaai.ui.device.GaaiDeviceCard
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
-import be.cuypers_ghys.gaai.ui.device.GaaiDeviceCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.kotlin.ble.core.MockServerDevice
+import no.nordicsemi.android.kotlin.ble.core.data.BondState
 
 // Tag for logging
 private const val TAG = "HomeScreen"
@@ -121,7 +114,7 @@ fun HomeScreen(
      * so make sure not to reexecute viewModel.scanDevice() on each state update.
      */
     var scanDeviceCalled by remember { mutableStateOf(false) }
-    if ( !scanDeviceCalled) {
+    if (!scanDeviceCalled) {
       viewModel.scanDevice()
       scanDeviceCalled = true
     }
@@ -226,7 +219,7 @@ private fun HomeBody(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier,
   ) {
-    if (homeUiState.deviceList.isEmpty()) {
+    if (homeUiState.deviceStateList.isEmpty()) {
       Log.v(TAG, "HomeBody() deviceList is empty")
 
       Text(
@@ -273,25 +266,25 @@ private fun DevicesList(
     modifier = modifier,
     contentPadding = contentPadding
   ) {
-    items(items = homeUiState.deviceList, key = { it.id }) { device ->
-      val isAdvertising = HomeViewModel.isAdvertising(device, homeUiState.advertisingDeviceList)
+    items(items = homeUiState.deviceStateList, key = { it.device }) { deviceState ->
+      val isAdvertising = HomeViewModel.isAdvertising(deviceState.device, homeUiState.advertisingDeviceList)
       GaaiDeviceItem(
-        device = device,
+        deviceState = deviceState,
         isAdvertising = isAdvertising,
         onDeviceClick = onDeviceClick,
         onDeviceRemove = onDeviceRemove,
         modifier = Modifier
-          .clickable { onDeviceClick(device) })
+          .clickable { onDeviceClick(deviceState.device) })
     }
   }
   Log.v(TAG, "RETURN DevicesList()")
 }
 
 /**
- * Implements a [Card] displaying the details of the [device],
+ * Implements a [Card] displaying the details of the [deviceState],
  * connect to it or delete it by swiping the card to the right using a [SwipeToDismissBox].
- * @param device The [Device] to display.
- * @param Is the [device] advertising itself?
+ * @param deviceState The [DeviceState] to display.
+ * @param isAdvertising Is the [deviceState] advertising itself?
  * @param onDeviceClick Function to be called when [GaaiDeviceItem] wants to connect to a known device and show
  *  its details.
  * @param onDeviceRemove Function to be called when [GaaiDeviceItem] wants to delete a known device from the list.
@@ -303,7 +296,7 @@ private fun DevicesList(
 // see Answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
 @Composable
 fun GaaiDeviceItem(
-  device: Device,
+  deviceState: DeviceState,
   isAdvertising: Boolean,
   onDeviceClick: (Device) -> Unit,
   onDeviceRemove: (Device) -> Unit,
@@ -312,24 +305,23 @@ fun GaaiDeviceItem(
   Log.v(TAG, "Entering GaaiDeviceItem()")
   val scope = rememberCoroutineScope()
   SwipeToDismissContainer(
-    device,
+    deviceState,
     stringResource(R.string.device),
     onDismiss = { _, onError ->
       scope.launch {
         delay(1000)
         onError()
-        onDeviceRemove(device)
+        onDeviceRemove(deviceState.device)
       }
     }
   ) {
     GaaiDeviceCard(
-      device, isAdvertising, modifier = Modifier
+      deviceState, isAdvertising, modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
-        .clickable { onDeviceClick(device) })
+        .clickable { onDeviceClick(deviceState.device) })
   }
   Log.v(TAG, "RETURN GaaiDeviceItem()")
 }
-
 
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "HomeBodyPreviewDark")
@@ -341,9 +333,36 @@ fun HomeBodyPreview() {
       HomeBody(
         HomeUiState(
           listOf(
-            Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
-            Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
-            Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+            DeviceState(
+              Device(
+                1,
+                "12345-A2",
+                "6789-12345-E3",
+                "FA:CA:DE:12:34:56",
+                0x12345678,
+                type = ChargerType.HOME
+              ), BondState.BONDING
+            ),
+            DeviceState(
+              Device(
+                2,
+                "12345-A2",
+                "2222-22222-E3",
+                "FA:CA:DE:22:22:22",
+                0x22222222,
+                type = ChargerType.MOBILE
+              ), BondState.BONDED
+            ),
+            DeviceState(
+              Device(
+                3,
+                "12345-A2",
+                "3333-33333-E3",
+                "FA:CA:DE:33:33:33",
+                0x33333333,
+                type = ChargerType.HOME
+              ), BondState.NONE
+            ),
           ),
           advertisingDeviceList = listOf(
             MockServerDevice("A1", "FA:CA:DE:22:22:22"),
@@ -364,9 +383,36 @@ fun HomeScreenNoViewModelPreview() {
         navigateToDeviceEntry = {}, navigateToDeviceDetails = {}, removeDevice = {}, homeUiState =
           HomeUiState(
             listOf(
-              Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, type = ChargerType.HOME),
-              Device(2, "12345-A2", "2222-22222-E3", "FA:CA:DE:22:22:22", 0x22222222, type = ChargerType.MOBILE),
-              Device(3, "12345-A2", "3333-33333-E3", "FA:CA:DE:33:33:33", 0x33333333, type = ChargerType.HOME),
+              DeviceState(
+                Device(
+                  1,
+                  "12345-A2",
+                  "6789-12345-E3",
+                  "FA:CA:DE:12:34:56",
+                  0x12345678,
+                  type = ChargerType.HOME
+                ), BondState.BONDING
+              ),
+              DeviceState(
+                Device(
+                  2,
+                  "12345-A2",
+                  "2222-22222-E3",
+                  "FA:CA:DE:22:22:22",
+                  0x22222222,
+                  type = ChargerType.MOBILE
+                ), BondState.BONDED
+              ),
+              DeviceState(
+                Device(
+                  3,
+                  "12345-A2",
+                  "3333-33333-E3",
+                  "FA:CA:DE:33:33:33",
+                  0x33333333,
+                  type = ChargerType.HOME
+                ), BondState.NONE
+              ),
             ),
             advertisingDeviceList = listOf(
               MockServerDevice("A1", "FA:CA:DE:22:22:22"),

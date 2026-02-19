@@ -56,7 +56,7 @@ import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 
 // Tag for logging
 private const val TAG = "BleScanResultAggregateCleaner"
-const val CUTOFF_PERIOD_NANO = 500000000L // 500ms. Nexxtender Home advertises itself every 25ms.
+const val CUTOFF_PERIOD_NANO = 1000000000L // 1000ms. Nexxtender Home advertises itself every 25ms.
 
 /**
  * Class responsible for aggregating scan results with a single server device.
@@ -99,19 +99,19 @@ class BleScanResultAggregatorCleaner {
    * from the [devices] map.
    * @return true if something was indeed cleaned
    */
-  fun clean() : Boolean {
+  fun clean(): Boolean {
     Log.d(TAG, "ENTRY clean() #devices=${devices.size}")
-    var cleaned = false;
+    var cleaned = false
 
-    val elapsedRealtimeNanos  = SystemClock.elapsedRealtimeNanos ()
+    val elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
     val cutoffTimeNano = elapsedRealtimeNanos - CUTOFF_PERIOD_NANO
 //    Log.v(TAG,"elapsedRealtimeNanos =$elapsedRealtimeNanos , cutoffTimeNanos = $cutoffTimeNano")
-    devices.forEach{ (serverDevice, bleScanResultData) ->
+    devices.forEach { (serverDevice, bleScanResultData) ->
 //      Log.v(TAG, "Testing serverDevice=$serverDevice ")
 //      Log.v(TAG, " bleScanResultData=$bleScanResultData ")
 //      Log.v(TAG, " bleScanResultData=$bleScanResultData.last() ")
       val lastTimeStamp = bleScanResultData?.timestampNanos
-      if ( bleScanResultData == null){
+      if (bleScanResultData == null) {
 //        Log.d(TAG, "bleScanResultData null  Removing $serverDevice")
         devices.remove(serverDevice)
         cleaned = true

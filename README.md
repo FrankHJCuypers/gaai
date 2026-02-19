@@ -280,11 +280,33 @@ If you entered the correct PN and SN,
 
 Gaai shows a card with the details of the found device.
 
-+ At the top is the type of the Nexxtender Charger: HOME or MOBILE. The BLE connection status is still *Not connected*.
-+ At the middle left is the PN.
-+ At the middle right is the SN.
-+ At the bottom left is the MAC.
-+ At the bottom right is the Service Data used to find the BLE device based on its advertisement packet.
++ The top row shows 
+    + at the left the type of the Nexxtender Charger: HOME or MOBILE.
+    + at the right the device's bonding state ("pairing"). See below table for an explanation of the possible states.
++ The second row shows if the device is available for connection. See below table for an explanation of the possible states.
+  For devices shown in this screen, it is always Available. 
++ The third row shows
+    + At the left the PN.
+    + At the right the SN.
++ The bottom row shows
+    + At the left the MAC.
+    + At right the Service Data used to find the BLE device based on its advertisement packet.
+
+Possible bonding states:
+
+| Value      | Icon                                                                                     | Description                                                     |
+|------------|------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| Not Bonded | ![Not Bonded](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | Device is not bonded and bonding process has not been initiated |
+| Bonding    | ![Bonding](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | Device is not bonded, but bonding process has been initiated    |
+| Bonded     | ![Bonded](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)    | Device is bonded                                                |
+
+Possible Availability states: 
+
+| Value         | Icon                                                                                         | Description                                                                                                                        |
+|---------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| Available     | ![Available](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | The charger is advertising itself on BLE, so it is available for connection                                                        |
+| Not Available | ![Not Available](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | The charger is not advertising itself on BLE, so it is either already connected over BLE with some other device or is out of range |
+
 
 Press *Save* to save this device in *Gaai's* database.
 This will bring you back to the previous screen, now showing one device.
@@ -302,15 +324,11 @@ shown in the next picture.
 
 ![Home Screen with 3 Devices](docs/images/HomeScreenThreeDevices.png)
 
+The details for each card are as explained in [Add a Nexxtender device](#add-a-nexxtender-device)
 The availability of each device is shown at the top right of the corresponding card and can have the following values:
 
-| Value         | Icon                                                                                         | Description                                                                                                                        |
-|---------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| Available     | ![Available](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | The charger is advertising itself on BLE, so it is available for connection                                                        |
-| Not Available | ![Not Available](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | The charger is not advertising itself on BLE, so it is either already connected over BLE with some other device or is out of range |
-
-If the BLE status stays *Not Available*,
-it might be that another BLE client is still connected to the device.
+If the Availability status stays *Not Available*,
+it might be that another BLE client is still connected to the device or that the device is out of range.
 
 In this screen you can
 
@@ -337,7 +355,10 @@ When the screen opens, only the labels are shown without data values.
 The values are populated as soon as *Gaai* has established the connection and read all the data.
 That can take 5 seconds.
 
-The Gatt connection state at the top right of the first card represents the current link status and can have the following values:
+The first card at the top has the same contents as described in [Add a Nexxtender device](#add-a-nexxtender-device)
+except for the second row that no longer contains the Availability state but:
+
++ At the left the Gatt connection stat**e** represents the current link status and can have the following values:
 
 | Value         | Icon                                                                                         | Description                                             |
 |---------------|----------------------------------------------------------------------------------------------|---------------------------------------------------------|
@@ -346,28 +367,25 @@ The Gatt connection state at the top right of the first card represents the curr
 | Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | *Gaai* is connected with the charger's Gatt server      | 
 | Disconnecting | ![Disconnecting](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | *Gaai* is disconnecting with the charger's Gatt server |
 
-The BLE Gatt connection status is shown just below Gatt connection state.
-It is the result code of the latest connection event and can have the following values:
++ At the right the BLE Gatt connection stat**us** shows the result code of the latest connection event and can have the 
+  following values:
 
-| Value               | Icon                                                                                               | Description                                 |
-|---------------------|----------------------------------------------------------------------------------------------------|---------------------------------------------|
-| Success             | ![Success](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)             | The disconnection was initiated by the user | 
-| Terminal_Local_Host | ![Terminal_Local_Host](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The local device initiated disconnection    | 
-| Terminal_Peer_User  | ![Terminal_Peer_User](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The peer user initiated disconnection       | 
-| Link_Loss           | ![Link_Loss](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Disconnection was not from the peer user performing a graceful disconnect
-| Not_Supported       | ![Not_Supported](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The device does not have the requierd services
-| Cancelled           | ![Cancelled](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Connection attempt was cancelled
-| Timeout             | ![Timeout](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The connection timed out. The device might have reboot, is out of range, turned off or doesn't respond for another reason
-| Unknown             | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | Unknown error
+| Value               | Icon                                                                                             | Description                                                                                                               |
+|---------------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| Success             | ![Success](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)           | The disconnection was initiated by the user                                                                               | 
+| Terminal_Local_Host | ![Terminal_Local_Host](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv) | The local device initiated disconnection                                                                                  | 
+| Terminal_Peer_User  | ![Terminal_Peer_User](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv)  | The peer user initiated disconnection                                                                                     | 
+| Link_Loss           | ![Link_Loss](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv)           | Disconnection was not from the peer user performing a graceful disconnect                                                 |
+| Not_Supported       | ![Not_Supported](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv)       | The device does not have the requierd services                                                                            |
+| Cancelled           | ![Cancelled](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv)           | Connection attempt was cancelled                                                                                          |
+| Timeout             | ![Timeout](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv)             | The connection timed out. The device might have reboot, is out of range, turned off or doesn't respond for another reason |
+| Unknown             | ![Unknown](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.sv)             | Unknown error                                                                                                             |
 
 If the Gatt connection state stays *Disconnected*,
-it might be that another BLE client is still connected to the device.
+it might be that another BLE client is still connected to the device or that the device is out of range.
 It could also be a problem in *Gaai*.
 It is normally solved by going back to the previous screen using the left arrow at the top left of the screen,
 and try again.
-
-The card on the top is the same one as from the [List of Devices](#list-of-devices), 
-except for the Gatt connection state and the BLE Gatt connection status.
 
 The remaining cards are only shown when the Gatt connection state equals Connected.
 

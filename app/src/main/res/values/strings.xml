@@ -138,4 +138,7 @@
     <string name="gatt_connection_state_disconnected">Disconnected</string>
     <string name="gatt_connection_state_connecting">Connecting</string>
     <string name="gatt_connection_state_disconnecting">Disconnecting</string>
+    <string name="bond_state_none">Not Bonded</string>
+    <string name="bond_state_bonding">Bonding</string>
+    <string name="bond_state_bonded">Bonded</string>
 </resources>

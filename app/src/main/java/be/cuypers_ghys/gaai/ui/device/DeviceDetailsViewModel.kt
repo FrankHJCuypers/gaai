@@ -78,6 +78,7 @@ import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattServices
 import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectionStatus
+import no.nordicsemi.android.kotlin.ble.core.data.BondState
 import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
 import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionStateWithStatus
 import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
@@ -174,6 +175,16 @@ class DeviceDetailsViewModel(
     client.connectionStateWithStatus
       .filterNotNull()
       .onEach { updateGattConnectionStateWithStatus(it) }
+      .launchIn(viewModelScope)
+
+    updateBondState(GaaiBondState.getBondState(bleRepository.context, gaaiDevice))
+
+    client.bondState
+      .filterNotNull()
+      .onEach {
+        Log.v(TAG, "bondState: $it")
+        updateBondState(it)
+      }
       .launchIn(viewModelScope)
 
     if (!client.isConnected) {
@@ -371,7 +382,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [newConfigData] to the [Generic Data]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
    * characteristic.
    */
   private suspend fun writeNewConfigData() {
@@ -382,7 +393,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [newTimeData] to the [Generic Data]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
    * characteristic.
    */
   private suspend fun writeNewTimeData() {
@@ -397,7 +408,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [newConfigData] to the [Generic Data]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
    * characteristic.
    * @param newConfigData The new [ConfigData] to write.
    */
@@ -410,7 +421,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [newTimeData] to the [Generic Data]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
    * characteristic.
    * @param newTimeData The new [TimeData] to write.
    */
@@ -423,7 +434,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [newData] to the [Generic Data]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_DATA_CHARACTERISTIC]
    * characteristic.
    * @param newData The new data to write.
    */
@@ -436,7 +447,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_GET] or [CONFIG_OPERATION_CBOR_GET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
    */
   private suspend fun sendConfigOperationGet() {
@@ -449,7 +460,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [TIME_OPERATION_GET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
    */
   private suspend fun sendTimeOperationGet() {
@@ -461,7 +472,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [TIME_OPERATION_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
    */
   private suspend fun sendTimeOperationSet() {
@@ -473,7 +484,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [command] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
    * @param command The [OperationId][be.cuypers_ghys.gaai.data.OperationAndStatusIDs] to write.
    */
@@ -499,7 +510,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [touPeriodWeek].
    * @param touPeriodWeek New values for [ConfigData.touWeekStart] and [ConfigData.touWeekEnd].
    */
@@ -517,7 +528,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [touPeriodWeekend].
    * @param touPeriodWeekend New values for [ConfigData.touWeekendStart] and [ConfigData.touWeekendEnd].
    */
@@ -535,7 +546,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [ConfigData.maxGrid].
    * @param maxGrid New values for [ConfigData.maxGrid].
    */
@@ -552,7 +563,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [ConfigData.maxDevice].
    * @param maxDevice New values for [ConfigData.maxDevice].
    */
@@ -569,7 +580,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [ConfigData.safe].
    * @param safe New values for [ConfigData.safe].
    */
@@ -586,7 +597,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [ConfigData.mode].
    * @param mode New values for [ConfigData.mode].
    */
@@ -603,7 +614,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the [ConfigData.iCapacity].
    * @param iCapacity New values for [ConfigData.iCapacity].
    */
@@ -620,7 +631,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [TIME_OPERATION_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic, changing the time to the current time on the mobile phone.
    */
   fun sendTimeOperationSyncTime() {
@@ -633,7 +644,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [TIME_OPERATION_GET]  to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic].
    */
   fun sendTimeOperationGetTime() {
@@ -646,7 +657,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
    */
   private suspend fun sendConfigOperationSet() {
@@ -673,7 +684,7 @@ class DeviceDetailsViewModel(
 
   /**
    * Writes [loaderOperation] to the [Generic Command]
-   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
    * @param loaderOperation Any of [LOADER_OPERATION_START_CHARGING_DEFAULT], [LOADER_OPERATION_START_CHARGING_MAX],
    *  [LOADER_OPERATION_START_CHARGING_AUTO], [LOADER_OPERATION_START_CHARGING_ECO],
@@ -701,9 +712,22 @@ class DeviceDetailsViewModel(
    * @param gattConnectionStateWithStatus The GattConnectionStateWithStatus.
    */
   private fun updateGattConnectionStateWithStatus(gattConnectionStateWithStatus: GattConnectionStateWithStatus) {
-    Log.d(TAG, "ENTRY updateGattConnectionStateWithStatus(gattConnectionStateWithStatus=$gattConnectionStateWithStatus)")
+    Log.d(
+      TAG,
+      "ENTRY updateGattConnectionStateWithStatus(gattConnectionStateWithStatus=$gattConnectionStateWithStatus)"
+    )
     _state.value = _state.value.copy(gattConnectionStateWithStatus = gattConnectionStateWithStatus)
     Log.v(TAG, "RETURN updateGattConnectionStateWithStatus()")
+  }
+
+  /**
+   * Updates the [bondState] with the value provided in the argument.
+   * @param bondState The BondState.
+   */
+  private fun updateBondState(bondState: BondState) {
+    Log.d(TAG, "ENTRY updateBondState(bondState=$bondState)")
+    _state.value = _state.value.copy(bondState = bondState)
+    Log.v(TAG, "RETURN updateBondState()")
   }
 }
 
@@ -723,8 +747,10 @@ data class DeviceInformation(
 data class DeviceDetailsViewState(
   val deviceName: String = "",
   val gattConnectionStateWithStatus: GattConnectionStateWithStatus = GattConnectionStateWithStatus(
-  GattConnectionState.STATE_DISCONNECTED,
-  BleGattConnectionStatus.UNKNOWN),
+    GattConnectionState.STATE_DISCONNECTED,
+    BleGattConnectionStatus.UNKNOWN
+  ),
+  val bondState: BondState = BondState.NONE,
   val deviceInformation: DeviceInformation = DeviceInformation(),
   val chargingBasicData: ChargingBasicData = ChargingBasicData(),
   val chargingGridData: ChargingGridData = ChargingGridData(),

@@ -42,8 +42,10 @@ import androidx.compose.ui.unit.dp
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.Device
+import be.cuypers_ghys.gaai.ui.home.DeviceState
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectionStatus
+import no.nordicsemi.android.kotlin.ble.core.data.BondState
 import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
 import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionStateWithStatus
 
@@ -51,8 +53,8 @@ import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionStateWithStatus
 private const val TAG = "GaaiDeviceCard"
 
 /**
- * Implements a [Card] displaying the details of the [device].
- * @param device The [Device] to display.
+ * Implements a [Card] displaying the details of the [deviceState].
+ * @param deviceState The [DeviceState] to display.
  * @param connectionState The connection state of the device
  * @param modifier The [Modifier] to be applied to this [GaaiDeviceCard]
  *
@@ -61,19 +63,15 @@ private const val TAG = "GaaiDeviceCard"
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 internal fun GaaiDeviceCard(
-  device: Device, isAdvertising: Boolean, modifier: Modifier = Modifier
+  deviceState: DeviceState, isAdvertising: Boolean, modifier: Modifier = Modifier
 ) {
-  Log.d(TAG, "ENTRY GaaiDeviceCard(device = $device)")
+  Log.d(TAG, "ENTRY GaaiDeviceCard(deviceState = $deviceState)")
 
-  GaaiDeviceCardCommon(device, modifier){
+  GaaiDeviceCardCommon(deviceState.device, deviceState.bondState, modifier) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.fillMaxWidth(),
     ) {
-      Text(
-        text = device.type.toString(),
-        style = MaterialTheme.typography.titleMedium,
-      )
       Spacer(Modifier.weight(1f))
       Icon(
         painter = isAvailableToPainter(isAdvertising),
@@ -85,6 +83,7 @@ internal fun GaaiDeviceCard(
         style = MaterialTheme.typography.titleMedium,
       )
     }
+
   }
   Log.v(TAG, "RETURN GaaiDeviceCard())")
 }
@@ -100,20 +99,19 @@ internal fun GaaiDeviceCard(
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 internal fun GaaiDeviceCardDeviceDetails(
-  device: Device, gattConnectionStateWithStatus: GattConnectionStateWithStatus, modifier: Modifier = Modifier
+  device: Device,
+  gattConnectionStateWithStatus: GattConnectionStateWithStatus,
+  bondState: BondState,
+  modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "ENTRY GaaiDeviceCardDeviceDetails(device = $device)")
 
-  GaaiDeviceCardCommon(device, modifier){
+  GaaiDeviceCardCommon(device, bondState, modifier) {
+
     Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.fillMaxWidth(),
     ) {
-      Text(
-        text = device.type.toString(),
-        style = MaterialTheme.typography.titleMedium,
-      )
-      Spacer(Modifier.weight(1f))
       Icon(
         painter = gattConnectionStateToPainter(gattConnectionStateWithStatus.state),
         contentDescription = stringResource(id = R.string.ev_charger_content_desc),
@@ -123,11 +121,6 @@ internal fun GaaiDeviceCardDeviceDetails(
         text = gattConnectionStateToText(gattConnectionStateWithStatus.state),
         style = MaterialTheme.typography.titleMedium,
       )
-    }
-    Row(
-      verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.fillMaxWidth(),
-    ) {
       Spacer(Modifier.weight(1f))
       Icon(
         painter = bleGattConnectionStatusToPainter(gattConnectionStateWithStatus.status),
@@ -154,7 +147,10 @@ internal fun GaaiDeviceCardDeviceDetails(
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 internal fun GaaiDeviceCardCommon(
-  device: Device, modifier: Modifier = Modifier, gaaiDeviceCardHomeEntryDetail: @Composable () -> Unit
+  device: Device,
+  bondState: BondState,
+  modifier: Modifier = Modifier,
+  gaaiDeviceCardHomeEntryDetail: @Composable () -> Unit
 ) {
   Log.d(TAG, "ENTRY GaaiDeviceCardCommon(device = $device)")
   Card(
@@ -182,6 +178,25 @@ internal fun GaaiDeviceCardCommon(
           .fillMaxWidth()
           .weight(1f)
       ) {
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier.fillMaxWidth(),
+        ) {
+          Text(
+            text = device.type.toString(),
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Icon(
+            painter = bondStateToPainter(bondState),
+            contentDescription = stringResource(id = R.string.ev_charger_content_desc),
+            modifier = Modifier.size(MaterialTheme.typography.titleMedium.fontSize.value.dp)
+          )
+          Text(
+            text = bondStateToText(bondState),
+            style = MaterialTheme.typography.titleMedium,
+          )
+        }
         gaaiDeviceCardHomeEntryDetail()
         Row(
           modifier = Modifier.fillMaxWidth()
@@ -238,8 +253,9 @@ private fun isAvailableToText(isAvailable: Boolean) = if (isAvailable)
  * @author Frank HJ Cuypers
  */
 @Composable
-private fun isAvailableToPainter(isAvailable: Boolean ) = if (isAvailable) painterResource(R.drawable.bluetooth_searching_24px)
-else painterResource(R.drawable.bluetooth_disabled_24px)
+private fun isAvailableToPainter(isAvailable: Boolean) =
+  if (isAvailable) painterResource(R.drawable.bluetooth_searching_24px)
+  else painterResource(R.drawable.bluetooth_disabled_24px)
 
 
 /**
@@ -251,18 +267,19 @@ else painterResource(R.drawable.bluetooth_disabled_24px)
  * @author Frank HJ Cuypers
  */
 @Composable
-private fun bleGattConnectionStatusToText(bleGattConnectionStatus: BleGattConnectionStatus) = when (bleGattConnectionStatus) {
-  BleGattConnectionStatus.SUCCESS -> stringResource(R.string.ble_gatt_connection_status_success)
-  BleGattConnectionStatus.TERMINATE_LOCAL_HOST -> stringResource(R.string.ble_gatt_connection_status_terminal_local_host)
-  BleGattConnectionStatus.TERMINATE_PEER_USER -> stringResource(R.string.ble_gatt_connection_status_terminal_peer_user)
-  BleGattConnectionStatus.LINK_LOSS -> stringResource(R.string.ble_gatt_connection_status_link_loss)
-  BleGattConnectionStatus.NOT_SUPPORTED -> stringResource(R.string.ble_gatt_connection_status_not_supported)
-  BleGattConnectionStatus.CANCELLED -> stringResource(R.string.ble_gatt_connection_status_timeout)
-  BleGattConnectionStatus.TIMEOUT -> stringResource(R.string.ble_gatt_connection_status_cancelled)
-  else -> {
-    stringResource(R.string.ble_gatt_connection_status_unknown)
+private fun bleGattConnectionStatusToText(bleGattConnectionStatus: BleGattConnectionStatus) =
+  when (bleGattConnectionStatus) {
+    BleGattConnectionStatus.SUCCESS -> stringResource(R.string.ble_gatt_connection_status_success)
+    BleGattConnectionStatus.TERMINATE_LOCAL_HOST -> stringResource(R.string.ble_gatt_connection_status_terminal_local_host)
+    BleGattConnectionStatus.TERMINATE_PEER_USER -> stringResource(R.string.ble_gatt_connection_status_terminal_peer_user)
+    BleGattConnectionStatus.LINK_LOSS -> stringResource(R.string.ble_gatt_connection_status_link_loss)
+    BleGattConnectionStatus.NOT_SUPPORTED -> stringResource(R.string.ble_gatt_connection_status_not_supported)
+    BleGattConnectionStatus.CANCELLED -> stringResource(R.string.ble_gatt_connection_status_timeout)
+    BleGattConnectionStatus.TIMEOUT -> stringResource(R.string.ble_gatt_connection_status_cancelled)
+    else -> {
+      stringResource(R.string.ble_gatt_connection_status_unknown)
+    }
   }
-}
 
 /**
  * Converts [bleGattConnectionStatus] to a corresponding icon to display.
@@ -272,12 +289,13 @@ private fun bleGattConnectionStatusToText(bleGattConnectionStatus: BleGattConnec
  * @author Frank HJ Cuypers
  */
 @Composable
-private fun bleGattConnectionStatusToPainter(bleGattConnectionStatus: BleGattConnectionStatus) = when (bleGattConnectionStatus) {
-  BleGattConnectionStatus.SUCCESS -> painterResource(R.drawable.bluetooth_connected_24px)
-  else -> {
-    painterResource(R.drawable.bluetooth_disabled_24px)
+private fun bleGattConnectionStatusToPainter(bleGattConnectionStatus: BleGattConnectionStatus) =
+  when (bleGattConnectionStatus) {
+    BleGattConnectionStatus.SUCCESS -> painterResource(R.drawable.bluetooth_connected_24px)
+    else -> {
+      painterResource(R.drawable.bluetooth_disabled_24px)
+    }
   }
-}
 
 /**
  * Converts [gattConnectionState] a string value to display.
@@ -291,7 +309,21 @@ private fun gattConnectionStateToText(gattConnectionState: GattConnectionState) 
   GattConnectionState.STATE_CONNECTED -> stringResource(R.string.gatt_connection_state_connected)
   GattConnectionState.STATE_DISCONNECTED -> stringResource(R.string.gatt_connection_state_disconnected)
   GattConnectionState.STATE_CONNECTING -> stringResource(R.string.gatt_connection_state_connecting)
-  GattConnectionState.STATE_DISCONNECTING ->stringResource(R.string.gatt_connection_state_disconnecting)
+  GattConnectionState.STATE_DISCONNECTING -> stringResource(R.string.gatt_connection_state_disconnecting)
+}
+
+/**
+ * Converts [bondState] a string value to display.
+ * @param bondState
+ * @return The corresponding string.
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+private fun bondStateToText(bondState: BondState) = when (bondState) {
+  BondState.NONE -> stringResource(R.string.bond_state_none)
+  BondState.BONDING -> stringResource(R.string.bond_state_bonding)
+  BondState.BONDED -> stringResource(R.string.bond_state_bonded)
 }
 
 /**
@@ -309,6 +341,20 @@ private fun gattConnectionStateToPainter(gattConnectionState: GattConnectionStat
   GattConnectionState.STATE_DISCONNECTING -> painterResource(R.drawable.bluetooth_searching_24px)
 }
 
+/**
+ * Converts [bondState] to a corresponding icon to display.
+ * @param bondState
+ * @return The corresponding icon.
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+private fun bondStateToPainter(bondState: BondState) = when (bondState) {
+  BondState.NONE -> painterResource(R.drawable.bluetooth_disabled_24px)
+  BondState.BONDING -> painterResource(R.drawable.bluetooth_searching_24px)
+  BondState.BONDED -> painterResource(R.drawable.bluetooth_connected_24px)
+}
+
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewHOMEDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewHOMELight")
 @Composable
@@ -316,7 +362,10 @@ fun DevicePreviewHOME() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCard(
-        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
+        DeviceState(
+          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
+          BondState.NONE
+        ),
         false
       )
     }
@@ -330,7 +379,10 @@ fun DevicePreviewMOBILE() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCard(
-        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
+        DeviceState(
+          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
+          BondState.BONDING
+        ),
         false
       )
     }
@@ -344,37 +396,60 @@ fun DevicePreviewUNKNOWN() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCard(
-        Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
+        DeviceState(
+          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.UNKNOWN),
+          BondState.BONDED
+        ),
         false
       )
     }
   }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiDeviceCardDeviceDetailsPreviewStateDisconnectedDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiDeviceCardDeviceDetailsPreviewStateDisconnectedLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_YES,
+  name = "GaaiDeviceCardDeviceDetailsPreviewStateDisconnectedDark"
+)
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiDeviceCardDeviceDetailsPreviewStateDisconnectedLight"
+)
 @Composable
 fun GaaiDeviceCardDeviceDetailsPreviewStateDisconnectedSuccess() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCardDeviceDetails(
         Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
-        GattConnectionStateWithStatus(GattConnectionState.STATE_DISCONNECTED, BleGattConnectionStatus.SUCCESS)
+        GattConnectionStateWithStatus(GattConnectionState.STATE_DISCONNECTED, BleGattConnectionStatus.SUCCESS),
+        BondState.BONDED
       )
     }
   }
 }
 
-
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiDeviceCardDeviceDetailsPreviewStateConnectedSuccessDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiDeviceCardDeviceDetailsPreviewStateConnectedSuccessLight")
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_YES,
+  name = "GaaiDeviceCardDeviceDetailsPreviewStateConnectedSuccessDark"
+)
+@Preview(
+  showBackground = true,
+  uiMode = UI_MODE_NIGHT_NO,
+  name = "GaaiDeviceCardDeviceDetailsPreviewStateConnectedSuccessLight"
+)
 @Composable
 fun GaaiDeviceCardDeviceDetailsPreviewStateConnectedTerminalLocalHost() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCardDeviceDetails(
         Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.HOME),
-        GattConnectionStateWithStatus(GattConnectionState.STATE_CONNECTED, BleGattConnectionStatus.TERMINATE_LOCAL_HOST)
+        GattConnectionStateWithStatus(
+          GattConnectionState.STATE_CONNECTED,
+          BleGattConnectionStatus.TERMINATE_LOCAL_HOST
+        ),
+        BondState.NONE
       )
     }
   }

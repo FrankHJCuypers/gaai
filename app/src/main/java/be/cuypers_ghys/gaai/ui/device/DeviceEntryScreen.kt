@@ -47,9 +47,11 @@ import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
+import be.cuypers_ghys.gaai.ui.home.DeviceState
 import be.cuypers_ghys.gaai.ui.navigation.NavigationDestination
 import be.cuypers_ghys.gaai.ui.permissions.RequireBluetooth
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
+import no.nordicsemi.android.kotlin.ble.core.data.BondState
 
 // Tag for logging
 private const val TAG = "DeviceEntryScreen"
@@ -260,7 +262,7 @@ fun DeviceDataForm(
     or (deviceUiState.entryState == EntryState.DUPLICATE_DEVICE_FOUND)
   ) {
     GaaiDeviceCard(
-      device = deviceUiState.deviceDetails.toDevice(),
+      deviceState = DeviceState(deviceUiState.deviceDetails.toDevice(), deviceUiState.bondingState),
       true,
       modifier = Modifier
         .padding(dimensionResource(id = R.dimen.padding_small))
@@ -368,7 +370,7 @@ private fun DeviceEntryScreenNoViewModelDeviceDetailsEmptyPreview() {
           DeviceDetails(
             pn = "", sn = ""
           ),
-          entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
+          entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false, bondingState = BondState.NONE
         ),
         onDeviceValueChange = {},
         onEntryStatusChange = {},
@@ -393,7 +395,7 @@ private fun DeviceEntryScreenNoViewModelDeviceDetailsValidPreview() {
           DeviceDetails(
             pn = "12345-A2", sn = "6789-12345-E3"
           ),
-          entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+          entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true, bondingState = BondState.NONE
         ),
         onDeviceValueChange = {},
         onEntryStatusChange = {},
@@ -415,7 +417,7 @@ private fun DeviceEntryScreenPreview() {
         deviceUiState = DeviceUiState(
           DeviceDetails(
             pn = "12345-A2", sn = "6789-12345-E3"
-          ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true
+          ), entryState = EntryState.ENTRY_VALID, isSnValid = true, isPnValid = true, bondingState = BondState.NONE
         ), onDeviceValueChange = {}, onButtonClick = {})
     }
   }
@@ -431,7 +433,7 @@ private fun DeviceEntryScreenScanningPreview() {
         deviceUiState = DeviceUiState(
           DeviceDetails(
             pn = "12345-A2", sn = "6789-12345-E3"
-          ), entryState = EntryState.SCANNING, isSnValid = true, isPnValid = true
+          ), entryState = EntryState.SCANNING, isSnValid = true, isPnValid = true, bondingState = BondState.NONE
         ), onDeviceValueChange = {}, onButtonClick = {})
     }
   }
@@ -447,7 +449,7 @@ private fun DeviceEntryScreenEmptyPreview() {
         deviceUiState = DeviceUiState(
           DeviceDetails(
             pn = "", sn = ""
-          ), entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false
+          ), entryState = EntryState.INPUTTING, isSnValid = false, isPnValid = false, bondingState = BondState.NONE
         ), onDeviceValueChange = {}, onButtonClick = {})
     }
   }
@@ -463,7 +465,7 @@ private fun DeviceEntryScreenPnIncorrectPreview() {
         deviceUiState = DeviceUiState(
           DeviceDetails(
             pn = "12-34", sn = "1234-56789-00"
-          ), entryState = EntryState.INPUTTING, isSnValid = true, isPnValid = false
+          ), entryState = EntryState.INPUTTING, isSnValid = true, isPnValid = false, bondingState = BondState.NONE
         ), onDeviceValueChange = {}, onButtonClick = {})
     }
   }
@@ -483,7 +485,7 @@ private fun DeviceEntryScreenScanCorrectPreview() {
             mac = "FA:CA:DE:12:34:56",
             serviceDataValue = 0x12345678,
             type = ChargerType.HOME
-          ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = true
+          ), entryState = EntryState.DEVICE_FOUND, isSnValid = true, isPnValid = true, bondingState = BondState.NONE
         ), onDeviceValueChange = {}, onButtonClick = {})
     }
   }
@@ -500,7 +502,11 @@ private fun DeviceEntryScreenScanDuplicatePreview() {
           DeviceDetails(
             pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
             type = ChargerType.HOME
-          ), entryState = EntryState.DUPLICATE_DEVICE_FOUND, isSnValid = true, isPnValid = true
+          ),
+          entryState = EntryState.DUPLICATE_DEVICE_FOUND,
+          isSnValid = true,
+          isPnValid = true,
+          bondingState = BondState.BONDED
         ), onDeviceValueChange = {}, onButtonClick = {})
     }
   }

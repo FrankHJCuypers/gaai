@@ -313,13 +313,13 @@ fun DeviceDetailsBody(
       GaaiDeviceCardDeviceDetails(
         device = it,
         gattConnectionStateWithStatus = state.gattConnectionStateWithStatus,
+        bondState = state.bondState,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
     }
 
-    if ( state.gattConnectionStateWithStatus.status == BleGattConnectionStatus.SUCCESS)
-    {
+    if (state.gattConnectionStateWithStatus.status == BleGattConnectionStatus.SUCCESS) {
       GaaiDeviceNameCard(
         deviceName = state.deviceName,
         modifier = Modifier
@@ -2100,7 +2100,10 @@ private fun DeviceDetailsHomeCompletePreview() {
         ),
         state = DeviceDetailsViewState(
           deviceName = "HOME2_",
-          gattConnectionStateWithStatus = GattConnectionStateWithStatus(GattConnectionState.STATE_CONNECTED, BleGattConnectionStatus.SUCCESS),
+          gattConnectionStateWithStatus = GattConnectionStateWithStatus(
+            GattConnectionState.STATE_CONNECTED,
+            BleGattConnectionStatus.SUCCESS
+          ),
           deviceInformation = DeviceInformation(
             modelNumber = "12345", serialNumber = "12345",
             firmwareRevision = "1.23.4", hardwareRevision = "A2"
@@ -2167,7 +2170,10 @@ private fun DeviceDetailsMobilePreview() {
         ),
         state = DeviceDetailsViewState(
           deviceName = "Mobile2_",
-          gattConnectionStateWithStatus = GattConnectionStateWithStatus(GattConnectionState.STATE_CONNECTED, BleGattConnectionStatus.SUCCESS),          deviceInformation = DeviceInformation(
+          gattConnectionStateWithStatus = GattConnectionStateWithStatus(
+            GattConnectionState.STATE_CONNECTED,
+            BleGattConnectionStatus.SUCCESS
+          ), deviceInformation = DeviceInformation(
             modelNumber = "12345", serialNumber = "12345",
             firmwareRevision = "1.23.4", hardwareRevision = "A2"
           ),

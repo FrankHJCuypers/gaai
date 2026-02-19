@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import no.nordicsemi.android.kotlin.ble.core.data.BondState
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 
 // Tag for logging
@@ -145,6 +146,7 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
    * Updates the [deviceUiState] with the BLE scan result.
    * @param scanResult The BLE scan result.
    */
+  @SuppressLint("MissingPermission")
   private suspend fun updateUiState(scanResult: BleScanResult) {
     Log.v(TAG, "ENTRY updateUiState(scanResult)")
     val chargerType = when (scanResult.data?.scanRecord?.deviceName) {
@@ -157,10 +159,12 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
       serviceDataValue = serviceDataFilter.data.fromUint32BE(0).toInt(),
       type = chargerType
     )
-    val canInsert = devicesRepository.canInsert(deviceDetails.toDevice())
+    val device = deviceDetails.toDevice()
+    val canInsert = devicesRepository.canInsert(device)
     deviceUiState = deviceUiState.copy(
       deviceDetails = deviceDetails,
-      entryState = if (canInsert) EntryState.DEVICE_FOUND else EntryState.DUPLICATE_DEVICE_FOUND
+      entryState = if (canInsert) EntryState.DEVICE_FOUND else EntryState.DUPLICATE_DEVICE_FOUND,
+      bondingState = GaaiBondState.getBondState(bleRepository.context, device)
     )
     Log.v(TAG, "RETURN updateUiState()")
   }
@@ -304,7 +308,8 @@ data class DeviceUiState(
   val deviceDetails: DeviceDetails = DeviceDetails(),
   val isSnValid: Boolean = false,
   val isPnValid: Boolean = false,
-  val entryState: EntryState = EntryState.INPUTTING
+  val entryState: EntryState = EntryState.INPUTTING,
+  val bondingState: BondState = BondState.NONE
 )
 
 /**

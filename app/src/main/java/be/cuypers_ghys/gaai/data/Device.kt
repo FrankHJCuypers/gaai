@@ -16,10 +16,12 @@
 
 package be.cuypers_ghys.gaai.data
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 /**
  * Possible charger type values.
@@ -35,6 +37,7 @@ enum class ChargerType {
  *
  * @author Frank HJ Cuypers
  */
+@Parcelize
 @Entity(
   tableName = "devices",
   indices = [Index(value = ["mac"], unique = true), Index(value = ["pn", "sn"], unique = true)]
@@ -74,4 +77,4 @@ data class Device(
    */
   @ColumnInfo(name = "chargerType", defaultValue = "HOME")
   val type: ChargerType = ChargerType.HOME
-)
+) : Parcelable

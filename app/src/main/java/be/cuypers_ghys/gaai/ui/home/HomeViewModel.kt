@@ -19,11 +19,13 @@ package be.cuypers_ghys.gaai.ui.home
 import android.annotation.SuppressLint
 import android.os.ParcelUuid
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.cuypers_ghys.gaai.ble.BleRepository
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.DevicesRepository
+import be.cuypers_ghys.gaai.ui.device.GaaiBondState
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -40,6 +42,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.kotlin.ble.core.ServerDevice
+import no.nordicsemi.android.kotlin.ble.core.data.BondState
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import kotlin.time.Duration.Companion.seconds
 
@@ -130,10 +133,14 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
    * Holds home ui state. Combines
    * The list of devices are retrieved from [DevicesRepository] and mapped to [HomeUiState].
    */
-
+  @SuppressLint("MissingPermission")
   val homeUiState: StateFlow<HomeUiState> =
     deviceList.combine(advertisingDeviceList) { deviceList, advertisingDeviceList ->
-      HomeUiState(deviceList, advertisingDeviceList)
+      val deviceStateList = mutableStateListOf<DeviceState>()
+      deviceList.forEach {
+        deviceStateList.add(DeviceState(it, GaaiBondState.getBondState(bleRepository.context, it)))
+      }
+      HomeUiState(deviceStateList, advertisingDeviceList)
     }
       .stateIn(
         scope = viewModelScope,
@@ -143,6 +150,7 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
 
   // Create aggregator which will concat scan records with a device
   private var aggregator: BleScanResultAggregatorCleaner? = null
+
 
   /**
    * Perform a BLE scan for the [Device]s that matches the [filterServiceUuid] filter and update the [_advertisingDeviceList]
@@ -157,7 +165,7 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
     Log.d(TAG, "starting scan using filter $serviceUuidFilter")
 
 //    aggregator?.stopCleaning()
-    aggregator = BleScanResultAggregatorCleaner()!!
+    aggregator = BleScanResultAggregatorCleaner()
 //    aggregator!!.startCleaning { _advertisingDeviceList.emit(it) }
 
     /* Note from https://github.com/iDevicesInc/SweetBlue/wiki/Android-BLE-Issues:
@@ -184,8 +192,8 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
         val cleaned = aggregator?.clean()
         val results = aggregator?.results
         Log.v(TAG, "cleaned = $cleaned, results = $results")
-        if ( (cleaned == true) && (results != null)) {
-          val listOfServerDevices = results.map{ it.device }
+        if ((cleaned == true) && (results != null)) {
+          val listOfServerDevices = results.map { it.device }
           Log.v(TAG, "listOfServerDevices = $listOfServerDevices")
           _advertisingDeviceList.emit(listOfServerDevices)
         }
@@ -247,10 +255,16 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
   }
 }
 
+data class DeviceState(
+  val device: Device = Device(),
+  val bondState: BondState = BondState.NONE
+)
+
 /**
  * Ui State for HomeScreen
  */
 data class HomeUiState(
-  val deviceList: List<Device> = listOf(),
+  val deviceStateList: List<DeviceState> = listOf(),
+//  val deviceList: List<Device> = listOf(),
   val advertisingDeviceList: List<ServerDevice> = listOf()
 )
