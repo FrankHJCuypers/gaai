@@ -73,7 +73,7 @@ class HomeViewModelTest {
         // First item is always empty (see initialValue in stateIn() call of HomeViewModel.kt)
         val firstItem = awaitItem()
         Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test firstItem=$firstItem")
-        assertEquals(0, firstItem.deviceList.size)
+        assertEquals(0, firstItem.deviceStateList.size)
 
         // Now emit a new value in the fakeRepository and wait for it to be collected
         Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test emit fakeRepository")
@@ -81,8 +81,8 @@ class HomeViewModelTest {
         Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test await second item")
         val secondItem = awaitItem()
         Log.d(TAG, "verifyHomeUiState() homeUiStateFlow.test secondItem=$secondItem")
-        assertEquals(FakeDevicesSource.devicesList.size, secondItem.deviceList.size)
-        assertEquals(FakeDevicesSource.devicesList, secondItem.deviceList)
+        assertEquals(FakeDevicesSource.devicesList.size, secondItem.deviceStateList.size)
+        assertEquals(FakeDevicesSource.devicesList, secondItem.deviceStateList)
         cancelAndIgnoreRemainingEvents()
         Log.d(TAG, "verifyHomeUiState() EXIT homeUiStateFlow.test body")
       }
@@ -97,7 +97,7 @@ class HomeViewModelTest {
         val firstItem = awaitItem()
         Log.d(TAG, "verifyRemoveDevice() homeUiStateFlow.test firstItem=$firstItem")
 
-        assertEquals(0, firstItem.deviceList.size)
+        assertEquals(0, firstItem.deviceStateList.size)
 
         // Now delete
         val dummyDevice = Device(11, "60211-A2", "2303-00008-E3", "FF:B8:37:72:4F:00", 2, ChargerType.HOME)
@@ -105,8 +105,8 @@ class HomeViewModelTest {
         Log.d(TAG, "verifyRemoveDevice() homeUiStateFlow.test await second item")
         val secondItem = awaitItem()
         Log.d(TAG, "verifyRemoveDevice() homeUiStateFlow.test secondItem=$secondItem")
-        assertEquals(1, secondItem.deviceList.size)
-        assertEquals(listOf(dummyDevice), secondItem.deviceList)
+        assertEquals(1, secondItem.deviceStateList.size)
+        assertEquals(listOf(dummyDevice), secondItem.deviceStateList)
         cancelAndIgnoreRemainingEvents()
         Log.d(TAG, "verifyRemoveDevice() EXIT homeUiStateFlow.test body")
       }
