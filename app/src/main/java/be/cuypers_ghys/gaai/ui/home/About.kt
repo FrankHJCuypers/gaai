@@ -99,7 +99,7 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
           Text(text = BuildConfig.VERSION_NAME, style = MaterialTheme.typography.bodyMedium)
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "© 2024-2025 Frank HJ Cuypers", style = MaterialTheme.typography.bodySmall)
+        Text(text = "© 2024-2026 Frank HJ Cuypers", style = MaterialTheme.typography.bodySmall)
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = "AGPL-3.0 license", style = MaterialTheme.typography.bodySmall)
         Spacer(modifier = Modifier.height(8.dp))
