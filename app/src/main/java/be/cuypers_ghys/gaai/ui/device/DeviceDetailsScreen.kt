@@ -1294,7 +1294,7 @@ internal fun GaaiConfigDataCard(
 
           /**
            * Only show Network Time; don't allow to change it.
-           * To dangerous to change it.
+           * Too dangerous to change it.
            */
           Row(
             modifier = modifier.fillMaxWidth(),
