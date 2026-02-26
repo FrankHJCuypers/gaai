@@ -7,7 +7,6 @@ import com.android.build.api.dsl.ApplicationExtension
 
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.jetbrains.kotlin.android)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.room)
   alias(libs.plugins.devtools.ksp)
@@ -160,8 +159,6 @@ dependencies {
   implementation(libs.androidx.junit.ktx)
   implementation(libs.androidx.monitor)
   annotationProcessor(libs.androidx.room.compiler)
-  // To use Kotlin annotation processing tool (kapt)
-  //kapt(libs.androidx.room.compiler)
   // To use Kotlin Symbol Processing (KSP)
   ksp(libs.androidx.room.compiler)
   implementation(libs.androidx.room.ktx)
@@ -220,8 +217,8 @@ dependencies {
 }
 
 dokka {
-  moduleName.set("Gaai")
-
+  moduleName.set(project.rootProject.name)
+  moduleVersion.set(android.defaultConfig.versionName)
   dokkaPublications.html {
     outputDirectory.set(layout.buildDirectory.dir("documentation/html"))
     suppressInheritedMembers.set(true)
@@ -234,29 +231,27 @@ dokka {
     // with per-variant sets, causing a pre-generation validation failure.
     // See https://github.com/Kotlin/dokka/issues/4458
     configureEach {
-      suppress.set(true)
-    }
-  }
-
-  dokkaSourceSets.main {
-    suppress.set(false)
-    documentedVisibilities.set(
-      setOf(
-        VisibilityModifier.Public,
-        VisibilityModifier.Protected,
-        VisibilityModifier.Package,
-        VisibilityModifier.Private,
-        VisibilityModifier.Internal
+      suppress.set(name != "release")
+      displayName.set(name)
+      documentedVisibilities.set(
+        setOf(
+          VisibilityModifier.Public,
+          VisibilityModifier.Protected,
+          VisibilityModifier.Package,
+          VisibilityModifier.Private,
+          VisibilityModifier.Internal
+        )
       )
-    )
-    sourceLink {
-      localDirectory.set(file("src/main/java"))
-      remoteUrl("https://github.com/FrankHJCuypers/gaai")
-      remoteLineSuffix.set("#L")
+      sourceRoots.from(file("src/main/java"))
+      sourceLink {
+        localDirectory.set(file("src/main/java"))
+        remoteUrl("https://github.com/FrankHJCuypers/gaai")
+        remoteLineSuffix.set("#L")
+      }
     }
   }
 
   pluginsConfiguration.html {
-    footerMessage.set("(c) Frank HJ Cuypers")
+    footerMessage.set("© Frank HJ Cuypers")
   }
 }
