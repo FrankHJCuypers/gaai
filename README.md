@@ -281,7 +281,7 @@ If you entered the correct PN and SN,
 Gaai shows a card with the details of the found device.
 
 + The top row shows 
-    + At the left the type of the Nexxtender Charger: HOME or MOBILE.
+    + At the left the type of the Nexxtender Charger: HOME. MOBILE BLACK or MOBILE RED.
     + At the right the device's bonding state ("pairing"). See below table for an explanation of the possible states.
 + The second row shows if the device is available for connection. See below table for an explanation of the possible states.
   For devices shown in this screen, it is by design always Available.
@@ -698,10 +698,11 @@ The developer
 *Gaai* is only tested on a the phone versus Nexxtender Home/Mobile versions as indicated in section
 [Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-homemobile-firmware-versions)
 
-At this point *Gaai* can be considered a stable release.
+At this point *Gaai* can be considered a stable release for the Nexxtender HOME.
 It is currently tested on a small set of combinations, but not all.
 This gives some level of confidence that it will work on most combinations,
 but there is no guarantee that it will work on all of them.
+For the Nexxtender MOBILE, more testing by users is still required.
 If despite the preceding warnings, you decide to use *Gaai*, that is on your own responsibility.
 But we will do our best to help you. 
 

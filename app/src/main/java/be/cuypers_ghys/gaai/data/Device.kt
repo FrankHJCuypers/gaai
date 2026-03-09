@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2024, Frank HJ Cuypers
+ * Copyright © 2024, 2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -28,8 +28,37 @@ import kotlinx.parcelize.Parcelize
  *
  * @author Frank HJ Cuypers
  */
-enum class ChargerType {
-  HOME, MOBILE, UNKNOWN
+enum class ChargerType(val typeName: String) {
+  /**
+   * Nexxtender HOME
+   */
+  HOME("HOME"),
+
+  /**
+   * Nexxtender MOBILE BLACK
+   */
+  MOBILE_BLACK("MOBILE BLACK"),
+
+  /**
+   * Nexxtender MOBILE RED
+   */
+  MOBILE_RED("MOBILE RED"),
+
+  /**
+   * Nexxtender CLUSTER
+   */
+  CLUSTER("CLUSTER"),
+
+  /**
+   * Unknown charger type
+   */
+  UNKNOWN("UNKNOWN");
+
+  fun isMobile(chargerType: ChargerType): Boolean = (chargerType == MOBILE_BLACK) || (chargerType == MOBILE_RED)
+
+  override fun toString(): String {
+    return typeName // working!
+  }
 }
 
 /**

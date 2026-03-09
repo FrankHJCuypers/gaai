@@ -350,7 +350,7 @@ fun HomeBodyPreview() {
                 "2222-22222-E3",
                 "FA:CA:DE:22:22:22",
                 0x22222222,
-                type = ChargerType.MOBILE
+                type = ChargerType.MOBILE_BLACK
               ), BondState.BONDED
             ),
             DeviceState(
@@ -400,7 +400,7 @@ fun HomeScreenNoViewModelPreview() {
                   "2222-22222-E3",
                   "FA:CA:DE:22:22:22",
                   0x22222222,
-                  type = ChargerType.MOBILE
+                  type = ChargerType.MOBILE_BLACK
                 ), BondState.BONDED
               ),
               DeviceState(

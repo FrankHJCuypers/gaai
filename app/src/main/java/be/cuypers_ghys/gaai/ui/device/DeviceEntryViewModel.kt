@@ -151,7 +151,8 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
     Log.v(TAG, "ENTRY updateUiState(scanResult)")
     val chargerType = when (scanResult.data?.scanRecord?.deviceName) {
       "HOME" -> ChargerType.HOME
-      "Mobile" -> ChargerType.MOBILE
+      "Mobile" -> ChargerType.MOBILE_BLACK
+      "MobRED" -> ChargerType.MOBILE_RED
       else -> ChargerType.UNKNOWN
     }
     val deviceDetails = deviceUiState.deviceDetails.copy(

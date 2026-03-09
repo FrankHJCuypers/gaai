@@ -51,7 +51,9 @@ GaaiDatabase o-- DeviceDao: +deviceDao
 
 enum ChargerType {
   HOME
-  MOBILE
+  MOBILE_BLACK
+  MOBILE_RED
+  CLUSTER
   UNKNOWN
 }
 

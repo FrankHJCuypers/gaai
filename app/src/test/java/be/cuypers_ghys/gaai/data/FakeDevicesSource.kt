@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender chargers.
- * Copyright © 2025, Frank HJ Cuypers
+ * Copyright © 2025-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -31,7 +31,7 @@ object FakeDevicesSource {
     Device(1, "60211-A2", "2303-00005-E3", "FF:B8:37:72:4F:F8", 2, ChargerType.HOME),
     Device(2, "60207-A1", "2135-00353-5E", "FF:B8:37:72:4F:F9", 2, ChargerType.HOME),
     Device(3, "60207-A2", "2134-00349-EC", "FF:B8:37:72:4F:FA", 2, ChargerType.HOME),
-    Device(4, "60211-A2", "2324-00217-48", "FF:B8:37:72:4F:FB", 2, ChargerType.MOBILE),
+    Device(4, "60211-A2", "2324-00217-48", "FF:B8:37:72:4F:FB", 2, ChargerType.MOBILE_BLACK),
     Device(5, "60211-A2", "2324-00276-31", "FF:B8:37:72:4F:FC", 2, ChargerType.HOME),
     Device(6, "60207-A2", "2129-00146-0A", "FF:B8:37:72:4F:FD", 2, ChargerType.HOME),
     Device(7, "60210-A1", "2141-05750-05", "FF:B8:37:72:4F:FE", 2, ChargerType.HOME),

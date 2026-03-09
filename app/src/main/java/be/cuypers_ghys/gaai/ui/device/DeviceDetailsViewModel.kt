@@ -241,7 +241,7 @@ class DeviceDetailsViewModel(
         NexxtenderHomeSpecification.UUID_BLE_HARDWARE_REVISION_STRING_CHARACTERISTIC
       )!!
 
-    if (gaaiDevice.type == ChargerType.MOBILE) {
+    if (gaaiDevice.type != ChargerType.HOME) {
       val nexxtenderChargingService =
         services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_SERVICE)!!
       nexxtenderHomeChargingBasicDataCharacteristic =
@@ -303,7 +303,7 @@ class DeviceDetailsViewModel(
 
     configVersion = getConfigVersion(firmwareRevision)
 
-    if (gaaiDevice.type != ChargerType.MOBILE) {
+    if (gaaiDevice.type == ChargerType.HOME) {
       nexxtenderHomeChargingGridDataCharacteristic.getNotifications().onEach {
         val newChargingGridData = ChargingGridDataParser.parse(it.value)!!
         //_state is a MutableStateFlow which propagates data to UI.

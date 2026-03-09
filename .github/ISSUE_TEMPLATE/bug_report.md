@@ -32,7 +32,7 @@ If applicable, add screenshots to help explain your problem.
 **Nexxtender Charger (As reported by *Gaai* or apps like *LightBlue*, *nRF Connect* or *BLE Analyzer* in
 the *Device Information* section):**
 
-- HOME or MOBILE charger
+- HOME, MOBILE BLACK or MOBILE RED charger
 - Firmware Revision: [e.g. 1.23.4]
 - Hardware Revision: [e.g. A2]
 

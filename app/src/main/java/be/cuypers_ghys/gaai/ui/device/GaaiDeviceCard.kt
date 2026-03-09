@@ -161,7 +161,7 @@ internal fun GaaiDeviceCardCommon(
       verticalAlignment = Alignment.CenterVertically
     ) {
       val newPainter = when (device.type) {
-        ChargerType.MOBILE -> painterResource(R.drawable.ic_cable_mobile)
+        ChargerType.MOBILE_BLACK, ChargerType.MOBILE_RED -> painterResource(R.drawable.ic_cable_mobile)
         ChargerType.HOME -> painterResource(R.drawable.ic_cable_home)
         else -> painterResource(R.drawable.rounded_ev_charger_24)
       }
@@ -372,15 +372,32 @@ fun DevicePreviewHOME() {
   }
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewMOBILEDark")
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewMOBILELight")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewMOBILEBLACKDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewMOBILEBLACKLight")
 @Composable
-fun DevicePreviewMOBILE() {
+fun DevicePreviewMOBILE_BLACK() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       GaaiDeviceCard(
         DeviceState(
-          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE),
+          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE_BLACK),
+          BondState.BONDING
+        ),
+        false
+      )
+    }
+  }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DevicePreviewMOBILEBREDDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DevicePreviewMOBILEREDLight")
+@Composable
+fun DevicePreviewMOBILE_RED() {
+  GaaiTheme(dynamicColor = false) {
+    Surface {
+      GaaiDeviceCard(
+        DeviceState(
+          Device(1, "12345-A2", "6789-12345-E3", "FA:CA:DE:12:34:56", 0x12345678, ChargerType.MOBILE_RED),
           BondState.BONDING
         ),
         false

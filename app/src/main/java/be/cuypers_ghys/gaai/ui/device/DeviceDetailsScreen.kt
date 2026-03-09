@@ -338,7 +338,7 @@ fun DeviceDetailsBody(
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
 
-      if (device?.type != ChargerType.MOBILE) {
+      if (device?.type == ChargerType.HOME) {
         GaaiChargingGridDataCard(
           chargingGridData = state.chargingGridData,
           modifier = Modifier
@@ -2166,7 +2166,7 @@ private fun DeviceDetailsMobilePreview() {
       DeviceDetailsBody(
         device = Device(
           pn = "12345-A2", sn = "6789-12345-E3", mac = "FA:CA:DE:12:34:56", serviceDataValue = 0x12345678,
-          type = ChargerType.MOBILE
+          type = ChargerType.MOBILE_BLACK
         ),
         state = DeviceDetailsViewState(
           deviceName = "Mobile2_",
