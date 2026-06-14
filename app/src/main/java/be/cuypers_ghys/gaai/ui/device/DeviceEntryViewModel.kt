@@ -149,10 +149,10 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
   @SuppressLint("MissingPermission")
   private suspend fun updateUiState(scanResult: BleScanResult) {
     Log.v(TAG, "ENTRY updateUiState(scanResult)")
-    val chargerType = when (scanResult.data?.scanRecord?.deviceName) {
+    val chargerType = when (scanResult.data?.scanRecord?.deviceName?.uppercase()) {
       "HOME" -> ChargerType.HOME
-      "Mobile" -> ChargerType.MOBILE_BLACK
-      "MobRED" -> ChargerType.MOBILE_RED
+      "MOBILE" -> ChargerType.MOBILE_BLACK
+      "MOBRED" -> ChargerType.MOBILE_RED
       else -> ChargerType.UNKNOWN
     }
     val deviceDetails = deviceUiState.deviceDetails.copy(

@@ -53,6 +53,7 @@ import no.nordicsemi.android.kotlin.ble.core.ServerDevice
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResultData
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
+import java.util.concurrent.ConcurrentHashMap
 
 // Tag for logging
 private const val TAG = "BleScanResultAggregateCleaner"
@@ -66,7 +67,7 @@ const val CUTOFF_PERIOD_NANO = 1000000000L // 1000ms. Nexxtender Home advertises
  * are not removed from the aggregated list, [clean] must be called periodically.
  */
 class BleScanResultAggregatorCleaner {
-  private val devices = mutableMapOf<ServerDevice, BleScanResultData?>()
+  private val devices = ConcurrentHashMap<ServerDevice, BleScanResultData?>()
   val results
     get() = devices.map { BleScanResult(it.key, it.value) }
 
@@ -112,7 +113,7 @@ class BleScanResultAggregatorCleaner {
 //      Log.v(TAG, " bleScanResultData=$bleScanResultData.last() ")
       val lastTimeStamp = bleScanResultData?.timestampNanos
       if (bleScanResultData == null) {
-//        Log.d(TAG, "bleScanResultData null  Removing $serverDevice")
+//        Log.d(TAG, "bleScanResultData null Removing $serverDevice")
         devices.remove(serverDevice)
         cleaned = true
       } else if (lastTimeStamp != null) {
