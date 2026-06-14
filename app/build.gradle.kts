@@ -60,7 +60,7 @@ android {
   }
 
   namespace = "be.cuypers_ghys.gaai"
-  compileSdk = 36
+  compileSdk = 37
 
   defaultConfig {
     versionCode = androidGitVersion.code()
