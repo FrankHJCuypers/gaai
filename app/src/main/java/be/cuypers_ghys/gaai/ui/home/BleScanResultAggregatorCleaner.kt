@@ -57,7 +57,15 @@ import java.util.concurrent.ConcurrentHashMap
 
 // Tag for logging
 private const val TAG = "BleScanResultAggregateCleaner"
-const val CUTOFF_PERIOD_NANO = 1000000000L // 1000ms. Nexxtender Home advertises itself every 25ms.
+
+/**
+ * According to measurement of advertisements using nRF Connect:
+ * - Nexxtender Home advertises itself every 20ms to 120ms.
+ * - Nexxtender Mobile Black advertises itself every +- 2.000ms.
+ *
+ * So a cutoff period of 3s should be OK
+ */
+const val CUTOFF_PERIOD_NANO = 6000000000L
 
 /**
  * Class responsible for aggregating scan results with a single server device.
@@ -106,26 +114,26 @@ class BleScanResultAggregatorCleaner {
 
     val elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
     val cutoffTimeNano = elapsedRealtimeNanos - CUTOFF_PERIOD_NANO
-//    Log.v(TAG,"elapsedRealtimeNanos =$elapsedRealtimeNanos , cutoffTimeNanos = $cutoffTimeNano")
+    Log.v(TAG,"elapsedRealtimeNanos =$elapsedRealtimeNanos , cutoffTimeNanos = $cutoffTimeNano")
     devices.forEach { (serverDevice, bleScanResultData) ->
-//      Log.v(TAG, "Testing serverDevice=$serverDevice ")
-//      Log.v(TAG, " bleScanResultData=$bleScanResultData ")
-//      Log.v(TAG, " bleScanResultData=$bleScanResultData.last() ")
+      Log.v(TAG, "Testing serverDevice=$serverDevice ")
+      Log.v(TAG, " bleScanResultData=$bleScanResultData ")
+      Log.v(TAG, " bleScanResultData=$bleScanResultData.last() ")
       val lastTimeStamp = bleScanResultData?.timestampNanos
       if (bleScanResultData == null) {
-//        Log.d(TAG, "bleScanResultData null Removing $serverDevice")
+        Log.d(TAG, "bleScanResultData null Removing $serverDevice")
         devices.remove(serverDevice)
         cleaned = true
       } else if (lastTimeStamp != null) {
         if ((lastTimeStamp < cutoffTimeNano)) {
-//          Log.v(TAG, "timestampNanos<cutoffTimeNano: Removing $serverDevice")
+          Log.v(TAG, "timestampNanos<cutoffTimeNano: Removing $serverDevice")
           devices.remove(serverDevice)
           cleaned = true
         } else {
-//          Log.v(TAG, "Not Removing $serverDevice, lastTimeStamp=$lastTimeStamp, cutoffTimeNano=$cutoffTimeNano ")
+          Log.v(TAG, "Not Removing $serverDevice, lastTimeStamp=$lastTimeStamp, cutoffTimeNano=$cutoffTimeNano ")
         }
       } else {
-//        Log.v(TAG, "lastTimeStamp not available ")
+        Log.v(TAG, "lastTimeStamp not available ")
       }
     }
     Log.d(TAG, "EXIT clean()  #devices=${devices.size}")
