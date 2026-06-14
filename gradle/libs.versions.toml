@@ -1,5 +1,5 @@
 [versions]
-agp = "9.0.1"
+agp = "9.2.1"
 androidDocumentationPlugin = "2.2.0"
 cbor = "0.01.02"
 firebaseBom = "34.14.1"
