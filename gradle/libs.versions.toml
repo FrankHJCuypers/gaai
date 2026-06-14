@@ -1,6 +1,6 @@
 [versions]
 agp = "9.0.1"
-androidDocumentationPlugin = "2.1.0"
+androidDocumentationPlugin = "2.2.0"
 cbor = "0.01.02"
 firebaseBom = "34.10.0"
 kotlin = "2.3.10"
