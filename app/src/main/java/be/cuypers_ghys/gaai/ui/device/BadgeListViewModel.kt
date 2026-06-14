@@ -198,7 +198,7 @@ class BadgeListViewModel(
   private var client: ClientBleGatt? = null
 
   /**
-   * Temporary badge lists. Used for preparing the list that will be send to [BadgeListManager.emitNewBadgeList()]
+   * Temporary badge lists. Used for preparing the list that will be sent to [BadgeListManager.emitNewBadgeList()]
    */
   private val badgeList: MutableList<Badge> = mutableListOf()
 

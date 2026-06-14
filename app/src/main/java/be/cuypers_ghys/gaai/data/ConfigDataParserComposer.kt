@@ -353,7 +353,7 @@ object ConfigDataParserComposer {
 
   /**
    * Composes a byte array with the contents of the Config Set operation from an
-   * [ConfigData] in the []ConfigVersion.CONFIG_CBOR] configuration.
+   * [ConfigData] in the [ConfigVersion.CONFIG_CBOR] configuration.
    * @param configGetData The data to compose.
    * @return Byte array with the compose configuration.
    */

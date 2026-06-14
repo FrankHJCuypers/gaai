@@ -645,7 +645,7 @@ class DeviceDetailsViewModel(
   /**
    * Writes [TIME_OPERATION_GET]  to the [Generic Command]
    * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
-   * characteristic].
+   * characteristic.
    */
   fun sendTimeOperationGetTime() {
     viewModelScope.launch {

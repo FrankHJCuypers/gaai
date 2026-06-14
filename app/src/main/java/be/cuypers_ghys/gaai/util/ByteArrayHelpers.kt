@@ -131,6 +131,6 @@ fun ByteArray.fromInt32LE(offset: Int): Int {
 fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02X".format(eachByte) }
 
 /**
- * Converts a ByteArray into a ":"separated hexadecimal string
+ * Converts a ByteArray into a ":" separated hexadecimal string
  */
 fun ByteArray.toColonHex() = joinToString(separator = ":") { eachByte -> "%02X".format(eachByte) }

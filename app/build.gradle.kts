@@ -45,7 +45,7 @@ android {
         keyAlias = keystoreProperties["keyAlias"] as String
         keyPassword = keystoreProperties["keyPassword"] as String
       } else {
-        // If the gaai-release-keystore.properties file does not exist, we use Github secrets.
+        // If the gaai-release-keystore.properties file does not exist, we use GitHub secrets.
         val signingStoreFileString = System.getenv("SIGNING_STORE_FILE")
         if (signingStoreFileString != null ) {
           storeFile = rootProject.file( signingStoreFileString )

@@ -51,7 +51,7 @@ Other alternatives are
 - [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook)
 - [NexxtenderBlackCable](https://github.com/Noudicus/NexxtenderBlackCable)
 
-*Gaai*'s source code is hosted on [Github](https://github.com/FrankHJCuypers/gaai).
+*Gaai*'s source code is hosted on [GitHub](https://github.com/FrankHJCuypers/gaai).
 
 ## Gaai?
 
@@ -105,7 +105,7 @@ All three have exactly the same functionality, but serve a different purpose.
    Choose this build type if you want to help improve the quality of *Gaai* and agree that
    [Firebase](DEVELOPMENT.md#firebase) collects some of your relevant data.
    The *Gaai* developers encourage you to use this build type.
-3. **debug**: Mostly used used during development and debugging with Android studio.
+3. **debug**: Mostly used during development and debugging with Android studio.
    Includes [Firebase](DEVELOPMENT.md#firebase).
    Not relevant for normal users.
 
@@ -168,11 +168,11 @@ For the moment all plans to publish *Gaai* on Google Play Store are abandoned.
 so make sure that Bluetooth is enabled on your mobile device.
 
 In addition, *Gaai* requires some Bluetooth related permissions in order to function.
-When *Gaai* is ran for the first time, it will ask for the required permissions.
+When *Gaai* is run for the first time, it will ask for the required permissions.
 In that case, please press the "Request permissions" button, and then press "Allow".
 If you press "Don't Allow", *Gaai* will insist that it needs the permissions to continue,
 but recent Android versions only allow an app to ask only once for permissions.
-The only way out in that case is to go to Android Settings -> Apps -> Gaai -> Permissions.
+The only way out in that case is to go to Android Settings → Apps → Gaai → Permissions.
 In the "Not Allowed" section you will find the permission "Nearby devices":
 click on it and press "Allow". You now have granted the permission.
 
@@ -187,7 +187,7 @@ in Android 12 and up:
 
 + The Android pop-up where you have to allow the permissions, will ask
   "Allow *Gaai* to find, connect to, and determine the relative position of nearby devices."
-+ In Android Settings -> Apps -> Gaai -> Permission the permission is named
++ In Android Settings → Apps → Gaai → Permission the permission is named
   "Nearby Devices permission".
 
 ## Bluetooth pairing
@@ -216,7 +216,7 @@ As long as you use the same mobile phone to connect to the Nexxtender charger, b
 there is no issue.
 But when you need to move to another phone, you need the PIN value.
 If you don't have the PIN code, you can provide the *Gaai* GitHub repository owner with the PN and SN values
-as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-device)
+as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-device),
 and he will calculate it for you.
 See [CONTACT](CONTACT.md).
 
@@ -240,7 +240,7 @@ When *Gaai* is started the first time, it has no *Nexxtender* devices in its dat
 At the bottom right is a button with a "+" that allows to add a *Nexxtender* device.
 
 At the top right there is a  "&#8942;" icon.
-When you click on it, a drop down menu with 2 items appears.
+When you click on it, a drop-down menu with 2 items appears.
 
 ![Home Drop Down Menu](docs/images/HomeDropDownMenu.png)
 
@@ -333,7 +333,7 @@ In this screen you can
 
 + Add another device by clicking on the "+" button at the bottom right.
 + Remove a device by swiping its card to the right.
-  A Dialog box will pop up asking you to confirm the delete:
+  A Dialog box will pop up asking you to confirm to delete:
 
 ![Device Delete Confirmation](docs/images/DeviceDeleteConfirm.png)
 
@@ -359,11 +359,11 @@ except for the second row that no longer contains the Availability state but:
 
 + At the left the Gatt connection stat**e** represents the current link status and can have the following values:
 
-| Value         | Icon                                                                                         | Description                                             |
-|---------------|----------------------------------------------------------------------------------------------|---------------------------------------------------------|
-| Disconnected  | ![Disconnected](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | *Gaai* is not connected with the charger's Gatt server  |
-| Connecting    | ![Connecting](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)    | *Gaai* is connecting with the charger's Gatt server     |
-| Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | *Gaai* is connected with the charger's Gatt server      | 
+| Value         | Icon                                                                                         | Description                                            |
+|---------------|----------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| Disconnected  | ![Disconnected](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | *Gaai* is not connected with the charger's Gatt server |
+| Connecting    | ![Connecting](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)    | *Gaai* is connecting with the charger's Gatt server    |
+| Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | *Gaai* is connected with the charger's Gatt server     | 
 | Disconnecting | ![Disconnecting](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | *Gaai* is disconnecting with the charger's Gatt server |
 
 + At the right the BLE Gatt connection stat**us** shows the result code of the latest connection event and can have the 
@@ -617,7 +617,7 @@ In this screen you can
   A message will be shown to hold the new badge against the charger.
   The charger will register the new badge and *Gaai* automatically updates its list of registered badges.
 - Remove a device by swiping the card entry that corresponds with the badge to the right.
-  A Dialog box will pop up asking you to confirm the delete:
+  A Dialog box will pop up asking you to confirm to delete:
 
 ![Badge Delete Confirmation](docs/images/BadgeDeleteConfirm.png)
 
@@ -695,7 +695,7 @@ The developer
   However, if you still need the *Nexxtmove* app to upload charging information (for reimbursement or others),
   be very careful as there is no guarantee that it will not interfere.
 
-*Gaai* is only tested on a the phone versus Nexxtender Home/Mobile versions as indicated in section
+*Gaai* is only tested on the phone versus Nexxtender Home/Mobile versions as indicated in section
 [Supported Android versions and Nexxtender Home firmware versions](#supported-android-versions-and-nexxtender-homemobile-firmware-versions)
 
 At this point *Gaai* can be considered a stable release for the Nexxtender HOME.

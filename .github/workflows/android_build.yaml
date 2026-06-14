@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Decodes Github secret ${{ secrets.SIGNING_STORE_FILE }} to the file ${{ env.keystoreFileName }}
+      # Decodes GitHub secret ${{ secrets.SIGNING_STORE_FILE }} to the file ${{ env.keystoreFileName }}
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
@@ -48,7 +48,7 @@ jobs:
           # cache: gradle
 
       # Make gradlew executable.
-      # Also make sure that git ignores permission changes. Otherwise workspace is considered dirty.
+      # Also make sure that git ignores permission changes. Otherwise, workspace is considered dirty.
       - name: Grant execute permission for gradlew
         run: |
           chmod +x gradlew

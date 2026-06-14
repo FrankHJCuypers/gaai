@@ -52,7 +52,7 @@ object BadgeParser {
   /**
    * Returns the UUID of a [Badge], preceded with 1 byte with the UUID length.
    * @param badge The badge
-   * @return A [DataByteArray] holding the length of teh UUID and teh UUID..
+   * @return A [DataByteArray] holding the length of the UUID and the UUID.
    */
   fun getLengthUUID(badge: Badge): DataByteArray {
     Log.d(TAG, "ENTRY getLengthUUID(badge = $badge)")

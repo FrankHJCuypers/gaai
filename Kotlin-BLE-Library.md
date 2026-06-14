@@ -107,7 +107,7 @@ Depends on the modules core, mock, server-api.
 
 ## test
 
-Junit tests and android tests for he library.
+Junit tests and android tests for the library.
 
 Depends on the modules core, advertiser, scanner, profile, client, client-android, client-mock, client-api, client,
 mock, server, server-android, server-mock, server-api.

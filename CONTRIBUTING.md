@@ -20,7 +20,7 @@ The Kotlin code is formatted according to the official
 The only exceptions applied are:
 
 + A tab is 2 spaces instead of 4.
-+ Line wrapping is applied after 120 characters in stead of 100.
++ Line wrapping is applied after 120 characters instead of 100.
 
 The Android Studio project editor is set up to automatically apply this style.
 Each time that a Kotlin file is saved or committed, it is also automatically reformatted.

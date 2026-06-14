@@ -38,7 +38,7 @@ private const val TAG = "GaaiNavGraph"
 
 /**
  * Provides the Navigation graph for the application.
- * @param navController The []NavHostController] for this host.
+ * @param navController The [NavHostController] for this host.
  * @param modifier The [Modifier] to be applied to this GaaiNavHost.
  *
  * @author Frank HJ Cuypers

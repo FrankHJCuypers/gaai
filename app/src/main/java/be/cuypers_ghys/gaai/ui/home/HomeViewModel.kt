@@ -93,7 +93,7 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
    * Filter by Service UUID.
    * BleScanResultData's [no.nordicsemi.android.kotlin.ble.core.scanner.BleScanRecord.serviceUuids] returns a list of
    * service UUID.
-   * The filter passes only devices that have the given Service UUID uuid .
+   * The filter passes only devices that have the given Service UUID [uuid] .
    * @property uuid The Service UUID to filter by.
    */
   @Suppress("ArrayInDataClass")

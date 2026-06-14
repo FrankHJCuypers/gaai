@@ -135,7 +135,7 @@ object NexxtenderHomeSpecification {
   }
 
   /**
-   * Creates a 128-bit UUID from a 8-bit UUID.
+   * Creates a 128-bit UUID from an 8-bit UUID.
    * @param shortUUID 8-bit UUID
    * @return 128-bit UUID
    */

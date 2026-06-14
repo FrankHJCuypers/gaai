@@ -21,9 +21,9 @@ For each device you connect to the following data is stored locally on your mobi
 
 This data is not shared by other apps or servers external to your phone.
 
-## Data collected by Github
+## Data collected by GitHub
 
-Some buttons or text will forward you to the *Gaai* Github project when clicked.
+Some buttons or text will forward you to the *Gaai* GitHub project when clicked.
 This may result in data collection.
 Please review the 
 [GitHub General Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)

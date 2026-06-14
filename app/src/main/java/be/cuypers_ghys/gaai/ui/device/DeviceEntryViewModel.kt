@@ -93,7 +93,7 @@ sealed class Filter(
  * Service data consists of a Service UUID and the Service Data associated with the service.
  * BleScanResultData's [no.nordicsemi.android.kotlin.ble.core.scanner.BleScanRecord.serviceData] returns a map of
  * service UUID and its corresponding Service Data.
- * The filter passes only devices that have the given Service UUID uuid and Service Data.
+ * The filter passes only devices that have the given Service UUID [uuid] and Service Data.
  * @property uuid The Service UUID to filter by.
  * @property data The Service Data to filter by.
  */

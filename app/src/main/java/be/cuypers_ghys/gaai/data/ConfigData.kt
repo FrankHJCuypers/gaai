@@ -99,16 +99,16 @@ data class ConfigData(
    */
   val networkType: NetWorkType = NetWorkType.UNKNOWN,
 
-  /** Off peak charging start time of each weekday. Coded in minutes since midnight. */
+  /** Off-peak charging start time of each weekday. Coded in minutes since midnight. */
   val touWeekStart: Short = 0,
 
-  /** Off peak charging end time of each weekday. Coded in minutes since midnight. */
+  /** Off-peak charging end time of each weekday. Coded in minutes since midnight. */
   val touWeekEnd: Short = 0,
 
-  /** Off peak charging start time of each weekend day. Coded in minutes since midnight. */
+  /** Off-peak charging start time of each weekend day. Coded in minutes since midnight. */
   val touWeekendStart: Short = 0,
 
-  /** Off peak charging end time of each weekend day. Coded in minutes since midnight. */
+  /** Off-peak charging end time of each weekend day. Coded in minutes since midnight. */
   val touWeekendEnd: Short = 0,
 
   /**
