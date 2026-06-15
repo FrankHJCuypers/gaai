@@ -16,6 +16,7 @@ plugins {
   id("com.google.gms.google-services")
   id("com.google.firebase.crashlytics")
   id("kotlin-parcelize")
+  id("org.jetbrains.dokka") version "2.2.0"
 }
 
 androidGitVersion {
@@ -229,7 +230,18 @@ dokka {
     failOnWarning.set(false)
   }
 
+  dokkaSourceSets {
+    // Suppress all auto-generated source sets first.
+    // Dokka 2.2 + AGP 9 creates an androidJvm source set that shares source roots
+    // with per-variant sets, causing a pre-generation validation failure.
+    // See https://github.com/Kotlin/dokka/issues/4458
+    configureEach {
+      suppress.set(true)
+    }
+  }
+
   dokkaSourceSets.main {
+    suppress.set(false)
     documentedVisibilities.set(
       setOf(
         VisibilityModifier.Public,
@@ -241,7 +253,7 @@ dokka {
     )
     sourceLink {
       localDirectory.set(file("src/main/java"))
-      remoteUrl("https://example.com/src")
+      remoteUrl("https://github.com/FrankHJCuypers/gaai")
       remoteLineSuffix.set("#L")
     }
   }
