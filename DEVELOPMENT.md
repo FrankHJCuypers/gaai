@@ -17,7 +17,7 @@ Follow these steps:
 
 1. Install the 64-bit version of [Git](https://git-scm.com/downloads/win).
 2. Install [Android Studio](https://developer.android.com/studio/install).
-3. In Android Studio select the menu item *File* -> *Settings* -> *Version Control* -> *Git* and make sure that the
+3. In Android Studio select the menu item *File* → *Settings* → *Version Control* → *Git* and make sure that the
    *Path to Git executable* points to the git.exe that you just installed.
 4. [Clone GitHub Gaai project in Android Studio](https://www.geeksforgeeks.org/how-to-clone-android-project-from-github-in-android-studio/).
    The required URL can be found by clicking on the ![Green Code>](docs/images/GreenCode.png)
@@ -88,7 +88,7 @@ No emulator or mobile phone running Android is required.
 
 Run the local tests in Android Studio as follows:
 
-- In the *Android* view, select the *app -> kotlin+java -> be.cuypers_ghys.gaai (test)* node.
+- In the *Android* view, select the *app → kotlin+java → be.cuypers_ghys.gaai (test)* node.
 - In the pop-up menu, select *Run 'Tests in 'be...'*.
   The tests run.
 - Verify that there are no errors.
@@ -106,8 +106,8 @@ Instrumented (JUnit) tests run on an Android emulator or mobile phone.
 
 Run the Instrumented tests in Android Studio as follows:
 
-- In the *Android* view, select the *app -> kotlin+java -> be.cuypers_ghys.gaai (androidTest)* node.
-- In the pop-up menu, select *Run 'Tests in 'be...'".
+- In the *Android* view, select the *app → kotlin+java → be.cuypers_ghys.gaai (androidTest)* node.
+- In the pop-up menu, select *Run 'Tests in be...'*.
   The tests run.
 - Verify that there are no errors.
   Fix errors if any.
@@ -140,7 +140,7 @@ Install the app either using Android Studio or by manually installing the APK to
     - select the default *app* configuration.
     - Run the *app*.
 2. Manual installation:
-    - Make the APK available on your hardware device (copy it using bluetooth or WiFi, use Google Drive,use Github link,
+    - Make the APK available on your hardware device (copy it using bluetooth or Wi-Fi, use Google Drive,use GitHub link,
       ...)
     - Install/Run the APK by clicking on it.
 
@@ -153,7 +153,7 @@ Now manually test all functionality that is described in the [README](README.md#
 The [Local (JUnit) tests](#local-tests) can also produce code coverage results.
 Run the local tests in Android Studio as follows:
 
-- In the *Android* view, select the *app -> kotlin+java -> be.cuypers_ghys.gaai (test)* node.
+- In the *Android* view, select the *app → kotlin+java → be.cuypers_ghys.gaai (test)* node.
 - In the pop-up menu, select *Run 'Tests in 'be...' with Coverage*.
   The tests run.
 - The Coverage screen shows a summary of the coverage results. 
@@ -181,10 +181,10 @@ Adding logging statements seems overkill.
 
 ## Developer Documentation generation
 
-The kotlin code is documented with [KDoc](https://kotlinlang.org/docs/kotlin-doc.html).
+The Kotlin code is documented with [KDoc](https://kotlinlang.org/docs/kotlin-doc.html).
 [Dokka](https://kotlinlang.org/docs/dokka-introduction.html) can generate HTML documentation from it.
 In order to do that, run the following command in a shell (e.g. PowerShell in Android Studio terminal, or git bash):
-`./gradlew dokkaGenerate`. The resulting html files are generated in the `app\build\documentation\html` subdirectory.
+`./gradlew dokkaGenerate`. The resulting HTML files are generated in the `app\build\documentation\html` subdirectory.
 Open the `index.html` file to start reading the documentation.
 
 Note that this documentation targets developers, not the users of *Gaai*.
@@ -196,7 +196,7 @@ See [Gradlew commands](#gradlew-commands).
 Once a commit on the master branch is selected to make a new release in GutHub, proceed as follows:
 
 1. Perform the tests from [Testing](#testing) and verify that they are successful.
-2. In Android Studio, select *Code -> Inspect Code* from the menu and inspect the results.
+2. In Android Studio, select *Code → Inspect Code* from the menu and inspect the results.
    Some of the reported issues can be improved, but several of them are not real issues.
    I tried to suppress these with `@Suppress` but that does not always work.
 3. Perform the [Developer Documentation generation](#developer-documentation-generation) and verify the result.
@@ -252,14 +252,14 @@ But non-debug APKs must be signed by a developer key.
 New versions of an already installed app must also be signed with the same key,
 otherwise the new version is refused by Android.
 
-Gradle automatically signs releas and firebase builds when `./gradlew build` is ran.
+Gradle automatically signs releas and firebase builds when `./gradlew build` is run.
 That behavior is defined in the `buildTypes` block of the app module's `build.gradle.kts` file.
 The release block uses a `signingConfig` with the name "release",
 which is itself defined in the `signingConfigs` of the app module's `build.gradle.kts` file.
 The values `storeFile`, `storePassword`, `keyAlias` and `keyPassword` are not defined in the `build.gradle.kts` file.
 `build.gradle.kts` must be pushed to the public git repo which would make the keys and passwords public.
 The `gaai-release.keystore` file which contains the keys is for the same reason not included in Git.
-Depending on the build being a local gradle build or a *Github Action* build, the key handling is different.
+Depending on the build being a local Gradle build or a *GitHub Action* build, the key handling is different.
 
 For a local build, the 4 values must be defined in a `gaai-release-keystore.properties` file,
 located in the ANDROID_USER_HOME directory (`C:\Users\<user>>\.android` on Windows).
@@ -268,9 +268,9 @@ located in the ANDROID_USER_HOME directory (`C:\Users\<user>>\.android` on Windo
 The keystore file is of type "JKS".
 It contains a 256 bits Elliptic Curve key on the NIST P-256 elliptic curve.
 This key is used with the *SHA-256 with ECDSA* signature algorithm to sign the APK.
-All of that is done automatically by gradle.
+All of that is done automatically by Gradle.
 
-For a *Github Action* build, the 4 values are stored in Github's
+For a *GitHub Action* build, the 4 values are stored in GitHub's
 [repository secrets](https://docs.github.com/en/actions/how-tos/writing-workflows/choosing-what-your-workflow-does/using-secrets-in-github-actions).
 The following 4 secrets are used:
 
@@ -326,24 +326,24 @@ Android Studio is installed.
 
 ## Gradlew commands
 
-- `./gradlew dokkaGenerate` creates Html based documentation from the Kdoc documentation used for documenting the source
+- `./gradlew dokkaGenerate` creates HTML based documentation from the KDoc documentation used for documenting the source
   code.
   The documentation is generated in the `app\build\documentation\html` directory
 - `./gradlew testReleaseUnitTest` runs the local (JUnit) tests for the release build.
-  The Junit xml files are generated in the `app\build\test-results\testReleaseUnitTest` directory.
-  Html test result files are generated in the `app\build\reports\tests\testReleaseUnitTest` directory.
+  The Junit XML files are generated in the `app\build\test-results\testReleaseUnitTest` directory.
+  HTML test result files are generated in the `app\build\reports\tests\testReleaseUnitTest` directory.
 - `./gradlew testDebugUnitTest` runs the local (JUnit) tests for the debug build.
-  The Junit xml files are generated in the `app\build\test-results\testDebugUnitTest` directory.
-  Html test result files are generated in the `app\build\reports\tests\testDebugUnitTest` directory.
-  In addition it performs code coverage analysis using jacoco.
+  The Junit XML files are generated in the `app\build\test-results\testDebugUnitTest` directory.
+  HTML test result files are generated in the `app\build\reports\tests\testDebugUnitTest` directory.
+  In addition, it performs code coverage analysis using jacoco.
   The jacoco result file is written to `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
 - `./gradlew test` runs both the above.
 - `./gradlew build` assembles and tests all the build types in the project.
   The release apk files are generated in the `app\build\outputs\apk\release` directory.
   Note that the *release* build type requires that the signingConfig *release* is correctly setup.
   See [APK Signing](#apk-signing).
-- `./gradlew createDebugCoverageReport` creates an html coverage report in `app\build\reports\coverage\test\debug`
-  based on the jacoco results in `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
+- `./gradlew createDebugCoverageReport` creates an HTML coverage report in `app\build\reports\coverage\test\debug`
+  based on the JaCoCo results in `app\build\outputs\unit_test_code_coverage\debugUnitTest\testDebugUnitTest.exec`.
   This task is **not** included in `./gradlew build`.
 - `./gradlew bundle` creates an aab bundle. This bundle can be used to upload to Google Play.
   Bundles are not signed.
@@ -360,14 +360,14 @@ The following GitHub actions are defined:
 
 ### Android CI
 
-On every push to the GitHub repository, this action execute's `./gradlew build` and uploads the generated
+On every push to the GitHub repository, this action executes `./gradlew build` and uploads the generated
 signed APK to the build artifacts.
 It also publishes the code coverage on [Codecov](https://app.codecov.io/github/FrankHJCuypers/gaai).
 
 ### pages-build-deployment
 
 Action generated by GitHub to build the project's documentation and deploy it to GitHub-pages.
-It was setup as follows:
+It was set up as follows:
 
 - In the project's repository in GitHub, select *Settings*, then under *Code and automation* select *Pages*.
 - Under *Source*, select *Deploy from a branch* and choose the master branch.
@@ -385,13 +385,13 @@ According to the video at the top of
 none of this info is secret.
 But for open source projects it is best that everyone that works on the project, 
 uses its own Firebase project and configuration settings.
-Therefore it is best to not include the json file in git.
-The video describes how everyone can setup their own Firebase project.
-But not including it in git, will generate failures during Github Actionns build.
+Therefore, it is best to not include the JSON file in git.
+The video describes how everyone can set up their own Firebase project.
+But not including it in git, will generate failures during GitHub Actionns build.
 Solutions are provided in 
 [Configure Firebase project for Continuous Integration builds](https://proandroiddev.com/configure-firebase-project-for-continuous-integration-builds-833f08561a73),
 but are a bit overkill for a project like Gaai.
-Therefore the current choice was to keep the google-services.json file in git.
+Therefore, the current choice was to keep the google-services.json file in git.
 This might need to be changed in the future.
 
 ### Firebase analytics
@@ -403,7 +403,7 @@ With the following command, your device does this more often.
 `adb shell setprop debug.firebase.analytics.app be.cuypers_ghys.gaai`
 
 Firebase analytics is enabled.
-Currently there is only 1 call to Firebase.analytics.logEvent() present in the code.
+Currently, there is only 1 call to Firebase.analytics.logEvent() present in the code.
 A press to the Get Time button writes an event.
 It is used for testing the Firebase analytics integration.
 
