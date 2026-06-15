@@ -69,7 +69,7 @@ android {
 
     applicationId = "be.cuypers_ghys.gaai"
     minSdk = 26
-    targetSdk = 36
+    targetSdk = 37
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables {
