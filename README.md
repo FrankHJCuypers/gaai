@@ -73,7 +73,7 @@ A bird name was chosen.
 - Allows to control the *Nexxtender Home*: start and stop the charger in ECO or MAX mode,
   sync the time with the mobile phone.
 - Allows to configure the *Nexxtender Home*: default charging mode, max grid and max device current, off-peak hours.
-- Management of badges (add, delete).
+- Management of badges (add, delete) on a *Nexxtender Home*.
 - Remembers the PN and SN of multiple devices.
 
 The following features are **not** available:
@@ -416,14 +416,14 @@ It is not supported by the *Nexxtender Mobile*.
 
 ![Grid Data Card](docs/images/GridDataCard.png)
 
-| Field      | Description                                                                                                                                                                                           |
-|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Timestamp  | Current time                                                                                                                                                                                          |
-| L1 Current | Grid phase L1 current                                                                                                                                                                                 |
-| L2 Current | Grid phase L2 current                                                                                                                                                                                 |
-| L3 Current | Grid phase L3 current                                                                                                                                                                                 |
-| Consumed   | Total power injected in the Grid in cWh during this quarter? See [Nexxtender Charger Information](https://github.com/FrankHJCuypers/gaai/wiki/Nexxtender-Charger-Information#charging-grid-data-0xd0) |
-| Interval   | Counts the seconds in the current quarter. Is set to 0 every multiple of a quarter (hh:00, hh:15, hh:30, hh:45)                                                                                       |
+| Field      | Description                                                                                                                                                      |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Timestamp  | Current time                                                                                                                                                     |
+| L1 Current | Grid phase L1 current                                                                                                                                            |
+| L2 Current | Grid phase L2 current                                                                                                                                            |
+| L3 Current | Grid phase L3 current                                                                                                                                            |
+| Consumed   | Total power injected in the Grid in cWh during this quarter? See [Nexxtender Charger Information](https://github.com/FrankHJCuypers/nexxtender-charger-info.git) |
+| Interval   | Counts the seconds in the current quarter. Is set to 0 every multiple of a quarter (hh:00, hh:15, hh:30, hh:45)                                                  |
 
 ### Car Data
 
@@ -628,7 +628,7 @@ Make sure that you are close to the *Nexxtender* charger and that no other devic
 Useful information can be found at
 
 - [Gaai Q&A](https://github.com/FrankHJCuypers/gaai/discussions/categories/q-a)
-- [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/gaai/wiki/Nexxtender-Charger-Information)
+- [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/nexxtender-charger-info.git)
 - [Analyzing-Bluetooth-Low-Energy-Traffic](https://github.com/FrankHJCuypers/gaai/wiki/Analyzing-Bluetooth-Low-Energy-Traffic)
 - [fuut: Wireshark Dissector in Lua for Nexxtender charger BLE](https://github.com/FrankHJCuypers/fuut)
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
@@ -666,8 +666,8 @@ The other rows are confirmed by other users.
 
 | Phone Model        | Android API (version) | Nexxtender Home firmware version | Nexxtender Mobile firmware version |
 |--------------------|-----------------------|----------------------------------|------------------------------------|
-| Google Pixel 6 Pro | 34 (14)               | 2.53.2                           |                                    | 
-| Google Pixel 8 Pro | 35 (15)               | 2.53.2                           |                                    | 
+| Google Pixel 6 Pro | 36 (16)               | 2.53.2                           | 2.1.2                              | 
+| Google Pixel 8 Pro | 36 (16)               | 2.53.2                           |                                    | 
 | Nokia X10          | 34 (14)               | 2.53.2                           |                                    |
 | OnePlus Nord 2     | 33 (13)               | 3.65.0                           |                                    |
 | Samsung Galaxy J7  | 27 (8.1)              | 3.65.0                           |                                    |
