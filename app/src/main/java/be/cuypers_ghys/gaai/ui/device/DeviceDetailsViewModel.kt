@@ -295,6 +295,7 @@ class DeviceDetailsViewModel(
 
     // Launch notifications for dynamic data
     nexxtenderHomeChargingBasicDataCharacteristic.getNotifications().onEach {
+      // Log.i(TAG, "Found the following notification of changed chargingBasicData DataByteArray: $it")
       val newChargingBasicData = ChargingBasicDataParser.parse(it.value)!!
       //_state is a MutableStateFlow which propagates data to UI.
       _state.value = _state.value.copy(chargingBasicData = newChargingBasicData)

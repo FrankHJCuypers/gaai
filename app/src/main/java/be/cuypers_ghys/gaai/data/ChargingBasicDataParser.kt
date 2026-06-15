@@ -67,16 +67,16 @@ object ChargingBasicDataParser {
 
     val rfu1 = chargingBasicData.fromUint32LE(4)
     if (rfu1 != 0u) {
-      Log.v(TAG, "rfu1 is not 0")
-      return null
+      Log.v(TAG, "rfu1 is not 0 but $rfu1")
+//      return null
     }
 
     val energy = chargingBasicData.fromUint32LE(8)
 
     val rfu2 = chargingBasicData[12]
     if (rfu2 != 0.toByte()) {
-      Log.v(TAG, "rfu2 is not 0")
-      return null
+      Log.v(TAG, "rfu2 is not 0 but $rfu2")
+//      return null
     }
 
     val phaseCount = chargingBasicData[13].toUByte()

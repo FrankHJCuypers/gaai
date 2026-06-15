@@ -66,13 +66,13 @@ class ChargingBasicDataParserTest {
   @OptIn(ExperimentalStdlibApi::class)
   @Test
   fun parse_ChargingBasicDataRFU1Not0() {
-    assertNull(ChargingBasicDataParser.parse("0300024200000001785634120001".hexToByteArray()))
+    assertNotNull(ChargingBasicDataParser.parse("0300024200000001785634120001".hexToByteArray()))
   }
 
   @OptIn(ExperimentalStdlibApi::class)
   @Test
   fun parse_ChargingBasicDataRFU2Not0() {
-    assertNull(ChargingBasicDataParser.parse("0300024200000000785634120101".hexToByteArray()))
+    assertNotNull(ChargingBasicDataParser.parse("0300024200000000785634120101".hexToByteArray()))
   }
 
   companion object {
