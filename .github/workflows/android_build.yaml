@@ -30,7 +30,7 @@ jobs:
       # Decodes GitHub secret ${{ secrets.SIGNING_STORE_FILE }} to the file ${{ env.keystoreFileName }}
       - name: Decode Keystore
         id: decode_keystore
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v2
         with:
           fileName: ${{ env.keystoreFileName }}
           encodedString: ${{ secrets.SIGNING_STORE_FILE }}
