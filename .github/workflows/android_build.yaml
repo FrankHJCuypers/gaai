@@ -70,7 +70,7 @@ jobs:
         if: always()
 
       - name: Upload to CodeCov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: true # optional (default = false)
           directory: app/build/reports/coverage/test/debug
