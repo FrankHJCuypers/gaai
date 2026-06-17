@@ -75,7 +75,7 @@ const val CUTOFF_PERIOD_NANO = 6000000000L
  * are not removed from the aggregated list, [clean] must be called periodically.
  */
 class BleScanResultAggregatorCleaner {
-  private val devices = ConcurrentHashMap<ServerDevice, BleScanResultData?>()
+  private val devices = ConcurrentHashMap<ServerDevice, BleScanResultData>()
   val results
     get() = devices.map { BleScanResult(it.key, it.value) }
 
@@ -87,7 +87,12 @@ class BleScanResultAggregatorCleaner {
    */
   fun aggregate(scanItem: BleScanResult): List<BleScanResult> {
     val data = scanItem.data
-    devices[scanItem.device] = data
+    if ( data == null ) {
+      // Create an entry with timestampNanos very old
+      devices[scanItem.device] = BleScanResultData(0,0, null)
+    } else {
+      devices[scanItem.device] = data
+    }
     return results
   }
 
@@ -119,21 +124,13 @@ class BleScanResultAggregatorCleaner {
       Log.v(TAG, "Testing serverDevice=$serverDevice ")
       Log.v(TAG, " bleScanResultData=$bleScanResultData ")
       Log.v(TAG, " bleScanResultData=$bleScanResultData.last() ")
-      val lastTimeStamp = bleScanResultData?.timestampNanos
-      if (bleScanResultData == null) {
-        Log.d(TAG, "bleScanResultData null Removing $serverDevice")
+      val lastTimeStamp = bleScanResultData.timestampNanos
+      if ((lastTimeStamp < cutoffTimeNano)) {
+        Log.v(TAG, "timestampNanos<cutoffTimeNano: Removing $serverDevice")
         devices.remove(serverDevice)
         cleaned = true
-      } else if (lastTimeStamp != null) {
-        if ((lastTimeStamp < cutoffTimeNano)) {
-          Log.v(TAG, "timestampNanos<cutoffTimeNano: Removing $serverDevice")
-          devices.remove(serverDevice)
-          cleaned = true
-        } else {
-          Log.v(TAG, "Not Removing $serverDevice, lastTimeStamp=$lastTimeStamp, cutoffTimeNano=$cutoffTimeNano ")
-        }
       } else {
-        Log.v(TAG, "lastTimeStamp not available ")
+        Log.v(TAG, "Not Removing $serverDevice, lastTimeStamp=$lastTimeStamp, cutoffTimeNano=$cutoffTimeNano ")
       }
     }
     Log.d(TAG, "EXIT clean()  #devices=${devices.size}")
