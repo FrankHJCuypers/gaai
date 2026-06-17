@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           java-version: '21'
-          distribution: 'adopt'
+          distribution: 'temurin'
           # next line commented out because of //https://github.com/gradle/actions/blob/v3.4.2/docs/setup-gradle.md#incompatibility-with-other-caching-mechanisms
           # cache: gradle
 
