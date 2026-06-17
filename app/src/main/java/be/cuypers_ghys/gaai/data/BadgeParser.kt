@@ -36,7 +36,7 @@ object BadgeParser {
    *      Null if *ccdtRecord* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(badgeData: ByteArray): Badge? {
-    Log.d(TAG, "ENTRY parse(badgeData = $badgeData)")
+    Log.d(TAG, "ENTRY parse(badgeData = ${badgeData.contentToString()})")
 
     val uuidLength = badgeData[0]
     if (badgeData.size != (uuidLength + 1)) {

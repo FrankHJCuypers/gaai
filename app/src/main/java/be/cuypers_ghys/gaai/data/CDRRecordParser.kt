@@ -43,7 +43,7 @@ object CDRRecordParser {
    *      Null if *cdrRecord* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(cdrRecord: ByteArray): CDRRecord? {
-    Log.d(TAG, "ENTRY parse(cdrRecord = $cdrRecord)")
+    Log.d(TAG, "ENTRY parse(cdrRecord = ${cdrRecord.contentToString()})")
     if (cdrRecord.size != 32) {
       Log.d(TAG, "cdrRecord.size is not 32 but ${cdrRecord.size} ")
       return null

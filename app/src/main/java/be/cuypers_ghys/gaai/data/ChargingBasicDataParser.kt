@@ -40,7 +40,7 @@ object ChargingBasicDataParser {
    *      Null if *chargingBasicData* is not 14 bytes long or RFU bytes are not 0.
    */
   fun parse(chargingBasicData: ByteArray): ChargingBasicData? {
-    Log.d(TAG, "ENTRY parse(chargingBasicData = $chargingBasicData)")
+    Log.d(TAG, "ENTRY parse(chargingBasicData = ${chargingBasicData.contentToString()})")
 
     if (chargingBasicData.size != 14) {
       Log.d(TAG, "chargingBasicData.size is not 14 but ${chargingBasicData.size} ")

@@ -41,7 +41,7 @@ object CCDTRecordParser {
    *      Null if *ccdtRecord* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(ccdtRecord: ByteArray): CCDTRecord? {
-    Log.d(TAG, "ENTRY parse(ccdtRecord = $ccdtRecord)")
+    Log.d(TAG, "ENTRY parse(ccdtRecord = ${ccdtRecord.contentToString()})")
 
     if (ccdtRecord.size != 16) {
       Log.d(TAG, "ccdtRecord.size is not 16 but ${ccdtRecord.size} ")

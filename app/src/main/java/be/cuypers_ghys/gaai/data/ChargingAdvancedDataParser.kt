@@ -44,7 +44,7 @@ object ChargingAdvancedDataParser {
    *      Null if *chargingAdvancedData* is not 18 bytes long or the CRC16 is not correct.
    */
   fun parse(chargingAdvancedData: ByteArray): ChargingAdvancedData? {
-    Log.d(TAG, "ENTRY parse(chargingAdvancedData = $chargingAdvancedData)")
+    Log.d(TAG, "ENTRY parse(chargingAdvancedData = ${chargingAdvancedData.contentToString()})")
 
     if (chargingAdvancedData.size != 18) {
       Log.d(TAG, "chargingAdvancedData.size is not 18 but ${chargingAdvancedData.size} ")

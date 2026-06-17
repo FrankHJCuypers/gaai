@@ -43,7 +43,7 @@ object ChargingGridDataParser {
    *      Null if *chargingGridData* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(chargingGridData: ByteArray): ChargingGridData? {
-    Log.d(TAG, "ENTRY parse(chargingGridData = $chargingGridData)")
+    Log.d(TAG, "ENTRY parse(chargingGridData = ${chargingGridData.contentToString()})")
 
     if (chargingGridData.size != 16) {
       Log.d(TAG, "chargingGridData.size is not 16 but ${chargingGridData.size} ")

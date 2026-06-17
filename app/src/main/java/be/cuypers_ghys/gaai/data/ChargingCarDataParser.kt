@@ -42,7 +42,7 @@ object ChargingCarDataParser {
    *      Null if *ChargingCarData* is not 18 bytes long or the CRC16 is not correct.
    */
   fun parse(chargingCarData: ByteArray): ChargingCarData? {
-    Log.d(TAG, "ENTRY parse(chargingCarData = $chargingCarData)")
+    Log.d(TAG, "ENTRY parse(chargingCarData = ${chargingCarData.contentToString()})")
 
     if (chargingCarData.size != 18) {
       Log.d(TAG, "chargingCarData.size is not 18 but ${chargingCarData.size} ")

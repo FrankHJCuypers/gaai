@@ -69,7 +69,7 @@ object ConfigDataParserComposer {
    */
   @Suppress("FunctionName")
   fun parseConfig_1_0(configGetData: ByteArray): ConfigData? {
-    Log.d(TAG, "ENTRY parseConfig_1_0(ccdtRecord = $configGetData)")
+    Log.d(TAG, "ENTRY parseConfig_1_0(ccdtRecord = ${configGetData.contentToString()})")
     if (configGetData.size != 13) {
       Log.d(TAG, "configGetData_1_0.size is not 13 but ${configGetData.size} ")
       return null
@@ -89,7 +89,7 @@ object ConfigDataParserComposer {
    */
   @Suppress("FunctionName")
   fun parseConfig_1_1(configGetData: ByteArray): ConfigData? {
-    Log.d(TAG, "ENTRY parseConfig_1_1(ccdtRecord = $configGetData)")
+    Log.d(TAG, "ENTRY parseConfig_1_1(ccdtRecord = ${configGetData.contentToString()})")
     if (configGetData.size != 15) {
       Log.d(TAG, "configGetData_1_1.size is not 15 but ${configGetData.size} ")
       return null
@@ -109,7 +109,7 @@ object ConfigDataParserComposer {
    *      Null if *configGetData* is not 13 or 15 bytes long or the CRC16 is not correct.
    */
   fun parse(configGetData: ByteArray, configVersion: ConfigVersion): ConfigData? {
-    Log.d(TAG, "ENTRY parse(configGetData = $configGetData, configVersion=$configVersion)")
+    Log.d(TAG, "ENTRY parse(configGetData = ${configGetData.contentToString()}, configVersion=$configVersion)")
 
     when (configVersion) {
       ConfigVersion.CONFIG_1_0 -> if (configGetData.size != 13) return null
@@ -225,7 +225,7 @@ object ConfigDataParserComposer {
    */
   @Suppress("FunctionName")
   fun parseConfig_CBOR(configGetData: ByteArray): ConfigData? {
-    Log.d(TAG, "ENTRY parseConfig_CBOR(configGetData = $configGetData)")
+    Log.d(TAG, "ENTRY parseConfig_CBOR(configGetData = ${configGetData.contentToString()})")
 
     val crc = configGetData.fromUint16LE(configGetData.size - 2)
     val computedCrc = CRC16.modBus(configGetData, 0, configGetData.size - 2).toUShort()
@@ -316,7 +316,7 @@ object ConfigDataParserComposer {
 
     if (configGetData.configVersion == ConfigVersion.CONFIG_CBOR) {
       val retval = composeConfig_CBOR(configGetData)
-      Log.d(TAG, "RETURN compose()=$retval")
+      Log.d(TAG, "RETURN compose()=${retval.contentToString()}")
       return retval
     }
 
@@ -347,7 +347,7 @@ object ConfigDataParserComposer {
 
     val computedCrc = CRC16.modBus(data, 0, dataLength - 2).toUInt()
     data.toUint16LE(offset, computedCrc)
-    Log.d(TAG, "RETURN compose()=$data")
+    Log.d(TAG, "RETURN compose()=${data.contentToString()}")
     return data
   }
 
@@ -399,7 +399,7 @@ object ConfigDataParserComposer {
     val computedCrcArray = ByteArray(2)
     computedCrcArray.toUint16LE(0, computedCrc)
     val cborDatWithCrc = cborData + computedCrcArray
-    Log.d(TAG, "RETURN composeConfig_CBOR()=$cborDatWithCrc")
+    Log.d(TAG, "RETURN composeConfig_CBOR()=${cborDatWithCrc.contentToString()}")
 
     return cborDatWithCrc
   }
