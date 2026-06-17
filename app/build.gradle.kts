@@ -3,7 +3,7 @@ import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.io.FileInputStream
 import java.nio.file.Paths
 import java.util.Properties
-
+import com.android.build.api.dsl.ApplicationExtension
 
 plugins {
   alias(libs.plugins.android.application)
@@ -36,7 +36,15 @@ if (keystorePropertiesFile.exists()) {
 
 val firebaseImplementation by configurations.creating
 
-android {
+kotlin {
+  jvmToolchain(21)
+}
+
+room {
+  schemaDirectory("$projectDir/schemas")
+}
+
+extensions.configure<ApplicationExtension> {
   signingConfigs {
     create("release") {
       // If the gaai-release-keystore.properties file exists, we use it (we are running locally)
@@ -48,8 +56,8 @@ android {
       } else {
         // If the gaai-release-keystore.properties file does not exist, we use GitHub secrets.
         val signingStoreFileString = System.getenv("SIGNING_STORE_FILE")
-        if (signingStoreFileString != null ) {
-          storeFile = rootProject.file( signingStoreFileString )
+        if (signingStoreFileString != null) {
+          storeFile = rootProject.file(signingStoreFileString)
           storePassword = System.getenv("SIGNING_STORE_PASSWORD")
           keyAlias = System.getenv("SIGNING_KEY_ALIAS")
           keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
@@ -103,15 +111,10 @@ android {
     targetCompatibility = JavaVersion.VERSION_21
   }
 
-  kotlin {
-    jvmToolchain(21)
-  }
-
   buildFeatures {
     compose = true
     buildConfig = true
   }
-  @Suppress("UnstableApiUsage")
   composeOptions {
     kotlinCompilerExtensionVersion = "1.5.1"
   }
@@ -127,10 +130,6 @@ android {
     unitTests.isReturnDefaultValues = true
   }
 
-  room {
-    schemaDirectory("$projectDir/schemas")
-  }
-
   dependenciesInfo {
     // Disables dependency metadata when building APKs (for IzzyOnDroid/F-Droid)
     includeInApk = false
@@ -138,7 +137,6 @@ android {
     includeInBundle = true
   }
 }
-
 
 dependencies {
   implementation(libs.androidx.lifecycle.runtime.ktx)
