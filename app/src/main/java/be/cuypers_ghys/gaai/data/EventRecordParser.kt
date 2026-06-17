@@ -41,7 +41,7 @@ object EventRecordParser {
    *      Null if *eventRecord* is not 16 bytes long or the CRC16 is not correct.
    */
   fun parse(eventRecord: ByteArray): EventRecord? {
-    Log.d(TAG, "ENTRY parse(eventRecord = $eventRecord)")
+    Log.d(TAG, "ENTRY parse(eventRecord = ${eventRecord.contentToString()})")
 
     if (eventRecord.size != 20) {
       Log.d(TAG, "eventRecord.size is not 20 but ${eventRecord.size} ")

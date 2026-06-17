@@ -36,7 +36,7 @@ object TimeDataParserComposer {
    *      Null if *timeGetData* is not 4 bytes long.
    */
   fun parse(timeGetData: ByteArray): TimeData? {
-    Log.d(TAG, "ENTRY parse(timeGetData = $timeGetData)")
+    Log.d(TAG, "ENTRY parse(timeGetData = ${timeGetData.contentToString()})")
 
     if (timeGetData.size != 4) {
       Log.d(TAG, "timeGetData.size is not 4 but ${timeGetData.size} ")
