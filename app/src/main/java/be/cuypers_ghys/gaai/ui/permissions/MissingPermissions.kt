@@ -346,6 +346,7 @@ private fun AskToEnableBluetoothPreview() {
   }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "AskToEnablePermissionsDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "AskToEnablePermissionsLight")
