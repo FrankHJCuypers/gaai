@@ -53,6 +53,7 @@ import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 // Tag for logging
 private const val TAG = "SwipeDismissConfirmationDialog"
@@ -191,7 +192,7 @@ fun SwipeToDismissContainerPreview() {
             it.toString(),
             onDismiss = { _, onError ->
               scope.launch {
-                delay(1000)
+                delay(1000.milliseconds)
                 onError()
               }
             }

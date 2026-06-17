@@ -72,6 +72,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.nordicsemi.android.kotlin.ble.core.MockServerDevice
 import no.nordicsemi.android.kotlin.ble.core.data.BondState
+import kotlin.time.Duration.Companion.milliseconds
 
 // Tag for logging
 private const val TAG = "HomeScreen"
@@ -309,7 +310,7 @@ fun GaaiDeviceItem(
     stringResource(R.string.device),
     onDismiss = { _, onError ->
       scope.launch {
-        delay(1000)
+        delay(1000.milliseconds)
         onError()
         onDeviceRemove(deviceState.device)
       }

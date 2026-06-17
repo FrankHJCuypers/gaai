@@ -80,6 +80,7 @@ import be.cuypers_ghys.gaai.ui.theme.GaaiTheme
 import be.cuypers_ghys.gaai.util.toColonHex
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 // Tag for logging
 private const val TAG = "BadgeListScreen"
@@ -357,7 +358,7 @@ fun GaaiBadgeItem(
     stringResource(R.string.badge),
     onDismiss = { _, onError ->
       scope.launch {
-        delay(1000)
+        delay(1000.milliseconds)
         onError()
         onBadgeRemove(badge)
       }

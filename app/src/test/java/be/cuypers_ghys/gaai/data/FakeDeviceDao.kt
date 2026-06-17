@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.sync.Mutex
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Fake [DeviceDao] for [OfflineDevicesRepositoryTest] JUnit tests.
@@ -39,9 +40,9 @@ class FakeDeviceDao(val initialDeviceList: List<Device>) : DeviceDao {
     val index = deviceList.indexOfFirst { it.id == id }
     if (index >= 0) {
       emit(deviceList[index])
-      delay(1000)
+      delay(1000.milliseconds)
       emit(deviceList[index])
-      delay(1000)
+      delay(1000.milliseconds)
     }
   }
 
