@@ -328,6 +328,7 @@ fun DeviceDetailsBody(
 
       GaaiDeviceInformationCard(
         deviceInformation = state.deviceInformation,
+        chargerType = device?.type!!,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
@@ -443,6 +444,7 @@ internal fun GaaiDeviceNameCard(
 /**
  * Implements a [Card] displaying the [deviceInformation].
  * @param deviceInformation The information to display.
+ * @param chargerType
  * @param modifier the [Modifier] to be applied to this GaaiDeviceInformationCard
  *
  * @author Frank HJ Cuypers
@@ -450,7 +452,7 @@ internal fun GaaiDeviceNameCard(
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiDeviceInformationCard(
-  deviceInformation: DeviceInformation, modifier: Modifier = Modifier
+  deviceInformation: DeviceInformation, chargerType: ChargerType, modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "ENTRY GaaiDeviceInformationCard(deviceInformation = $deviceInformation)")
   Card(
@@ -529,6 +531,23 @@ internal fun GaaiDeviceInformationCard(
             text = deviceInformation.hardwareRevision,
             style = MaterialTheme.typography.titleMedium
           )
+        }
+
+        if (chargerType != ChargerType.HOME ) {
+          Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            Text(
+              text = stringResource(R.string.manufacturer_name),
+              style = MaterialTheme.typography.titleMedium,
+            )
+            Spacer(Modifier.weight(1f))
+            Text(
+              text = deviceInformation.manufacturerName,
+              style = MaterialTheme.typography.titleMedium
+            )
+          }
         }
       }
     }
@@ -2106,7 +2125,7 @@ private fun DeviceDetailsHomeCompletePreview() {
           ),
           deviceInformation = DeviceInformation(
             modelNumber = "12345", serialNumber = "12345",
-            firmwareRevision = "1.23.4", hardwareRevision = "A2"
+            firmwareRevision = "1.23.4", hardwareRevision = "A2", manufacturerName = "?"
           ),
           chargingBasicData = ChargingBasicData(
             seconds = 123u, discriminator = Discriminator.STOPPED,
@@ -2175,7 +2194,7 @@ private fun DeviceDetailsMobilePreview() {
             BleGattConnectionStatus.SUCCESS
           ), deviceInformation = DeviceInformation(
             modelNumber = "12345", serialNumber = "12345",
-            firmwareRevision = "1.23.4", hardwareRevision = "A2"
+            firmwareRevision = "1.23.4", hardwareRevision = "A2", manufacturerName = "Powerdale"
           ),
           chargingBasicData = ChargingBasicData(
             seconds = 123u, discriminator = Discriminator.STOPPED,
@@ -2228,12 +2247,13 @@ private fun DeviceInformationPreview() {
       GaaiDeviceInformationCard(
         deviceInformation = DeviceInformation(
           modelNumber = "12345", serialNumber = "67890",
-          firmwareRevision = "1.23.4", hardwareRevision = "A1"
+          firmwareRevision = "1.23.4", hardwareRevision = "A1", manufacturerName = "Frank"
         ),
+        ChargerType.MOBILE_BLACK,
         modifier = Modifier
           .padding(
             dimensionResource(id = R.dimen.padding_small)
-          )
+          ),
       )
     }
   }

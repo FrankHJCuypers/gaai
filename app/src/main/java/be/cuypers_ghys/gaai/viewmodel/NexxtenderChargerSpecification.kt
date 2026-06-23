@@ -59,6 +59,9 @@ object NexxtenderHomeSpecification {
   /** BLE Hardware Revision String Characteristic UUID. */
   val UUID_BLE_HARDWARE_REVISION_STRING_CHARACTERISTIC: UUID = from16bitString("2a27")
 
+  /** BLE Manufacturer Name String Characteristic UUID. */
+  val UUID_BLE_MANUFACTURER_NAME_STRING_CHARACTERISTIC: UUID = from16bitString("2a29")
+
   /** Nexxtender charger Service Data Service UUID. */
   val UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE: UUID = fromNexxtenderHomeBase("c0")
 

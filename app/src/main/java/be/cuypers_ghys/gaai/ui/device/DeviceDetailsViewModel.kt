@@ -144,6 +144,7 @@ class DeviceDetailsViewModel(
   private lateinit var serialNumberStringCharacteristic: ClientBleGattCharacteristic
   private lateinit var firmwareRevisionStringCharacteristic: ClientBleGattCharacteristic
   private lateinit var hardwareRevisionStringCharacteristic: ClientBleGattCharacteristic
+  private lateinit var manufacturerNameStringCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeChargingBasicDataCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeChargingGridDataCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeChargingCarDataCharacteristic: ClientBleGattCharacteristic
@@ -242,6 +243,11 @@ class DeviceDetailsViewModel(
       )!!
 
     if (gaaiDevice.type != ChargerType.HOME) {
+      manufacturerNameStringCharacteristic =
+        deviceInformationService.findCharacteristic(
+          NexxtenderHomeSpecification.UUID_BLE_MANUFACTURER_NAME_STRING_CHARACTERISTIC
+        )!!
+
       val nexxtenderChargingService =
         services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_SERVICE)!!
       nexxtenderHomeChargingBasicDataCharacteristic =
@@ -287,9 +293,14 @@ class DeviceDetailsViewModel(
     val serialNumber = serialNumberStringCharacteristic.read().value.toString(Charsets.UTF_8)
     val firmwareRevision = firmwareRevisionStringCharacteristic.read().value.toString(Charsets.UTF_8)
     val hardwareRevision = hardwareRevisionStringCharacteristic.read().value.toString(Charsets.UTF_8)
+    val manufacturerName = if (gaaiDevice.type != ChargerType.HOME) {
+      manufacturerNameStringCharacteristic.read().value.toString(Charsets.UTF_8)
+    } else {
+      "?"
+    }
     val deviceInformation = DeviceInformation(
       modelNumber = modelNumber, serialNumber = serialNumber,
-      firmwareRevision = firmwareRevision, hardwareRevision = hardwareRevision
+      firmwareRevision = firmwareRevision, hardwareRevision = hardwareRevision, manufacturerName=manufacturerName
     )
     _state.value = _state.value.copy(deviceName = deviceName, deviceInformation = deviceInformation)
 
@@ -739,7 +750,9 @@ data class DeviceInformation(
   val modelNumber: String = "",
   val serialNumber: String = "",
   val firmwareRevision: String = "",
-  val hardwareRevision: String = ""
+  val hardwareRevision: String = "",
+  // Only on Mobile
+  val manufacturerName: String = ""
 )
 
 /**
