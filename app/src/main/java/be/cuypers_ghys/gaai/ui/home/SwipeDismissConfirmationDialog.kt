@@ -60,8 +60,12 @@ private const val TAG = "SwipeDismissConfirmationDialog"
 
 /**
  * This function is mostly copied from
- * https://stackoverflow.com/a/79055503/1366319.
- * See answer from https://stackoverflow.com/questions/78638403/reset-of-swipetodismissboxstate-not-working
+ * https://proandroiddev.com/swipe-to-dismiss-with-compose-material-3-38445e0143f7
+ * @param item The item to show in the container
+ * @param itemName The name of the item
+ * @param confirmationDialog Do we need to confirm a delete?
+ * @param onDismiss Code for dismissing an item
+ * @param content Composable showing the item
  */
 @Composable
 fun <T> SwipeToDismissContainer(
@@ -73,12 +77,37 @@ fun <T> SwipeToDismissContainer(
 ) {
   Log.v(TAG, "ENTRY SwipeToDismissContainer()")
 
+  val scope = rememberCoroutineScope()
   var potentialDelete by remember { mutableStateOf(false) }
   var deleteItem by remember { mutableStateOf(false) }
   var stateToMaintain by remember { mutableStateOf<SwipeToDismissBoxValue?>(null) }
 
-  val state = rememberSwipeToDismissBoxState(
-    confirmValueChange = { dismissValue ->
+  val dismissState = rememberSwipeToDismissBoxState()
+
+  //Maintains the row's swiped state while it waits for confirmation and for AnimatedVisibility to hide the item
+  LaunchedEffect(stateToMaintain) {
+    stateToMaintain?.let {
+      dismissState.snapTo(it)
+      stateToMaintain = null
+    }
+  }
+
+  LaunchedEffect(deleteItem) {
+    if (deleteItem) {
+      dismissState.reset()
+      onDismiss(item) {
+        deleteItem = false
+      }
+    } else {
+      //In our app, the onDismiss function also takes in an onError: () -> Unit,
+      //which allows us to bring the item back if deletion fails
+      dismissState.reset()
+    }
+  }
+
+  SwipeToDismissBox(
+    state = dismissState,
+    onDismiss = { dismissValue ->
       when (dismissValue) {
         SwipeToDismissBoxValue.EndToStart,
         SwipeToDismissBoxValue.StartToEnd -> {
@@ -93,46 +122,19 @@ fun <T> SwipeToDismissContainer(
 
         else -> {}
       }
-      false //Immediately resets the state so we can swipe it again if confirmation is canceled or if deletion fails
-    }
-  )
-
-  //Maintains the row's swiped state while it waits for confirmation and for AnimatedVisibility to hide the item
-  LaunchedEffect(stateToMaintain) {
-    stateToMaintain?.let {
-      state.snapTo(it)
-      stateToMaintain = null
-    }
-  }
-
-  LaunchedEffect(deleteItem) {
-    if (deleteItem) {
-      state.reset()
-      onDismiss(item) {
-        deleteItem = false
-      }
-    } else {
-      //In our app, the onDismiss function also takes in an onError: () -> Unit,
-      //which allows us to bring the item back if deletion fails
-      state.reset()
-    }
-  }
-
-  SwipeToDismissBox(
-    state = state,
-    backgroundContent = { DismissBackground(state) },
+    },
+    backgroundContent = { DismissBackground(dismissState) },
     content = {
       content(item)
     }
   )
 
-  val scope = rememberCoroutineScope()
   if (confirmationDialog && potentialDelete) {
     DeleteConfirmationDialog(
       itemName = itemName,
       onCancel = {
         potentialDelete = false
-        scope.launch { state.reset() } //reset() seems to only reset the visual state, not the full state object
+        scope.launch { dismissState.reset() } //reset() seems to only reset the visual state, not the full state object
       },
       onConfirm = {
         potentialDelete = false
@@ -140,6 +142,7 @@ fun <T> SwipeToDismissContainer(
       }
     )
   }
+
   Log.v(TAG, "RETURN SwipeToDismissContainer()")
 }
 

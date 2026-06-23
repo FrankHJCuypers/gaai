@@ -321,7 +321,7 @@ private fun BadgesList(
     modifier = modifier,
     contentPadding = contentPadding
   ) {
-    items(items = badgeList) { badge ->
+    items(items = badgeList, key = { badge -> badge.uuid }) { badge ->
       GaaiBadgeItem(
         badge = badge,
         onBadgeRemove = onBadgeRemove,
