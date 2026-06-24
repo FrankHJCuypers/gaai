@@ -37,6 +37,7 @@ class ChargingBasicDataParserTest {
     expectedSeconds: Int,
     expectedDiscriminator: Discriminator,
     expectedStatus: Status,
+    expectedRfu1CarPower: UInt,
     expectedRawStatus: Int,
     expectedEnergy: Long,
     expectedPhaseCount: Int
@@ -46,6 +47,7 @@ class ChargingBasicDataParserTest {
     assertEquals(expectedSeconds.toUShort(), computedChargingBasicData!!.seconds)
     assertEquals(expectedDiscriminator, computedChargingBasicData.discriminator)
     assertEquals(expectedStatus, computedChargingBasicData.status)
+    assertEquals(expectedRfu1CarPower, computedChargingBasicData.rfu1CarPower)
     assertEquals(expectedRawStatus.toByte(), computedChargingBasicData.rawStatus)
     assertEquals(expectedEnergy.toUInt(), computedChargingBasicData.energy)
     assertEquals(expectedPhaseCount.toUByte(), computedChargingBasicData.phaseCount)
@@ -92,6 +94,7 @@ class ChargingBasicDataParserTest {
           0x03,
           Discriminator.CHARGING,
           Status.PLUGGED,
+          0,
           'B',
           0x12345678,
           1
@@ -101,6 +104,7 @@ class ChargingBasicDataParserTest {
           0xFFFF,
           Discriminator.STARTED,
           Status.CHARGING,
+          0,
           'C',
           0xA2A4A6A8,
           2
@@ -110,6 +114,7 @@ class ChargingBasicDataParserTest {
           0x3412,
           Discriminator.STOPPED,
           Status.CHARGING,
+          0,
           'D',
           0x00000000,
           3
@@ -119,6 +124,7 @@ class ChargingBasicDataParserTest {
           0x3412,
           Discriminator.UNKNOWN,
           Status.FAULT,
+          0,
           'E',
           0x11111111,
           4
@@ -128,6 +134,7 @@ class ChargingBasicDataParserTest {
           0x3412,
           Discriminator.UNKNOWN,
           Status.FAULT,
+          0,
           'F',
           0x11111111,
           4
@@ -137,6 +144,17 @@ class ChargingBasicDataParserTest {
           0x3412,
           Discriminator.UNKNOWN,
           Status.UNKNOWN,
+          0,
+          'G',
+          0x11111111,
+          4
+        ),
+        Arguments.of(
+          "1234044712345678111111110004".hexToByteArray(),
+          0x3412,
+          Discriminator.UNKNOWN,
+          Status.UNKNOWN,
+          0x78563412,
           'G',
           0x11111111,
           4

@@ -53,6 +53,12 @@ data class ChargingBasicData(
   /** Not yet decoded [status] */
   val rawStatus: Byte = 0,
 
+  /**
+   * RFU1 on Nexxtender Home.
+   * Total power consumption from the car in W on Nexxtender Mobile.
+   */
+  val rfu1CarPower: UInt = 0u,
+
   /** Total energy in Wh charged during this session? */
   val energy: UInt = 0u,
 

@@ -335,6 +335,7 @@ fun DeviceDetailsBody(
 
       GaaiChargingBasicDataCard(
         chargingBasicData = state.chargingBasicData,
+        chargerType = device?.type!!,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
@@ -558,6 +559,7 @@ internal fun GaaiDeviceInformationCard(
 /**
  * Implements a [Card] displaying the [chargingBasicData].
  * @param chargingBasicData The information to display.
+ * @param chargerType
  * @param modifier the [Modifier] to be applied to this GaaiChargingBasicDataCard
  *
  * @author Frank HJ Cuypers
@@ -565,7 +567,7 @@ internal fun GaaiDeviceInformationCard(
 @Composable
 // TODO: factorize to its own file, since it is also used in DeviceEntryViewModel.kt
 internal fun GaaiChargingBasicDataCard(
-  chargingBasicData: ChargingBasicData, modifier: Modifier = Modifier
+  chargingBasicData: ChargingBasicData, chargerType: ChargerType, modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "ENTRY GaaiChargingBasicDataCard(chargingBasicData = $chargingBasicData)")
   Card(
@@ -630,6 +632,22 @@ internal fun GaaiChargingBasicDataCard(
             text = chargingBasicData.status.toString(),
             style = MaterialTheme.typography.titleMedium
           )
+        }
+        if (chargerType !=  ChargerType.HOME){
+          Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+          ) {
+            Text(
+              text = stringResource(R.string.car_power),
+              style = MaterialTheme.typography.titleMedium,
+            )
+            Spacer(Modifier.weight(1f))
+            Text(
+              text = "%.3f kW".format(chargingBasicData.rfu1CarPower.toFloat() / 1000.0),
+              style = MaterialTheme.typography.titleMedium
+            )
+          }
         }
         Row(
           modifier = modifier.fillMaxWidth(),
@@ -2269,8 +2287,9 @@ private fun ChargingBasicDataPreview() {
       GaaiChargingBasicDataCard(
         chargingBasicData = ChargingBasicData(
           seconds = 123u, discriminator = Discriminator.STOPPED,
-          status = Status.PLUGGED, energy = 1234u, phaseCount = 2u
+          status = Status.PLUGGED, rfu1CarPower = 2345u, energy = 1234u, phaseCount = 2u
         ),
+        ChargerType.MOBILE_BLACK,
         modifier = Modifier
           .padding(
             dimensionResource(id = R.dimen.padding_small)

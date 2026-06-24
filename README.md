@@ -401,13 +401,14 @@ The Basic Data card shows Basic *Nexxtender Home* and *Nexxtender Mobile* chargi
 
 ![Basic Data Card](docs/images/BasicDataCard.png)
 
-| Field         | Description                                               |
-|---------------|-----------------------------------------------------------|
-| Seconds       | Number of seconds since start of charging                 |
-| Discriminator | Possible discriminator states: STARTED, CHARGING, STOPPED |
-| Status        | Possible states: PLUGGED, CHARGING, FAULT                 |
-| Energy        | Total energy in kWh charged during this session           |
-| Phase count   | Charging Phase Count                                      |
+| Field         | Description                                                                   |
+|---------------|-------------------------------------------------------------------------------|
+| Seconds       | Number of seconds since start of charging                                     |
+| Discriminator | Possible discriminator states: STARTED, CHARGING, STOPPED                     |
+| Status        | Possible states: PLUGGED, CHARGING, FAULT                                     |
+| Car Power     | Total power consumption by the car. Only available for an *Nexxtender Mobile* |
+| Energy        | Total energy in kWh charged during this session                               |
+| Phase count   | Charging Phase Count                                                          |
 
 ### Grid Data
 

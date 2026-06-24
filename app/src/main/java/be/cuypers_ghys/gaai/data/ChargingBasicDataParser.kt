@@ -65,9 +65,9 @@ object ChargingBasicDataParser {
       else -> Status.UNKNOWN
     }
 
-    val rfu1 = chargingBasicData.fromUint32LE(4)
-    if (rfu1 != 0u) {
-      Log.v(TAG, "rfu1 is not 0 but $rfu1")
+    val rfu1CarPower = chargingBasicData.fromUint32LE(4)
+    if (rfu1CarPower != 0u) {
+      Log.v(TAG, "rfu1_carPower is not 0 but $rfu1CarPower")
 //      return null
     }
 
@@ -86,6 +86,7 @@ object ChargingBasicDataParser {
       discriminator,
       status,
       rawStatus,
+      rfu1CarPower,
       energy,
       phaseCount
     )
