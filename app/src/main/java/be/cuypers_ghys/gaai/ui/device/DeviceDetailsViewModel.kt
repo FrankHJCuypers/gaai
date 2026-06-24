@@ -16,8 +16,10 @@
 
 package be.cuypers_ghys.gaai.ui.device
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.annotation.RequiresPermission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -63,9 +65,11 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_STATUS_READY
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.TIME_STATUS_SUCCESS
 import be.cuypers_ghys.gaai.data.TimeData
 import be.cuypers_ghys.gaai.data.TimeDataParserComposer
+import be.cuypers_ghys.gaai.util.Timestamp
 import be.cuypers_ghys.gaai.util.TouPeriod
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
+import io.github.g00fy2.versioncompare.Version
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -76,6 +80,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
+import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattService
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattServices
 import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectionStatus
 import no.nordicsemi.android.kotlin.ble.core.data.BondState
@@ -114,6 +119,8 @@ class DeviceDetailsViewModel(
   private val bleRepository: BleRepository
 ) : ViewModel() {
 
+  private val VERSION_1_3_8 = Version("1.3.8")
+
   /**
    * The id of the [Device] for which to build a state.
    */
@@ -145,10 +152,12 @@ class DeviceDetailsViewModel(
   private lateinit var firmwareRevisionStringCharacteristic: ClientBleGattCharacteristic
   private lateinit var hardwareRevisionStringCharacteristic: ClientBleGattCharacteristic
   private lateinit var manufacturerNameStringCharacteristic: ClientBleGattCharacteristic
+  private lateinit var dateUtcCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeChargingBasicDataCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeChargingGridDataCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeChargingCarDataCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeChargingAdvancedDataCharacteristic: ClientBleGattCharacteristic
+  private lateinit var nexxtenderChargingService: ClientBleGattService
   private lateinit var nexxtenderHomeGenericCommandCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeGenericStatusCharacteristic: ClientBleGattCharacteristic
   private lateinit var nexxtenderHomeGenericDataCharacteristic: ClientBleGattCharacteristic
@@ -248,8 +257,9 @@ class DeviceDetailsViewModel(
           NexxtenderHomeSpecification.UUID_BLE_MANUFACTURER_NAME_STRING_CHARACTERISTIC
         )!!
 
-      val nexxtenderChargingService =
+      nexxtenderChargingService =
         services.findService(NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_SERVICE)!!
+
       nexxtenderHomeChargingBasicDataCharacteristic =
         nexxtenderChargingService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CHARGING_BASIC_DATA_CHARACTERISTIC
@@ -312,6 +322,19 @@ class DeviceDetailsViewModel(
       _state.value = _state.value.copy(chargingBasicData = newChargingBasicData)
       Log.d(TAG, "Found the following notification of changed chargingBasicData: $newChargingBasicData")
     }.launchIn(viewModelScope)
+
+    if (gaaiDevice.type != ChargerType.HOME) {
+      val version = Version(firmwareRevision)
+      val supportsDateUtc = version >= VERSION_1_3_8
+      _state.value = _state.value.copy(supportsDateUtc = supportsDateUtc)
+
+      if (supportsDateUtc) {
+        dateUtcCharacteristic =
+          nexxtenderChargingService.findCharacteristic(
+            NexxtenderHomeSpecification.UUID_BLE_DATE_UTC_CHARACTERISTIC
+          )!!
+      }
+    }
 
     configVersion = getConfigVersion(firmwareRevision)
 
@@ -641,6 +664,31 @@ class DeviceDetailsViewModel(
     }
   }
 
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+  fun syncTime() {
+    Log.v(TAG, "ENTRY syncTime()")
+    if (gaaiDevice.type == ChargerType.HOME) {
+      sendTimeOperationSyncTime()
+    }
+    else if (_state.value.supportsDateUtc) {
+      writeDateUTC()
+    }
+    Log.v(TAG, "RETURN syncTime()")
+  }
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+  fun writeDateUTC() {
+    viewModelScope.launch {
+      Log.v(TAG, "ENTRY writeDateUTC()")
+      val time = (System.currentTimeMillis() / 1000).toUInt()
+      newTimeData = _state.value.timeData.copy(
+        time = time
+      )
+      dateUtcCharacteristic.write(DataByteArray(TimeDataParserComposer.compose(newTimeData)))
+     // _state.value = _state.value.copy(timeData = newTimeData)
+      Log.v(TAG, "RETURN writeDateUTC() " +Timestamp.toString(time) )
+    }
+  }
+
   /**
    * Writes [TIME_OPERATION_SET] to the [Generic Command]
    * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
@@ -651,6 +699,28 @@ class DeviceDetailsViewModel(
       Log.v(TAG, "ENTRY sendTimeOperationSyncTime()")
       sendTimeOperationSet()
       Log.v(TAG, "RETURN sendTimeOperationSyncTime()")
+    }
+  }
+
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+  fun getTime() {
+    Log.v(TAG, "ENTRY getTime()")
+    if (gaaiDevice.type == ChargerType.HOME) {
+      sendTimeOperationGetTime()
+    }
+    else if (_state.value.supportsDateUtc) {
+      readDateUTC()
+    }
+    Log.v(TAG, "RETURN getTime()")
+  }
+
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+  fun readDateUTC() {
+    viewModelScope.launch {
+      Log.v(TAG, "ENTRY readDateUTC()")
+      val timeData = TimeDataParserComposer.parse(dateUtcCharacteristic.read().value)!!
+      _state.value = _state.value.copy(timeData = timeData)
+      Log.v(TAG, "RETURN readDateUTC() " + Timestamp.toString(timeData.time))
     }
   }
 
@@ -667,7 +737,7 @@ class DeviceDetailsViewModel(
     }
   }
 
-  /**
+    /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
@@ -775,5 +845,6 @@ data class DeviceDetailsViewState(
    * Time in [Unix Time](https://en.wikipedia.org/wiki/Unix_time) as reported by the TIME SET and TIME GET
    * operations.
    */
-  val timeData: TimeData = TimeData()
+  val timeData: TimeData = TimeData(),
+  val supportsDateUtc: Boolean = false
 )

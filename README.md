@@ -565,15 +565,16 @@ Pressing Cancel does not change anything.
 ### Time
 
 The Time card allows to sync the time of the *Nexxtender Home* with the time on the phone.
-It is not supported by the *Nexxtender Mobile*.
+On the *Nexxtender Mobile*, it is only supported on Firmware Versions from 1.3.8.
 
 ![Time Card](docs/images/TimeCard.png)
 
 Clicking "Get Time" reads the current time from the *Nexxtender Home*.
+On the *Nexxtender Mobile* it returns the time at the last power-up or "Sync Time".
 
 ![Time Card Get Time](docs/images/TimeCardGetTime.png)
 
-Clicking "Sync Time" writes the current phone time to the *Nexxtender Home*.
+Clicking "Sync Time" writes the current phone time to the *Nexxtender Home* or *Nexxtender Mobile*.
 
 ### Loader
 

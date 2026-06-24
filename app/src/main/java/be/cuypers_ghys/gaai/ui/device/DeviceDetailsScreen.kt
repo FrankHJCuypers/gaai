@@ -156,8 +156,8 @@ fun DeviceDetailsScreen(
       onSafeChange = viewModel::sendConfigOperationSetSafe,
       onModeChange = viewModel::sendConfigOperationSetMode,
       onICapacityChange = viewModel::sendConfigOperationSetICapacity,
-      onTimeGet = viewModel::sendTimeOperationGetTime,
-      onTimeSync = viewModel::sendTimeOperationSyncTime,
+      onTimeGet = viewModel::getTime,
+      onTimeSync = viewModel::syncTime,
       onLoaderOperation = viewModel::sendLoaderOperation,
       navigateToBadgeList = { navigateToBadgeList(deviceId) },
     )
@@ -371,7 +371,9 @@ fun DeviceDetailsBody(
           modifier = Modifier
             .padding(dimensionResource(id = R.dimen.padding_small))
         )
+      }
 
+      if ((device?.type == ChargerType.HOME) || state.supportsDateUtc) {
         GaaiTimeDataCard(
           timeData = state.timeData,
           onTimeGet = onTimeGet,
@@ -379,7 +381,9 @@ fun DeviceDetailsBody(
           modifier = Modifier
             .padding(dimensionResource(id = R.dimen.padding_small))
         )
+      }
 
+      if (device?.type == ChargerType.HOME) {
         GaaiLoaderCard(
           onLoaderOperation = onLoaderOperation,
           modifier = Modifier
