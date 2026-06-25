@@ -16,6 +16,7 @@
 package be.cuypers_ghys.gaai.data
 
 import android.util.Log
+import be.cuypers_ghys.gaai.data.ConfigDataParserComposer.getConfigVersion
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -246,6 +247,32 @@ class ConfigDataParserComposerTest {
   @Test
   fun parseConfig_CBOR_FirstTypeMapAndSubItem2NotMap() {
     assertNull(ConfigDataParserComposer.parseConfig_CBOR("A200A2010102010101C464".hexToByteArray()))
+  }
+
+
+  @Test
+  fun getConfigVersion_1_0_0() {
+    assertEquals(ConfigVersion.CONFIG_1_0 , getConfigVersion("1.0.0" ))
+  }
+
+  @Test
+  fun getConfigVersion_1_1_0() {
+    assertEquals(ConfigVersion.CONFIG_1_1 , getConfigVersion("1.1.0" ))
+  }
+
+  @Test
+  fun getConfigVersion_3_49() {
+    assertEquals(ConfigVersion.CONFIG_1_1, getConfigVersion("3.49" ))
+  }
+
+  @Test
+  fun getConfigVersion_3_50() {
+    assertEquals(ConfigVersion.CONFIG_CBOR, getConfigVersion("3.50" ))
+  }
+
+  @Test
+  fun getConfigVersion_3_65() {
+    assertEquals(ConfigVersion.CONFIG_CBOR, getConfigVersion("3.65" ))
   }
 
   companion object {
