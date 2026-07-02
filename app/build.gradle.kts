@@ -176,7 +176,7 @@ dependencies {
   implementation(libs.androidx.navigation.compose)
   implementation(libs.kotlinx.datetime)
   implementation(libs.versioncompare)
-
+  implementation(libs.androidx.documentfile)
   testImplementation(libs.junit)
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.mockk)

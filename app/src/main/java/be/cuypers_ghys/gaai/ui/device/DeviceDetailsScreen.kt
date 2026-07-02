@@ -18,7 +18,11 @@ package be.cuypers_ghys.gaai.ui.device
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.net.Uri
+import android.provider.DocumentsContract
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -160,6 +164,7 @@ fun DeviceDetailsScreen(
       onTimeSync = viewModel::syncTime,
       onLoaderOperation = viewModel::sendLoaderOperation,
       navigateToBadgeList = { navigateToBadgeList(deviceId) },
+      onRecordsSync = viewModel::startRecordsSync
     )
   }
   Log.v(TAG, "RETURN DeviceDetailsScreen()")
@@ -192,6 +197,7 @@ fun DeviceDetailsScreen(
  * @param onTimeSync Function to be called when [DeviceDetailsBody] wants to sync the
  *  device's [TimeData.time] with the current time on the mobile phone.
  * @param onLoaderOperation Function to be called when [DeviceDetailsBody] wants to perform a loader operation.
+ * @param onRecordsSync Function to be called when [DeviceDetailsBody] wants to sync records.
  * @param modifier The [Modifier] to be applied to this [DeviceDetailsBody].
  * @param canNavigateUp Is the [DeviceDetailsScreen] allowed to navigate back?
  *
@@ -216,6 +222,7 @@ fun DeviceDetailsScreenNoViewModel(
   onTimeGet: () -> Unit,
   onTimeSync: () -> Unit,
   onLoaderOperation: (Int) -> Unit,
+  onRecordsSync: (Uri) -> Unit,
   modifier: Modifier = Modifier,
   canNavigateUp: Boolean = true
 ) {
@@ -244,6 +251,7 @@ fun DeviceDetailsScreenNoViewModel(
       onTimeSync = onTimeSync,
       onLoaderOperation = onLoaderOperation,
       navigateToBadgeList = navigateToBadgeList,
+      onRecordsSync = onRecordsSync,
       modifier = Modifier
         .padding(
           start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
@@ -281,7 +289,7 @@ fun DeviceDetailsScreenNoViewModel(
  * @param onTimeSync Function to be called when [DeviceDetailsBody] wants to sync the
  *  device's [TimeData.time] with the current time on the mobile phone.
  * @param onLoaderOperation Function to be called when [DeviceDetailsBody] wants to perform a loader operation.
- * @param navigateToBadgeList Function to be called when [DeviceDetailsBody] wants to show list of badges.
+ * @param onRecordsSync Function to be called when [DeviceDetailsBody] wants to sync records.
  * @param modifier The [Modifier] to be applied to this [DeviceDetailsBody].
  *
  * @author Frank HJ Cuypers
@@ -301,6 +309,7 @@ fun DeviceDetailsBody(
   onTimeSync: () -> Unit,
   onLoaderOperation: (Int) -> Unit,
   navigateToBadgeList: () -> Unit,
+  onRecordsSync: (Uri) -> Unit,
   modifier: Modifier = Modifier
 ) {
   Log.d(TAG, "ENTRY DeviceDetailsBody(device = $device)")
@@ -396,6 +405,14 @@ fun DeviceDetailsBody(
             .padding(dimensionResource(id = R.dimen.padding_small))
         )
       }
+
+      GaaiDataRecordsCard(
+        dataRecordsInformation = state.dataRecordsInformation,
+        onRecordsSync = onRecordsSync,
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+      )
+
     }
   }
   Log.v(TAG, "RETURN DeviceDetailsBody()")
@@ -538,7 +555,7 @@ internal fun GaaiDeviceInformationCard(
           )
         }
 
-        if (chargerType != ChargerType.HOME ) {
+        if (chargerType != ChargerType.HOME) {
           Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -637,7 +654,7 @@ internal fun GaaiChargingBasicDataCard(
             style = MaterialTheme.typography.titleMedium
           )
         }
-        if (chargerType !=  ChargerType.HOME){
+        if (chargerType != ChargerType.HOME) {
           Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -1641,6 +1658,197 @@ internal fun GaaiBadgesCard(
 }
 
 /**
+ * State of the GaaiDataRecordsCard ui
+ *
+ */
+enum class GaaiRecordsState {
+  NOTHING_TO_LOAD,
+  SOMETHING_TO_LOAD,
+  READ_REMAINING_RECORDS_ASKED,
+  READ_REMAINING_RECORDS_CONFIRMED,
+  HAS_LOG_REC_DIR,
+  WAITING_FOR_COMPLETION
+}
+
+/**
+ * Implements a [Card] displaying the [dataRecordsInformation] with the possibility to read the records
+ * to a file.
+ *
+ * @param dataRecordsInformation The records state
+ * @param onRecordsSync Function to be called when [GaaiDataRecordsCard] wants to read the
+ *  device's records from the mobile phone.
+ * @param modifier the [Modifier] to be applied to this [GaaiDataRecordsCard]
+ *
+ * @author Frank HJ Cuypers
+ */
+@Composable
+internal fun GaaiDataRecordsCard(
+  dataRecordsInformation: DataRecordsInformation,
+  onRecordsSync: (Uri) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  Log.d(TAG, "ENTRY GaaiDataRecordsCard(dataRecordsInformation = $dataRecordsInformation)")
+
+  var recordsState by remember {
+    mutableStateOf<GaaiRecordsState?>(GaaiRecordsState.NOTHING_TO_LOAD)
+  }
+
+  var logRecDirUri by remember {
+    mutableStateOf<Uri?>(null)
+  }
+
+  val logDirPicker = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.OpenDocumentTree(),
+    onResult = { uri ->
+      recordsState = if (uri != null) GaaiRecordsState.HAS_LOG_REC_DIR else GaaiRecordsState.NOTHING_TO_LOAD
+      logRecDirUri = uri
+    }
+  )
+
+  if (recordsState == GaaiRecordsState.HAS_LOG_REC_DIR ) {
+    recordsState = GaaiRecordsState.WAITING_FOR_COMPLETION
+    onRecordsSync(logRecDirUri!!)
+  }
+
+  if (recordsState == GaaiRecordsState.READ_REMAINING_RECORDS_ASKED) {
+    ReadRemainingRecordsConfirmationDialog(
+      onCancel = {
+        recordsState = GaaiRecordsState.SOMETHING_TO_LOAD
+      },
+      onConfirm = {
+        recordsState = GaaiRecordsState.READ_REMAINING_RECORDS_CONFIRMED
+      }
+    )
+  }
+
+  if ( recordsState == GaaiRecordsState.READ_REMAINING_RECORDS_CONFIRMED) {
+    val authority = "com.android.externalstorage.documents"
+    val documentId = "primary:Documents"
+    val initialUri = DocumentsContract.buildTreeDocumentUri(authority, documentId)
+    logDirPicker.launch(initialUri)
+  }
+
+  Card(
+    modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+  ) {
+    Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .weight(1f)
+      ) {
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.records),
+            style = MaterialTheme.typography.titleLarge,
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.remaining_cdr_records),
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
+            text = if (dataRecordsInformation.remainingCDRRecords == -1) stringResource(R.string.not_loaded_yet) else dataRecordsInformation.remainingCDRRecords.toString(),
+            style = MaterialTheme.typography.titleMedium
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.remaining_ccdt_records),
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
+            text = if (dataRecordsInformation.remainingCCDTRecords == -1) stringResource(R.string.not_loaded_yet) else dataRecordsInformation.remainingCCDTRecords.toString(),
+            style = MaterialTheme.typography.titleMedium
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.remaining_event_records),
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
+            text = if (dataRecordsInformation.remainingEventRecords == -1) stringResource(R.string.not_loaded_yet) else dataRecordsInformation.remainingEventRecords.toString(),
+            style = MaterialTheme.typography.titleMedium
+          )
+        }
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = stringResource(R.string.remaining_metrics_records),
+            style = MaterialTheme.typography.titleMedium,
+          )
+          Spacer(Modifier.weight(1f))
+          Text(
+            text = if (dataRecordsInformation.remainingMetricRecords == -1) stringResource(R.string.not_loaded_yet) else dataRecordsInformation.remainingMetricRecords.toString(),
+            style = MaterialTheme.typography.titleMedium
+          )
+        }
+
+        Row(
+          modifier = modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically
+        )
+        {
+          Spacer(Modifier.weight(1f))
+          Button(onClick = {
+            Log.v(TAG, "GaaiDataRecordsCard Get Remaining Records pressed")
+            recordsState = GaaiRecordsState.READ_REMAINING_RECORDS_ASKED
+          }
+          ) {
+            Text(stringResource(R.string.read_remaining_records))
+          }
+          Spacer(Modifier.weight(1f))
+        }
+
+        if ( recordsState == GaaiRecordsState.WAITING_FOR_COMPLETION ){
+          if ((dataRecordsInformation.remainingCDRRecords == 0)
+            && (dataRecordsInformation.remainingCCDTRecords == 0)
+            && (dataRecordsInformation.remainingEventRecords == 0)
+            && (dataRecordsInformation.remainingMetricRecords == 0)) {
+            recordsState = GaaiRecordsState.NOTHING_TO_LOAD
+          }
+          else {
+            Row(
+              modifier = modifier.fillMaxWidth(),
+              verticalAlignment = Alignment.CenterVertically,
+            ) {
+              Text(
+                text = stringResource(R.string.wait_for_completion),
+                style = MaterialTheme.typography.titleSmall
+              )
+            }
+          }
+        }
+      }
+    }
+    Log.v(TAG, "RETURN GaaiDataRecordsCard()")
+  }
+}
+
+
+/**
  * Converts [mode] to a string value to display.
  * @param mode
  * @return The corresponding string.
@@ -2188,7 +2396,8 @@ private fun DeviceDetailsHomeCompletePreview() {
         navigateToBadgeList = { },
         onNavigateUp = { },
         canNavigateUp = true,
-        navigateUp = { }
+        navigateUp = { },
+        onRecordsSync = { }
       )
     }
   }
@@ -2254,7 +2463,8 @@ private fun DeviceDetailsMobilePreview() {
         onTimeGet = {},
         onTimeSync = {},
         onLoaderOperation = {},
-        navigateToBadgeList = { }
+        navigateToBadgeList = { },
+        onRecordsSync = { }
       )
     }
   }
@@ -2694,3 +2904,18 @@ private fun GaaiBadgesCardPreview() {
   }
 }
 
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "GaaiRecordsCardPreviewDark")
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "GaaiRecordsCardPreviewLight")
+@Composable
+private fun GaaiDataRecordsCardPreview() {
+  GaaiTheme(dynamicColor = false) {
+    Surface {
+      GaaiDataRecordsCard(
+        dataRecordsInformation = DataRecordsInformation(2, 4, 6, 11),
+        onRecordsSync = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small)),
+      )
+    }
+  }
+}

@@ -142,4 +142,13 @@
     <string name="bond_state_bonding">Bonding</string>
     <string name="bond_state_bonded">Bonded</string>
     <string name="manufacturer_name">Manufacturer Name</string>
+    <string name="cdr">CDR</string>
+    <string name="records">Records (experimental)</string>
+    <string name="remaining_cdr_records">Remaining CDR Records</string>
+    <string name="remaining_ccdt_records">Remaining CCDT Records</string>
+    <string name="remaining_event_records">Remaining Event Records</string>
+    <string name="not_loaded_yet">Not loaded yet</string>
+    <string name="remaining_metrics_records">Remaining Metrics Records</string>
+    <string name="read_remaining_records">Read Remaining Records</string>
+    <string name="wait_for_completion">Wait for completion</string>
 </resources>

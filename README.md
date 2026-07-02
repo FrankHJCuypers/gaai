@@ -593,7 +593,7 @@ The Badges card allows to go to the [Badge list](#badge-list) screen.
 
 Click on the button to go to the [Badge list](#badge-list) screen.
 
-## Badge list
+#### Badge list
 
 This screen shows the list of RF badges registered by the charger.
 Gaai does not keep a database of registered badges; it only shows the live list as known by the charger.
@@ -625,7 +625,75 @@ In this screen you can
 
 Make sure that you are close to the *Nexxtender* charger and that no other device is connected with it over BLE.
 
+### Records (Experimental)
+
+The *Nexxtender Charger* stores records of 4 different types of data:
+
+- CDR
+- CCDT
+- EVENT
+- METRIC
+
+Event and Metric records are only available on the *Nexxtender Home*, not on the *Nexxtender Mobile*s.
+These records can only be downloaded from the charger once!
+Normally the *Nexxtmove* app downloads these records and forwards them to the *Nexxtmove.me* website 
+for billing purposes.
+See [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/nexxtender-charger-info.git)
+for more information.
+
+The Records card allows to see how many records of each type are not yet downloaded and still stored on the charger.
+
+![GaaiRecords Card](docs/images/GaaiRecordsCard.png)
+
+Pressing the *Read Remaining Records* allows to download all these records to *Gaai*.
+
+**Do not press the Read Remaining Records button unless you know what you are doing**.
+This feature is for research purpose only.
+Once you press the button, you will no longer be able to load the data to the *Nexxtmove.me* app.
+So you will not be able to get refunded by your employer.
+
+
+When you press *Read Remaining Records*, Gaai will first ask for confirmation.
+If you confirm, Gaai first opens the Android file picker from which you must select a directory where
+output files are stored.
+Choose a directory from which you have easy access in order to use them. 
+i.e. a subdirectory in your *Documents* directory like internal storage/Documents/GaaiRecordsLog
+4 text files are generated in the selected directory, storing the downloaded records, one file per type.
+
+Once downloading is started, the displayed remaining record numbers decreases.
+Wait until all records are downloaded and the remaining number of records are all 0, before doing anything else with Gaai.
+
+There can be maximum 576 METRIC records, which are filled by the charger in a tempo of 1 every quarter.
+The maximum number of records is reached after 6 days of operation, regardless of the occurrence of charging events.
+So reading all of them takes some time.
+
+The created files are named like
+`<SN>_<type>_<creationtime>.txt` with
+
+- `<SN>` the chargers serial number
+- `<type>` the record type this file contains
+- `<creationtime>` time of creation of this file
+
+Each line in the file is formated as `< YYYY-DD-MM HH:mm:ss <data>` with
+
+- `<` indicating the message is outbound (from charger to mobile phone)
+- `YYYY-DD-MM HH:mm:ss` the timestamp in the record.
+  Wireshark normally shows the time that the record was downloaded from the charger.
+  For research, it is more useful to see the time the record was created within the charger.
+- `<data>` the data of the record, in hex. 
+
+Each time you press "Read Remaining records, a new set of files is generated on the mobile phone.
+These files are in a format that Wireshark's `text2pcap` understands, allowing to use it for research.
+That allows documenting the record formats as much as possible in
+[Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/nexxtender-charger-info.git).
+Transferring the files from mobile phone to PC can be done a.o. using the Android *Files* app: locate the files
+and share them or copy them to a cloud server. 
+
+See [fuut: Analyzing record files from Gaai](https://github.com/FrankHJCuypers/fuut#preparing-wireshark)
+for more information on how to use Wireshark.
+
 # Links
+
 
 Useful information can be found at
 
