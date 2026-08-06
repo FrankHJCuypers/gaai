@@ -787,7 +787,7 @@ internal fun GaaiChargingGridDataCard(
           )
           Spacer(Modifier.weight(1f))
           Text(
-            text = "%.3f kWh?".format(chargingGridData.consumed.toFloat() / 1000.0),
+            text = "%.5f kWh".format(chargingGridData.consumed.toFloat() / 100000.0),
             style = MaterialTheme.typography.titleMedium
           )
         }
