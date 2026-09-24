@@ -19,6 +19,7 @@ package be.cuypers_ghys.gaai.ui.home
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,7 +78,7 @@ fun DeleteConfirmationDialog(
       ) {
         Text("Cancel")
       }
-    },
+    }
   )
   Log.v(TAG, "RETURN DeleteConfirmationDialog()")
 }
@@ -86,7 +88,11 @@ fun DeleteConfirmationDialog(
 @Composable
 fun DeleteConfirmDialogDevicePreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface {
+    Surface (
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp),
+    ){
       DeleteConfirmationDialog(
         "Device",
         onCancel = { }, onConfirm = {}
@@ -100,7 +106,11 @@ fun DeleteConfirmDialogDevicePreview() {
 @Composable
 fun DeleteConfirmDialogBadgePreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface {
+    Surface (
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp),
+    ) {
       DeleteConfirmationDialog(
         "Badge",
         onCancel = { }, onConfirm = {}
