@@ -1,6 +1,6 @@
 # Download Records 
 
-Still to do regardings the downloading of CDR, CCDT, Event and Metrics records.
+Still to do regarding the downloading of CDR, CCDT, Event and Metrics records.
 
 ## Todo
 
@@ -9,10 +9,10 @@ Still to do regardings the downloading of CDR, CCDT, Event and Metrics records.
   + Use database tables instead?
 
 ## Where are record files stored?
+ As chosen by the user. Example:
+/sdcard/Documents/GaaiRecordsLog
 
-/data/data/be.cuypers_ghys.gaai/files/DownloadedRecords
-
-These file can be accessed using Android Studio→Device Explorer, while Android Studio is Wi-Fi connected to the 
+These files can be accessed using Android Studio→Device Explorer, while Android Studio is Wi-Fi connected to the 
 Android phone.
 
 ## Known problems
