@@ -82,6 +82,7 @@ import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
 import io.github.g00fy2.versioncompare.Version
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -158,6 +159,13 @@ class DeviceDetailsViewModel(
   val state = _state.asStateFlow()
 
   private var client: ClientBleGatt? = null
+
+  /**
+   * The [Job] that is currently handling notifications
+   */
+  private var currentJob: Job? = null
+
+  private var connectionStatusJob: Job? = null
 
   init {
     Log.v(TAG, "ENTRY init()")
@@ -251,14 +259,14 @@ class DeviceDetailsViewModel(
       this@DeviceDetailsViewModel.client = it
     }
 
-    client.connectionStateWithStatus
+    connectionStatusJob = client.connectionStateWithStatus
       .filterNotNull()
       .onEach { updateGattConnectionStateWithStatus(it) }
       .launchIn(viewModelScope)
 
     updateBondState(GaaiBondState.getBondState(bleRepository.context, gaaiDevice))
 
-    client.bondState
+    currentJob = client.bondState
       .filterNotNull()
       .onEach {
         Log.v(TAG, "bondState: $it")
@@ -1275,6 +1283,13 @@ class DeviceDetailsViewModel(
     currentGenericCommand = - 1
     startNextQueuedGenericCommandIfNotBusy()
     Log.v(TAG, "RETURN startNextQueuedGenericCommand()")
+  }
+
+  override fun onCleared() {
+    Log.v(TAG, "ENTRY onCleared()")
+    currentJob?.cancel()
+    connectionStatusJob?.cancel()
+    super.onCleared()
   }
 }
 
