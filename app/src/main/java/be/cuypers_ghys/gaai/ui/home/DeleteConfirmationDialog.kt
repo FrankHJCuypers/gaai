@@ -83,10 +83,11 @@ fun DeleteConfirmationDialog(
   Log.v(TAG, "RETURN DeleteConfirmationDialog()")
 }
 
+
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeleteConfirmDialogDevicePreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeleteConfirmDialogDevicePreviewLight")
 @Composable
-fun DeleteConfirmDialogDevicePreview() {
+private fun DeleteConfirmDialogDevicePreview() {
   GaaiTheme(dynamicColor = false) {
     Surface (
       modifier = Modifier
@@ -104,7 +105,7 @@ fun DeleteConfirmDialogDevicePreview() {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, name = "DeleteConfirmDialogBadgePreviewDark")
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, name = "DeleteConfirmDialogBadgePreviewLight")
 @Composable
-fun DeleteConfirmDialogBadgePreview() {
+private fun DeleteConfirmDialogBadgePreview() {
   GaaiTheme(dynamicColor = false) {
     Surface (
       modifier = Modifier
