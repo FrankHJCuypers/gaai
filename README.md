@@ -654,9 +654,9 @@ So you will not be able to get refunded by your employer.
 
 
 When you press *Read Remaining Records*, Gaai will first ask for confirmation.
-If you confirm, Gaai first opens the Android file picker from which you must select a directory where
-output files are stored.
-Choose a directory from which you have easy access in order to use them. 
+If you confirm, Gaai opens the Android file picker from which you must select a directory where
+you want the output files to be stored.
+Choose a directory from which you have easy access in order to use them.
 i.e. a subdirectory in your *Documents* directory like internal storage/Documents/GaaiRecordsLog
 4 text files are generated in the selected directory, storing the downloaded records, one file per type.
 
