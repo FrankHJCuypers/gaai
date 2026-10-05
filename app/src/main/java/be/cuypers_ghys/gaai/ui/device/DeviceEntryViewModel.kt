@@ -300,6 +300,12 @@ class DeviceEntryViewModel(private val devicesRepository: DevicesRepository, pri
     Log.v(TAG, "ENTRY validateInput()")
     return validateSn(uiState) && validatePn(uiState)
   }
+
+  override fun onCleared() {
+    Log.v(TAG, "ENTRY onCleared()")
+    currentJob?.cancel()
+    super.onCleared()
+  }
 }
 
 /**
