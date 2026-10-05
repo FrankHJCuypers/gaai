@@ -45,6 +45,7 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_NEXT
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -198,6 +199,11 @@ class BadgeListViewModel(
   private var client: ClientBleGatt? = null
 
   /**
+   * The [Job] that is currently handling notifications
+   */
+  private var currentJob: Job? = null
+
+  /**
    * Temporary badge lists. Used for preparing the list that will be sent to [BadgeListManager.emitNewBadgeList()]
    */
   private val badgeList: MutableList<Badge> = mutableListOf()
@@ -300,7 +306,7 @@ class BadgeListViewModel(
     // Launch notifications for dynamic data
 
     // Read Configuration Data
-    nexxtenderHomeGenericStatusCharacteristic.getNotifications().onEach {
+    currentJob = nexxtenderHomeGenericStatusCharacteristic.getNotifications().onEach {
       Log.d(TAG, "Found Generic Status: $it")
       val status = it.value.fromUint16LE(0).toInt()
       Log.d(TAG, "Converted status: $status")
@@ -500,6 +506,12 @@ class BadgeListViewModel(
     Log.d(TAG, "ENTRY getDevice($deviceId)")
     return@runBlocking devicesRepository.getDeviceStream(deviceId).first()
     // Log.v(TAG, "RETURN getDevice()")
+  }
+
+  override fun onCleared() {
+    Log.v(TAG, "ENTRY onCleared()")
+    currentJob?.cancel()
+    super.onCleared()
   }
 }
 
