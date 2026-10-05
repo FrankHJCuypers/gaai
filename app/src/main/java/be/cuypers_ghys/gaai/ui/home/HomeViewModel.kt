@@ -230,6 +230,14 @@ class HomeViewModel(private val devicesRepository: DevicesRepository, private va
     return WithServiceUuid(uuid = ParcelUuid(UUID_NEXXTENDER_CHARGER_SERVICE_DATA_SERVICE))
   }
 
+  override fun onCleared() {
+    Log.v(TAG, "ENTRY onCleared()")
+    cancelScanDevice()
+    cleaningJob?.cancel()
+    super.onCleared()
+  }
+
+
   companion object {
     /**
      * Delay (in milliseconds) between the disappearance of the last
