@@ -344,12 +344,12 @@ fun DeviceDetailsBody(
 
       GaaiChargingBasicDataCard(
         chargingBasicData = state.chargingBasicData,
-        chargerType = device?.type!!,
+        chargerType = device.type!!,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
 
-      if (device?.type == ChargerType.HOME) {
+      if (device.type == ChargerType.HOME) {
         GaaiChargingGridDataCard(
           chargingGridData = state.chargingGridData,
           modifier = Modifier
@@ -382,7 +382,7 @@ fun DeviceDetailsBody(
         )
       }
 
-      if ((device?.type == ChargerType.HOME) || state.supportsDateUtc) {
+      if ((device.type == ChargerType.HOME) || state.supportsDateUtc) {
         GaaiTimeDataCard(
           timeData = state.timeData,
           onTimeGet = onTimeGet,
@@ -392,7 +392,7 @@ fun DeviceDetailsBody(
         )
       }
 
-      if (device?.type == ChargerType.HOME) {
+      if (device.type == ChargerType.HOME) {
         GaaiLoaderCard(
           onLoaderOperation = onLoaderOperation,
           modifier = Modifier
