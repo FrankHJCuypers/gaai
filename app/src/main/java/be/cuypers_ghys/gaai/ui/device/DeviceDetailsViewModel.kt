@@ -1090,7 +1090,7 @@ class DeviceDetailsViewModel(
       val file = logRecOutDir?.createFile("text/plain", fileName)
       val contentResolver = context.contentResolver
       val outputStream = contentResolver.openOutputStream(file!!.uri, "w")
-      printWriter = PrintWriter(outputStream)
+      printWriter = PrintWriter(outputStream!!)
       return printWriter
   }
 
