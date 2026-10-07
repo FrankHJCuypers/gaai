@@ -5,7 +5,7 @@ package android.util;
 
 /**
  * Class to mock android.util.Log.
- * Avoids the "Method d in android.util.Log not mocked"when running Junit tests on code that uses android.util.Log.
+ * Avoids the "Method d in android.util.Log not mocked" when running Junit tests on code that uses android.util.Log.
  */
 public class Log {
 
