@@ -344,7 +344,7 @@ fun DeviceDetailsBody(
 
       GaaiChargingBasicDataCard(
         chargingBasicData = state.chargingBasicData,
-        chargerType = device.type!!,
+        chargerType = device.type,
         modifier = Modifier
           .padding(dimensionResource(id = R.dimen.padding_small))
       )
