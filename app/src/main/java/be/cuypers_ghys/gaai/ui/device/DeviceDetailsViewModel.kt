@@ -523,6 +523,7 @@ class DeviceDetailsViewModel(
           }
 
           TIME_STATUS_POPPED -> {
+            Log.d(TAG, "Received TIME_STATUS_POPPED")
             val timeData = TimeDataParserComposer.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
             _state.value = _state.value.copy(timeData = timeData)
             startNextQueuedGenericCommand()
@@ -573,7 +574,7 @@ class DeviceDetailsViewModel(
               }
             } else {
               startNextQueuedGenericCommand()
-              Log.d(TAG, "Unknown GENERIC_STATUS value: $status")
+              Log.d(TAG, "Unknown GENERIC_STATUS value: ${status.toHexString()}")
             }
           }
         }
@@ -774,7 +775,7 @@ class DeviceDetailsViewModel(
    */
   @SuppressLint("MissingPermission")
   private suspend fun writeGenericCommand(command: Int) {
-    Log.d(TAG, "ENTRY writeGenericCommand(command=$command)")
+    Log.d(TAG, "ENTRY writeGenericCommand(command=${command.toHexString()})")
     nexxtenderHomeGenericCommandCharacteristic.write(DataByteArray.fromUShort(command))
     Log.v(TAG, "RETURN writeGenericCommand()")
   }
