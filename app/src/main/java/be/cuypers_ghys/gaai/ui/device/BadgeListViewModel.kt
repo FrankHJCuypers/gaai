@@ -67,73 +67,6 @@ import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 private const val TAG = "BadgeListViewModel"
 
 /**
- * A listener that listens for a new [List] of [Badge]s.
- */
-interface IBadgeListListener {
-  /**
-   * Informs the [IBadgeListListener] of a new [List] of [Badge]s.
-   */
-  fun badgeListChanged(badgeList: List<Badge>)
-}
-
-/**
- * Badge list manager, responsible for (un)registering [IBadgeListListener]s that want to be informed of updates.
- */
-interface IBadgeListManager {
-  /**
-   * Register the [listener].
-   * @param listener
-   */
-  fun register(listener: IBadgeListListener)
-
-  /**
-   * Unregister the [listener].
-   * @param listener
-   */
-  fun unregister(listener: IBadgeListListener)
-}
-
-/**
- * Badge list manager, responsible for (un)registering [IBadgeListListener]s that want to be informed of updates and
- * for emitting new badge lists to the registered listeners.
- */
-class BadgeListManager : IBadgeListManager {
-
-  /**
-   * The registered listeners.
-   */
-  private val listeners: MutableList<IBadgeListListener> = mutableListOf()
-
-  /**
-   * Register a new [listener].
-   * @param listener
-   */
-  // TODO: must be thread safe
-  override fun register(listener: IBadgeListListener) {
-    listeners.add(listener)
-  }
-
-  /**
-   * Unregister a [listener].
-   * @param listener
-   */
-  // TODO: must be thread safe
-  override fun unregister(listener: IBadgeListListener) {
-    listeners.remove(listener)
-  }
-
-  /**
-   * Inform all registered listeners of the new [badgeList].
-   * @param badgeList
-   */
-  fun emitNewBadgeList(badgeList: List<Badge>) {
-    Log.d(TAG, "emitNewBadgeList: $badgeList")
-
-    listeners.forEach { it.badgeListChanged(badgeList) }
-  }
-}
-
-/**
  * ViewModel to manage all badges from the charger, to be used by [BadgeListScreen].
  *
  * @param savedStateHandle [SavedStateHandle] passed by
@@ -191,7 +124,7 @@ class BadgeListViewModel(
    * @param statusId The initial status Id.
    */
   private fun updateBadgeDeviceUiState(statusId: Int) {
-    Log.d(TAG, "ENTRY updateBadgeDeviceUiState() with statusId = $statusId")
+    Log.d(TAG, "ENTRY updateBadgeDeviceUiState() with statusId = ${statusId.toHexString()}")
     badgeDeviceUiState = badgeDeviceUiState.copy(statusId = statusId)
     Log.v(TAG, "RETURN updateBadgeDeviceUiState()")
   }
