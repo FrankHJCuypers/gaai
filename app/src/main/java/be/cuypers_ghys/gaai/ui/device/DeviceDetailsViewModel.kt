@@ -26,6 +26,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.cuypers_ghys.gaai.ble.BleRepository
+import be.cuypers_ghys.gaai.data.Badge
+import be.cuypers_ghys.gaai.data.BadgeParser
+import be.cuypers_ghys.gaai.data.ChargeType
 import be.cuypers_ghys.gaai.data.ChargerType
 import be.cuypers_ghys.gaai.data.ChargingAdvancedData
 import be.cuypers_ghys.gaai.data.ChargingAdvancedDataParser
@@ -42,6 +45,18 @@ import be.cuypers_ghys.gaai.data.ConfigVersion
 import be.cuypers_ghys.gaai.data.Device
 import be.cuypers_ghys.gaai.data.DevicesRepository
 import be.cuypers_ghys.gaai.data.Mode
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_ADD_DEFAULT
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_ADD_MAX
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_DELETE
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_LIST_NEXT
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_LIST_START
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD1
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD2
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADDED
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_DELETE
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_EXISTS
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_FINISH
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CCDT_COMMAND_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CDR_COMMAND_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_CBOR_GET
@@ -83,6 +98,7 @@ import be.cuypers_ghys.gaai.util.fromUint32LE
 import be.cuypers_ghys.gaai.util.toColonHex
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
 import io.github.g00fy2.versioncompare.Version
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -146,7 +162,14 @@ class DeviceDetailsViewModel(
   /**
    * The id of the [Device] for which to build a state.
    */
-  val deviceId: Int = checkNotNull(savedStateHandle[DeviceDetailsDestination.DEVICE_ID_ARG])
+  val deviceId: Int = checkNotNull(savedStateHandle[DeviceDetailsDestination.DEVICE_ID_ARG]) {
+    "savedStateHandle[${DeviceDetailsDestination.DEVICE_ID_ARG}] is null"
+  }
+
+  /**
+   * The badge that must be deleted on the charger using BLE.
+   */
+  private lateinit var badgeToDelete: Badge
 
   /**
    * The [Device] corresponding with [deviceId].
@@ -168,9 +191,29 @@ class DeviceDetailsViewModel(
 
   private var connectionStatusJob: Job? = null
 
+  /**
+   * Temporary badge lists. Used for preparing the list that will be sent to [BadgeListManager.emitNewBadgeList()]
+   */
+  private val badgeList: MutableList<Badge> = mutableListOf()
+
+  private val badgeListManager: BadgeListManager = BadgeListManager()
+
+  private fun startBadgeListListening(badgeListManager: IBadgeListManager) {
+    Log.v(TAG, "ENTRY startBadgeListListening()")
+    val listener = object : IBadgeListListener {
+      override fun badgeListChanged(badgeList: List<Badge>) {
+        _state.value = _state.value.copy(badgeList = badgeList)
+      }
+    }
+    badgeListManager.register(listener)
+    Log.v(TAG, "RETURN startBadgeListListening()")
+  }
+
+
   init {
     Log.v(TAG, "ENTRY init()")
     _device.value = gaaiDevice
+    startBadgeListListening(badgeListManager)
     startGattClient(gaaiDevice)
     Log.v(TAG, "RETURN init()")
   }
@@ -228,24 +271,24 @@ class DeviceDetailsViewModel(
   /**
    * URI of the directory selected by the user for writing log records (CDR, CCDT, Event, Metrics)
    */
-  private var logRecordOutDirectoryUri : Uri? = null
+  private var logRecordOutDirectoryUri: Uri? = null
 
-  private var cdrFileName : String = ""
-  private var ccdtFileName : String = ""
-  private var eventFileName : String = ""
-  private var metricFileName : String = ""
+  private var cdrFileName: String = ""
+  private var ccdtFileName: String = ""
+  private var eventFileName: String = ""
+  private var metricFileName: String = ""
 
   /**
    * The Generic Command that is currently handled. -1 means none.
    */
-  private var currentGenericCommand : Int = -1 ;
+  private var currentGenericCommand: Int = -1
 
   /**
    * Queue of Generic Command to process.
    * Generic commands require the exchange of multiple BLE messages.
    * A new Generic Command should not start as long as the previous one is not completed.
    */
-  private var genericCommandQueue: Queue<Int> = LinkedList();
+  private var genericCommandQueue: Queue<Int> = LinkedList()
 
   /**
    * Starts a [ClientBleGatt] to communicate with the [gaaiDevice].
@@ -353,7 +396,7 @@ class DeviceDetailsViewModel(
         nexxtenderCDRService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CDR_STATUS_CHARACTERISTIC
         )!!
-      nexxtenderHomeCDRRecordCharacteristic=
+      nexxtenderHomeCDRRecordCharacteristic =
         nexxtenderCDRService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CDR_RECORD_CHARACTERISTIC
         )!!
@@ -368,7 +411,7 @@ class DeviceDetailsViewModel(
         nexxtenderCCDTService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_STATUS_CHARACTERISTIC
         )!!
-      nexxtenderHomeCCDTRecordCharacteristic=
+      nexxtenderHomeCCDTRecordCharacteristic =
         nexxtenderCCDTService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_RECORD_CHARACTERISTIC
         )!!
@@ -415,7 +458,7 @@ class DeviceDetailsViewModel(
         nexxtenderGenericService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CDR_STATUS_CHARACTERISTIC
         )!!
-      nexxtenderHomeCDRRecordCharacteristic=
+      nexxtenderHomeCDRRecordCharacteristic =
         nexxtenderGenericService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CDR_RECORD_CHARACTERISTIC
         )!!
@@ -430,7 +473,7 @@ class DeviceDetailsViewModel(
         nexxtenderGenericService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_STATUS_CHARACTERISTIC
         )!!
-      nexxtenderHomeCCDTRecordCharacteristic=
+      nexxtenderHomeCCDTRecordCharacteristic =
         nexxtenderGenericService.findCharacteristic(
           NexxtenderHomeSpecification.UUID_NEXXTENDER_CHARGER_CCDT_RECORD_CHARACTERISTIC
         )!!
@@ -449,9 +492,9 @@ class DeviceDetailsViewModel(
     }
     val deviceInformation = DeviceInformation(
       modelNumber = modelNumber, serialNumber = serialNumber,
-      firmwareRevision = firmwareRevision, hardwareRevision = hardwareRevision, manufacturerName=manufacturerName
+      firmwareRevision = firmwareRevision, hardwareRevision = hardwareRevision, manufacturerName = manufacturerName
     )
-    _state.value = _state.value.copy( deviceInformation = deviceInformation)
+    _state.value = _state.value.copy(deviceInformation = deviceInformation)
 
     nexxtenderHomeChargingBasicDataCharacteristic.getNotifications().onEach {
       // Log.i(TAG, "Found the following notification of changed chargingBasicData DataByteArray: $it")
@@ -502,6 +545,7 @@ class DeviceDetailsViewModel(
       nexxtenderHomeGenericStatusCharacteristic.getNotifications().onEach {
         Log.d(TAG, "Found Generic Status: $it")
         val status = it.value.fromUint16LE(0).toInt()
+        updateGenericStatus(status)
         Log.d(TAG, "Converted status: $status")
         when (status) {
           CONFIG_STATUS_POPPED, CONFIG_STATUS_POPPED_CBOR -> {
@@ -513,7 +557,7 @@ class DeviceDetailsViewModel(
              * If null, then data received was not a Get Config. See bug #77.
              * We assume this is a second Get Config and skip it.
              */
-            if ( configData != null ) {
+            if (configData != null) {
               Log.i(TAG, "Correct CONFIG data found")
               _state.value = _state.value.copy(configData = configData)
               startNextQueuedGenericCommand()
@@ -553,29 +597,67 @@ class DeviceDetailsViewModel(
             // Read time to sync with changes
             sendTimeOperationGet()
           }
+
+          BADGE_STATUS_WAIT_ADD1, BADGE_STATUS_WAIT_ADD2 -> {
+            // TODO: set state such that UI shows that badge must be presented.
+          }
+
+          BADGE_STATUS_WAIT_DELETE -> {
+            Log.d(TAG, "Deleting badge: $badgeToDelete")
+            nexxtenderHomeGenericDataCharacteristic.write(BadgeParser.getLengthUUID(badgeToDelete))
+            currentCommandFinished()
+            startGettingNewBadgeList()
+          }
+
+          BADGE_STATUS_WAIT_NEXT -> {
+            val badge = BadgeParser.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
+            Log.d(TAG, "Retrieved badge: $badge")
+
+            badgeList.add(badge)
+            currentCommandFinished()
+            sendBadgeListNext()
+          }
+
+          BADGE_STATUS_WAIT_FINISH -> {
+            val newBadgeList = badgeList.toList()
+            badgeListManager.emitNewBadgeList(newBadgeList)
+            startNextQueuedGenericCommand()
+          }
+
+          BADGE_STATUS_WAIT_ADDED -> {
+            BadgeParser.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
+            currentCommandFinished()
+            startGettingNewBadgeList()
+          }
+
+          BADGE_STATUS_WAIT_EXISTS -> {
+            currentCommandFinished()
+            startGettingNewBadgeList()
+          }
+
           else -> {
-            if ( (status and 0xF000) == EVENT) {
+            if ((status and 0xF000) == EVENT) {
               remainingEventRecords = status and 0x0FFF
               updateEventState(remainingEventRecords)
-              if ( onlyGetMumberofRecords ) {
+              if (onlyGetMumberofRecords) {
                 startNextQueuedGenericCommand()
               } else {
                 if (remainingEventRecords > 0) {
                   readEventRecordAndAskNext()
                 } else {
                   printWriter.close()
-                  currentGenericCommand = - 1
+                  currentCommandFinished()
                   startmetricSync()
                 }
               }
-            } else if ( (status and 0xF000) == METRIC) {
+            } else if ((status and 0xF000) == METRIC) {
               remainingMetricRecords = status and 0x0FFF
               updateMetricState(remainingMetricRecords)
 
-              if ( onlyGetMumberofRecords ) {
+              if (onlyGetMumberofRecords) {
                 startNextQueuedGenericCommand()
               } else {
-                if ( remainingMetricRecords > 0) {
+                if (remainingMetricRecords > 0) {
                   readMetricRecordAndAskNext()
                 } else {
                   printWriter.close()
@@ -589,13 +671,13 @@ class DeviceDetailsViewModel(
           }
         }
       }.launchIn(viewModelScope)
-
       readRemainingCDRRecordsAndUpdateState()
       readRemainingCCDTRecordsAndUpdateState()
       readRemainingEventRecordsAndUpdateState()
       readRemainingMetricRecordsAndUpdateState()
       sendConfigOperationGet()
       sendTimeOperationGet()
+      startGettingNewBadgeList()
     }
     Log.v(TAG, "RETURN configureGatt()")
   }
@@ -617,6 +699,7 @@ class DeviceDetailsViewModel(
     onlyGetMumberofRecords = true
     sendEventOperationUpdateStatus()
   }
+
   @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   private suspend fun readRemainingMetricRecordsAndUpdateState() {
     onlyGetMumberofRecords = true
@@ -625,28 +708,29 @@ class DeviceDetailsViewModel(
 
   private fun updateCDRState(remainingCDRRecords: Int) {
     Log.d(TAG, "ENTRY updateCDRState(remainingCdrRecords=$remainingCDRRecords)")
-    val dataRecordsInformation = _state.value.dataRecordsInformation.copy(remainingCDRRecords=remainingCDRRecords)
+    val dataRecordsInformation = _state.value.dataRecordsInformation.copy(remainingCDRRecords = remainingCDRRecords)
     _state.value = _state.value.copy(dataRecordsInformation = dataRecordsInformation)
     Log.v(TAG, "RETURN updateCDRState()")
   }
 
   private fun updateCCDTState(remainingCCDTRecords: Int) {
     Log.d(TAG, "ENTRY updateCCDTState(remainingCCDTRecords=$remainingCCDTRecords)")
-    val dataRecordsInformation = _state.value.dataRecordsInformation.copy(remainingCCDTRecords=remainingCCDTRecords)
+    val dataRecordsInformation = _state.value.dataRecordsInformation.copy(remainingCCDTRecords = remainingCCDTRecords)
     _state.value = _state.value.copy(dataRecordsInformation = dataRecordsInformation)
     Log.v(TAG, "RETURN updateCCDTState()")
   }
 
   private fun updateEventState(remainingEventRecords: Int) {
     Log.d(TAG, "ENTRY updateEventState(remainingEventRecords=$remainingEventRecords)")
-    val dataRecordsInformation = _state.value.dataRecordsInformation.copy(remainingEventRecords=remainingEventRecords)
+    val dataRecordsInformation = _state.value.dataRecordsInformation.copy(remainingEventRecords = remainingEventRecords)
     _state.value = _state.value.copy(dataRecordsInformation = dataRecordsInformation)
     Log.v(TAG, "RETURN updateEventState()")
   }
 
   private fun updateMetricState(remainingMetricRecords: Int) {
     Log.d(TAG, "ENTRY updateMetricState(remainingMetricRecords=$remainingMetricRecords)")
-    val dataRecordsInformation = _state.value.dataRecordsInformation.copy(remainingMetricRecords=remainingMetricRecords)
+    val dataRecordsInformation =
+      _state.value.dataRecordsInformation.copy(remainingMetricRecords = remainingMetricRecords)
     _state.value = _state.value.copy(dataRecordsInformation = dataRecordsInformation)
     Log.v(TAG, "RETURN updateMetricState()")
   }
@@ -929,12 +1013,12 @@ class DeviceDetailsViewModel(
     Log.v(TAG, "ENTRY syncTime()")
     if (gaaiDevice.type == ChargerType.HOME) {
       sendTimeOperationSyncTime()
-    }
-    else if (_state.value.supportsDateUtc) {
+    } else if (_state.value.supportsDateUtc) {
       writeDateUTC()
     }
     Log.v(TAG, "RETURN syncTime()")
   }
+
   @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   fun writeDateUTC() {
     viewModelScope.launch {
@@ -944,8 +1028,8 @@ class DeviceDetailsViewModel(
         time = time
       )
       dateUtcCharacteristic.write(DataByteArray(TimeDataParserComposer.compose(newTimeData)))
-     // _state.value = _state.value.copy(timeData = newTimeData)
-      Log.v(TAG, "RETURN writeDateUTC() " +Timestamp.toString(time) )
+      // _state.value = _state.value.copy(timeData = newTimeData)
+      Log.v(TAG, "RETURN writeDateUTC() " + Timestamp.toString(time))
     }
   }
 
@@ -967,8 +1051,7 @@ class DeviceDetailsViewModel(
     Log.v(TAG, "ENTRY getTime()")
     if (gaaiDevice.type == ChargerType.HOME) {
       sendTimeOperationGetTime()
-    }
-    else if (_state.value.supportsDateUtc) {
+    } else if (_state.value.supportsDateUtc) {
       readDateUTC()
     }
     Log.v(TAG, "RETURN getTime()")
@@ -997,7 +1080,7 @@ class DeviceDetailsViewModel(
     }
   }
 
-    /**
+  /**
    * Writes [CONFIG_OPERATION_SET] or [CONFIG_OPERATION_CBOR_SET] to the [Generic Command]
    * [NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
    * characteristic.
@@ -1073,6 +1156,16 @@ class DeviceDetailsViewModel(
   }
 
   /**
+   * Updates the [badgeDeviceUiState] with the value provided in the argument.
+   * @param statusId The initial status Id.
+   */
+  private fun updateGenericStatus(genericStatus: Int) {
+    Log.d(TAG, "ENTRY updateGenericStatus(genericStatus=$genericStatus)")
+    _state.value = _state.value.copy(genericStatus = genericStatus)
+    Log.v(TAG, "RETURN updateGenericStatus()")
+  }
+
+  /**
    * Starts syncing the records.
    * characteristic.
    */
@@ -1082,7 +1175,7 @@ class DeviceDetailsViewModel(
       onlyGetMumberofRecords = false
       // Create outputfile names
       val time = (System.currentTimeMillis() / 1000).toUInt()
-      val timeString = Timestamp.toString(time).replace("[^\\w]".toRegex(),"")
+      val timeString = Timestamp.toString(time).replace("[^\\w]".toRegex(), "")
       logRecordOutDirectoryUri = outputDirectoryUri
       cdrFileName = gaaiDevice.sn + "_CDR_" + timeString
       ccdtFileName = gaaiDevice.sn + "_CCDT_" + timeString
@@ -1093,16 +1186,16 @@ class DeviceDetailsViewModel(
     }
   }
 
-    fun createRecordsOutputWriter(fileName: String): PrintWriter {
-      // Create outputfile
-      Log.i(TAG, "createRecordsOutputWriter() fileName = $fileName")
-      val context = bleRepository.context
-      val logRecOutDir = DocumentFile.fromTreeUri(context, logRecordOutDirectoryUri!!)
-      val file = logRecOutDir?.createFile("text/plain", fileName)
-      val contentResolver = context.contentResolver
-      val outputStream = contentResolver.openOutputStream(file!!.uri, "w")
-      printWriter = PrintWriter(outputStream!!)
-      return printWriter
+  fun createRecordsOutputWriter(fileName: String): PrintWriter {
+    // Create outputfile
+    Log.i(TAG, "createRecordsOutputWriter() fileName = $fileName")
+    val context = bleRepository.context
+    val logRecOutDir = DocumentFile.fromTreeUri(context, logRecordOutDirectoryUri!!)
+    val file = logRecOutDir?.createFile("text/plain", fileName)
+    val contentResolver = context.contentResolver
+    val outputStream = contentResolver.openOutputStream(file!!.uri, "w")
+    printWriter = PrintWriter(outputStream!!)
+    return printWriter
   }
 
   /**
@@ -1110,19 +1203,19 @@ class DeviceDetailsViewModel(
    * Once complete, it calls [startCCDTSync()]
    * characteristic.
    */
-  @RequiresPermission(android.Manifest.permission.BLUETOOTH_CONNECT)
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   fun startCDRSync() {
     viewModelScope.launch {
       Log.v(TAG, "ENTRY startCDRSync()")
       printWriter = createRecordsOutputWriter(cdrFileName)
 
       // Start reading CDR record
-      if (remainingCDRRecords > 0 ) {
-        nexxtenderHomeCDRStatusCharacteristic.getNotifications().onEach() {
+      if (remainingCDRRecords > 0) {
+        nexxtenderHomeCDRStatusCharacteristic.getNotifications().onEach {
           remainingCDRRecords = it.value.fromUint32LE(0).toInt()
           Log.d(TAG, "Found the following notification of changed remainingCdrRecords: $remainingCDRRecords")
           updateCDRState(remainingCDRRecords)
-          if (remainingCDRRecords > 0 ) {
+          if (remainingCDRRecords > 0) {
             // Read one more
             readCDRRecordAndAskNext()
           } else {
@@ -1132,7 +1225,7 @@ class DeviceDetailsViewModel(
             val cancellationException = CancellationException()
             throw cancellationException
           }
-        }.onCompletion{startCCDTSync()}.launchIn(viewModelScope)
+        }.onCompletion { startCCDTSync() }.launchIn(viewModelScope)
         readCDRRecordAndAskNext()  // read first record
       } else {
         // There were no CDR records
@@ -1150,7 +1243,7 @@ class DeviceDetailsViewModel(
     nexxtenderHomeCDRCommandCharacteristic.write(DataByteArray.from(CDR_COMMAND_NEXT))
   }
 
-  private suspend fun printRecord(record: ByteArray, timeOffset:Int) {
+  private suspend fun printRecord(record: ByteArray, timeOffset: Int) {
     val timestamp = record.fromUint32LE(timeOffset)
     printWriter.print("< ")
     printWriter.print(Timestamp.toString(timestamp))
@@ -1165,7 +1258,7 @@ class DeviceDetailsViewModel(
    * Once complete, it calls [startEventSync()]
    * characteristic.
    */
-  @RequiresPermission(android.Manifest.permission.BLUETOOTH_CONNECT)
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   private suspend fun startCCDTSync() {
     viewModelScope.launch {
       Log.v(TAG, "ENTRY startCCDTSync()")
@@ -1173,12 +1266,12 @@ class DeviceDetailsViewModel(
       printWriter = createRecordsOutputWriter(ccdtFileName)
 
       // Start reading CCDT record
-      if (remainingCCDTRecords > 0 ) {
-        nexxtenderHomeCCDTStatusCharacteristic.getNotifications().onEach() {
+      if (remainingCCDTRecords > 0) {
+        nexxtenderHomeCCDTStatusCharacteristic.getNotifications().onEach {
           remainingCCDTRecords = it.value.fromUint32LE(0).toInt()
           Log.d(TAG, "Found the following notification of changed remainingCCDTRecords: $remainingCCDTRecords")
           updateCCDTState(remainingCCDTRecords)
-          if (remainingCCDTRecords > 0 ) {
+          if (remainingCCDTRecords > 0) {
             // Read one more
             readCCDTRecordAndAskNext()
           } else {
@@ -1188,7 +1281,7 @@ class DeviceDetailsViewModel(
             val cancellationException = CancellationException()
             throw cancellationException
           }
-        }.onCompletion{startEventSync()}.launchIn(viewModelScope)
+        }.onCompletion { startEventSync() }.launchIn(viewModelScope)
         readCCDTRecordAndAskNext()
       } else {
         // There were no CCDT records
@@ -1203,7 +1296,7 @@ class DeviceDetailsViewModel(
    * Starts syncing the [event] records.
    * Once complete, it calls [startMetricSync()]
    */
-  @RequiresPermission(android.Manifest.permission.BLUETOOTH_CONNECT)
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   private suspend fun startEventSync() {
     viewModelScope.launch {
       Log.v(TAG, "ENTRY startEventSync()")
@@ -1218,7 +1311,7 @@ class DeviceDetailsViewModel(
   /**
    * Starts syncing the [metric] records.
    */
-  @RequiresPermission(android.Manifest.permission.BLUETOOTH_CONNECT)
+  @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
   private suspend fun startmetricSync() {
     viewModelScope.launch {
       Log.v(TAG, "ENTRY startmetricSync()")
@@ -1262,7 +1355,7 @@ class DeviceDetailsViewModel(
    * @param genericCommand
    */
   private suspend fun queueGenericCommand(genericCommand: Int) {
-    Log.v(TAG, "ENTRY queueGenericCommand() genericCommand:genericCommand")
+    Log.v(TAG, "ENTRY queueGenericCommand() genericCommand:$genericCommand")
     genericCommandQueue.add(genericCommand)
     startNextQueuedGenericCommandIfNotBusy()
     Log.v(TAG, "RETURN queueGenericCommand()")
@@ -1271,16 +1364,16 @@ class DeviceDetailsViewModel(
   /**
    * Starts the first command on the []genericCommandQueue] on the queue if none was busy.
    */
-   private suspend fun startNextQueuedGenericCommandIfNotBusy() {
+  private suspend fun startNextQueuedGenericCommandIfNotBusy() {
     Log.v(TAG, "ENTRY startNextQueuedGenericCommandIfNotBusy()")
     if (currentGenericCommand == -1) {
-      if ( ! genericCommandQueue.isEmpty()) {
+      if (!genericCommandQueue.isEmpty()) {
         currentGenericCommand = genericCommandQueue.remove()
         writeGenericCommand(currentGenericCommand)
       } else {
         Log.i(TAG, "startNextQueuedGenericCommandIfNotBusy(): no generic commands to queue")
       }
-    }  else {
+    } else {
       Log.i(TAG, "startNextQueuedGenericCommandIfNotBusy(): previous command still busy")
     }
     Log.v(TAG, "RETURN startNextQueuedGenericCommandIfNotBusy()")
@@ -1291,13 +1384,136 @@ class DeviceDetailsViewModel(
    */
   private suspend fun startNextQueuedGenericCommand() {
     Log.v(TAG, "ENTRY startNextQueuedGenericCommand()")
-    currentGenericCommand = - 1
+    currentCommandFinished()
     startNextQueuedGenericCommandIfNotBusy()
     Log.v(TAG, "RETURN startNextQueuedGenericCommand()")
+
+  }
+
+  private fun currentCommandFinished() {
+    currentGenericCommand = -1
+  }
+
+  private suspend fun startGettingNewBadgeList() {
+    Log.v(TAG, "ENTRY startGettingNewBadgeList()")
+    badgeList.clear()
+    sendBadgeListStart()
+    Log.v(TAG, "RETURN startGettingNewBadgeList()")
+  }
+
+  /**
+   * Writes [BADGE_OPERATION_LIST_START] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun sendBadgeListStart() {
+    Log.v(TAG, "ENTRY sendBadgeListStart()")
+    val command = BADGE_OPERATION_LIST_START
+    queueGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeListStart()")
+  }
+
+  /**
+   * Writes [BADGE_OPERATION_LIST_NEXT] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun sendBadgeListNext() {
+    Log.v(TAG, "ENTRY sendBadgeListNext()")
+    val command = BADGE_OPERATION_LIST_NEXT
+    queueGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeListNext()")
+  }
+
+  /**
+   * Writes [BADGE_OPERATION_ADD_MAX] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun sendBadgeAddMax() {
+    Log.v(TAG, "ENTRY sendBadgeAddMax()")
+    val command = BADGE_OPERATION_ADD_MAX
+    queueGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeAddMax()")
+  }
+
+  /**
+   * Writes [BADGE_OPERATION_ADD_DEFAULT] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun sendBadgeAddDefault() {
+    Log.v(TAG, "ENTRY sendBadgeAddDefault()")
+    val command = BADGE_OPERATION_ADD_DEFAULT
+    queueGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeAddDefault()")
+  }
+
+  /**
+   * Writes [BADGE_OPERATION_DELETE] to the [Generic Command]
+   * [be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification.UUID_NEXXTENDER_HOME_GENERIC_COMMAND_CHARACTERISTIC]
+   * characteristic.
+   */
+  private suspend fun sendBadgeDelete() {
+    Log.v(TAG, "ENTRY sendBadgeDelete()")
+    val command = BADGE_OPERATION_DELETE
+    queueGenericCommand(command)
+    Log.v(TAG, "RETURN sendBadgeDelete()")
+  }
+
+  /**
+   * Delete the [badge] from the charger.
+   * @param badge The [Badge] to delete.
+   */
+  // TODO: We already emit a newBadgeList before actually deleting the badge from the charger.
+  //  The original idea was that this was not necessary;
+  //  rereading the badge list from the charger after the delete should have the same effect.
+  //  But it did not work correctly, so I added the explicit emit.
+  fun deleteBadge(badge: Badge) {
+    Log.d(TAG, "ENTRY deleteBadge($badge)")
+    viewModelScope.launch(Dispatchers.IO) {
+      Log.d(TAG, "ENTRY deleteBadge($badge) body")
+      // emit an updated badge list for the UI
+      val newBadgeList = badgeList.toMutableList()
+      newBadgeList.remove(badge)
+      badgeListManager.emitNewBadgeList(newBadgeList)
+      // And now delete the badge from the charger
+      badgeToDelete = badge
+      sendBadgeDelete()
+      Log.v(TAG, "RETURN deleteBadge() body")
+    }
+    Log.v(TAG, "RETURN deleteBadge()")
+  }
+
+  /**
+   * Add a new [Badge] in the specified [be.cuypers_ghys.gaai.data.ChargeType].
+   * @param chargeType The [be.cuypers_ghys.gaai.data.ChargeType] for the badge to add.
+   */
+  fun addBadge(chargeType: ChargeType) {
+    Log.d(TAG, "ENTRY addBadge($chargeType)")
+    viewModelScope.launch {
+      Log.d(TAG, "ENTRY addBadge($chargeType) body")
+      when (chargeType) {
+        ChargeType.DEFAULT -> sendBadgeAddDefault()
+        ChargeType.MAX -> sendBadgeAddMax()
+        ChargeType.UNKNOWN -> Unit // do nothing
+      }
+      Log.v(TAG, "RETURN addBadge() body")
+    }
+    Log.v(TAG, "RETURN addBadge()")
+  }
+
+  companion object {
+    /**
+     * Delay (in milliseconds) between the disappearance of the last
+     * subscriber and the stopping of the sharing coroutine.
+     */
+    private const val TIMEOUT_MILLIS = 5_000L
   }
 
   override fun onCleared() {
     Log.v(TAG, "ENTRY onCleared()")
+    badgeListManager.unregisterAll()
     currentJob?.cancel()
     connectionStatusJob?.cancel()
     super.onCleared()
@@ -1363,5 +1579,7 @@ data class DeviceDetailsViewState(
    */
   val timeData: TimeData = TimeData(),
   val supportsDateUtc: Boolean = false,
-  val dataRecordsInformation : DataRecordsInformation = DataRecordsInformation()
+  val dataRecordsInformation: DataRecordsInformation = DataRecordsInformation(),
+  val genericStatus: Int = -1,
+  val badgeList: List<Badge> = listOf()
 )

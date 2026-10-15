@@ -24,7 +24,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import be.cuypers_ghys.gaai.GaaiApplication
-import be.cuypers_ghys.gaai.ui.device.BadgeListViewModel
 import be.cuypers_ghys.gaai.ui.device.DeviceDetailsViewModel
 import be.cuypers_ghys.gaai.ui.device.DeviceEntryViewModel
 import be.cuypers_ghys.gaai.ui.home.HomeViewModel
@@ -65,14 +64,6 @@ object AppViewModelProvider {
       MissingPermissionsViewModel()
     }
 
-    // Initializer for BadgeListViewModel
-    initializer {
-      BadgeListViewModel(
-        this.createSavedStateHandle(),
-        gaaiApplication().container.devicesRepository,
-        gaaiApplication().container.bleRepository
-      )
-    }
     Log.d(TAG, "RETURN viewModelFactory()")
 
   }

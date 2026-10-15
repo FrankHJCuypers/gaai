@@ -1,6 +1,6 @@
 /*
  * Project Gaai: one app to control the Nexxtender Home charger.
- * Copyright © 2025, Frank HJ Cuypers
+ * Copyright © 2025-2026, Frank HJ Cuypers
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation,
@@ -50,7 +50,6 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -65,6 +64,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.Badge
@@ -93,8 +93,11 @@ private const val TAG = "BadgeListScreen"
 object BadgeListDestination : NavigationDestination {
   override val route = "badge_list"
   override val titleRes = R.string.badge_list
+
   const val DEVICE_ID_ARG = "deviceId"
-  val routeWithArgs = "$route/{$DEVICE_ID_ARG}"
+
+  val routeWithArgs = "${route}/{$DEVICE_ID_ARG}"
+
 }
 
 /**
@@ -103,7 +106,7 @@ object BadgeListDestination : NavigationDestination {
  * and allows to add new ones.
  * @param onNavigateUp Function to be called when [BadgeListScreen] wants to navigate up.
  * @param modifier The [Modifier] to be applied to this HomeScreen.
- * @param viewModel The [BadgeListViewModel] to be associated with this [BadgeListScreen].
+ * @param viewModel The [DeviceDetailsViewModel] to be associated with this [BadgeListScreen].
  *
  * @author Frank HJ Cuypers
  */
@@ -111,19 +114,20 @@ object BadgeListDestination : NavigationDestination {
 fun BadgeListScreen(
   onNavigateUp: () -> Unit,
   modifier: Modifier = Modifier,
-  viewModel: BadgeListViewModel = viewModel(factory = AppViewModelProvider.Factory)
+  viewModel: DeviceDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
   Log.v(TAG, "ENTRY BadgeListScreen()")
 
-  val badgeListUiState by viewModel.badgeListUiState.collectAsState()
+  val state by viewModel.state.collectAsStateWithLifecycle()
+  val device by viewModel.device.collectAsStateWithLifecycle()
 
   RequireBluetooth {
     BadgeListScreenNoViewModel(
       onNavigateUp,
       viewModel::addBadge,
       viewModel::deleteBadge,
-      badgeListUiState,
-      viewModel.badgeDeviceUiState,
+      state.badgeList,
+      state.genericStatus,
       modifier
     )
   }
@@ -137,8 +141,8 @@ fun BadgeListScreen(
  * @param onNavigateUp Function to be called when [BadgeListScreenNoViewModel] wants to navigate up.
  * @param addBadge Function to be called when [BadgeListScreenNoViewModel] wants to add a new badge.
  * @param deleteBadge Function to be called when [BadgeListScreenNoViewModel] wants to delete a new badge.
- * @param badgeListUiState
- * @param badgeDeviceUiState The device state determined by the [BadgeListViewModel].
+ * @param badgeList
+ * @param genericStatus The device state determined by the [BadgeListViewModel].
  * @param modifier The [Modifier] to be applied to this [BadgeListScreenNoViewModel].
  *
  * @author Frank HJ Cuypers
@@ -149,8 +153,8 @@ fun BadgeListScreenNoViewModel(
   onNavigateUp: () -> Unit,
   addBadge: (ChargeType) -> Unit,
   deleteBadge: (Badge) -> Unit,
-  badgeListUiState: BadgeListUiState,
-  badgeDeviceUiState: BadgeDeviceUiState,
+  badgeList: List<Badge>,
+  genericStatus: Int,
   modifier: Modifier = Modifier
 ) {
   Log.v(TAG, "ENTRY BadgeListScreenNoViewModel()")
@@ -233,7 +237,7 @@ fun BadgeListScreenNoViewModel(
       }
     },
   ) { innerPadding ->
-    when (badgeDeviceUiState.statusId) {
+    when (genericStatus) {
       BADGE_STATUS_WAIT_EXISTS -> Toast.makeText(
         context,
         stringResource(R.string.badge_already_registered), Toast.LENGTH_SHORT
@@ -246,7 +250,7 @@ fun BadgeListScreenNoViewModel(
     }
 
     BadgeListBody(
-      badgeList = badgeListUiState.badgeList,
+      badgeList = badgeList,
       onBadgeRemove = deleteBadge,
       modifier = modifier.fillMaxSize(),
       contentPadding = innerPadding,
@@ -442,13 +446,11 @@ fun BadgeListScreenNoViewModelPreview() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       BadgeListScreenNoViewModel(
-        onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(
-          listOf(
-            Badge("11223344556677".hexToByteArray(), ChargeType.DEFAULT),
-            Badge("11223344".hexToByteArray(), ChargeType.MAX),
-            Badge("112233445566778899AA".hexToByteArray(), ChargeType.UNKNOWN),
-          )
-        ), badgeDeviceUiState = BadgeDeviceUiState()
+        onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeList = listOf(
+          Badge("11223344556677".hexToByteArray(), ChargeType.DEFAULT),
+          Badge("11223344".hexToByteArray(), ChargeType.MAX),
+          Badge("112233445566778899AA".hexToByteArray(), ChargeType.UNKNOWN),
+        ), genericStatus = -1
       )
     }
   }
@@ -461,9 +463,7 @@ fun BadgeListScreenNoViewModelEmptyListPreview() {
   GaaiTheme(dynamicColor = false) {
     Surface {
       BadgeListScreenNoViewModel(
-        onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeListUiState = BadgeListUiState(
-          listOf()
-        ), badgeDeviceUiState = BadgeDeviceUiState()
+        onNavigateUp = {}, addBadge = {}, deleteBadge = {}, badgeList = listOf(), genericStatus = -1
       )
     }
   }

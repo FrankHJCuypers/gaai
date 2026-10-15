@@ -47,6 +47,12 @@ interface IBadgeListManager {
    * @param listener
    */
   fun unregister(listener: IBadgeListListener)
+
+  /**
+   * Unregister all registered listeners
+   */
+  fun unregisterAll()
+
 }
 
 /**
@@ -77,6 +83,15 @@ class BadgeListManager : IBadgeListManager {
   override fun unregister(listener: IBadgeListListener) {
     listeners.remove(listener)
   }
+
+  /**
+   * Unregister all listeners.
+   */
+  // TODO: must be thread safe
+  override fun unregisterAll() {
+    listeners.clear()
+  }
+
 
   /**
    * Inform all registered listeners of the new [badgeList].
