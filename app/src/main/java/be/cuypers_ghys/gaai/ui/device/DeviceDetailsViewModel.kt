@@ -80,6 +80,7 @@ import be.cuypers_ghys.gaai.util.TouPeriod
 import be.cuypers_ghys.gaai.util.fromInt32LE
 import be.cuypers_ghys.gaai.util.fromUint16LE
 import be.cuypers_ghys.gaai.util.fromUint32LE
+import be.cuypers_ghys.gaai.util.toColonHex
 import be.cuypers_ghys.gaai.viewmodel.NexxtenderHomeSpecification
 import io.github.g00fy2.versioncompare.Version
 import kotlinx.coroutines.Job
@@ -504,12 +505,21 @@ class DeviceDetailsViewModel(
         Log.d(TAG, "Converted status: $status")
         when (status) {
           CONFIG_STATUS_POPPED, CONFIG_STATUS_POPPED_CBOR -> {
+            val configGetData = nexxtenderHomeGenericDataCharacteristic.read().value
             val configData = ConfigDataParserComposer.parse(
-              nexxtenderHomeGenericDataCharacteristic.read().value,
-              configVersion
-            )!!
-            _state.value = _state.value.copy(configData = configData)
-            startNextQueuedGenericCommand()
+              configGetData, configVersion
+            )
+            /*
+             * If null, then data received was not a Get Config. See bug #77.
+             * We assume this is a second Get Config and skip it.
+             */
+            if ( configData != null ) {
+              Log.i(TAG, "Correct CONFIG data found")
+              _state.value = _state.value.copy(configData = configData)
+              startNextQueuedGenericCommand()
+            } else {
+              Log.e(TAG, "Skipping incorrect CONFIG data: ${configGetData.toColonHex()}")
+            }
           }
 
           CONFIG_STATUS_READY, CONFIG_STATUS_READY_CBOR -> {
@@ -584,8 +594,8 @@ class DeviceDetailsViewModel(
       readRemainingCCDTRecordsAndUpdateState()
       readRemainingEventRecordsAndUpdateState()
       readRemainingMetricRecordsAndUpdateState()
-      sendTimeOperationGet()
       sendConfigOperationGet()
+      sendTimeOperationGet()
     }
     Log.v(TAG, "RETURN configureGatt()")
   }
