@@ -69,8 +69,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import be.cuypers_ghys.gaai.R
 import be.cuypers_ghys.gaai.data.Badge
 import be.cuypers_ghys.gaai.data.ChargeType
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADDED
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_EXISTS
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_ADDED
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_EXISTS
 import be.cuypers_ghys.gaai.ui.AppViewModelProvider
 import be.cuypers_ghys.gaai.ui.GaaiTopAppBar
 import be.cuypers_ghys.gaai.ui.home.SwipeToDismissContainer
@@ -238,12 +238,12 @@ fun BadgeListScreenNoViewModel(
     },
   ) { innerPadding ->
     when (genericStatus) {
-      BADGE_STATUS_WAIT_EXISTS -> Toast.makeText(
+      BADGE_STATUS_EXISTS -> Toast.makeText(
         context,
         stringResource(R.string.badge_already_registered), Toast.LENGTH_SHORT
       ).show()
 
-      BADGE_STATUS_WAIT_ADDED -> Toast.makeText(
+      BADGE_STATUS_ADDED -> Toast.makeText(
         context,
         stringResource(R.string.badge_added), Toast.LENGTH_SHORT
       ).show()

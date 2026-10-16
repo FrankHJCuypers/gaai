@@ -52,11 +52,11 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_LIST_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_LIST_START
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD1
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD2
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADDED
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_ADDED
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_DELETE
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_EXISTS
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_FINISH
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_NEXT
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_EXISTS
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_FINISH
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CCDT_COMMAND_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CDR_COMMAND_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_CBOR_GET
@@ -609,7 +609,7 @@ class DeviceDetailsViewModel(
             startGettingNewBadgeList()
           }
 
-          BADGE_STATUS_WAIT_NEXT -> {
+          BADGE_STATUS_NEXT -> {
             val badge = BadgeParser.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
             Log.d(TAG, "Retrieved badge: $badge")
 
@@ -618,19 +618,19 @@ class DeviceDetailsViewModel(
             sendBadgeListNext()
           }
 
-          BADGE_STATUS_WAIT_FINISH -> {
+          BADGE_STATUS_FINISH -> {
             val newBadgeList = badgeList.toList()
             badgeListManager.emitNewBadgeList(newBadgeList)
             startNextQueuedGenericCommand()
           }
 
-          BADGE_STATUS_WAIT_ADDED -> {
+          BADGE_STATUS_ADDED -> {
             BadgeParser.parse(nexxtenderHomeGenericDataCharacteristic.read().value)!!
             currentCommandFinished()
             startGettingNewBadgeList()
           }
 
-          BADGE_STATUS_WAIT_EXISTS -> {
+          BADGE_STATUS_EXISTS -> {
             currentCommandFinished()
             startGettingNewBadgeList()
           }
