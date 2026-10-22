@@ -99,7 +99,7 @@ fun ModeDialog(
     Card(
       modifier = modifier
     ) {
-      Column(modifier = modifier.padding(horizontal = 16.dp)) {
+      Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
           modifier = Modifier
             .fillMaxWidth()
@@ -135,7 +135,7 @@ fun ModeDialog(
           }
         }
         Row(
-          modifier = modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically
         )
         {
@@ -171,9 +171,11 @@ fun ModeDialog(
 @Composable
 private fun ModeDialogPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface(modifier = Modifier
-      .fillMaxSize()
-      .padding(20.dp)) {
+    Surface(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp)
+    ) {
       ModeDialog(
         mode = Mode.ECO_PRIVATE,
         onDismiss = {},
@@ -190,9 +192,11 @@ private fun ModeDialogPreview() {
 @Composable
 private fun ModeDialogUnknownPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface(modifier = Modifier
-      .fillMaxSize()
-      .padding(20.dp)) {
+    Surface(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp)
+    ) {
       ModeDialog(
         mode = Mode.UNKNOWN,
         onDismiss = {},

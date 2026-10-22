@@ -147,7 +147,9 @@ fun TouPeriodDialog(
   Dialog(onDismissRequest = { onDismissRequest() }) {
     Card(modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
       Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+          .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Text(
@@ -166,7 +168,7 @@ fun TouPeriodDialog(
 //                    newTouPeriod = newTouPeriod.copy(startTime = touTime)
           Log.d(TAG, "touTimeRow start confirmed: $touTime")
         },
-        modifier = modifier
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
       )
       TouTimeRow(
         name = stringResource(R.string.end),
@@ -179,11 +181,13 @@ fun TouPeriodDialog(
           newTouPeriodEnd = touTime
           Log.d(TAG, "touTimeRow end confirmed: $touTime")
         },
-        modifier = modifier
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
       )
 
       Row(
-        modifier = modifier.fillMaxWidth(),
+        Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
+          .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Button(onClick = onDismissRequest) {
@@ -207,9 +211,11 @@ fun TouPeriodDialog(
 @Composable
 private fun TouPeriodDialogPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface(modifier = Modifier
-      .fillMaxSize()
-      .padding(20.dp)) {
+    Surface(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp)
+    ) {
       TouPeriodDialog(
         title = "Weekdays",
         touPeriod = TouPeriod(720, 1234),

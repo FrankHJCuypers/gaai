@@ -96,7 +96,7 @@ fun DialTimePickerDialog(
           state = timePickerState,
         )
         Row(
-          modifier = modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically
         )
         {
@@ -129,9 +129,11 @@ fun DialTimePickerDialog(
 @Composable
 private fun DialTimePickerDialogPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface(modifier = Modifier
-      .fillMaxSize()
-      .padding(20.dp)) {
+    Surface(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp)
+    ) {
       DialTimePickerDialog(
         title = "Sample Time Picker Dialog",
         touTime = TouTime(13, 45),

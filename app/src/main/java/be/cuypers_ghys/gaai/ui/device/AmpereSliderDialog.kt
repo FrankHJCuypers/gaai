@@ -77,7 +77,7 @@ fun AmpereSliderDialog(
   var sliderPosition by remember { mutableFloatStateOf(value.toFloat()) }
   Dialog(onDismissRequest = { onDismiss() }) {
     Card(modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
-      Column(modifier = modifier.padding(horizontal = 16.dp)) {
+      Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
           modifier = Modifier
             .fillMaxWidth()
@@ -92,7 +92,7 @@ fun AmpereSliderDialog(
           valueRange = minValue.toFloat()..maxValue.toFloat()
         )
         Row(
-          modifier = modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically
         ) {
           Text(text = "$minValue A")
@@ -102,7 +102,7 @@ fun AmpereSliderDialog(
           Text(text = "$maxValue A")
         }
         Row(
-          modifier = modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically
         )
         {
@@ -135,9 +135,11 @@ fun AmpereSliderDialog(
 @Composable
 private fun AmpereSliderDialogPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface(modifier = Modifier
-      .fillMaxSize()
-      .padding(20.dp)) {
+    Surface(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(20.dp)
+    ) {
       AmpereSliderDialog(
         name = "Sample Ampere x",
         value = 32u,
