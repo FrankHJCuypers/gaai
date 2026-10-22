@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -128,7 +129,9 @@ fun DialTimePickerDialog(
 @Composable
 private fun DialTimePickerDialogPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface {
+    Surface(modifier = Modifier
+      .fillMaxSize()
+      .padding(20.dp)) {
       DialTimePickerDialog(
         title = "Sample Time Picker Dialog",
         touTime = TouTime(13, 45),

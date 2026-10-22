@@ -22,6 +22,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -169,11 +171,15 @@ fun ModeDialog(
 @Composable
 private fun ModeDialogPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface {
+    Surface(modifier = Modifier
+      .fillMaxSize()
+      .padding(20.dp)) {
       ModeDialog(
         mode = Mode.ECO_PRIVATE,
         onDismiss = {},
         onConfirm = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
       )
     }
   }
@@ -184,11 +190,15 @@ private fun ModeDialogPreview() {
 @Composable
 private fun ModeDialogUnknownPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface {
+    Surface(modifier = Modifier
+      .fillMaxSize()
+      .padding(20.dp)) {
       ModeDialog(
         mode = Mode.UNKNOWN,
         onDismiss = {},
         onConfirm = {},
+        modifier = Modifier
+          .padding(dimensionResource(id = R.dimen.padding_small))
       )
     }
   }
