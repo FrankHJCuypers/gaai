@@ -86,11 +86,11 @@ fun ReadRemainingRecordsConfirmationDialog(
 @Composable
 fun ReadRemainingRecordsConfirmationDialogPreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface (
+    Surface(
       modifier = Modifier
         .fillMaxSize()
         .padding(20.dp),
-    ){
+    ) {
       ReadRemainingRecordsConfirmationDialog(
         onCancel = { }, onConfirm = {}
       )

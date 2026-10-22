@@ -50,13 +50,13 @@ import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_ADD_MAX
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_DELETE
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_LIST_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_OPERATION_LIST_START
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD1
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD2
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_ADDED
-import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_DELETE
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_EXISTS
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_FINISH
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_NEXT
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD1
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_ADD2
+import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.BADGE_STATUS_WAIT_DELETE
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CCDT_COMMAND_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CDR_COMMAND_NEXT
 import be.cuypers_ghys.gaai.data.OperationAndStatusIDs.CONFIG_OPERATION_CBOR_GET

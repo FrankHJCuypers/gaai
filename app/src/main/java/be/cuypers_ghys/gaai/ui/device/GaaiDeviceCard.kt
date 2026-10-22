@@ -14,7 +14,6 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 package be.cuypers_ghys.gaai.ui.device
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
