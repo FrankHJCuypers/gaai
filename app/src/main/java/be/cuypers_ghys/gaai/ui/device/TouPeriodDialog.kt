@@ -20,6 +20,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -146,59 +147,63 @@ fun TouPeriodDialog(
 
   Dialog(onDismissRequest = { onDismissRequest() }) {
     Card(modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
-      Row(
-        modifier = Modifier
-          .padding(dimensionResource(id = R.dimen.padding_small))
-          .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        Text(
-          text = title,
-          style = MaterialTheme.typography.titleLarge,
-        )
-      }
-      TouTimeRow(
-        name = stringResource(R.string.start),
-        time = touPeriod.startTime,
-        onDismissRequest = {
-          Log.v(TAG, "touTimeRow start dismissed")
-        },
-        onConfirmation = { touTime ->
-          newTouPeriodStart = touTime
-//                    newTouPeriod = newTouPeriod.copy(startTime = touTime)
-          Log.d(TAG, "touTimeRow start confirmed: $touTime")
-        },
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
-      )
-      TouTimeRow(
-        name = stringResource(R.string.end),
-        time = touPeriod.endTime,
-        onDismissRequest = {
-          Log.v(TAG, "touTimeRow end dismissed")
-        },
-        onConfirmation = { touTime ->
-//                        newTouPeriod = newTouPeriod.copy(endTime = touTime)
-          newTouPeriodEnd = touTime
-          Log.d(TAG, "touTimeRow end confirmed: $touTime")
-        },
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
-      )
-
-      Row(
-        Modifier
-          .padding(dimensionResource(id = R.dimen.padding_small))
-          .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        Button(onClick = onDismissRequest) {
-          Text(stringResource(R.string.cancel))
+      Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Row(
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+            .fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+          )
         }
-        Spacer(Modifier.weight(1f))
-        Button(onClick = {
+        TouTimeRow(
+          name = stringResource(R.string.start),
+          time = touPeriod.startTime,
+          onDismissRequest = {
+            Log.v(TAG, "touTimeRow start dismissed")
+          },
+          onConfirmation = { touTime ->
+            newTouPeriodStart = touTime
+//                    newTouPeriod = newTouPeriod.copy(startTime = touTime)
+            Log.d(TAG, "touTimeRow start confirmed: $touTime")
+          },
+          modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+        )
+        TouTimeRow(
+          name = stringResource(R.string.end),
+          time = touPeriod.endTime,
+          onDismissRequest = {
+            Log.v(TAG, "touTimeRow end dismissed")
+          },
+          onConfirmation = { touTime ->
+//                        newTouPeriod = newTouPeriod.copy(endTime = touTime)
+            newTouPeriodEnd = touTime
+            Log.d(TAG, "touTimeRow end confirmed: $touTime")
+          },
+          modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+        )
+
+        Row(
+          Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+            .fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Spacer(Modifier.weight(1f))
+          Button(onClick = onDismissRequest) {
+            Text(stringResource(R.string.cancel))
+          }
+          Spacer(Modifier.weight(1f))
+          Button(onClick = {
 //                    onConfirmation(newTouPeriod)
-          onConfirmation(TouPeriod(newTouPeriodStart, newTouPeriodEnd))
-        }) {
-          Text(stringResource(R.string.ok))
+            onConfirmation(TouPeriod(newTouPeriodStart, newTouPeriodEnd))
+          }) {
+            Text(stringResource(R.string.ok))
+          }
+          Spacer(Modifier.weight(1f))
         }
       }
     }

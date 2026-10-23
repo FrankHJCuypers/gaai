@@ -40,6 +40,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,19 +85,25 @@ fun DialTimePickerDialog(
         .height(IntrinsicSize.Min),
       elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-      Column {
-        Text(
+      Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Row(
           modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 20.dp),
-          text = title,
-          style = MaterialTheme.typography.labelMedium
-        )
+            .padding(dimensionResource(id = R.dimen.padding_small))
+            .fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+          )
+        }
         TimePicker(
           state = timePickerState,
         )
         Row(
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.padding_small)),
           verticalAlignment = Alignment.CenterVertically
         )
         {
@@ -135,7 +142,7 @@ private fun DialTimePickerDialogPreview() {
         .padding(20.dp)
     ) {
       DialTimePickerDialog(
-        title = "Sample Time Picker Dialog",
+        title = "Select Time",
         touTime = TouTime(13, 45),
         onDismiss = {},
         onConfirm = {},

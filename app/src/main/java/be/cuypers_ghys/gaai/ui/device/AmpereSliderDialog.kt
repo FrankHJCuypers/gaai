@@ -39,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,9 +82,9 @@ fun AmpereSliderDialog(
         Text(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp),
+            .padding(bottom = 20.dp, top = 20.dp),
           text = name,
-          style = MaterialTheme.typography.titleMedium,
+          style = MaterialTheme.typography.titleLarge,
         )
         Slider(
           value = sliderPosition,
@@ -102,7 +103,9 @@ fun AmpereSliderDialog(
           Text(text = "$maxValue A")
         }
         Row(
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_small))
+            .fillMaxWidth(),
           verticalAlignment = Alignment.CenterVertically
         )
         {

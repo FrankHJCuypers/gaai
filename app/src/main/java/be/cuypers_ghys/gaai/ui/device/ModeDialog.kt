@@ -103,9 +103,9 @@ fun ModeDialog(
         Text(
           modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp),
+            .padding(bottom = 20.dp, top = 20.dp),
           text = stringResource(R.string.choose_default_mode),
-          style = MaterialTheme.typography.titleMedium,
+          style = MaterialTheme.typography.titleLarge,
         )
         val (selectedOption, onOptionSelected) = remember { mutableStateOf(modeString) }
         Column(Modifier.selectableGroup()) {
@@ -135,7 +135,9 @@ fun ModeDialog(
           }
         }
         Row(
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.padding_small)),
           verticalAlignment = Alignment.CenterVertically
         )
         {
