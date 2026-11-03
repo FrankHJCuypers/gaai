@@ -48,8 +48,9 @@ Other alternatives are
 
 - [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
 - [Nexxtender Home Bluetooth Controller](https://github.com/toSvenson/nexxtender-ble)
-- [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook)
+- [NEXXTLOOK](https://www.lookwatt.be/drupal/web/nexxtlook) (no longer exists?)
 - [NexxtenderBlackCable](https://github.com/Noudicus/NexxtenderBlackCable)
+- [PotatoCharge](https://potatocharge.com/en/blog/powerdale-charger-ocpp-box)
 
 *Gaai*'s source code is hosted on [GitHub](https://github.com/FrankHJCuypers/gaai).
 
@@ -211,14 +212,22 @@ The only options to restore from this situation are either of:
 
 The Nexxtender charger installer that installed your charger and connected it with the Nexxtmove app on your
 mobile phone, has paired it with the Nexxtender charger using the correct PIN value.
-In general, the installer will not have provided you with that PIN value.
+In general, the installer will not have provided you with a copy of that PIN value.
 As long as you use the same mobile phone to connect to the Nexxtender charger, both devices should stay paired and
 there is no issue.
 But when you need to move to another phone, you need the PIN value.
 If you don't have the PIN code, you can provide the *Gaai* GitHub repository owner with the PN and SN values
 as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-device),
-and he will calculate it for you.
+and he will calculate it for you for free.
 See [CONTACT](CONTACT.md).
+
+Alternatively you can 
+
+- contact the repo owner of 
+  [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender) 
+  for the PIN, also free of charge.
+- at [Lost your Nexxtender PIN? Your Powerdale charger still works](https://potatocharge.com/en/blog/nexxtender-pin-powerdale-bankruptcy)
+  you can also request your PIN, but a small fee is asked.
 
 ### Incorrect PIN value
 
