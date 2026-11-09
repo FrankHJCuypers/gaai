@@ -1,6 +1,5 @@
 [![Firebase](https://readmebadge.vercel.app/badges/firebase.svg)](https://console.firebase.google.com/project/gaai-3e164/overview)
 
-
 # Development
 
 This app is developed in [Kotlin](https://developer.android.com/kotlin) with
@@ -17,8 +16,8 @@ Follow these steps:
 
 1. Install the 64-bit version of [Git](https://git-scm.com/downloads/win).
 2. Install [Android Studio](https://developer.android.com/studio/install).
-3. In Android Studio select the menu item *File* → *Settings* → *Version Control* → *Git* and make sure that the
-   *Path to Git executable* points to the git.exe that you just installed.
+3. In Android Studio select the menu item *File* → *Settings* → *Version Control* → *Git* and make sure that the *Path
+   to Git executable* points to the git.exe that you just installed.
 4. [Clone GitHub Gaai project in Android Studio](https://www.geeksforgeeks.org/how-to-clone-android-project-from-github-in-android-studio/).
    The required URL can be found by clicking on the ![Green Code>](docs/images/GreenCode.png)
    button at the top of this page.
@@ -49,8 +48,8 @@ As soon as a commit is officially released for the x.y.z release, the following 
 1. A number x'.y'.z' for the next release is decided on, based on the [Semantic Versioning]( https://semver.org/) rules.
 2. The commit chosen for the official release of x.y.z is marked with the tag *v*x.y.z, possibly with an extension.
    Some of the extensions that can be used are `-experimental`, `-alpha`, `-beta`, etc...
-   See [Software release life cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle).
-   *Gaai* will use `-beta` until the achieved testing level warrants an `stable state.
+   See [Software release life cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle). *Gaai* will use `-beta`
+   until the achieved testing level warrants an `stable state.
 3. A release is created in GitHub with the APK files of the commit tagged with *v*x.y.z.
 4. The next commit is marked with the tag x'.y'.z', marking it as the first candidate for release *v*x'.y'.z'.
 5. The Gradle build generates a unique Android
@@ -140,7 +139,8 @@ Install the app either using Android Studio or by manually installing the APK to
     - select the default *app* configuration.
     - Run the *app*.
 2. Manual installation:
-    - Make the APK available on your hardware device (copy it using bluetooth or Wi-Fi, use Google Drive,use GitHub link,
+    - Make the APK available on your hardware device (copy it using bluetooth or Wi-Fi, use Google Drive,use GitHub
+      link,
       ...)
     - Install/Run the APK by clicking on it.
 
@@ -156,12 +156,12 @@ Run the local tests in Android Studio as follows:
 - In the *Android* view, select the *app → kotlin+java → be.cuypers_ghys.gaai (test)* node.
 - In the pop-up menu, select *Run 'Tests in 'be...' with Coverage*.
   The tests run.
-- The Coverage screen shows a summary of the coverage results. 
-  From there you can drill down to source code level to see which code is covered and which not. 
+- The Coverage screen shows a summary of the coverage results.
+  From there you can drill down to source code level to see which code is covered and which not.
   Add Junit tests to increase coverage to 100% is possible.
 
-Code coverage of local tests can also be generated using Gradle in a shell 
-(e.g. PowerShell in Android Studio terminal, or git bash),
+Code coverage of local tests can also be generated using Gradle in a shell (e.g. PowerShell in Android Studio terminal,
+or git bash),
 see [Test from the command line](https://developer.android.com/studio/test/command-line):
 `./gradlew testDebugUnitTest` followed by `./gradlew createDebugCoverageReport`.
 Note that `./gradlew testReleaseUnitTest` does not create Code coverage information.
@@ -172,7 +172,7 @@ Note that `./gradlew testReleaseUnitTest` does not create Code coverage informat
 
 Gaai uses android.util.Log for logging.
 The logging results are available in real time in [Logcat](https://developer.android.com/studio/debug/logcat).
-The use of the logging levels is loosely based on 
+The use of the logging levels is loosely based on
 [When to use the different log levels](https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels.)
 
 None if the code in the be.cuypers_ghys.gaai.util package has logging statements.
@@ -190,6 +190,7 @@ Open the `index.html` file to start reading the documentation.
 Note that this documentation targets developers, not the users of *Gaai*.
 
 ## Make a release
+
 This procedure only works if you have the APK signing keys setup, so that `./gradlew build` can run.
 See [Gradlew commands](#gradlew-commands).
 
@@ -210,7 +211,8 @@ Once a commit on the master branch is selected to make a new release in GutHub, 
    based on the most recent tag of the form x.y.z.
    See [Versioning](#versioning).
    The name of the version to release will then be vx.y.z.
-5. Build the AAB file by running `./gradlew bundle` in a shell (e.g. PowerShell in Android Studio terminal, or git bash).
+5. Build the AAB file by running `./gradlew bundle` in a shell (e.g. PowerShell in Android Studio terminal, or git
+   bash).
    The resulting AAB files are generated in the `app\build\outputs\bundle` subdirectory.
    For the GitHub release, use the one in the `app\build\outputs\bundle\release` and `app\build\outputs\bundle\firebase`
    subdirectories.
@@ -305,7 +307,7 @@ apksigner verify --print-certs *.apk
 ```
 
 This command does not verify the signature, but just prints the certificate information.
-`apksigner` is part of the Android SDK build tools, which should be automatically installed when 
+`apksigner` is part of the Android SDK build tools, which should be automatically installed when
 Android Studio is installed.
 Note that the location of `apksigner` is not automatically included in the PATH.
 I manually had to add `C:\Users\frank\AppData\Local\Android\Sdk\build-tools\36.0.0` to the PATH.
@@ -376,19 +378,19 @@ It was set up as follows:
 
 The Gaai **debug** and **firebase** build types use [Firebase](https://firebase.google.com/) integration, see
 [Gaai on Firebase](https://console.firebase.google.com/project/gaai-3e164/overview).
-As explained in [PRIVACY.md](PRIVACY.md#google-analytics-and-crashlytics), 
+As explained in [PRIVACY.md](PRIVACY.md#google-analytics-and-crashlytics),
 this has an impact on the user's privacy.
 
 Its configuration is in app\google-services.json.
-According to the video at the top of 
-[Add Firebase to your Android project](https://firebase.google.com/docs/android/setup) at around 7:50, 
+According to the video at the top of
+[Add Firebase to your Android project](https://firebase.google.com/docs/android/setup) at around 7:50,
 none of this info is secret.
-But for open source projects it is best that everyone that works on the project, 
+But for open source projects it is best that everyone that works on the project,
 uses its own Firebase project and configuration settings.
 Therefore, it is best to not include the JSON file in git.
 The video describes how everyone can set up their own Firebase project.
 But not including it in git, will generate failures during GitHub Actionns build.
-Solutions are provided in 
+Solutions are provided in
 [Configure Firebase project for Continuous Integration builds](https://proandroiddev.com/configure-firebase-project-for-continuous-integration-builds-833f08561a73),
 but are a bit overkill for a project like Gaai.
 Therefore, the current choice was to keep the google-services.json file in git.
@@ -396,14 +398,14 @@ This might need to be changed in the future.
 
 ### Firebase analytics
 
-The aforementioned video also shows how to trigger a Firebase.analytics.logEvent().
+The aforementioned video also shows how to trigger a Firebase.analytics.logEvent ().
 Events are only send to Firebase once every hour or so.
 With the following command, your device does this more often.
 
 `adb shell setprop debug.firebase.analytics.app be.cuypers_ghys.gaai`
 
 Firebase analytics is enabled.
-Currently, there is only 1 call to Firebase.analytics.logEvent() present in the code.
+Currently, there is only 1 call to Firebase.analytics.logEvent () present in the code.
 A press to the Get Time button writes an event.
 It is used for testing the Firebase analytics integration.
 
@@ -412,9 +414,9 @@ It is used for testing the Firebase analytics integration.
 Crashlytics is enabled.
 Gaai instances that crash report this to the Crashlytics server.
 On the Crashlytics server, the crashes are visible with stack dumps.
-That way, the developers are made aware of crashes in the filed and are provided with information that aids in 
+That way, the developers are made aware of crashes in the filed and are provided with information that aids in
 debugging the crash.
- 
+
 ## Distributing via Google Play
 
 It is not yet possible to distribute Gaai via Google Play.
@@ -424,7 +426,7 @@ Not sure if it is worthwhile for such a small project with a limited number of u
 Blocking problems
 
 - For new personal Google Play accounts, applications can only go into production after successful testing
-  by at least 12 testers. See 
+  by at least 12 testers. See
   [Everything about the 12 testers requirement](https://support.google.com/googleplay/android-developer/community-guide/255621488/everything-about-the-12-testers-requirement?hl=en).
   This does not seem very realistic for Gaai, seen the limited number of users.
 

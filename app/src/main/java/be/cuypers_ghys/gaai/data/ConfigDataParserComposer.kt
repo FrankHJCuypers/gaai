@@ -120,7 +120,10 @@ object ConfigDataParserComposer {
     val crc = configGetData.fromUint16LE(configGetData.size - 2)
     val computedCrc = CRC16.modBus(configGetData, 0, configGetData.size - 2).toUShort()
     if (computedCrc != crc) {
-      Log.d(TAG, "  fun parse(configGetData: ByteArray, configVersion: ConfigVersion): ConfigData? {\n crc is ${computedCrc.toHexString()} in stead of ${crc.toHexString()}")
+      Log.d(
+        TAG,
+        "  fun parse(configGetData: ByteArray, configVersion: ConfigVersion): ConfigData? {\n crc is ${computedCrc.toHexString()} in stead of ${crc.toHexString()}"
+      )
       return null
     }
 
@@ -242,7 +245,7 @@ object ConfigDataParserComposer {
       subMap1 = cborMap.get(CborInteger.create(1)) ?: return null
       if (subMap1 !is CborMap) return null
     } catch (e: CborParseException) {
-      Log.d( TAG, "cbor parsing returned exception $e")
+      Log.d(TAG, "cbor parsing returned exception $e")
       return null
     }
 

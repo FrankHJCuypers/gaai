@@ -1,6 +1,6 @@
 # Contact
 
-For questions regarding *Gaai*, its PIN or its privacy policy, 
+For questions regarding *Gaai*, its PIN or its privacy policy,
 please contact us using one of the following alternatives:
 
 - Open a [GitHub Discussion](https://github.com/FrankHJCuypers/gaai/discussions) or a

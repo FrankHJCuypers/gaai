@@ -107,12 +107,12 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
           withLink(
             LinkAnnotation.Url(
               "https://github.com/FrankHJCuypers/gaai",
-              TextLinkStyles(style = SpanStyle( color = MaterialTheme.colorScheme.primary ))
+              TextLinkStyles(style = SpanStyle(color = MaterialTheme.colorScheme.primary))
             )
           ) {
             append("https://github.com/FrankHJCuypers/gaai")
           }
-        } , style = MaterialTheme.typography.bodySmall)
+        }, style = MaterialTheme.typography.bodySmall)
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(
           onClick = { onDismissRequest() },

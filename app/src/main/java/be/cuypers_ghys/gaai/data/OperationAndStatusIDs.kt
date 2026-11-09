@@ -96,6 +96,6 @@ object OperationAndStatusIDs {
   const val CONFIG_STATUS_SUCCESS_CBOR = CONFIG + 0x05
   const val CONFIG_STATUS_POPPED_CBOR = CONFIG + 0x06
 
-  const val CDR_COMMAND_NEXT:Byte = 0x01
-  const val CCDT_COMMAND_NEXT:Byte = 0x01
+  const val CDR_COMMAND_NEXT: Byte = 0x01
+  const val CCDT_COMMAND_NEXT: Byte = 0x01
 }

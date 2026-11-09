@@ -20,7 +20,6 @@
 [![gradle](https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)](https://gradle.org/)
 [![Junit 5](https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)](https://junit.org/)
 
-
 [![stable](https://img.shields.io/badge/version-stable-green)](https://kotlinlang.org/docs/components-stability.html#stability-levels-explained)
 [![codecov](https://codecov.io/github/FrankHJCuypers/gaai/graph/badge.svg?token=QE75WWEEUQ)](https://codecov.io/github/FrankHJCuypers/gaai)
 
@@ -32,7 +31,6 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/commits)
 [![GitHub contributors](https://img.shields.io/github/contributors/FrankHJCuypers/gaai?logo=github)](https://github.com/FrankHJCuypers/gaai/graphs/contributors)
 [![GitHub commit activity (master)](https://img.shields.io/github/commit-activity/y/FrankHJCuypers/gaai/master?logo=github)](https://github.com/FrankHJCuypers/gaai/commits/master)
-
 
 # Nexxtender Charger android app
 
@@ -66,8 +64,8 @@ A bird name was chosen.
 - Only requires to install *Gaai*.
 - No additional hardware required.
 - No www.Nexxtmove.me account required.
-- Connects over [Bluetooth Low Energy (BLE)](https://en.wikipedia.org/wiki/Bluetooth_Low_Energy) to the
-  *Nexxtender Home* or *Nexxtender Mobile*.
+- Connects over [Bluetooth Low Energy (BLE)](https://en.wikipedia.org/wiki/Bluetooth_Low_Energy) to the *Nexxtender
+  Home* or *Nexxtender Mobile*.
 - Finds and connects to the device based on its PN and SN. No MAC required.
 - Shows real time data from the *Nexxtender Home* or *Nexxtender Mobile*: device information, charging status, current,
   power consumption, ...
@@ -146,8 +144,8 @@ If the selected APK is a **debug** build type, it will install without questions
 ## Install Gaai from IzzyOnDroid
 
 You can install *Gaai* from [IzzyOnDroid](https://apt.izzysoft.de/packages/be.cuypers_ghys.gaai)
-or your favorite 
-[F-Droid client](https://android.izzysoft.de/applists/category/named/apps_markets#group_1181), 
+or your favorite
+[F-Droid client](https://android.izzysoft.de/applists/category/named/apps_markets#group_1181),
 which then also takes care of updates.
 IzzyOnDroid only distributes **release** build types.
 
@@ -157,7 +155,7 @@ Once *Gaai* is sufficiently stable, distributing it via Google Play Store is an 
 For the moment *Gaai* is not available on Google Play.
 Distributing *Gaai* via Google Play Store gives a huge administrative overhead and adds a lot of additional
 requirements, like mandatory daily testing by minimum 12 testers during 14 days.
-That does not seem very realistic for a small project like *Gaai*, 
+That does not seem very realistic for a small project like *Gaai*,
 supported by only 1 developer and with a very limited user base.
 For the moment all plans to publish *Gaai* on Google Play Store are abandoned.
 
@@ -193,8 +191,8 @@ in Android 12 and up:
 
 ## Bluetooth pairing
 
-The first time that *Gaai* connects to a *Nexxtender Home* or *Nexxtender Mobile* device,
-*Gaai* will show a pop-up asking to enter the 6-digit PIN.
+The first time that *Gaai* connects to a *Nexxtender Home* or *Nexxtender Mobile* device, *Gaai* will show a pop-up
+asking to enter the 6-digit PIN.
 After entering the PIN, pairing completes.
 
 See [PIN value](#pin-value) for the PIN value.
@@ -205,8 +203,8 @@ the pairing information is lost and *Gaai* will not automatically open the pairi
 The only options to restore from this situation are either of:
 
 - pair the device from the Android "Bluetooth menu".
-- delete the *Nexxtender Home* or *Nexxtender Mobile* from *Gaai* and then add it again.
-  *Gaai* will now again ask to pair.
+- delete the *Nexxtender Home* or *Nexxtender Mobile* from *Gaai* and then add it again. *Gaai* will now again ask to
+  pair.
 
 ### PIN value
 
@@ -221,28 +219,29 @@ as mentioned in [Add a Nexxtender charger device](#add-a-nexxtender-device),
 and he will calculate it for you for free.
 See [CONTACT](CONTACT.md).
 
-Alternatively you can 
+Alternatively you can
 
-- contact the repo owner of 
-  [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender) 
+- contact the repo owner of
+  [ESPHome BLE Client for Powerdale Nexxtender EV Charger](https://github.com/geertmeersman/nexxtender)
   for the PIN, also free of charge.
-- at [Lost your Nexxtender PIN? Your Powerdale charger still works](https://potatocharge.com/en/blog/nexxtender-pin-powerdale-bankruptcy)
-  you can also request your PIN, but a small fee is asked.
+-
+
+at [Lost your Nexxtender PIN? Your Powerdale charger still works](https://potatocharge.com/en/blog/nexxtender-pin-powerdale-bankruptcy)
+you can also request your PIN, but a small fee is asked.
 
 ### Incorrect PIN value
 
-If your phone is not paired with the Nexxtender charger using a correct PIN,
-**Gaai** still shows most data from the Nexxtender charger,
+If your phone is not paired with the Nexxtender charger using a correct PIN, **Gaai** still shows most data from the
+Nexxtender charger,
 but not everything works.
 It might not be immediately clear that the root cause is the incorrect PIN.
 See [Configuration screen not reactive #40](https://github.com/FrankHJCuypers/gaai/discussions/40)
 for more explanation.
 
-
 ## First start
 
-When *Gaai* is started the first time, it has no *Nexxtender* devices in its database yet.
-*Gaai* will display a home screen like the following:
+When *Gaai* is started the first time, it has no *Nexxtender* devices in its database yet. *Gaai* will display a home
+screen like the following:
 
 ![Empty DB](docs/images/EmptyDB.png)
 
@@ -282,17 +281,18 @@ cancel the scan if it takes to long.
 
 ![Device Entry Scanning](docs/images/DeviceEntryScanning.png)
 
-If you entered the correct PN and SN,
-*Gaai* should find the *Nexxtender* in less then a few seconds and show the following screen.
+If you entered the correct PN and SN, *Gaai* should find the *Nexxtender* in less then a few seconds and show the
+following screen.
 
 ![Device Entry Found](docs/images/DeviceEntryFound.png)
 
 Gaai shows a card with the details of the found device.
 
-+ The top row shows 
++ The top row shows
     + At the left the type of the Nexxtender Charger: HOME. MOBILE BLACK or MOBILE RED.
     + At the right the device's bonding state ("pairing"). See below table for an explanation of the possible states.
-+ The second row shows if the device is available for connection. See below table for an explanation of the possible states.
++ The second row shows if the device is available for connection. See below table for an explanation of the possible
+  states.
   For devices shown in this screen, it is by design always Available.
 + The third row shows
     + At the left the PN.
@@ -309,13 +309,12 @@ Possible bonding states:
 | Bonding    | ![Bonding](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)   | Device is not bonded, but bonding process has been initiated    |
 | Bonded     | ![Bonded](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)    | Device is bonded                                                |
 
-Possible Availability states: 
+Possible Availability states:
 
-| Value         | Icon                                                                                         | Description                                                                                                                        |
-|---------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| Available     | ![Available](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | The charger is advertising itself on BLE, so it is available for connection                                                        |
-| Not Available | ![Not Available](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)  | The charger is not advertising itself on BLE, so it is either already connected over BLE with some other device or is out of range |
-
+| Value         | Icon                                                                                        | Description                                                                                                                        |
+|---------------|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| Available     | ![Available](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)    | The charger is advertising itself on BLE, so it is available for connection                                                        |
+| Not Available | ![Not Available](docs/images/bluetooth_disabled_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | The charger is not advertising itself on BLE, so it is either already connected over BLE with some other device or is out of range |
 
 Press *Save* to save this device in *Gaai's* database.
 This will bring you back to the previous screen, now showing one device.
@@ -352,8 +351,8 @@ In this screen you can
 
 ## Device details
 
-When clicking on a device card in [List of Devices](#list-of-devices),
-*Gaai* tries to connect to the device and shows the following screen.
+When clicking on a device card in [List of Devices](#list-of-devices), *Gaai* tries to connect to the device and shows
+the following screen.
 
 ![Device Detail](docs/images/DeviceDetailScreen.png)
 
@@ -366,7 +365,7 @@ That can take 5 seconds.
 The first card at the top has the same contents as described in [Add a Nexxtender device](#add-a-nexxtender-device)
 except for the second row that no longer contains the Availability state but:
 
-+ At the left the Gatt connection stat**e** represents the current link status and can have the following values:
++ At the left the Gatt connection stat **e** represents the current link status and can have the following values:
 
 | Value         | Icon                                                                                         | Description                                            |
 |---------------|----------------------------------------------------------------------------------------------|--------------------------------------------------------|
@@ -375,7 +374,7 @@ except for the second row that no longer contains the Availability state but:
 | Connected     | ![Connected](docs/images/bluetooth_connected_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg)     | *Gaai* is connected with the charger's Gatt server     | 
 | Disconnecting | ![Disconnecting](docs/images/bluetooth_searching_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg) | *Gaai* is disconnecting with the charger's Gatt server |
 
-+ At the right the BLE Gatt connection stat**us** shows the result code of the latest connection event and can have the 
++ At the right the BLE Gatt connection stat **us** shows the result code of the latest connection event and can have the
   following values:
 
 | Value               | Icon                                                                                              | Description                                                                                                               |
@@ -472,8 +471,8 @@ It is not supported by the *Nexxtender Mobile*.
 
 The Configuration card shows the data that can be configured in the *Nexxtender Home*.
 It is not supported by the *Nexxtender Mobile*.
-In theory all these fields are configurable and can be changed.
-*Gaai* only allows to change the fields marked with ![edit outline](docs/images/mdi--edit-outline.png).
+In theory all these fields are configurable and can be changed. *Gaai* only allows to change the fields marked
+with ![edit outline](docs/images/mdi--edit-outline.png).
 There are three different layouts, depending on the *Firmware Version*.
 
 #### Configuration 1.0
@@ -645,7 +644,7 @@ The *Nexxtender Charger* stores records of 4 different types of data:
 
 Event and Metric records are only available on the *Nexxtender Home*, not on the *Nexxtender Mobile*s.
 These records can only be downloaded from the charger once!
-Normally the *Nexxtmove* app downloads these records and forwards them to the *Nexxtmove.me* website 
+Normally the *Nexxtmove* app downloads these records and forwards them to the *Nexxtmove.me* website
 for billing purposes.
 See [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/nexxtender-charger-info.git)
 for more information.
@@ -661,7 +660,6 @@ This feature is for research purpose only.
 Once you press the button, you will no longer be able to load the data to the *Nexxtmove.me* app.
 So you will not be able to get refunded by your employer.
 
-
 When you press *Read Remaining Records*, Gaai will first ask for confirmation.
 If you confirm, Gaai opens the Android file picker from which you must select a directory where
 you want the output files to be stored.
@@ -670,7 +668,8 @@ i.e. a subdirectory in your *Documents* directory like internal storage/Document
 4 text files are generated in the selected directory, storing the downloaded records, one file per type.
 
 Once downloading is started, the displayed remaining record numbers decreases.
-Wait until all records are downloaded and the remaining number of records are all 0, before doing anything else with Gaai.
+Wait until all records are downloaded and the remaining number of records are all 0, before doing anything else with
+Gaai.
 
 There can be maximum 576 METRIC records, which are filled by the charger in a tempo of 1 every quarter.
 The maximum number of records is reached after 6 days of operation, regardless of the occurrence of charging events.
@@ -689,20 +688,19 @@ Each line in the file is formated as `< YYYY-DD-MM HH:mm:ss <data>` with
 - `YYYY-DD-MM HH:mm:ss` the timestamp in the record.
   Wireshark normally shows the time that the record was downloaded from the charger.
   For research, it is more useful to see the time the record was created within the charger.
-- `<data>` the data of the record, in hex. 
+- `<data>` the data of the record, in hex.
 
 Each time you press "Read Remaining records, a new set of files is generated on the mobile phone.
 These files are in a format that Wireshark's `text2pcap` understands, allowing to use it for research.
 That allows documenting the record formats as much as possible in
 [Nexxtender Charger Information, Frank HJ Cuypers](https://github.com/FrankHJCuypers/nexxtender-charger-info.git).
 Transferring the files from mobile phone to PC can be done a.o. using the Android *Files* app: locate the files
-and share them or copy them to a cloud server. 
+and share them or copy them to a cloud server.
 
 See [fuut: Analyzing record files from Gaai](https://github.com/FrankHJCuypers/fuut#preparing-wireshark)
 for more information on how to use Wireshark.
 
 # Links
-
 
 Useful information can be found at
 
@@ -753,13 +751,13 @@ The other rows are confirmed by other users.
 
 The previous table did not track the *Gaai* version. That is done in the next table, starting from version v0.1.1.
 
-| Phone Model          | Android API (version) | Nexxtender firmware version | *Gaai* version   |
-|----------------------|-----------------------|-----------------------------|------------------|
-| Google Pixel 6 Pro   | 36 (16)               | Home 2.53.2                 | v0.1.1 - current | 
-| Google Pixel 8 Pro   | 36 (16)               | Home 2.53.2                 | v0.1.1 - current |
-| Samsung Galaxy S24+  | 36 (16)               | Home 3.65.0                 | v1.0.0           |
-| Samsung Galaxy S8    | 28 (9)                | Home 3.65.0                 | v1.0.0           |
-| Motorola G20         | (11)                  | Home 2.52.2                 | V1.1.0?          |
+| Phone Model         | Android API (version) | Nexxtender firmware version | *Gaai* version   |
+|---------------------|-----------------------|-----------------------------|------------------|
+| Google Pixel 6 Pro  | 36 (16)               | Home 2.53.2                 | v0.1.1 - current | 
+| Google Pixel 8 Pro  | 36 (16)               | Home 2.53.2                 | v0.1.1 - current |
+| Samsung Galaxy S24+ | 36 (16)               | Home 3.65.0                 | v1.0.0           |
+| Samsung Galaxy S8   | 28 (9)                | Home 3.65.0                 | v1.0.0           |
+| Motorola G20        | (11)                  | Home 2.52.2                 | V1.1.0?          |
 
 There are currently no combinations for which it is confirmed that it does not work.
 

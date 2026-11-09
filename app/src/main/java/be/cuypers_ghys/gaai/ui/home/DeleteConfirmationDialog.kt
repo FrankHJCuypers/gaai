@@ -89,11 +89,11 @@ fun DeleteConfirmationDialog(
 @Composable
 private fun DeleteConfirmDialogDevicePreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface (
+    Surface(
       modifier = Modifier
         .fillMaxSize()
         .padding(20.dp),
-    ){
+    ) {
       DeleteConfirmationDialog(
         "Device",
         onCancel = { }, onConfirm = {}
@@ -107,7 +107,7 @@ private fun DeleteConfirmDialogDevicePreview() {
 @Composable
 private fun DeleteConfirmDialogBadgePreview() {
   GaaiTheme(dynamicColor = false) {
-    Surface (
+    Surface(
       modifier = Modifier
         .fillMaxSize()
         .padding(20.dp),

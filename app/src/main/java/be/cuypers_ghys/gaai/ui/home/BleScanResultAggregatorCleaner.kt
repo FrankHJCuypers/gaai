@@ -87,9 +87,9 @@ class BleScanResultAggregatorCleaner {
    */
   fun aggregate(scanItem: BleScanResult): List<BleScanResult> {
     val data = scanItem.data
-    if ( data == null ) {
+    if (data == null) {
       // Create an entry with timestampNanos very old
-      devices[scanItem.device] = BleScanResultData(0,0, null)
+      devices[scanItem.device] = BleScanResultData(0, 0, null)
     } else {
       devices[scanItem.device] = data
     }
@@ -119,7 +119,7 @@ class BleScanResultAggregatorCleaner {
 
     val elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
     val cutoffTimeNano = elapsedRealtimeNanos - CUTOFF_PERIOD_NANO
-    Log.v(TAG,"elapsedRealtimeNanos =$elapsedRealtimeNanos , cutoffTimeNanos = $cutoffTimeNano")
+    Log.v(TAG, "elapsedRealtimeNanos =$elapsedRealtimeNanos , cutoffTimeNanos = $cutoffTimeNano")
     devices.forEach { (serverDevice, bleScanResultData) ->
       Log.v(TAG, "Testing serverDevice=$serverDevice ")
       Log.v(TAG, " bleScanResultData=$bleScanResultData ")

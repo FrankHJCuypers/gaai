@@ -252,27 +252,27 @@ class ConfigDataParserComposerTest {
 
   @Test
   fun getConfigVersion_1_0_0() {
-    assertEquals(ConfigVersion.CONFIG_1_0 , getConfigVersion("1.0.0" ))
+    assertEquals(ConfigVersion.CONFIG_1_0, getConfigVersion("1.0.0"))
   }
 
   @Test
   fun getConfigVersion_1_1_0() {
-    assertEquals(ConfigVersion.CONFIG_1_1 , getConfigVersion("1.1.0" ))
+    assertEquals(ConfigVersion.CONFIG_1_1, getConfigVersion("1.1.0"))
   }
 
   @Test
   fun getConfigVersion_3_49() {
-    assertEquals(ConfigVersion.CONFIG_1_1, getConfigVersion("3.49" ))
+    assertEquals(ConfigVersion.CONFIG_1_1, getConfigVersion("3.49"))
   }
 
   @Test
   fun getConfigVersion_3_50() {
-    assertEquals(ConfigVersion.CONFIG_CBOR, getConfigVersion("3.50" ))
+    assertEquals(ConfigVersion.CONFIG_CBOR, getConfigVersion("3.50"))
   }
 
   @Test
   fun getConfigVersion_3_65() {
-    assertEquals(ConfigVersion.CONFIG_CBOR, getConfigVersion("3.65" ))
+    assertEquals(ConfigVersion.CONFIG_CBOR, getConfigVersion("3.65"))
   }
 
   companion object {

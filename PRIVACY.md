@@ -3,7 +3,7 @@
 ## Gaai App Privacy Policy
 
 This Privacy Policy describes the types of data collected by the *Gaai* App,
-the purposes for collecting such data, and how we handle, store, and protect that information. 
+the purposes for collecting such data, and how we handle, store, and protect that information.
 
 ## Data collected directly by Gaai
 
@@ -25,7 +25,7 @@ This data is not shared by other apps or servers external to your phone.
 
 Some buttons or text will forward you to the *Gaai* GitHub project when clicked.
 This may result in data collection.
-Please review the 
+Please review the
 [GitHub General Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)
 for more information.
 
@@ -39,12 +39,11 @@ This way we are made aware of any crashes in the field including a stack dump
 of where the crash occurred in the code.
 We use this to analyze the crash and fix it in future versions if possible.
 
-What Google does with this data is restricted by the *Google Analytics Terms of Use* and the
-*Google Privacy Policy*.
+What Google does with this data is restricted by the *Google Analytics Terms of Use* and the *Google Privacy Policy*.
 
 Consult Google for information on how to turn this data collection off.
 
-Since version 1.1.1, only the **firebase** and **debug** [build types](README.md#build-types) 
+Since version 1.1.1, only the **firebase** and **debug** [build types](README.md#build-types)
 include the Google Analytics and Crashlytics tools.
 The **release** build type no longer includes the Google Analytics and Crashlytics tools.
 If you don't want your data to be collected by Google Analytics or Crashlytics, you must use the **release** build type.
@@ -63,9 +62,9 @@ policy periodically in order to be informed of any changes.
 
 ## Your acceptance
 
-By using *Gaai*, you confirm your acceptance of this policy. 
-If you do not agree to this policy, please do not use *Gaai*. 
-If you keep on using *Gaai* after any changes to this policy, 
+By using *Gaai*, you confirm your acceptance of this policy.
+If you do not agree to this policy, please do not use *Gaai*.
+If you keep on using *Gaai* after any changes to this policy,
 you indicate your acceptance of these changes.
 
 ## Contacting us
