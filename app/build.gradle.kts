@@ -15,7 +15,7 @@ plugins {
   id("com.google.gms.google-services")
   id("com.google.firebase.crashlytics")
   id("kotlin-parcelize")
-  id("org.jetbrains.dokka") version "2.2.0"
+  id("org.jetbrains.dokka") version "2.3.0"
 }
 
 androidGitVersion {
