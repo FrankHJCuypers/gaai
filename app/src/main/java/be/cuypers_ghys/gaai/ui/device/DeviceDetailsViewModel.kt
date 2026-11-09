@@ -494,7 +494,7 @@ class DeviceDetailsViewModel(
       modelNumber = modelNumber, serialNumber = serialNumber,
       firmwareRevision = firmwareRevision, hardwareRevision = hardwareRevision, manufacturerName = manufacturerName
     )
-    _state.value = _state.value.copy(deviceInformation = deviceInformation)
+    _state.value = _state.value.copy(deviceName = deviceName, deviceInformation = deviceInformation)
 
     nexxtenderHomeChargingBasicDataCharacteristic.getNotifications().onEach {
       // Log.i(TAG, "Found the following notification of changed chargingBasicData DataByteArray: $it")
